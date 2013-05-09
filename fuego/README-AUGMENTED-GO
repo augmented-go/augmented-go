@@ -1,0 +1,7 @@
+Description
+===========
+
+Augmented Go uses only a portion of the fuego library.
+There are also modifications to support boost version 1.52.
+
+For more information on fuego see README-FUEGO.

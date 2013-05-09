@@ -5,7 +5,7 @@ project(AugmentedGo)
 # CMAKE_BINARY_DIR: The path to the top level of the build tree.
 # CMAKE_SOURCE_DIR: The path to the top level of the source tree.
 
-
+add_subdirectory(fuego)
 add_subdirectory(Go_AugmentedReality)
 add_subdirectory(Go_Backend)
 add_subdirectory(Go_GUI)
