@@ -12,6 +12,9 @@ public:
     // initializes the game board with given size and setup (starting positions)
     void init(int size, GoSetup setup = GoSetup());
 
+    // tries to extract a valid move from the setup, ignores current player information in setup
+    void update(GoSetup setup);
+
     const GoBoard& getBoard() const;
 
 private:

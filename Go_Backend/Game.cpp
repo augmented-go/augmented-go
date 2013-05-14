@@ -19,4 +19,42 @@ void Game::init(int size, GoSetup setup) {
 const GoBoard& Game::getBoard() const {
     return _go_game.Board();
 }
+
+void Game::update(GoSetup setup) {
+    // get new and current stones
+    auto new_blacks = setup.m_stones[SG_BLACK];
+    auto new_whites = setup.m_stones[SG_WHITE];
+
+    auto current_blacks = getBoard().All(SG_BLACK);
+    auto current_whites = getBoard().All(SG_WHITE);
+
+    // check if the setup is the same as the current board
+    if (new_blacks == current_blacks
+        && new_whites == current_whites)
+        // no update needed
+        return;
+
+    // extract new played stones with respect to the current board
+    auto added_blacks = new_blacks - current_blacks;
+    auto added_whites = new_whites - current_whites;
+
+    auto removed_blacks = current_blacks - new_blacks;
+    auto removed_whites = current_whites - new_whites;
+
+    if (added_blacks.Size() == 1 && added_whites.Size() == 0) {
+        // blacks move
+        auto point = added_blacks.PointOf();
+
+        _go_game.AddMove(point, SG_BLACK);
+    }
+    else if (added_blacks.Size() == 0 && added_whites.Size() == 1) {
+        // whites move
+        auto point = added_whites.PointOf();
+
+        _go_game.AddMove(point, SG_WHITE);
+    }
+    else {
+        assert(!"Neither black nor white move?!");
+    }
+}
 }
