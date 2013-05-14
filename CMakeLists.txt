@@ -5,7 +5,11 @@ project(AugmentedGo CXX)
 # CMAKE_BINARY_DIR: The path to the top level of the build tree.
 # CMAKE_SOURCE_DIR: The path to the top level of the source tree.
 
-find_package(Boost 1.52 REQUIRED)
+set(Boost_USE_STATIC_LIBS        ON)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME     OFF)
+find_package( Boost 1.52 COMPONENTS date_time)
+
 include_directories(${Boost_INCLUDE_DIRS})
 include(fuego/add_fuego_to_target.cmake)
 

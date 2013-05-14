@@ -1,10 +1,10 @@
 
 SET(backend_SOURCE
-    Backend.cpp
+    Game.cpp
 )
 
 SET(backend_HEADERS
-    Backend.hpp
+    Game.hpp
 )
 
 add_library (Go_Backend ${backend_SOURCE} ${backend_HEADERS})

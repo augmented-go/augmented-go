@@ -9,3 +9,5 @@ source_group(smartgame FILES ${fuego_sg})
 
 include_directories(go smartgame gtpengine)
 add_library(fuego ${fuego_go} ${fuego_sg} ${fuego_gtpengine})
+
+target_link_libraries (fuego ${Boost_LIBRARIES})
