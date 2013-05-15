@@ -1,10 +1,12 @@
 #include "CppUnitTest.h"
 
-#include "Game.hpp"
+// fuego
 #include "GoInit.cpp"
 #include "SgInit.h"
 #include "GoSetupUtil.h"
 
+// augmented go
+#include "Game.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace GoBackendGameTest
@@ -60,6 +62,8 @@ namespace GoBackendGameTest
             go_game.init(19);
 
             auto& board = go_game.getBoard();
+
+            Assert::AreEqual(19, board.Size());
 
             auto whites = board.TotalNumStones(SG_WHITE);
             auto blacks = board.TotalNumStones(SG_BLACK);
