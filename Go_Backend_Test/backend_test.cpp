@@ -1,17 +1,18 @@
 #include "CppUnitTest.h"
 
+// augmented go
+#include "Game.hpp"
+
 // fuego
 #include "GoInit.cpp"
 #include "SgInit.h"
 #include "GoSetupUtil.h"
 
-// augmented go
-#include "Game.hpp"
-
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace GoBackendGameTest
 {
     using GoBackend::Game;
+    using GoBackend::State;
     using SgPointUtil::Pt;
 
     // fuego needs those to work
@@ -96,6 +97,21 @@ namespace GoBackendGameTest
             Assert::AreEqual(1, blacks);
         }
 
+        TEST_METHOD(overriding_board_resets_state) {
+            Game go_game;
+            go_game.init(6);
+
+            GoSetup setup;
+            setup.AddWhite(Pt(1, 1));
+            setup.m_player = SG_BLACK;
+
+            go_game.update(setup);
+            Assert::IsTrue(go_game.getState() == State::Invalid);
+
+            go_game.init(6, setup);
+            Assert::IsTrue(go_game.getState() == State::Valid);
+        }
+
         TEST_METHOD(can_initialize_with_uncaptured_stone) {
             // O = White
             // X = Black
@@ -164,7 +180,7 @@ namespace GoBackendGameTest
             board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
             Assert::IsTrue(new_setup == board_setup);
 
-            // updating with a black new move
+            // updating with a white new move
             s = "....\n"
                 "....\n"
                 "OXO.\n"
@@ -178,10 +194,182 @@ namespace GoBackendGameTest
         }
 
         TEST_METHOD(cannot_update_board_with_single_move_played_and_its_not_players_turn) {
+            std::string s(  "....\n"
+                            "....\n"
+                            "O...\n"
+                            ".O..");
 
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // white moved while blacks turn
+            s = "....\n"
+                "..O.\n"
+                "O...\n"
+                ".O..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            Assert::IsTrue(go_game.getState() == State::Invalid);
+
+
+            // black moved while whites turn
+            go_game.init(size, setup);
+            // first a black move so white gets the turn
+            s = "....\n"
+                "....\n"
+                "OX..\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            Assert::IsTrue(go_game.getState() == State::Valid);
+
+            // ...then the illegal black move
+            s = "....\n"
+                ".X..\n"
+                "OX..\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            Assert::IsTrue(go_game.getState() == State::Invalid);
         }
 
-        TEST_METHOD(can_update_board_and_recognize_captures) {
+        TEST_METHOD(can_update_board_and_detect_illegal_move) {
+            std::string s(  "....\n"
+                            "....\n"
+                            "O...\n"
+                            ".O..");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            setup.m_player = SG_BLACK;
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // suicide
+            s = "....\n"
+                "....\n"
+                "O...\n"
+                "XO..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+            Assert::IsTrue(go_game.getState() == State::Invalid);
+
+            // valid state again after removing illegal move
+            s = "....\n"
+                "....\n"
+                "O...\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+            Assert::IsTrue(go_game.getState() == State::Valid);
+        }
+
+        TEST_METHOD(detect_invalid_updates) {
+            std::string s(  "....\n"
+                            "....\n"
+                            "O...\n"
+                            ".O..");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // removed stone
+            s = "....\n"
+                "....\n"
+                "....\n"
+                ".O..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+            Assert::IsTrue(go_game.getState() == State::Invalid);
+
+            go_game.init(size, setup);
+            // added two stones
+            s = "....\n"
+                ".XX.\n"
+                "O...\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+            Assert::IsTrue(go_game.getState() == State::Invalid);
+
+            go_game.init(size, setup);
+            // added stones of both colors
+            s = "....\n"
+                ".X..\n"
+                "OO..\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+            Assert::IsTrue(go_game.getState() == State::Invalid);
+
+            go_game.init(size, setup);
+            // played black stone and removed white stone
+            s = "....\n"
+                ".X..\n"
+                "....\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            Assert::IsTrue(go_game.getState() == State::Invalid);
+        }
+
+        TEST_METHOD(recognize_captures) {
+            std::string s(  "..OX\n"
+                            "X...\n"
+                            "OX..\n"
+                            "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // updating with black move that captures
+            s = "..OX\n"
+                "X...\n"
+                "OX..\n"
+                "OX..";
+            size;
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            go_game.update(new_setup);
+            Assert::IsTrue(go_game.getState() == GoBackend::State::WhileCapturing);
+
+            // internal board state should automatically remove stones
+            s = "..OX\n"
+                "X...\n"
+                ".X..\n"
+                ".X..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            new_setup.m_player = SG_WHITE;
+            auto current_board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(new_setup == current_board_setup);
+
+            // back to valid state after the stones have been removed by the user
+            go_game.update(new_setup);
+            Assert::IsTrue(go_game.getState() == GoBackend::State::Valid);
+
+            // whites capture
+            s = "..OX\n"
+                "X..O\n"
+                ".X..\n"
+                ".X..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+            Assert::IsTrue(go_game.getState() == GoBackend::State::WhileCapturing);
+        }
+
+
+        TEST_METHOD(capture_move_with_removal) {
 
         }
     };
