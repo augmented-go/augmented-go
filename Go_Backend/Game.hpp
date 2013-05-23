@@ -7,6 +7,7 @@ namespace GoBackend {
 // possible states of the Game
 enum class State {
     Valid,
+
     // in this state, the user has to restore the last valid state of the board
     // getBoard() will contain the last valid state
     Invalid,
@@ -15,18 +16,54 @@ enum class State {
     WhileCapturing
 };
 
+/**
+ * Basic game class to play and keep track of a game of go. One instance handles one
+ * game of go. 
+ * The board locations begin at (1,1) and go up to max. (19,19), depending on the
+ * board size. These points are represented by the fuego type 'SgPoint'.
+ * The fuego type 'GoSetup' is used for updating the board. GoSetup uses
+ * 'SgPoints' to add stones to such a setup. The game then automatically tries to read
+ * a move out of the current and updated board.
+ * Usage Example:
+ *   Game game;
+ *   GoSetup setup;
+ *   setup.AddWhite(SgPointUtil::Pt(1, 1));
+ *
+ *   game.init(9, setup);
+ *
+ *   setup.AddBlack(SgPointUtil::Pt(2, 2));
+ *   game.update(setup);
+ */
 class Game {
 
 public:
     Game();
 
-    // initializes the game board with given size and setup (starting positions)
+    /**
+     * @brief       Initializes the game board with given size and setup (starting positions)
+     * @param[in]   size    board size (size x size)
+     * @param[in]   setup   initial board setup
+     */
     void init(int size, GoSetup setup = GoSetup());
 
-    // tries to extract a valid move from the setup, ignores current player information in setup
+    /**
+     * @brief       Updates the game with the given setup. Tries to extract a valid move from the setup.
+     *              Modifies the internal game state if no valid move was found.
+     *              Note: Ignores current player information in setup.
+     * @param[in]   setup   new board setup
+     */
     void update(GoSetup setup);
 
+    /**
+     * @brief       Get current board information
+     * @returns     reference to current board instance
+     */
     const GoBoard& getBoard() const;
+
+    /**
+     * @brief       Get current game state
+     * @returns     current game state
+     */
     State getState() const;
 
 private:

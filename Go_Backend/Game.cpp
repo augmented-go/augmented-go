@@ -14,7 +14,9 @@ void Game::init(int size, GoSetup setup) {
 
     _go_game.Init(size, GoRules());
 
-    // fuego bastards, a SgBWArray<SgPointSet> is essentially the same as a SgBWSet
+    // @Todo: check if setup contains only valid stones!
+
+    // a SgBWArray<SgPointSet> is essentially the same as a SgBWSet
     // but SetupPosition wants a SbBWArray...
     _go_game.SetupPosition(SgBWArray<SgPointSet>(setup.m_stones[SG_BLACK], setup.m_stones[SG_WHITE]));
 
@@ -30,6 +32,8 @@ State Game::getState() const {
 }
 
 void Game::update(GoSetup setup) {
+    // @Todo: check if setup contains only valid stones!
+
     // get new and current stones
     auto new_blacks = setup.m_stones[SG_BLACK];
     auto new_whites = setup.m_stones[SG_WHITE];
