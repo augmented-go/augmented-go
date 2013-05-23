@@ -73,6 +73,15 @@ namespace GoBackendGameTest
             Assert::AreEqual(0, blacks);
         }
 
+        TEST_METHOD(cannot_initialize_board_with_faulty_setup) {
+            GoSetup setup;
+            setup.AddWhite(Pt(12, 1));
+            setup.AddWhite(Pt(5, 5));
+
+            Game go_game;
+            go_game.init(9, setup); // WARNING: aborts execution for now (because of invalid stones in setup)
+        }
+
         TEST_METHOD(can_override_game_with_new_board) {
             Game go_game;
             go_game.init(6);
