@@ -30,6 +30,7 @@
 #include "SgPointArray.h"
 #include "SgPointIterator.h"
 #include "SgPointSet.h"
+#include "SgBlackWhite.h"
 
 //----------------------------------------------------------------------------
 

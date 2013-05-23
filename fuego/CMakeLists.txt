@@ -8,7 +8,6 @@ FILE(GLOB fuego_sg "smartgame/*.cpp" "smartgame/*.h")
 source_group(smartgame FILES ${fuego_sg})
 
 include_directories(go smartgame gtpengine)
-
-find_package(Boost 1.52 REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
 add_library(fuego ${fuego_go} ${fuego_sg} ${fuego_gtpengine})
+
+target_link_libraries (fuego ${Boost_LIBRARIES})
