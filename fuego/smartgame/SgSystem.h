@@ -114,7 +114,7 @@ const bool SG_HEAVYCHECK = false;
 // Visual C++ already includes classes from the coming standard C++0x into
 // namespace std by default, which conflicts with classes from Boost
 // (e.g. shared_ptr). This can be disabled by defining the following macro.
-#define _HAS_CPP0X 0
+//#define _HAS_CPP0X 1
 
 // Don't report Visual C++ warning 4355 ('this' : used in base member
 // initializer list) in default warning level 3. Storing a reference to
