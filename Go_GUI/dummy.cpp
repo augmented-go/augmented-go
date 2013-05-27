@@ -87,3 +87,5 @@ int main(int argc, char *argv[]) {
     return mainQ3D(argc, argv);
 }
 //! [main]
+
+#include "dummy.moc"
