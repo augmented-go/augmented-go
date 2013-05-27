@@ -13,13 +13,14 @@ IF (NOT QT5_ROOT)
 ENDIF (NOT QT5_ROOT)
 
 # necessary for finding qt5 modules
-set (CMAKE_PREFIX_PATH ${QT5_ROOT})
+LIST(APPEND CMAKE_PREFIX_PATH ${QT5_ROOT})
 
-# Find the QtWidgets library
+# Find the Qt libraries
 find_package(Qt5OpenGL REQUIRED)
-find_package(Qt53D REQUIRED)
+# WARNING: commented out the _qt5gui_find_extra_libs command in ${QT5_ROOT}/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake
+#          to make it configure, don't know if that spawns any problems later. The project builds, so whatever...
 find_package(Qt5Widgets REQUIRED)
-
+find_package(Qt53D REQUIRED)
 
 SET(gui_SOURCE
     dummy.cpp
