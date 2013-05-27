@@ -10,6 +10,9 @@ set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME     OFF)
 find_package( Boost 1.52 COMPONENTS date_time)
 
+mark_as_advanced(Boost_DIR)
+mark_as_advanced(Boost_LIB_DIAGNOSTIC_DEFINITIONS)
+
 include_directories(${Boost_INCLUDE_DIRS})
 include(fuego/add_fuego_to_target.cmake)
 
