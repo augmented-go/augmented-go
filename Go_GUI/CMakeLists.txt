@@ -3,21 +3,21 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
-set (QT5_ROOT $ENV{QT5_ROOT} CACHE STRING "Qt5 root directory" FORCE)
+set (QT_PLUGIN_PATH $ENV{QT_PLUGIN_PATH} CACHE STRING "Qt5 plugin path" FORCE)
 
 # check if qt5 root is set
-IF (NOT QT5_ROOT)
+IF (NOT QT_PLUGIN_PATH)
   message(FATAL_ERROR
-    "QT5_ROOT environment variable has to be set to proceed."
+    "QT_PLUGIN_PATH environment variable has to be set to proceed."
   )
-ENDIF (NOT QT5_ROOT)
+ENDIF (NOT QT_PLUGIN_PATH)
 
 # necessary for finding qt5 modules
-LIST(APPEND CMAKE_PREFIX_PATH ${QT5_ROOT})
+LIST(APPEND CMAKE_PREFIX_PATH ${QT_PLUGIN_PATH}/..)
 
 # Find the Qt libraries
 find_package(Qt5OpenGL REQUIRED)
-# WARNING: commented out the _qt5gui_find_extra_libs command in ${QT5_ROOT}/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake
+# WARNING: commented out the _qt5gui_find_extra_libs command in ${QT_PLUGIN_PATH}/../lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake
 #          to make it configure, don't know if that spawns any problems later. The project builds, so whatever...
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt53D REQUIRED)
