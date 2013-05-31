@@ -1,6 +1,6 @@
 
 SET(scanner_SOURCE
-    dummy.cpp
+    Scanner.cpp
 )
 
 SET(scanner_HEADERS
