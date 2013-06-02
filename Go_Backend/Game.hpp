@@ -1,10 +1,13 @@
 // Copyright (c) 2013 augmented-go team
-// See the  file LICENSE for full license and copying terms.
+// See the file LICENSE for full license and copying terms.
 #pragma once
 
 #include "GoGame.h"
+#include <string>
+
 
 namespace GoBackend {
+using std::string;
 
 // possible states of the Game
 enum class State {
@@ -67,6 +70,14 @@ public:
      * @returns     current game state
      */
     State getState() const;
+
+    /**
+    * @brief        Writes the current game state to a sgf file.
+    *               Names for players and game are only added to the file if not empty.
+    *               Also includes the current date.
+    * @returns      false if the file could not be opened
+    */
+    bool saveGame(string file_path, string name_black = "", string name_white = "", string game_name = "");
 
 private:
     // Not implemented
