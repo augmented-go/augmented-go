@@ -2,6 +2,7 @@
 
 #include "GoSetupUtil.h"
 #include "SgGameWriter.h"
+#include "SgProp.h"
 
 #include <fstream>
 #include "boost/date_time/gregorian/gregorian.hpp" 
@@ -187,7 +188,12 @@ bool Game::saveGame(string file_path, string name_black, string name_white, stri
     _go_game.UpdateDate(date);
 
     SgGameWriter writer(file);
-    writer.WriteGame(_go_game.Root(), true, 0, 1, 19);
+
+    bool all_props = true; // all properties like player names and game name
+    int file_format = 0; // default file format
+    int game_number = SG_PROPPOINTFMT_GO; // the game of go
+    int default_size = 19; // default boardsize, never actually relevant as _go_game.Init gets always called
+    writer.WriteGame(_go_game.Root(), all_props, file_format, game_number, default_size);
 
     return true;
 }
