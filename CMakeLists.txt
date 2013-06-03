@@ -10,6 +10,8 @@ set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME     OFF)
 find_package( Boost 1.52 COMPONENTS date_time)
 
+# boost not found variables aren't displayed anymore
+# boost is found anyway, seems to be a bug or some remnant of older find_package versions
 mark_as_advanced(Boost_DIR)
 mark_as_advanced(Boost_LIB_DIAGNOSTIC_DEFINITIONS)
 
