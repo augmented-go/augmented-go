@@ -5,6 +5,8 @@ project(AugmentedGo CXX)
 # CMAKE_BINARY_DIR: The path to the top level of the build tree.
 # CMAKE_SOURCE_DIR: The path to the top level of the source tree.
 
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
 set(Boost_USE_STATIC_LIBS        ON)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME     OFF)
