@@ -1,4 +1,4 @@
-#include "Go_GUI/virtualview.h"
+#include "virtualview.h"
 #include "qglbuilder.h"
 #include "qglscenenode.h"
 #include "qglteapot.h"

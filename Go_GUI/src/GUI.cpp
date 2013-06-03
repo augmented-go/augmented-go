@@ -1,8 +1,8 @@
-#include "Go_GUI/GUI.h"
+#include "GUI.h"
 
 #include <Qt3D/qglview.h>
 #include "Qt3D/qglbuilder.h"
-#include "Go_GUI/VirtualView.h"
+#include "VirtualView.h"
 
 
 namespace Go_GUI {
