@@ -382,10 +382,6 @@ namespace GoBackendGameTest
             Assert::IsTrue(go_game.getState() == GoBackend::State::WhileCapturing);
         }
 
-        TEST_METHOD(capture_move_with_removal) {
-            Assert::IsTrue(false);
-        }
-
         TEST_METHOD(can_get_board_information) {
             // set up a board
             std::string s(  "....\n"
@@ -399,49 +395,132 @@ namespace GoBackendGameTest
             Game go_game;
             go_game.init(size, setup);
 
-            // get all the board info we need
+            // get a reference to the game board
             auto& board = go_game.getBoard();
 
-            // get current player
-            auto current_player = board.ToPlay();
-            Assert::AreEqual(SG_BLACK, current_player);
+            // get information
+            {
+                // get current player
+                auto current_player = board.ToPlay();
+                Assert::AreEqual(SG_BLACK, current_player);
 
-            // get board size
-            auto board_size = board.Size();
-            Assert::AreEqual(4, board_size);
+                // get board size
+                auto board_size = board.Size();
+                Assert::AreEqual(4, board_size);
 
-            // get move number
-            auto move_number = board.MoveNumber();
-            Assert::AreEqual(0, move_number);
+                // get move number
+                auto move_number = board.MoveNumber();
+                Assert::AreEqual(0, move_number);
 
-            // get number of captured stones for each player
-            auto num_captured_black = board.NumPrisoners(SG_BLACK);
-            Assert::AreEqual(0, num_captured_black);
+                // get number of captured stones for each player
+                auto num_captured_black = board.NumPrisoners(SG_BLACK);
+                Assert::AreEqual(0, num_captured_black);
 
-            auto num_captured_white = board.NumPrisoners(SG_WHITE);
-            Assert::AreEqual(0, num_captured_white);
+                auto num_captured_white = board.NumPrisoners(SG_WHITE);
+                Assert::AreEqual(0, num_captured_white);
 
-            // get all stone positions for each color
-            auto black_stones = board.All(SG_BLACK);
-            for (auto iter = SgSetIterator(black_stones); iter; ++iter) {
-                auto point = *iter;
+                // get all stone positions for each color
+                auto black_stones = board.All(SG_BLACK);
+                for (auto iter = SgSetIterator(black_stones); iter; ++iter) {
+                    auto point = *iter;
 
-                auto column = SgPointUtil::Col(point);
-                auto row    = SgPointUtil::Row(point);
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
 
-                Assert::AreEqual(1, column);
-                Assert::AreEqual(2, row);
+                    Assert::AreEqual(1, column);
+                    Assert::AreEqual(2, row);
+                }
+
+                auto white_stones = board.All(SG_WHITE);
+                for (auto iter = SgSetIterator(white_stones); iter; ++iter) {
+                    auto point = *iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(1, column);
+                    Assert::AreEqual(1, row);
+                }
             }
 
-            auto white_stones = board.All(SG_WHITE);
-            for (auto iter = SgSetIterator(white_stones); iter; ++iter) {
-                auto point = *iter;
+            // play a capturing move
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            "OX..");
 
-                auto column = SgPointUtil::Col(point);
-                auto row    = SgPointUtil::Row(point);
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
 
-                Assert::AreEqual(1, column);
-                Assert::AreEqual(1, row);
+            // remove the captured stone
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            ".X..");
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
+
+            // get information after the capturing move
+            {
+                // get current player
+                auto current_player = board.ToPlay();
+                Assert::AreEqual(SG_WHITE, current_player);
+
+                // get board size
+                auto board_size = board.Size();
+                Assert::AreEqual(4, board_size);
+
+                // get move number
+                auto move_number = board.MoveNumber();
+                Assert::AreEqual(1, move_number);
+
+                // get number of captured stones for each player
+                auto num_captured_black = board.NumPrisoners(SG_BLACK);
+                Assert::AreEqual(0, num_captured_black);
+
+                auto num_captured_white = board.NumPrisoners(SG_WHITE);
+                Assert::AreEqual(1, num_captured_white);
+
+                // get all stone positions for each color
+                auto black_stones = board.All(SG_BLACK);
+            
+                auto black_iter = SgSetIterator(black_stones);
+                {
+                    // first black stone
+                    auto point = *black_iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(2, column);
+                    Assert::AreEqual(1, row);
+                }
+
+                // next black stone
+                ++black_iter;
+
+                {
+                    // second black stone
+                    auto point = *black_iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(1, column);
+                    Assert::AreEqual(2, row);
+                }
+
+                // no more black stones!
+                ++black_iter;
+                Assert::IsFalse(black_iter);
+
+                // get whites stones
+                auto white_stones = board.All(SG_WHITE);
+                auto white_iter = SgSetIterator(white_stones);
+                
+                // no stones or white! :(
+                Assert::IsFalse(white_iter);
             }
         }
     };
