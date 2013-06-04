@@ -23,10 +23,14 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt53D REQUIRED)
 
 SET(gui_SOURCE
-    dummy.cpp
+    GUI.cpp
+    VirtualView.cpp
+    GUI.ui   
 )
 
 SET(gui_HEADERS
+    GUI.hpp
+    VirtualView.hpp
 )
 
 add_executable (Go_GUI ${gui_SOURCE} ${gui_HEADERS})

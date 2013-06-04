@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Go_Backend/Backend.h"
+#include "../Go_Backend/Game.hpp"
 
 #include <QtWidgets/qmainwindow>
 #include "ui_GUI.h"
