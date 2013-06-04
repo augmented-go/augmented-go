@@ -8,12 +8,17 @@
 #include "SgInit.h"
 #include "GoSetupUtil.h"
 
+// other libraries
+#include <string>
+#include <fstream>
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace GoBackendGameTest
 {
     using GoBackend::Game;
     using GoBackend::State;
     using SgPointUtil::Pt;
+    using std::string;
 
     // fuego needs those to work
     TEST_MODULE_INITIALIZE(Fugeo_Init) {
@@ -380,6 +385,51 @@ namespace GoBackendGameTest
 
         TEST_METHOD(capture_move_with_removal) {
 
+        }
+    };
+
+    TEST_CLASS(SgfTest)
+    {
+    public:
+        TEST_METHOD(save_current_game_state_as_sgf_file) {
+            string filename = "save_current_game_state_as_sgf_file.sgf";
+            std::string s(  "....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            s = "....\n"
+                "....\n"
+                "X...\n"
+                "OX..";
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
+
+            go_game.saveGame(filename);
+
+            std::ifstream file(filename);
+            std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+     
+            // probably nice to load the game back in, and check the GoGame instance..
+            Assert::IsTrue(contents.find("(;SZ[4]KM[6.5]") != string::npos);
+            Assert::IsTrue(contents.find("AB[ac]\nAW[ad];B[bd])") != string::npos);
+        }
+
+        TEST_METHOD(save_empty_game_whith_names_as_sgf_file) {
+            string filename = "save_empty_game_whith_names_as_sgf_file.sgf";
+            Game go_game;
+            go_game.init(19);
+            // always nice to not just support ascii ;)
+            go_game.saveGame(filename, "進藤ヒカル", "塔矢アキラ", "第一局");
+            
+            std::ifstream file(filename);
+            std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("(;SZ[19]KM[6.5]\nPB[進藤ヒカル]\nPW[塔矢アキラ]\nGN[第一局]") != string::npos);
         }
     };
 }
