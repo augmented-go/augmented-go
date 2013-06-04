@@ -414,15 +414,12 @@ namespace GoBackendGameTest
             auto move_number = board.MoveNumber();
             Assert::AreEqual(0, move_number);
 
-            // get num captured stones? only for last move?
-            auto num_captured_stones = board.NuCapturedStones();
-            Assert::AreEqual(0, num_captured_stones);
+            // get number of captured stones for each player
+            auto num_captured_black = board.NumPrisoners(SG_BLACK);
+            Assert::AreEqual(0, num_captured_black);
 
-            // TODO: get all captured stones? only for last move?
-            auto captured = board.CapturedStones();
-            //for (auto iter = GoPointList::Iterator(captured); iter; ++iter) {
-            //    auto& point = *iter;
-            //}
+            auto num_captured_white = board.NumPrisoners(SG_WHITE);
+            Assert::AreEqual(0, num_captured_white);
 
             // get all stone positions for each color
             auto black_stones = board.All(SG_BLACK);
