@@ -382,9 +382,70 @@ namespace GoBackendGameTest
             Assert::IsTrue(go_game.getState() == GoBackend::State::WhileCapturing);
         }
 
-
         TEST_METHOD(capture_move_with_removal) {
+            Assert::IsTrue(false);
+        }
 
+        TEST_METHOD(can_get_board_information) {
+            // set up a board
+            std::string s(  "....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // get all the board info we need
+            auto& board = go_game.getBoard();
+
+            // get current player
+            auto current_player = board.ToPlay();
+            Assert::AreEqual(SG_BLACK, current_player);
+
+            // get board size
+            auto board_size = board.Size();
+            Assert::AreEqual(4, board_size);
+
+            // get move number
+            auto move_number = board.MoveNumber();
+            Assert::AreEqual(0, move_number);
+
+            // get num captured stones? only for last move?
+            auto num_captured_stones = board.NuCapturedStones();
+            Assert::AreEqual(0, num_captured_stones);
+
+            // TODO: get all captured stones? only for last move?
+            auto captured = board.CapturedStones();
+            //for (auto iter = GoPointList::Iterator(captured); iter; ++iter) {
+            //    auto& point = *iter;
+            //}
+
+            // get all stone positions for each color
+            auto black_stones = board.All(SG_BLACK);
+            for (auto iter = SgSetIterator(black_stones); iter; ++iter) {
+                auto point = *iter;
+
+                auto column = SgPointUtil::Col(point);
+                auto row    = SgPointUtil::Row(point);
+
+                Assert::AreEqual(1, column);
+                Assert::AreEqual(2, row);
+            }
+
+            auto white_stones = board.All(SG_WHITE);
+            for (auto iter = SgSetIterator(white_stones); iter; ++iter) {
+                auto point = *iter;
+
+                auto column = SgPointUtil::Col(point);
+                auto row    = SgPointUtil::Row(point);
+
+                Assert::AreEqual(1, column);
+                Assert::AreEqual(1, row);
+            }
         }
     };
 
