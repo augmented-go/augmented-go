@@ -2,7 +2,7 @@
 #include <QApplication>
 #include "qwidget.h"
 #include "qglview.h"
-#include "QGLAbstractScene.h";
+#include "QGLAbstractScene.h"
 
 class QGLSceneNode;
 

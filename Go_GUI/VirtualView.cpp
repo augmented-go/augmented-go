@@ -1,8 +1,8 @@
-#include "virtualview.h"
+#include "virtualview.hpp"
 #include "qglbuilder.h"
 #include "qglscenenode.h"
 #include "qglteapot.h"
-#include "QGLAbstractScene.h";
+#include "QGLAbstractScene.h"
 
 void VirtualView::initializeGL(QGLPainter *painter)
 {

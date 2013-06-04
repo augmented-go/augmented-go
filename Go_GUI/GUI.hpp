@@ -3,7 +3,7 @@
 #include "../Go_Backend/Game.hpp"
 
 #include <QtWidgets/qmainwindow>
-#include "ui_GUI.h"
+#include "ui_GUI.h"			// is build while compiling GUI.ui
 
 class VirtualView;
 

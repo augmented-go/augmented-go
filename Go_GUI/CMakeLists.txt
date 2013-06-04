@@ -33,6 +33,8 @@ SET(gui_HEADERS
     VirtualView.hpp
 )
 
+add_fuego_to_target(Go_GUI)
+
 add_executable (Go_GUI ${gui_SOURCE} ${gui_HEADERS})
 #add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS})
 
