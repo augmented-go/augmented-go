@@ -1,5 +1,5 @@
 # just for user info
-set(OPENCV_DIR $ENV{OPEdNCV_DIR} CACHE STRING "opencv path" FORCE)
+set(OPENCV_DIR $ENV{OPENCV_DIR} CACHE STRING "opencv path" FORCE)
 IF(NOT OPENCV_DIR)
   message(SEND_ERROR "OPENCV_DIR environment variable has to be set to proceed.")
 ENDIF()
