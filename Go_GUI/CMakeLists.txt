@@ -22,10 +22,13 @@ find_package(Qt5OpenGL REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt53D REQUIRED)
 
+# compile Qt Designer files
+qt5_wrap_ui(ui_GUI GUI.ui)
+
 SET(gui_SOURCE
     GUI.cpp
     VirtualView.cpp
-    GUI.ui   
+    ${ui_GUI}
 )
 
 SET(gui_HEADERS
@@ -33,10 +36,15 @@ SET(gui_HEADERS
     VirtualView.hpp
 )
 
-add_fuego_to_target(Go_GUI)
+# Backend module
+include_directories (${CMAKE_SOURCE_DIR}/Go_Backend)
+link_directories (${CMAKE_BINARY_DIR}/Go_Backend)
 
-add_executable (Go_GUI ${gui_SOURCE} ${gui_HEADERS})
-#add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS})
+add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS})
+
+# Backend module libs
+target_link_libraries (Go_GUI Go_Backend)
+add_fuego_to_target(Go_GUI)
 
 # Use Qt5 modules
 qt5_use_modules(Go_GUI OpenGL 3D Widgets)

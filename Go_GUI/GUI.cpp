@@ -22,7 +22,7 @@ void GUI::init(){
 	view_small->addWidget(augmented_view);
 }
 
-void GUI::RenderGame(Go_Backend::Backend game) {
+void GUI::RenderGame(GoBackend::Game game) {
     // blaa
 	//virtual_view->show();
 	this->show(); // shows Qt5 Window

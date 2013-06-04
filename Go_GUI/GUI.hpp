@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Go_Backend/Game.hpp"
+#include "Game.hpp"
 
 #include <QtWidgets/qmainwindow>
 #include "ui_GUI.h"			// is build while compiling GUI.ui
@@ -24,7 +24,7 @@ public:
 	~GUI(){};
 
 	void init();
-    void RenderGame(Go_Backend::Backend game);
+    void RenderGame(GoBackend::Game game);
 
 private:
 	Ui::MainWindow ui;
