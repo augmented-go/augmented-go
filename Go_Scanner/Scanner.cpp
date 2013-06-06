@@ -2,6 +2,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 #include <string>
+#include <math.h>
 
 cv::Mat img0, selectedImg, temp;
 void releaseImg(cv::Mat a,int x,int y);
@@ -23,8 +24,8 @@ Rectangle Order:
 */
 
 //point coordinates
-int boardCornerX[]={100, 500, 500, 100};	
-int boardCornerY[]={100, 100, 500, 500};
+int boardCornerX[]={180, 643, 660, 157};	
+int boardCornerY[]={80, 87, 530, 525};
 int imagewidth, imageheight;
 
 int point=-1;			//currently selected point
@@ -182,6 +183,9 @@ cv::Mat warpImage()
 	selCorners[2] = cv::Point2f(boardCornerX[3], boardCornerY[3]);
 	selCorners[3] = cv::Point2f(boardCornerX[2], boardCornerY[2]);
 
+	for (int i=0; i < 4; i ++)
+		std::cout << boardCornerX[i] << " " << boardCornerY[i] << std::endl;
+
 	cv::Point2f dstCorners[4]; 
 	dstCorners[0] = cv::Point2f(0.0, 0.0);
 	dstCorners[1] = cv::Point2f(imagewidth-1, 0.0);
@@ -230,15 +234,95 @@ cv::Mat laplaceFiltering(cv::Mat warpedImgGray)
 	int ddepth = CV_16S;
 
 	cv::Laplacian( warpedImgGray, dst, ddepth, kernel_size, scale, delta, 0);
-	convertScaleAbs( dst, abs_dst);
+	convertScaleAbs(dst, abs_dst);
 
 	return abs_dst;
 }
 
+float calcBetweenAngle(cv::Vec2f v1, cv::Vec2f v2)
+{
+	float angle;
+
+	//calculate angle in radians between the 2 vectors
+	angle = acosf((v1[0]*v2[0] + v1[1]*v2[1])/(sqrtf((v1[0]*v1[0])+(v1[1]*v1[1]))*sqrtf((v2[0]*v2[0])+(v2[1]*v2[1]))));
+	
+	//to degree
+	angle = angle * (180.0f/3.14159f);
+
+	return angle;
+}
+
+void getIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>& horizontalLines, cv::vector<cv::Vec4i>& verticalLines)
+{
+	/*
+		TODO: some crooked lines will be painted... dont know why.
+	*/
+
+	cv::Vec2f baseVector, lineVector;
+
+	//baseVector
+	baseVector[0] = imagewidth;
+	baseVector[1] = 0;
+
+	for (int i = 0; i < lines.size(); i++)
+	{
+		lineVector[0] = lines[i][2] - lines[i][0];
+		lineVector[1] = lines[i][3] - lines[i][1];
+
+		float angle = calcBetweenAngle(baseVector, lineVector);
+		if(angle != 0.0f && angle != 90.0f)
+			std::cout << angle << std::endl;
+
+		//horizontal lines
+		if(angle <= 1.0f && angle >= -1.0f)
+		{
+			cv::Vec4i v = lines[i];
+			lines[i][0] = 0;
+			lines[i][1] = ((float)v[1] - v[3]) / (v[0] - v[2]) * -v[0] + v[1]; 
+			lines[i][2] = imagewidth; 
+			lines[i][3] = ((float)v[1] - v[3]) / (v[0] - v[2]) * (imagewidth - v[2]) + v[3];
+			
+			horizontalLines.push_back(lines[i]);
+		}
+		//vertical lines
+		else if(angle >= 89.5f && angle <= 90.5f)
+		{
+			cv::Vec4i v = lines[i];
+
+			// y = m*x+n
+			float m = ((float)v[1] - v[3]) / (v[0] - v[2] + 1);
+			float n = v[1] - m * v[0];
+
+			lines[i][0] = -n/m;
+			lines[i][1] = 0; 
+			lines[i][2] = (imageheight-n)/m;
+			lines[i][3] = imageheight;
+
+			verticalLines.push_back(lines[i]);
+		}
+		//other lines
+		else
+		{
+			lines.erase(lines.begin()+i);
+			std::cout << "This Line is deleted. Muahaha" << std::endl;
+			//Delete that Line. Its a false line :)
+		}
+	}
+
+}
+
 cv::Mat getBoardIntersections(cv::Mat warpedImg, int thresholdValue)
 {
+	/*TODO: Find the best results
+		Canny + HoughLinesP gives the best results.
+
+		Dont know if the filtering methods need to be used. 
+
+		threshold will be implemented for bad images
+	*/
+
 	//Set the right Threshold for the image
-	cv::Mat warpedImgGray, threshedImg;
+	cv::Mat warpedImgGray, threshedImg, sobelImg, cannyImg;
 	int const maxValue = 255;
 	int thresholdType = 4;
 
@@ -246,9 +330,24 @@ cv::Mat getBoardIntersections(cv::Mat warpedImg, int thresholdValue)
 	cv::GaussianBlur(warpedImg, warpedImg , cv::Size(3,3), 0, 0, 0);
 	cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
 
-	cv::threshold(warpedImgGray, threshedImg, thresholdValue, maxValue, thresholdType );
+	cv::Canny(warpedImgGray, cannyImg, 100, 200, 3);
+	//sobelImg = sobelFiltering(cannyImg);
+	cv::threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
 
+	cv::vector<cv::Vec4i> lines, horizontal_lines, vertival_lines;
+	cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 80, 10, 10 );
 
+	getIntersectionLines(lines, horizontal_lines, vertival_lines);
+
+	//Draw the lines
+    for( size_t i = 0; i < lines.size(); i++ )
+    {
+        cv::line(warpedImg, cv::Point(lines[i][0], lines[i][1]),
+            cv::Point(lines[i][2], lines[i][3]), cv::Scalar(0,0,255), 1, 8 );
+    }
+
+	cv::imshow("Hough Lines", warpedImg);
+	
 	return threshedImg;
 }
 
@@ -272,10 +371,13 @@ void Threshold_Debug( int, void* )
      3: Threshold to Zero
      4: Threshold to Zero Inverted
    */
+	cv::Mat sobel;
 
-  cv::threshold(Thresh, Thresh_res, threshold_value, max_BINARY_value,threshold_type );
+	sobel = sobelFiltering(Thresh);
 
-  cv::imshow( window_name_thre, Thresh_res );
+	cv::threshold(sobel, Thresh_res, threshold_value, max_BINARY_value,threshold_type );
+
+	cv::imshow( window_name_thre, Thresh_res );
 }
 
 int main(int argc, char** argv)
@@ -316,8 +418,8 @@ int main(int argc, char** argv)
 
 	else
 	{
-	cv::Mat threshedImg = getBoardIntersections(warpedImg, 110);
-	cv::imshow("Threshed Image", threshedImg);
+		cv::Mat threshedImg = getBoardIntersections(warpedImg, 255);
+		cv::imshow("Threshed Image", threshedImg);
 	}
 
 	cv::waitKey(0);
