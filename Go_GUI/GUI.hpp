@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Game.hpp"
+#include "Go_Backend/Backend.h"
 
 #include <QtWidgets/qmainwindow>
-#include "ui_GUI.h"			// is build while compiling GUI.ui
+#include <QtWidgets\qfiledialog>
+#include "ui_GUI.h"
 
 class VirtualView;
 
@@ -14,17 +15,17 @@ class GUI : public QMainWindow
 	Q_OBJECT
 
 public:
-	GUI(QWidget *parent = 0)
-		: QMainWindow(parent)
-	{
-		ui.setupUi(this);
-		this->init();
-	}
-
+	GUI(QWidget *parent = 0);
 	~GUI(){};
 
 	void init();
-    void RenderGame(GoBackend::Game game);
+    void RenderGame(Go_Backend::Backend game);
+
+//slots
+public:
+	void slot_MenuOpen(const QVariant &);
+	void slot_MenuOpen_FileSelected(const QString & file);
+	void slot_MenuExit(const QVariant &);
 
 private:
 	Ui::MainWindow ui;
