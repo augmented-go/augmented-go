@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Go_Backend/Backend.h"
+#include "Game.hpp"
 
 #include <QtWidgets/qmainwindow>
 #include <QtWidgets\qfiledialog>
@@ -19,7 +19,7 @@ public:
 	~GUI(){};
 
 	void init();
-    void RenderGame(Go_Backend::Backend game);
+	void RenderGame(GoBackend::Game game);
 
 //slots
 public:

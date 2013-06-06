@@ -1,11 +1,14 @@
-#include "GUI.h"
+#include "GUI.hpp"
+#include "Game.hpp"
 
 #include <Qt3D/qglview.h>
 #include "Qt3D/qglbuilder.h"
-#include "VirtualView.h"
+#include "VirtualView.hpp"
 #include "qgraphicsview.h"
 #include <QGraphicsPixmapItem>
 #include <QMessageBox>
+#include <QAction>
+#include <Qgridlayout>
 
 namespace Go_GUI {
 
@@ -50,7 +53,7 @@ void GUI::init(){
 	view_big->addWidget(virtual_view);
 }
 
-void GUI::RenderGame(Go_Backend::Backend game) {
+void GUI::RenderGame(GoBackend::Game game) {
     // blaa
 	//virtual_view->show();
 	this->show(); // shows Qt5 Window
