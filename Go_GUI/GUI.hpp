@@ -27,6 +27,16 @@ public:
 	void slot_MenuOpen_FileSelected(const QString & file);
 	void slot_MenuExit(const QVariant &);
 
+public slots:
+    // note: just a sample slot demonstrating a signal from the backend thread
+    void new_image() {
+        // TODO: update gui
+        printf(">>> New Image arrived! <<<\n\n");
+    }
+
+signals:
+    void stop_backend_thread();
+
 private:
 	Ui::MainWindow ui;
 };

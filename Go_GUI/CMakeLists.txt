@@ -35,15 +35,15 @@ SET(gui_HEADERS
     VirtualView.hpp
 )
 
-# Backend module
-include_directories (${CMAKE_SOURCE_DIR}/Go_Backend)
-link_directories (${CMAKE_BINARY_DIR}/Go_Backend)
-
 add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS} ${ui_GUI})
 
-# Backend module libs
-target_link_libraries (Go_GUI Go_Backend)
+# additional modules
+add_backend_to_target(Go_GUI)
 add_fuego_to_target(Go_GUI)
 
 # Use Qt5 modules
 qt5_use_modules(Go_GUI OpenGL 3D Widgets)
+
+# copies textures and models to the binary dir of Go_GUI
+file(COPY models DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY textures DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
