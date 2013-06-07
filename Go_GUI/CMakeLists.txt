@@ -43,3 +43,7 @@ add_fuego_to_target(Go_GUI)
 
 # Use Qt5 modules
 qt5_use_modules(Go_GUI OpenGL 3D Widgets)
+
+# copies textures and models to the binary dir of Go_GUI
+file(COPY models DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY textures DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

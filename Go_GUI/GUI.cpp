@@ -32,7 +32,7 @@ void GUI::init(){
 	
 	QGraphicsView* graphics_view = central->findChild<QGraphicsView *>("graphicsView");
 
-	QString filename = QString("../Go_GUI/models/white_stone.png");
+	QString filename = QString("../Go_GUI/textures/white_stone.png");
 	QImage* image = new QImage(filename);
 	if (!image->load(filename)){
 		QMessageBox m;
