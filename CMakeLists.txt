@@ -17,7 +17,6 @@ add_subdirectory(fuego)
 add_subdirectory(Go_AugmentedReality)
 add_subdirectory(Go_Backend)
 add_subdirectory(Go_GUI)
-add_subdirectory(Go_GUI_Test)
 add_subdirectory(Go_Scanner)
 add_subdirectory(Go_VirtualReality)
 
