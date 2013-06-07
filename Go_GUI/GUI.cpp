@@ -32,7 +32,7 @@ void GUI::init(){
 	
 	QGraphicsView* graphics_view = central->findChild<QGraphicsView *>("graphicsView");
 
-	QString filename = QString("../Go_GUI/models/white_stone.png");
+	QString filename = QString("../Go_GUI/textures/white_stone.png");
 	QImage* image = new QImage(filename);
 	if (!image->load(filename)){
 		QMessageBox m;
@@ -49,7 +49,6 @@ void GUI::init(){
 	//graphics_view->setScene(scene);
 	
 	QWidget* virtual_view = QWidget::createWindowContainer(new VirtualView());
-
 	view_big->addWidget(virtual_view);
 }
 
@@ -80,10 +79,11 @@ void GUI::slot_MenuOpen_FileSelected(const QString & file){
 }
 
 void GUI::slot_MenuExit(const QVariant &){
-	QMessageBox::StandardButton reply;
-	//reply = QMessageBox::question(this, "Quit?", "You really want to quit?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
-	if (reply == QMessageBox::StandardButton::Yes)
+	auto reply = QMessageBox::question(this, "Quit?", "You really want to quit?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
+	if (reply == QMessageBox::StandardButton::Yes) {
+        emit stop_backend_thread();
 		this->close();
+    }
 	else
 		return; // do nothing
 }
