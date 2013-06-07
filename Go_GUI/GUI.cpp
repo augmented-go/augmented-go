@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QAction>
 #include <Qgridlayout>
+#include <QCloseEvent>
 
 namespace Go_GUI {
 
@@ -86,6 +87,12 @@ void GUI::slot_MenuExit(const QVariant &){
     }
 	else
 		return; // do nothing
+}
+
+// override
+void GUI::closeEvent(QCloseEvent *event){
+	emit stop_backend_thread();
+	event->accept();
 }
 
 } // namespace Go_GUI

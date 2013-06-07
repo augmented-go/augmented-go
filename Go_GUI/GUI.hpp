@@ -20,6 +20,7 @@ public:
 
 	void init();
 	void RenderGame(GoBackend::Game game);
+	void closeEvent(QCloseEvent *event);
 
 //slots
 public:
