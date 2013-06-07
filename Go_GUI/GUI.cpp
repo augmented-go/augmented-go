@@ -67,17 +67,16 @@ void GUI::RenderGame(GoBackend::Game game) {
 
 
 void GUI::slot_MenuOpen(const QVariant &){
-	QFileDialog* open_file_dialog = new QFileDialog();
-	// first connect FileDialog to event_OpenFileSelected function THEN execute FileDialog!
-	connect(open_file_dialog, &QFileDialog::fileSelected, this, &GUI::slot_MenuOpen_FileSelected);
-	open_file_dialog->exec();	// executed FileDialog	
+	QString selfilter = tr("SGF (*.sgf)");
+	QString fileName = QFileDialog::getOpenFileName(
+        this,
+        "open sgf-file",
+        NULL,
+        tr("SGF (*.sgf)" ),
+        &selfilter 
+	);
 }
 
-void GUI::slot_MenuOpen_FileSelected(const QString & file){
-	QMessageBox m;
-	m.setText(file + " selected !");
-	m.exec();
-}
 
 // override
 void GUI::closeEvent(QCloseEvent *event){
