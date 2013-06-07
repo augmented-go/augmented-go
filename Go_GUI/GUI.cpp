@@ -49,7 +49,6 @@ void GUI::init(){
 	//graphics_view->setScene(scene);
 	
 	QWidget* virtual_view = QWidget::createWindowContainer(new VirtualView());
-
 	view_big->addWidget(virtual_view);
 }
 
@@ -80,10 +79,11 @@ void GUI::slot_MenuOpen_FileSelected(const QString & file){
 }
 
 void GUI::slot_MenuExit(const QVariant &){
-	QMessageBox::StandardButton reply;
-	//reply = QMessageBox::question(this, "Quit?", "You really want to quit?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
-	if (reply == QMessageBox::StandardButton::Yes)
+	auto reply = QMessageBox::question(this, "Quit?", "You really want to quit?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
+	if (reply == QMessageBox::StandardButton::Yes) {
+        emit stop_backend_thread();
 		this->close();
+    }
 	else
 		return; // do nothing
 }
