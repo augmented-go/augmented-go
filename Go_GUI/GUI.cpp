@@ -1,3 +1,5 @@
+#include <string>
+
 #include "GUI.hpp"
 #include "Game.hpp"
 
@@ -19,9 +21,11 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
 	this->init();
 	QAction* menuitem_open = this->findChild<QAction *>("actionOpen");
 	QAction* menuitem_exit = this->findChild<QAction *>("actionExit");
+	QAction* menuitem_info = this->findChild<QAction *>("actionInfo");
 
 	connect(menuitem_open, &QAction::triggered, this, &GUI::slot_MenuOpen);
 	connect(menuitem_exit, &QAction::triggered, this, &GUI::close);
+	connect(menuitem_info, &QAction::triggered, this, &GUI::slot_MenuInfo);
 }
 
 void GUI::init(){
@@ -75,6 +79,26 @@ void GUI::slot_MenuOpen(const QVariant &){
         tr("SGF (*.sgf)" ),
         &selfilter 
 	);
+}
+
+void GUI::slot_MenuInfo(const QVariant &){
+	// Appliction Info
+	std::string output = "Augmented Go - Interactive Game of Go as Augmented Reality Application\n\n\n";
+
+	// Build date and time
+	output += "This build of Augmented Go was compiled at " __DATE__ ", " __TIME__ ".\n";
+
+	// Copyright
+	std::string year = __DATE__;
+	year = year.substr(year.find_last_of(" "));	// deleting day and month
+	output += "Copyright " + year + "\n";
+
+	// Licence
+	output += "\nThis software is released under the \"MIT License\".\n"
+		"See the file LICENSE for full license and copying terms.\n";
+
+	// Final InfoBox
+	QMessageBox::about(this, "Info", output.c_str());
 }
 
 

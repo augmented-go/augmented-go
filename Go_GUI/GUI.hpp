@@ -25,6 +25,7 @@ public:
 //slots
 public:
 	void slot_MenuOpen(const QVariant &);
+	void slot_MenuInfo(const QVariant &);
 
 public slots:
     // note: just a sample slot demonstrating a signal from the backend thread
