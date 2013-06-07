@@ -21,7 +21,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
 	QAction* menuitem_exit = this->findChild<QAction *>("actionExit");
 
 	connect(menuitem_open, &QAction::triggered, this, &GUI::slot_MenuOpen);
-	connect(menuitem_exit, &QAction::triggered, this, &GUI::slot_MenuExit);
+	connect(menuitem_exit, &QAction::triggered, this, &GUI::close);
 }
 
 void GUI::init(){
@@ -79,20 +79,15 @@ void GUI::slot_MenuOpen_FileSelected(const QString & file){
 	m.exec();
 }
 
-void GUI::slot_MenuExit(const QVariant &){
+// override
+void GUI::closeEvent(QCloseEvent *event){
 	auto reply = QMessageBox::question(this, "Quit?", "You really want to quit?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
 	if (reply == QMessageBox::StandardButton::Yes) {
         emit stop_backend_thread();
-		this->close();
+		event->accept();
     }
 	else
-		return; // do nothing
-}
-
-// override
-void GUI::closeEvent(QCloseEvent *event){
-	emit stop_backend_thread();
-	event->accept();
+		event->ignore();
 }
 
 } // namespace Go_GUI

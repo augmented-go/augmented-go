@@ -26,7 +26,6 @@ public:
 public:
 	void slot_MenuOpen(const QVariant &);
 	void slot_MenuOpen_FileSelected(const QString & file);
-	void slot_MenuExit(const QVariant &);
 
 public slots:
     // note: just a sample slot demonstrating a signal from the backend thread
