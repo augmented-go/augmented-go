@@ -28,11 +28,13 @@ qt5_wrap_ui(ui_GUI GUI.ui)
 SET(gui_SOURCE
     GUI.cpp
     VirtualView.cpp
+    ResourceHelper.cpp
 )
 
 SET(gui_HEADERS
     GUI.hpp
     VirtualView.hpp
+    ResourceHelper.hpp
 )
 
 add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS} ${ui_GUI})

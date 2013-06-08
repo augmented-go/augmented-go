@@ -1,15 +1,18 @@
 #include "GUI.hpp"
-#include "Game.hpp"
 
 #include <Qt3D/qglview.h>
-#include "Qt3D/qglbuilder.h"
-#include "VirtualView.hpp"
-#include "qgraphicsview.h"
+#include <Qt3D/qglbuilder.h>
+#include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 #include <QMessageBox>
 #include <QAction>
 #include <Qgridlayout>
 #include <QCloseEvent>
+
+#include "VirtualView.hpp"
+#include "Game.hpp"
+#include "ResourceHelper.hpp"
+
 
 namespace Go_GUI {
 
@@ -33,7 +36,7 @@ void GUI::init(){
 	
 	QGraphicsView* graphics_view = central->findChild<QGraphicsView *>("graphicsView");
 
-	QString filename = QString("../Go_GUI/textures/white_stone.png");
+	QString filename = generateResourcePath("/res/textures/white_stone.png");
 	QImage* image = new QImage(filename);
 	if (!image->load(filename)){
 		QMessageBox m;

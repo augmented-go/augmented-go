@@ -6,6 +6,8 @@
 
 class QGLSceneNode;
 
+namespace Go_GUI {
+
 class VirtualView : public QGLView
 {
     Q_OBJECT
@@ -23,3 +25,5 @@ private:
 	QGLSceneNode* m_main;
 	QQuaternion m_pose;
 };
+
+}
