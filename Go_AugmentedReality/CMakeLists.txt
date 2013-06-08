@@ -32,3 +32,5 @@ add_gui_to_target(Go_AugmentedReality)
 
 # Use Qt5 modules
 qt5_use_modules(Go_AugmentedReality OpenGL 3D Widgets)
+
+configure_target(Go_AugmentedReality)
