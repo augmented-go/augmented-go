@@ -1,6 +1,7 @@
 #include "BackendThread.hpp"
 
-#include <qdebug.h>
+#include <QDebug>
+#include <QImage>
 
 namespace Go_AR {
 
@@ -41,10 +42,15 @@ void BackendThread::scan() {
     // update game state
     _game->update(setup);
 
-    qDebug() << "Scan finished! new image available!";
+    qDebug() << "\nScan finished! new image available!";
     
+    const auto testparam = std::make_shared<QImage>(200, 400, QImage::Format::Format_RGB32);
+
     // send signal to gui
-    emit backend_new_image();
+    emit backend_new_image(testparam);
+
+    // send board data to gui
+    emit game_data_changed(&(_game->getBoard()));
 }
 
 } // namespace Go_AR

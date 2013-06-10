@@ -30,9 +30,13 @@ public:
 
 public slots:
     // note: just a sample slot demonstrating a signal from the backend thread
-    void new_image() {
+    void new_image(const std::shared_ptr<QImage> param) {
         // TODO: update gui
-        printf(">>> New Image arrived! <<<\n\n");
+        printf(">>> New Image arrived! '%d x %d' <<<\n", param->width(), param->height());
+    }
+
+    void new_game_data(const GoBoard * game_board) {
+        printf(">>> New Game data! 'Movenum: %d' <<<\n", game_board->MoveNumber());
     }
 
 signals:

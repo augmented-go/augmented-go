@@ -47,7 +47,8 @@ namespace Go_AR {
         void scan();
         
     signals:
-        void backend_new_image();
+        void backend_new_image(const std::shared_ptr<QImage> camera_image);
+        void game_data_changed(const GoBoard * game_board);
 
     // Member vars    
     private:
