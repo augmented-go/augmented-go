@@ -1,5 +1,7 @@
 #include "BackendThread.hpp"
 
+#include <iostream>
+
 #include <QDebug>
 #include <QImage>
 
@@ -55,5 +57,25 @@ void BackendThread::scan() {
     // as long as the GUI says so
     emit game_data_changed(&(_game->getBoard()));
 }
+
+void BackendThread::save_sgf(QString path) const {
+    auto filepath = path.toStdString();
+
+    if (!_game->saveGame(filepath))
+        std::cout << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
+}
+
+void BackendThread::pass(SgBlackWhite player) {
+    assert(!"Passing is not yet implemented");
+}
+
+void BackendThread::reset() {
+    assert(!"Resetting a game is not yet implemented");
+}
+
+void BackendThread::finish() {
+    assert(!"Ending a game is not yet implemented");
+}
+
 
 } // namespace Go_AR

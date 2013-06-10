@@ -42,6 +42,10 @@ namespace Go_AR {
     // signals and slots
     public slots:
         void backend_stop();
+        void save_sgf(QString path) const;
+        void pass(SgBlackWhite player);
+        void reset();
+        void finish();
         
     private slots:
         void scan();
