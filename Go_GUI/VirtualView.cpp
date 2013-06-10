@@ -5,15 +5,13 @@
 #include <QGlTeapot>
 #include <QGLAbstractScene>
 
-#include "ResourceHelper.hpp"
-
 namespace Go_GUI {
 
 void VirtualView::initializeGL(QGLPainter *painter)
 {
     Q_UNUSED(painter);
 
-    this->m_scene = QGLAbstractScene::loadScene(generateResourcePath("/res/models/example_board.3ds"));
+    this->m_scene = QGLAbstractScene::loadScene("res/models/example_board.3ds");
 
 	QGLSceneNode* scene_camera = this->m_scene->mainNode()->findChild<QGLSceneNode *>("Camera001");
 	QString s = QString::number(scene_camera->position().y());
