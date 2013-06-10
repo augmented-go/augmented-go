@@ -48,13 +48,16 @@ public:
      * @brief       Initializes the game board with given size and setup (starting positions)
      * @param[in]   size    board size (size x size)
      * @param[in]   setup   initial board setup
+     * @returns     false - the setup contains invalid stones\n
+     *              true  - init successful
      */
-    void init(int size, GoSetup setup = GoSetup());
+    bool init(int size, GoSetup setup = GoSetup());
 
     /**
      * @brief       Updates the game with the given setup. Tries to extract a valid move from the setup.
      *              Modifies the internal game state if no valid move was found.
-     *              Note: Ignores current player information in setup.
+     *              Note: Ignores current player information in setup. Also ignores setups with invalid stones!
+     *              These will be silently skipped.
      * @param[in]   setup   new board setup
      */
     void update(GoSetup setup);
@@ -92,6 +95,9 @@ private:
     //void updateWhileCapturing(SgPointSet added_blacks, SgPointSet added_whites, 
     //                          SgPointSet removed_blacks, SgPointSet removed_whites);
     void updateInvalid(GoSetup new_setup);
+
+    bool validSetup(const GoSetup& setup) const;
+    bool allValidPoints(const SgPointSet& stones) const;
 
 private:
     GoGame _go_game;
