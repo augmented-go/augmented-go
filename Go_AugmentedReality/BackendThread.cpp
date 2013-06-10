@@ -50,6 +50,9 @@ void BackendThread::scan() {
     emit backend_new_image(testparam);
 
     // send board data to gui
+    // the GUI controls the lifetime of this thread,
+    // so passing a pointer to the GoBoard is safe and won't be invalidated
+    // as long as the GUI says so
     emit game_data_changed(&(_game->getBoard()));
 }
 
