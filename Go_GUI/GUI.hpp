@@ -36,7 +36,21 @@ public slots:
     }
 
     void new_game_data(const GoBoard * game_board) {
-        printf(">>> New Game data! 'Movenum: %d' <<<\n", game_board->MoveNumber());
+        auto current_turn = game_board->MoveNumber();
+        auto current_player = game_board->ToPlay();
+        switch (current_player) {
+        case SG_WHITE:
+            break;
+        case SG_BLACK:
+            break;
+        default:
+            assert(false);
+        }
+        
+        auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
+        auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
+
+        printf(">>> New Game data! <<<\n");
     }
 
 signals:
