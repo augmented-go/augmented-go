@@ -32,6 +32,26 @@ int point=-1;			//currently selected point
 int nop=4;				//number of points
 
 
+struct HorizontalOperator
+{
+	bool operator()(const int &lhs, const int &rhs) const 
+	{
+		int distance = abs(lhs - rhs);
+
+		return distance > ((1/18) * imageheight);
+	}
+};
+
+struct VerticalOperator
+{
+	bool operator()(const int &lhs, const int &rhs) const 
+	{
+		int distance = abs(lhs - rhs);
+
+		return distance > ((1/18) * imagewidth);
+	}
+};
+
 void mouseHandler(int event, int x, int y, int flags, void *param)
 {
 
@@ -311,6 +331,43 @@ void getIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>& h
 
 }
 
+cv::vector<int> getHorizontalBoardLines(cv::vector<cv::Vec4i>& lines)
+{
+	//Horizontal Lines. X is 0 or the width of the picture. 
+	cv::vector<int> lineStarts(lines.size());
+	cv::vector<int> resultStarts;
+
+	for(int i=0; i<lines.size(); i++)
+	{
+		lineStarts[i] = lines[i][1];
+	}
+
+
+	// clustering of linedata
+	cv::partition<int, HorizontalOperator>(lineStarts, resultStarts);
+
+
+		for(int i=0; i<resultStarts.size(); i++)
+		{
+			std::cout << resultStarts[i] << " " << lineStarts[i] << std::endl;
+		}
+	/*
+	int sum_x1=0, sum_y1=0;
+	int sum_x2=0, sum_y2=0;
+
+	for(int i=0; i<lines.size; i++)
+	{
+		sum_x1 += lines[i][0]; 
+		sum_y1 += lines[i][1];
+		sum_x2 += lines[i][2]; 
+		sum_y2 += lines[i][3];
+	}
+
+	*/
+
+	return resultStarts;
+}
+
 cv::Mat getBoardIntersections(cv::Mat warpedImg, int thresholdValue)
 {
 	/*TODO: Find the best results
@@ -334,10 +391,12 @@ cv::Mat getBoardIntersections(cv::Mat warpedImg, int thresholdValue)
 	//sobelImg = sobelFiltering(cannyImg);
 	cv::threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
 
-	cv::vector<cv::Vec4i> lines, horizontal_lines, vertival_lines;
+	cv::vector<cv::Vec4i> lines, horizontalLines, verticalLines;
 	cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 80, 10, 10 );
 
-	getIntersectionLines(lines, horizontal_lines, vertival_lines);
+	getIntersectionLines(lines, horizontalLines, verticalLines);
+
+	cv::vector<int> horizontalLinesGrouped = getHorizontalBoardLines(horizontalLines);
 
 	//Draw the lines
     for( size_t i = 0; i < lines.size(); i++ )
