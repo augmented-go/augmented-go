@@ -8,12 +8,17 @@
 #include "SgInit.h"
 #include "GoSetupUtil.h"
 
+// other libraries
+#include <string>
+#include <fstream>
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace GoBackendGameTest
 {
     using GoBackend::Game;
     using GoBackend::State;
     using SgPointUtil::Pt;
+    using std::string;
 
     // fuego needs those to work
     TEST_MODULE_INITIALIZE(Fugeo_Init) {
@@ -377,9 +382,191 @@ namespace GoBackendGameTest
             Assert::IsTrue(go_game.getState() == GoBackend::State::WhileCapturing);
         }
 
+        TEST_METHOD(can_get_board_information) {
+            // set up a board
+            std::string s(  "....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
 
-        TEST_METHOD(capture_move_with_removal) {
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
 
+            Game go_game;
+            go_game.init(size, setup);
+
+            // get a reference to the game board
+            auto& board = go_game.getBoard();
+
+            // get information
+            {
+                // get current player
+                auto current_player = board.ToPlay();
+                Assert::AreEqual(SG_BLACK, current_player);
+
+                // get board size
+                auto board_size = board.Size();
+                Assert::AreEqual(4, board_size);
+
+                // get move number
+                auto move_number = board.MoveNumber();
+                Assert::AreEqual(0, move_number);
+
+                // get number of captured stones for each player
+                auto num_captured_black = board.NumPrisoners(SG_BLACK);
+                Assert::AreEqual(0, num_captured_black);
+
+                auto num_captured_white = board.NumPrisoners(SG_WHITE);
+                Assert::AreEqual(0, num_captured_white);
+
+                // get all stone positions for each color
+                auto black_stones = board.All(SG_BLACK);
+                for (auto iter = SgSetIterator(black_stones); iter; ++iter) {
+                    auto point = *iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(1, column);
+                    Assert::AreEqual(2, row);
+                }
+
+                auto white_stones = board.All(SG_WHITE);
+                for (auto iter = SgSetIterator(white_stones); iter; ++iter) {
+                    auto point = *iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(1, column);
+                    Assert::AreEqual(1, row);
+                }
+            }
+
+            // play a capturing move
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            "OX..");
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
+
+            // remove the captured stone
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            ".X..");
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
+
+            // get information after the capturing move
+            {
+                // get current player
+                auto current_player = board.ToPlay();
+                Assert::AreEqual(SG_WHITE, current_player);
+
+                // get board size
+                auto board_size = board.Size();
+                Assert::AreEqual(4, board_size);
+
+                // get move number
+                auto move_number = board.MoveNumber();
+                Assert::AreEqual(1, move_number);
+
+                // get number of captured stones for each player
+                auto num_captured_black = board.NumPrisoners(SG_BLACK);
+                Assert::AreEqual(0, num_captured_black);
+
+                auto num_captured_white = board.NumPrisoners(SG_WHITE);
+                Assert::AreEqual(1, num_captured_white);
+
+                // get all stone positions for each color
+                auto black_stones = board.All(SG_BLACK);
+            
+                auto black_iter = SgSetIterator(black_stones);
+                {
+                    // first black stone
+                    auto point = *black_iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(2, column);
+                    Assert::AreEqual(1, row);
+                }
+
+                // next black stone
+                ++black_iter;
+
+                {
+                    // second black stone
+                    auto point = *black_iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(1, column);
+                    Assert::AreEqual(2, row);
+                }
+
+                // no more black stones!
+                ++black_iter;
+                Assert::IsFalse(black_iter);
+
+                // get whites stones
+                auto white_stones = board.All(SG_WHITE);
+                auto white_iter = SgSetIterator(white_stones);
+                
+                // no stones or white! :(
+                Assert::IsFalse(white_iter);
+            }
+        }
+    };
+
+    TEST_CLASS(SgfTest)
+    {
+    public:
+        TEST_METHOD(save_current_game_state_as_sgf_file) {
+            string filename = "save_current_game_state_as_sgf_file.sgf";
+            std::string s(  "....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            s = "....\n"
+                "....\n"
+                "X...\n"
+                "OX..";
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
+
+            go_game.saveGame(filename);
+
+            std::ifstream file(filename);
+            std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+     
+            // probably nice to load the game back in, and check the GoGame instance..
+            Assert::IsTrue(contents.find("(;SZ[4]KM[6.5]") != string::npos);
+            Assert::IsTrue(contents.find("AB[ac]\nAW[ad];B[bd])") != string::npos);
+        }
+
+        TEST_METHOD(save_empty_game_whith_names_as_sgf_file) {
+            string filename = "save_empty_game_whith_names_as_sgf_file.sgf";
+            Game go_game;
+            go_game.init(19);
+            // always nice to not just support ascii ;)
+            go_game.saveGame(filename, "進藤ヒカル", "塔矢アキラ", "第一局");
+            
+            std::ifstream file(filename);
+            std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("(;SZ[19]KM[6.5]\nPB[進藤ヒカル]\nPW[塔矢アキラ]\nGN[第一局]") != string::npos);
         }
     };
 }

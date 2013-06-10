@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8.9)
 
 project(AugmentedGo CXX)
 
@@ -10,11 +10,17 @@ set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME     OFF)
 find_package( Boost 1.52 COMPONENTS date_time)
 
+# boost not found variables aren't displayed anymore
+# boost is found anyway, seems to be a bug or some remnant of older find_package versions
 mark_as_advanced(Boost_DIR)
 mark_as_advanced(Boost_LIB_DIAGNOSTIC_DEFINITIONS)
 
 include_directories(${Boost_INCLUDE_DIRS})
-include(fuego/add_fuego_to_target.cmake)
+
+# our custom cmake functions/macros
+include(cmake/add_fuego_to_target.cmake)
+include(cmake/add_backend_to_target.cmake)
+include(cmake/add_gui_to_target.cmake)
 
 add_subdirectory(fuego)
 add_subdirectory(Go_AugmentedReality)

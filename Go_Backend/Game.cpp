@@ -1,6 +1,11 @@
 #include "Game.hpp"
 
 #include "GoSetupUtil.h"
+#include "SgGameWriter.h"
+#include "SgProp.h"
+
+#include <fstream>
+#include "boost/date_time/gregorian/gregorian.hpp" 
 
 namespace GoBackend {
 Game::Game()
@@ -162,4 +167,34 @@ void Game::updateInvalid(GoSetup new_setup) {
     }
 }
 
+bool Game::saveGame(string file_path, string name_black, string name_white, string game_name) {
+    using boost::gregorian::day_clock;
+    using boost::gregorian::to_simple_string;
+
+    std::ofstream file(file_path.c_str());
+    if (!file.is_open()) {
+        return false;
+    }
+    
+    if (!name_black.empty())
+        _go_game.UpdatePlayerName(SG_BLACK, name_black);
+    if (!name_white.empty())
+        _go_game.UpdatePlayerName(SG_WHITE, name_white);
+    if (!game_name.empty())
+        _go_game.UpdateGameName(game_name);
+
+    // current date
+    string date = to_simple_string(day_clock::local_day());
+    _go_game.UpdateDate(date);
+
+    SgGameWriter writer(file);
+
+    bool all_props = true; // all properties like player names and game name
+    int file_format = 0; // default file format
+    int game_number = SG_PROPPOINTFMT_GO; // the game of go
+    int default_size = 19; // default boardsize, never actually relevant as _go_game.Init gets always called
+    writer.WriteGame(_go_game.Root(), all_props, file_format, game_number, default_size);
+
+    return true;
+}
 }
