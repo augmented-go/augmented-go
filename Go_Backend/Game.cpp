@@ -1,11 +1,13 @@
 #include "Game.hpp"
 
+#include <fstream>
+#include <iostream>
+
+#include <boost/date_time/gregorian/gregorian.hpp>
+
 #include "GoSetupUtil.h"
 #include "SgGameWriter.h"
 #include "SgProp.h"
-
-#include <fstream>
-#include "boost/date_time/gregorian/gregorian.hpp" 
 
 namespace GoBackend {
 Game::Game()
@@ -13,19 +15,45 @@ Game::Game()
     _current_state(State::Valid)
 {}
 
-void Game::init(int size, GoSetup setup) {
+bool Game::validSetup(const GoSetup& setup) const {
+    if (!allValidPoints(setup.m_stones[SG_BLACK])
+        || !allValidPoints(setup.m_stones[SG_WHITE]))
+        return false;
+    return true;
+}
+
+bool Game::allValidPoints(const SgPointSet& stones) const {
+    auto& board = getBoard();
+
+    // check all stones
+    for (auto iter = SgSetIterator(stones); iter; ++iter) {
+        auto point = *iter;
+
+        if (!board.IsValidPoint(point))
+            return false;
+    }
+
+    return true;
+}
+
+bool Game::init(int size, GoSetup setup) {
     // assert valid board size
     assert(size < 20 && size > 1);
 
     _go_game.Init(size, GoRules());
 
-    // @Todo: check if setup contains only valid stones!
+    // check if setup contains only valid stones!
+    if (!validSetup(setup)) {
+        std::cout << __TIMESTAMP__ << "[" << __FUNCTION__ << "] " << " GoSetup contains invalid stones! Skipping..." << std::endl;
+        return false;
+    }
 
     // a SgBWArray<SgPointSet> is essentially the same as a SgBWSet
     // but SetupPosition wants a SbBWArray...
     _go_game.SetupPosition(SgBWArray<SgPointSet>(setup.m_stones[SG_BLACK], setup.m_stones[SG_WHITE]));
 
     _current_state = State::Valid;
+    return true;
 }
 
 const GoBoard& Game::getBoard() const {
@@ -37,7 +65,13 @@ State Game::getState() const {
 }
 
 void Game::update(GoSetup setup) {
-    // @Todo: check if setup contains only valid stones!
+    // check if setup contains only valid stones!
+    if (!validSetup(setup)) {
+        std::cout << __TIMESTAMP__ << " [" << __FUNCTION__ << "] " << " GoSetup contains invalid stones! Skipping..." << std::endl;
+
+        // "silenty" skip this update (besides the debug output)
+        return;
+    }
 
     // get new and current stones
     auto new_blacks = setup.m_stones[SG_BLACK];
