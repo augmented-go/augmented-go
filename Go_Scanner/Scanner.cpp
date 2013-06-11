@@ -26,29 +26,30 @@ Rectangle Order:
 //point coordinates
 int boardCornerX[]={180, 643, 660, 157};	
 int boardCornerY[]={80, 87, 530, 525};
-int imagewidth, imageheight;
+int imagewidth = 768;
+int imageheight = 576;
+
 
 int point=-1;			//currently selected point
 int nop=4;				//number of points
 
-
-struct HorizontalOperator
+struct PartitionOperator
 {
-	bool operator()(const int &lhs, const int &rhs) const 
-	{
-		int distance = abs(lhs - rhs);
+	int sidesize;
 
-		return distance > ((1/18) * imageheight);
+	PartitionOperator(int size)
+	{
+		sidesize = size;
 	}
-};
 
-struct VerticalOperator
-{
-	bool operator()(const int &lhs, const int &rhs) const 
+	bool operator()(const int &a, const int &b) const 
 	{
-		int distance = abs(lhs - rhs);
+		int distance = a - b;
+		distance = abs(distance);
 
-		return distance > ((1/18) * imagewidth);
+		int boardfield = ((1.0f/18.0f) * sidesize)/3.0f;
+
+		return distance < boardfield;
 	}
 };
 
@@ -335,22 +336,32 @@ cv::vector<int> getHorizontalBoardLines(cv::vector<cv::Vec4i>& lines)
 {
 	//Horizontal Lines. X is 0 or the width of the picture. 
 	cv::vector<int> lineStarts(lines.size());
-	cv::vector<int> resultStarts;
+	cv::vector<int> resultStarts(lines.size());
 
 	for(int i=0; i<lines.size(); i++)
 	{
 		lineStarts[i] = lines[i][1];
 	}
 
-
 	// clustering of linedata
-	cv::partition<int, HorizontalOperator>(lineStarts, resultStarts);
+	PartitionOperator horizontalOper(imageheight);
+	int clusterNum = cv::partition<int, PartitionOperator>(lineStarts, resultStarts, horizontalOper);
 
 
-		for(int i=0; i<resultStarts.size(); i++)
-		{
-			std::cout << resultStarts[i] << " " << lineStarts[i] << std::endl;
-		}
+	// put the lines in there cluster
+	cv::vector<cv::vector<int>> clusteredLines(clusterNum);
+
+	for(int i = 0; i < clusterNum; i++)
+	{
+		int j;
+		resultStarts[i] = j;
+
+		clusteredLines[j].push_back(lineStarts[i]);
+
+		//TODO: middle the lines and create 19 perfect new lines. 
+
+	}
+
 	/*
 	int sum_x1=0, sum_y1=0;
 	int sum_x2=0, sum_y2=0;
@@ -443,9 +454,6 @@ int main(int argc, char** argv)
 {
 	//TODO: Get imagewidth and size automatically
 	img0 = cv::imread("go_bilder/01.jpg");
-
-	imagewidth = 768;
-	imageheight = 576;
 
 	cv::namedWindow(windowName, CV_WINDOW_AUTOSIZE);
 	cv::setMouseCallback(windowName, mouseHandler, NULL);
