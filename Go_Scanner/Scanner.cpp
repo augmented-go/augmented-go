@@ -33,6 +33,8 @@ int imageheight = 576;
 int point=-1;			//currently selected point
 int nop=4;				//number of points
 
+enum lineType{HORIZONTAL, VERTICAL};
+
 struct PartitionOperator
 {
 	int sidesize;
@@ -332,51 +334,78 @@ void getIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>& h
 
 }
 
-cv::vector<int> getHorizontalBoardLines(cv::vector<cv::Vec4i>& lines)
+cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
 {
+	int valueIndex, imagesizeIndex, zeroIndex, imagesize;
+
+	if(type == VERTICAL)
+	{
+		valueIndex = 0;
+		imagesizeIndex = 3;
+		zeroIndex = 1;
+		imagesize = imageheight;
+	}
+	else if (type == HORIZONTAL)
+	{
+		valueIndex = 1;
+		imagesizeIndex = 2;
+		zeroIndex = 0;
+		imagesize = imagewidth;
+	}
+
 	//Horizontal Lines. X is 0 or the width of the picture. 
 	cv::vector<int> lineStarts(lines.size());
 	cv::vector<int> resultStarts(lines.size());
 
 	for(int i=0; i<lines.size(); i++)
 	{
-		lineStarts[i] = lines[i][1];
+		lineStarts[i] = lines[i][valueIndex];
 	}
 
 	// clustering of linedata
-	PartitionOperator horizontalOper(imageheight);
-	int clusterNum = cv::partition<int, PartitionOperator>(lineStarts, resultStarts, horizontalOper);
+	PartitionOperator Oper(imagesize);
+	int clusterNum = cv::partition<int, PartitionOperator>(lineStarts, resultStarts, Oper);
 
 
 	// put the lines in there cluster
-	cv::vector<cv::vector<int>> clusteredLines(clusterNum);
+	cv::vector<cv::vector<int>> clusteredLineStarts(clusterNum);
 
-	for(int i = 0; i < clusterNum; i++)
+	for(int i = 0; i < resultStarts.size(); i++)
 	{
-		int j;
-		resultStarts[i] = j;
+		int j = resultStarts[i];
 
-		clusteredLines[j].push_back(lineStarts[i]);
-
-		//TODO: middle the lines and create 19 perfect new lines. 
-
+		clusteredLineStarts[j].push_back(lineStarts[i]);
 	}
 
-	/*
-	int sum_x1=0, sum_y1=0;
-	int sum_x2=0, sum_y2=0;
+	// middle the lines
+	cv::vector<cv::Vec4i> middledLines;
+	cv::Vec4i middle;
 
-	for(int i=0; i<lines.size; i++)
+	for(int i=0; i < clusterNum; i++)
 	{
-		sum_x1 += lines[i][0]; 
-		sum_y1 += lines[i][1];
-		sum_x2 += lines[i][2]; 
-		sum_y2 += lines[i][3];
+		int numLines = clusteredLineStarts[i].size();
+		int sum=0;
+
+		for(int j=0; j < numLines; j++)
+		{
+			sum += clusteredLineStarts[i][j];
+		}
+
+		int mid = sum/numLines;
+
+		if(mid == 0)
+		{	std::cout << numLines << " " << mid << std::endl;
+		}
+
+		middle[zeroIndex] = 0;
+		middle[valueIndex] = mid;
+		middle[imagesizeIndex] = imagesize;
+		middle[valueIndex+2] = mid;
+
+		middledLines.push_back(middle);
 	}
 
-	*/
-
-	return resultStarts;
+	return middledLines;
 }
 
 cv::Mat getBoardIntersections(cv::Mat warpedImg, int thresholdValue)
@@ -407,13 +436,19 @@ cv::Mat getBoardIntersections(cv::Mat warpedImg, int thresholdValue)
 
 	getIntersectionLines(lines, horizontalLines, verticalLines);
 
-	cv::vector<int> horizontalLinesGrouped = getHorizontalBoardLines(horizontalLines);
+	cv::vector<cv::Vec4i> newhorizontalLines = getBoardLines(horizontalLines, HORIZONTAL);
+	cv::vector<cv::Vec4i> newverticalLines = getBoardLines(verticalLines, VERTICAL);
+
+	cv::vector<cv::Vec4i> newLines; 
+
+	newLines.insert(newLines.begin(), newhorizontalLines.begin(), newhorizontalLines.end());
+	newLines.insert(newLines.end(), newverticalLines.begin(), newverticalLines.end());
 
 	//Draw the lines
-    for( size_t i = 0; i < lines.size(); i++ )
+    for( size_t i = 0; i < newLines.size(); i++ )
     {
-        cv::line(warpedImg, cv::Point(lines[i][0], lines[i][1]),
-            cv::Point(lines[i][2], lines[i][3]), cv::Scalar(0,0,255), 1, 8 );
+        cv::line(warpedImg, cv::Point(newLines[i][0], newLines[i][1]),
+            cv::Point(newLines[i][2], newLines[i][3]), cv::Scalar(0,0,255), 1, 8 );
     }
 
 	cv::imshow("Hough Lines", warpedImg);
