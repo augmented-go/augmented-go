@@ -1,5 +1,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/features2d/features2d.hpp>
+#include <opencv2/objdetect/objdetect.hpp>
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -438,6 +440,8 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
 
 		threshold will be implemented for bad images
 
+		sort the lines! 
+
 		what if there are not enough intersections points? 
 		what if there are to many intersections points? 
 	*/
@@ -504,6 +508,47 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
 
 	cv::imshow("Intersections", warpedImg);
 	
+	return true;
+}
+
+bool detectBlobs(cv::Mat warpedImg)
+{
+	cv::Mat warpedImgGray;
+	cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
+
+	// set up the parameters (check the defaults in opencv's code in blobdetector.cpp)
+	cv::SimpleBlobDetector::Params params;
+	params.minDistBetweenBlobs = 50.0f;
+	params.filterByInertia = false;
+	params.filterByConvexity = false;
+	params.filterByColor = true;
+	params.filterByCircularity = false;
+	params.filterByArea = false;
+	params.blobColor = 0;
+	// ... any other params you don't want default value
+
+	// set up and create the detector using the parameters
+	cv::Ptr<cv::FeatureDetector> blob_detector = new cv::SimpleBlobDetector(params);
+	blob_detector->create("SimpleBlob");
+
+	// detect!
+	cv::vector<cv::KeyPoint> keypoints;
+	blob_detector->detect(warpedImgGray, keypoints);
+
+	// extract the x y coordinates of the keypoints: 
+
+	for (int i=0; i<keypoints.size(); i++){
+		float X=keypoints[i].pt.x; 
+		float Y=keypoints[i].pt.y;
+
+		cv::rectangle( warpedImg, 
+		cv::Point(X-1, Y-1),
+		cv::Point(X+1, Y+1), 
+		cv::Scalar(0, 0,  255, 0), 2, 8, 0);
+
+	}
+
+
 	return true;
 }
 
@@ -576,6 +621,8 @@ int main(int argc, char** argv)
 		bool intersectionResult = getBoardIntersections(warpedImg, 255, intersectionPoints);
 
 	}
+
+	bool blobResult = detectBlobs(warpedImg);
 
 	cv::waitKey(0);
 	cv::destroyWindow(windowName);
