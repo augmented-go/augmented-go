@@ -12,6 +12,7 @@ cv::Mat holdImg(int x,int y);
 std::string windowName = "Augmented Go Cam";
 
 bool debug = false;
+bool showall = false;
 
 /*
 
@@ -46,10 +47,10 @@ struct PartitionOperator
 
 	bool operator()(const int &a, const int &b) const 
 	{
-		int distance = a - b;
+		float distance = a - b;
 		distance = abs(distance);
 
-		int boardfield = ((1.0f/18.0f) * sidesize)/3.0f;
+		float boardfield = ((1.0f/18.0f) * sidesize)/3.5f;
 
 		return distance < boardfield;
 	}
@@ -72,7 +73,7 @@ void mouseHandler(int event, int x, int y, int flags, void *param)
 		}
 		break;
 
-	//Draws the lines while simple navigating with the mouse
+	//Draws the lines while navigating with the mouse
 	case CV_EVENT_MOUSEMOVE:
 		/* draw a rectangle*/
 		if(point!=-1)
@@ -154,7 +155,7 @@ cv::Mat holdImg(int x, int y)
 	return img;
 }
 
-//set new cordinates and redraw the scene if the left mouse button is released
+//set new coordinates and redraw the scene if the left mouse button is released
 void releaseImg(cv::Mat a, int x, int y)
 {
 	boardCornerX[point]=x;
@@ -277,10 +278,6 @@ float calcBetweenAngle(cv::Vec2f v1, cv::Vec2f v2)
 
 void getIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>& horizontalLines, cv::vector<cv::Vec4i>& verticalLines)
 {
-	/*
-		TODO: some crooked lines will be painted... dont know why.
-	*/
-
 	cv::Vec2f baseVector, lineVector;
 
 	//baseVector
@@ -308,7 +305,7 @@ void getIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>& h
 			horizontalLines.push_back(lines[i]);
 		}
 		//vertical lines
-		else if(angle >= 89.5f && angle <= 90.5f)
+		else if(angle >= 89.7f && angle <= 90.2f)
 		{
 			cv::Vec4i v = lines[i];
 
@@ -316,7 +313,7 @@ void getIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>& h
 			float m = ((float)v[1] - v[3]) / (v[0] - v[2] + 1);
 			float n = v[1] - m * v[0];
 
-			lines[i][0] = -n/m;
+			lines[i][0] = (-n)/m;
 			lines[i][1] = 0; 
 			lines[i][2] = (imageheight-n)/m;
 			lines[i][3] = imageheight;
@@ -357,7 +354,7 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
 	cv::vector<int> lineStarts(lines.size());
 	cv::vector<int> resultStarts(lines.size());
 
-	for(int i=0; i<lines.size(); i++)
+	for(size_t i=0; i<lines.size(); i++)
 	{
 		lineStarts[i] = lines[i][valueIndex];
 	}
@@ -370,7 +367,7 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
 	// put the lines in there cluster
 	cv::vector<cv::vector<int>> clusteredLineStarts(clusterNum);
 
-	for(int i = 0; i < resultStarts.size(); i++)
+	for(size_t i = 0; i < resultStarts.size(); i++)
 	{
 		int j = resultStarts[i];
 
@@ -393,10 +390,6 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
 
 		int mid = sum/numLines;
 
-		if(mid == 0)
-		{	std::cout << numLines << " " << mid << std::endl;
-		}
-
 		middle[zeroIndex] = 0;
 		middle[valueIndex] = mid;
 		middle[imagesizeIndex] = imagesize;
@@ -408,7 +401,35 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
 	return middledLines;
 }
 
-cv::Mat getBoardIntersections(cv::Mat warpedImg, int thresholdValue)
+bool intersection(cv::Vec4i horizontalLine, cv::Vec4i verticalLine, cv::Point2f &r)
+{
+	cv::Point2f o1;
+	o1.x = horizontalLine[0];
+	o1.y = horizontalLine[1];
+	cv::Point2f p1;
+	p1.x = horizontalLine[2];
+	p1.y = horizontalLine[3];
+	cv::Point2f o2;
+	o2.x = verticalLine[0];
+	o2.y = verticalLine[1];
+	cv::Point2f p2;
+	p2.x = verticalLine[2];
+	p2.y = verticalLine[3];
+
+    cv::Point2f x = o2 - o1;
+    cv::Point2f d1 = p1 - o1;
+    cv::Point2f d2 = p2 - o2;
+
+    float cross = d1.x*d2.y - d1.y*d2.x;
+    if (abs(cross) < /*EPS*/1e-8)
+        return false;
+
+    double t1 = (x.x * d2.y - x.y * d2.x)/cross;
+    r = o1 + d1 * t1;
+    return true;
+}
+
+bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv::Point2f> &intersectionPoints)
 {
 	/*TODO: Find the best results
 		Canny + HoughLinesP gives the best results.
@@ -416,6 +437,9 @@ cv::Mat getBoardIntersections(cv::Mat warpedImg, int thresholdValue)
 		Dont know if the filtering methods need to be used. 
 
 		threshold will be implemented for bad images
+
+		what if there are not enough intersections points? 
+		what if there are to many intersections points? 
 	*/
 
 	//Set the right Threshold for the image
@@ -431,13 +455,30 @@ cv::Mat getBoardIntersections(cv::Mat warpedImg, int thresholdValue)
 	//sobelImg = sobelFiltering(cannyImg);
 	cv::threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
 
+	if(showall == true)
+		cv::imshow("Threshed Image", threshedImg);
+
 	cv::vector<cv::Vec4i> lines, horizontalLines, verticalLines;
-	cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 80, 10, 10 );
+	cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 80, 60, 10 );
 
 	getIntersectionLines(lines, horizontalLines, verticalLines);
 
 	cv::vector<cv::Vec4i> newhorizontalLines = getBoardLines(horizontalLines, HORIZONTAL);
 	cv::vector<cv::Vec4i> newverticalLines = getBoardLines(verticalLines, VERTICAL);
+
+	//get the intersections
+	for(size_t i=0; i < newhorizontalLines.size();  i++)
+	{
+		for(size_t j=0; j < newverticalLines.size(); j++)
+		{
+			cv::Point2f intersectedPoint;
+			bool result = intersection(newhorizontalLines[i], newverticalLines[j], intersectedPoint);
+
+			if(result == true)
+				intersectionPoints.push_back(intersectedPoint);
+		}
+	}
+
 
 	cv::vector<cv::Vec4i> newLines; 
 
@@ -451,9 +492,19 @@ cv::Mat getBoardIntersections(cv::Mat warpedImg, int thresholdValue)
             cv::Point(newLines[i][2], newLines[i][3]), cv::Scalar(0,0,255), 1, 8 );
     }
 
-	cv::imshow("Hough Lines", warpedImg);
+	//Draw the intersections
+	for(size_t i= 0; i < intersectionPoints.size(); i++)
+	{
+		cv::rectangle( warpedImg, 
+		cv::Point(intersectionPoints[i].x-1, intersectionPoints[i].y-1),
+		cv::Point(intersectionPoints[i].x+1, intersectionPoints[i].y+1), 
+		cv::Scalar(255, 0,  0, 0), 2, 8, 0);
+	}
+
+
+	cv::imshow("Intersections", warpedImg);
 	
-	return threshedImg;
+	return true;
 }
 
 	cv::Mat Thresh;
@@ -498,7 +549,8 @@ int main(int argc, char** argv)
 	cv::waitKey(0);
 	
 	cv::Mat warpedImg = warpImage();
-	cv::imshow("Warped Image", warpedImg);
+	if(showall == true)
+		cv::imshow("Warped Image", warpedImg);
 
 
 	if (debug == true)
@@ -520,8 +572,9 @@ int main(int argc, char** argv)
 
 	else
 	{
-		cv::Mat threshedImg = getBoardIntersections(warpedImg, 255);
-		cv::imshow("Threshed Image", threshedImg);
+		cv::vector<cv::Point2f> intersectionPoints;
+		bool intersectionResult = getBoardIntersections(warpedImg, 255, intersectionPoints);
+
 	}
 
 	cv::waitKey(0);
