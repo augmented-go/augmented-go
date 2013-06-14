@@ -10,8 +10,7 @@ class VirtualView : public QGLView
 {
     Q_OBJECT
 public:
-    VirtualView(QWidget *parent = 0) : m_scene(0) {
-	}
+    VirtualView(QWidget *parent = 0) : m_scene(0) {}
     ~VirtualView();
 
 protected:

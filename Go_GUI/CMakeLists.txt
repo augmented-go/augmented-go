@@ -33,6 +33,7 @@ SET(gui_SOURCE
 SET(gui_HEADERS
     GUI.hpp
     VirtualView.hpp
+    AugmentedView.hpp
 )
 
 add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS} ${ui_GUI})
