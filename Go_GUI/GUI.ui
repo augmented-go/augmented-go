@@ -113,7 +113,7 @@
      <string>Pass</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="capturedwhite_label">
     <property name="geometry">
      <rect>
       <x>650</x>
@@ -139,7 +139,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QLabel" name="capturedblack_label">
     <property name="geometry">
      <rect>
       <x>800</x>
@@ -222,7 +222,7 @@
      <string>New Game / Reset</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLabel" name="capturedstones_label">
     <property name="geometry">
      <rect>
       <x>680</x>

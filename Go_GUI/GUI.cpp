@@ -11,6 +11,8 @@
 #include <QAction>
 #include <Qgridlayout>
 #include <QCloseEvent>
+#include <QFile>
+#include <QFontDatabase>
 #include "Game.hpp"
 
 #include "VirtualView.hpp"
@@ -37,6 +39,10 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
 		this->findChild<QLabel* >("white_basket")->setPixmap(whitebasket_pixmap);
 		this->findChild<QLabel* >("black_basket")->setPixmap(blackbasket_pixmap);
 	}
+
+	QFontDatabase fontDatabase;
+	if (fontDatabase.addApplicationFont("../Go_GUI/fonts/SHOJUMARU-REGULAR.TTF") == -1)
+		QMessageBox::critical(this, "Font not found", QString("Shojumaru font was not found!"));
 
 	// checking for elements
 	auto open_menuitem	= this->findChild<QAction *>("open_action");
