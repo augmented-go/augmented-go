@@ -18,9 +18,7 @@
 
 
 namespace Go_GUI {
-
-#define _(x) std::cout << #x << std::endl; x
-
+	
 /**
  * @brief	Checks for gui elements and connects signals and slots
  * @param	QWidget/QMainWindow		parent widget that creates this
