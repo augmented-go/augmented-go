@@ -2,19 +2,34 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>891</width>
-    <height>581</height>
+    <height>582</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <widget class="QLabel" name="white_basket">
     <property name="geometry">
      <rect>
       <x>600</x>
@@ -33,13 +48,13 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>textures/White_basket.png</pixmap>
+     <pixmap>../build/Go_GUI/textures/White_basket.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="black_basket">
     <property name="geometry">
      <rect>
       <x>760</x>
@@ -84,7 +99,7 @@
     <property name="geometry">
      <rect>
       <x>600</x>
-      <y>490</y>
+      <y>500</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -193,7 +208,7 @@
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>490</y>
+      <y>500</y>
       <width>151</width>
       <height>31</height>
      </rect>
@@ -239,6 +254,19 @@
      <string>&lt;&gt;</string>
     </property>
    </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>-23</x>
+      <y>529</y>
+      <width>921</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -276,7 +304,14 @@
    <addaction name="settings_menu"/>
    <addaction name="help_menu"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+  </widget>
   <action name="open_action">
    <property name="text">
     <string>Open</string>

@@ -5,13 +5,11 @@
 #include "QGLAbstractScene.h"
 #include <QMessageBox>
 
-#include <string>
-
 void VirtualView::initializeGL(QGLPainter *painter)
 {
     Q_UNUSED(painter);
-    this->m_scene = QGLAbstractScene::loadScene(QLatin1String("../o_GUI/models/example_board.3ds"));
-	if (this->m_scene == NULL) 
+    this->m_scene = QGLAbstractScene::loadScene(QLatin1String("../Go_GUI/models/example_board.3ds"));
+	if (this->m_scene == NULL)
 		QMessageBox::critical(this->parent_Widget, QString("file not found!"), QString("The 3ds file of go-board was not found!"));
 
 	QGLSceneNode* scene_camera = this->m_scene->mainNode()->findChild<QGLSceneNode *>("Camera001");

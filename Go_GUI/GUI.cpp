@@ -27,25 +27,34 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
 {
 	ui.setupUi(this);
 
+	// Pixmaps are saved relative to ui-file. 
+	// Here we have to set them again manually to get paths right!
+	QPixmap whitebasket_pixmap = QPixmap("../Go_GUI/textures/white_basket.png");
+	QPixmap blackbasket_pixmap = QPixmap("../Go_GUI/textures/black_basket.png");
+	if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull())
+		QMessageBox::critical(this, "GUI element not found", QString("White and/or black basket textures not found!"));
+	else{
+		this->findChild<QLabel* >("white_basket")->setPixmap(whitebasket_pixmap);
+		this->findChild<QLabel* >("black_basket")->setPixmap(blackbasket_pixmap);
+	}
+
 	// checking for elements
 	auto open_menuitem	= this->findChild<QAction *>("open_action");
 	auto exit_menuitem	= this->findChild<QAction *>("exit_action");
 	auto info_menuitem	= this->findChild<QAction *>("info_action");
-	auto big_view		= this->findChild<QGridLayout *>("big_view");
-	auto small_view		= this->findChild<QGridLayout *>("small_view");
-	auto graphics_view	= this->findChild<QGraphicsView *>("graphics_view");
+	auto big_layout		= this->findChild<QGridLayout *>("big_layout");
+	auto small_layout	= this->findChild<QGridLayout *>("small_layout");
 	auto viewswitch_button = this->findChild<QPushButton *>("viewswitch_button");
 
 	if ( open_menuitem == nullptr || exit_menuitem == nullptr || info_menuitem == nullptr
-		|| big_view == nullptr || small_view == nullptr || graphics_view == nullptr)
-		QMessageBox::critical(this, "Element not found", 
+		|| big_layout == nullptr || small_layout == nullptr)
+		QMessageBox::critical(this, "GUI element not found", 
 							QString("An element of GUI could not be found. (Deleted, renamed?)\n\n Element list:\n " 
 							 + ((open_menuitem) ? open_menuitem->objectName()	: "<Open> not found!") + "\n"
 							 + ((exit_menuitem) ? exit_menuitem->objectName()	: "<Exit> not found!") + "\n"
 							 + ((info_menuitem) ? info_menuitem->objectName()	: "<Info> not found!") + "\n"
-							 + ((big_view)		? big_view->objectName()		: "<Big view> not found!") + "\n"
-							 + ((small_view)	? small_view->objectName()		: "<Small view> not found!") + "\n"
-							 + ((graphics_view)	? graphics_view->objectName()	: "<Graphicsview> not found!") + "\n"
+							 + ((big_layout)	? big_layout->objectName()		: "<Big view> not found!") + "\n"
+							 + ((small_layout)	? small_layout->objectName()	: "<Small view> not found!") + "\n"
 							 ));
 
 	// connections
@@ -63,11 +72,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
  */
 void GUI::init(){
 	this->setWindowTitle("Augmented Go");
-	QWidget* central = this->centralWidget();
-
-	QGridLayout* big_layout = central->findChild<QGridLayout *>("big_layout");
-	QGridLayout* small_layout = central->findChild<QGridLayout *>("small_layout");
-	
+	this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+		
 	//QGraphicsView* graphics_view = central->findChild<QGraphicsView *>("graphics_view");
 
 	QString filename = QString("../Go_GUI/textures/white_stone.png");
@@ -92,16 +98,30 @@ void GUI::init(){
 	QWidget* big_container = QWidget::createWindowContainer(augmented_view, this);
 	big_container->setObjectName("big_container");
 	big_container->setToolTip("augmented view");
+	this->findChild<QGridLayout *>("big_layout")->addWidget(big_container);
 	QWidget* small_container = QWidget::createWindowContainer(virtual_view, this);
 	small_container->setObjectName("small_container");
 	small_container->setToolTip("virtual view");
-
-	//container->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-	
-	big_layout->addWidget(big_container);
-	small_layout->addWidget(small_container);
+	this->findChild<QGridLayout *>("small_layout")->addWidget(small_container);
 }
 
+/**
+ * @brief	shows and renders a GoBackend::Game
+ */
+void GUI::RenderGame(GoBackend::Game game) {
+	this->show(); // shows Qt5 Window
+}
+
+
+//////////
+//Slots
+//////////
+
+/**
+ * @brief	SLOT "ViewSwitch"
+ *			Switches big view with small view.
+ *			To assign a view to something a QWidget has to be created.
+ */
 void GUI::slot_ViewSwitch(){
 	QWidget* big_container = this->findChild<QWidget*>("big_container");
 	QWidget* small_container = this->findChild<QWidget*>("small_container");
@@ -129,29 +149,7 @@ void GUI::slot_ViewSwitch(){
 
 	this->findChild<QGridLayout *>("big_layout")->addWidget(newbig_container);
 	this->findChild<QGridLayout *>("small_layout")->addWidget(newsmall_container);
-
-
-	/*for (QWidget* l : big_list){
-		small_view->addWidget(l);
-		big_view->removeWidget(l);
-	}
-	for (QWidget* l : small_list){
-		big_view->addWidget(l);
-		small_view->removeWidget(l);
-	}*/
 }
-/**
- * @brief	shows and renders a GoBackend::Game
- */
-void GUI::RenderGame(GoBackend::Game game) {
-	//virtual_view->show();
-	this->show(); // shows Qt5 Window
-}
-
-
-//////////
-//Slots
-//////////
 
 /**
  * @brief	SLOT QAction "MenuOpen"

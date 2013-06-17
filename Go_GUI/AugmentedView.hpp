@@ -13,7 +13,7 @@ public:
     AugmentedView(QWidget *parent = 0) {
 		m_scene = new QGLSceneNode();
 		board_material = new QGLMaterial;
-		augmented_picture.setPath(QLatin1String("../Go_GUI/example_pic.jpg"));
+		augmented_picture.setPath(QLatin1String("../Go_GUI/textures/example_pic.jpg"));
 		augmented_picture.setScheme(QLatin1String("file"));
 	
 		board_material->setDiffuseColor(Qt::white);
