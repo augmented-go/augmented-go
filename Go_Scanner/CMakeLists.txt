@@ -9,11 +9,14 @@ find_package(OpenCV REQUIRED)
 
 SET(scanner_SOURCE
     Scanner.cpp
+    Scanner_class.cpp
 )
 
 SET(scanner_HEADERS
+    Scanner.hpp
 )
 
 #add_library (Go_Scanner ${scanner_SOURCE} ${scanner_HEADERS})
-add_executable(Go_Scanner ${scanner_SOURCE} ${scanner_HEADERS})
+add_library(Go_Scanner ${scanner_SOURCE} ${scanner_HEADERS})
 target_link_libraries(Go_Scanner ${OpenCV_LIBS})
+add_fuego_to_target(Go_Scanner)
