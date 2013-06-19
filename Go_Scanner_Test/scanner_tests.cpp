@@ -24,8 +24,6 @@ namespace MyTest
                 bool success = scanner.scanCamera(setup, size, image);
                 if (success)
                     imshow("after scanning: ", image);
-                else
-                    imshow("no image retrieved", Mat());
 
                 if(waitKey(30) >= 0)
                     break;
