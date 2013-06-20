@@ -14,96 +14,96 @@
 
 
 namespace Go_GUI {
-	
+    
 /**
  * @brief	Checks for gui elements and fonts and connects signals and slots
  * @param	QWidget/QMainWindow		parent widget that creates this
  */
 GUI::GUI(QWidget *parent) : QMainWindow(parent)
 {
-	ui.setupUi(this);
+    ui.setupUi(this);
 
-	QString texture_path = "../Go_GUI/textures/";
-	whitebasket_pixmap = QPixmap(texture_path + "white_basket.png");
-	blackbasket_pixmap = QPixmap(texture_path + "black_basket.png");
-	closedbasket_pixmap = QPixmap(texture_path + "Closed_basket.png");
-	if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull() || closedbasket_pixmap.isNull())
-		QMessageBox::critical(this, "GUI element not found", QString("White and/or black basket textures not found!\n searched relative to exe in: " + texture_path));
-	
-	// loading font
-	QFontDatabase fontDatabase;
-	QString font_path = "../Go_GUI/fonts/SHOJUMARU-REGULAR.TTF";
-	if (fontDatabase.addApplicationFont(font_path) == -1)
-		QMessageBox::critical(this, "Font not found", QString("Shojumaru font was not found!\n searched relative to exe in: " + font_path));
+    QString texture_path = "../Go_GUI/textures/";
+    whitebasket_pixmap = QPixmap(texture_path + "white_basket.png");
+    blackbasket_pixmap = QPixmap(texture_path + "black_basket.png");
+    closedbasket_pixmap = QPixmap(texture_path + "Closed_basket.png");
+    if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull() || closedbasket_pixmap.isNull())
+        QMessageBox::critical(this, "GUI element not found", QString("White and/or black basket textures not found!\n searched relative to exe in: " + texture_path));
+    
+    // loading font
+    QFontDatabase fontDatabase;
+    QString font_path = "../Go_GUI/fonts/SHOJUMARU-REGULAR.TTF";
+    if (fontDatabase.addApplicationFont(font_path) == -1)
+        QMessageBox::critical(this, "Font not found", QString("Shojumaru font was not found!\n searched relative to exe in: " + font_path));
 
-	// checking for elements
-	auto open_menuitem	= this->findChild<QAction *>("open_action");
-	auto save_menuitem	= this->findChild<QAction *>("save_action");
-	auto exit_menuitem	= this->findChild<QAction *>("exit_action");
-	auto info_menuitem	= this->findChild<QAction *>("info_action");
-	auto big_container	= this->findChild<QWidget *>("big_container");
-	auto small_container= this->findChild<QWidget *>("small_container");
-	auto viewswitch_button = this->findChild<QPushButton *>("viewswitch_button");
-	auto capturedwhite_label = this->findChild<QLabel *>("capturedwhite_label");
-	auto capturedblack_label = this->findChild<QLabel *>("capturedblack_label");
+    // checking for elements
+    auto open_menuitem	= this->findChild<QAction *>("open_action");
+    auto save_menuitem	= this->findChild<QAction *>("save_action");
+    auto exit_menuitem	= this->findChild<QAction *>("exit_action");
+    auto info_menuitem	= this->findChild<QAction *>("info_action");
+    auto big_container	= this->findChild<QWidget *>("big_container");
+    auto small_container= this->findChild<QWidget *>("small_container");
+    auto viewswitch_button = this->findChild<QPushButton *>("viewswitch_button");
+    auto capturedwhite_label = this->findChild<QLabel *>("capturedwhite_label");
+    auto capturedblack_label = this->findChild<QLabel *>("capturedblack_label");
 
-	// throwing an error message of elements that were not found
-	if ( open_menuitem == nullptr || exit_menuitem == nullptr || info_menuitem == nullptr
-		|| save_menuitem == nullptr	|| big_container == nullptr || small_container == nullptr
-		|| capturedwhite_label == nullptr || capturedblack_label == nullptr)
-		QMessageBox::critical(this, "GUI element not found", 
-							QString("An element of GUI could not be found. (Deleted, renamed?)\n\n Element list:\n " 
-							 + ((open_menuitem) ? open_menuitem->objectName()	: "<Open> not found!") + "\n"
-							 + ((save_menuitem) ? save_menuitem->objectName()	: "<Save> not found!") + "\n"
-							 + ((exit_menuitem) ? exit_menuitem->objectName()	: "<Exit> not found!") + "\n"
-							 + ((info_menuitem) ? info_menuitem->objectName()	: "<Info> not found!") + "\n"
-							 + ((big_container)	? big_container->objectName()	: "<Big container> not found!") + "\n"
-							 + ((small_container) ? small_container->objectName()	: "<Small container> not found!") + "\n"
-							 + ((capturedwhite_label) ? capturedwhite_label->objectName()	: "<Captured white label> not found!") + "\n"
-							 + ((capturedblack_label) ? capturedblack_label->objectName()	: "<Captured black label> not found!") + "\n"
-							 ));
+    // throwing an error message of elements that were not found
+    if ( open_menuitem == nullptr || exit_menuitem == nullptr || info_menuitem == nullptr
+        || save_menuitem == nullptr	|| big_container == nullptr || small_container == nullptr
+        || capturedwhite_label == nullptr || capturedblack_label == nullptr)
+        QMessageBox::critical(this, "GUI element not found", 
+                            QString("An element of GUI could not be found. (Deleted, renamed?)\n\n Element list:\n " 
+                             + ((open_menuitem) ? open_menuitem->objectName()	: "<Open> not found!") + "\n"
+                             + ((save_menuitem) ? save_menuitem->objectName()	: "<Save> not found!") + "\n"
+                             + ((exit_menuitem) ? exit_menuitem->objectName()	: "<Exit> not found!") + "\n"
+                             + ((info_menuitem) ? info_menuitem->objectName()	: "<Info> not found!") + "\n"
+                             + ((big_container)	? big_container->objectName()	: "<Big container> not found!") + "\n"
+                             + ((small_container) ? small_container->objectName()	: "<Small container> not found!") + "\n"
+                             + ((capturedwhite_label) ? capturedwhite_label->objectName()	: "<Captured white label> not found!") + "\n"
+                             + ((capturedblack_label) ? capturedblack_label->objectName()	: "<Captured black label> not found!") + "\n"
+                             ));
 
-	// connections
-	connect(open_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuOpen);
-	connect(save_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuSave);
-	connect(exit_menuitem,		&QAction::triggered,	this, &QWidget::close);	
-	connect(info_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
-	connect(viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
+    // connections
+    connect(open_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuOpen);
+    connect(save_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuSave);
+    connect(exit_menuitem,		&QAction::triggered,	this, &QWidget::close);	
+    connect(info_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
+    connect(viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
 
-	// setting initial values
-	this->init();
+    // setting initial values
+    this->init();
 }
 
 /**
  * @brief	Sets initial settings, texts and windows
  */
 void GUI::init(){
-	this->setWindowTitle("Augmented Go");
-	this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	
-	virtual_view = new VirtualView(this);
-	augmented_view = new AugmentedView(this);
+    this->setWindowTitle("Augmented Go");
+    this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    
+    virtual_view = new VirtualView(this);
+    augmented_view = new AugmentedView(this);
 
 
-	// Attaching augmented view to big container
-	QWidget* big_container = this->findChild<QWidget *>("big_container");
-	augmented_view->setParent(big_container);
-	augmented_view->rescaleImage(big_container->size());
-	big_container->setToolTip("augmented view");
+    // Attaching augmented view to big container
+    QWidget* big_container = this->findChild<QWidget *>("big_container");
+    augmented_view->setParent(big_container);
+    augmented_view->rescaleImage(big_container->size());
+    big_container->setToolTip("augmented view");
 
-	// Attaching virtual view to small container
-	QWidget* small_container = this->findChild<QWidget *>("small_container");
-	QSize small_container_size = small_container->size();	// saving size
-	small_container = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
-	small_container->resize(small_container_size);
-	virtual_view->resize(small_container_size);
-	small_container->setToolTip("virtual view");
+    // Attaching virtual view to small container
+    QWidget* small_container = this->findChild<QWidget *>("small_container");
+    QSize small_container_size = small_container->size();	// saving size
+    small_container = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
+    small_container->resize(small_container_size);
+    virtual_view->resize(small_container_size);
+    small_container->setToolTip("virtual view");
 
-	this->findChild<QLabel* >("white_basket")->setPixmap(closedbasket_pixmap);
-	this->findChild<QLabel* >("black_basket")->setPixmap(closedbasket_pixmap);
+    this->findChild<QLabel* >("white_basket")->setPixmap(closedbasket_pixmap);
+    this->findChild<QLabel* >("black_basket")->setPixmap(closedbasket_pixmap);
 
-	this->findChild<QLabel* >("capturedwhite_label")->setText(QString());
-	this->findChild<QLabel* >("capturedblack_label")->setText(QString());
+    this->findChild<QLabel* >("capturedwhite_label")->setText(QString());
+    this->findChild<QLabel* >("capturedblack_label")->setText(QString());
 }
 
 
@@ -117,39 +117,39 @@ void GUI::init(){
  *			To assign a view to something a QWidget has to be created.
  */
 void GUI::slot_ViewSwitch(){
-	QWidget* big_container = this->findChild<QWidget *>("big_container");
-	QWidget* small_container = this->findChild<QWidget *>("small_container");
-	
-	if (big_container->toolTip() == "virtual view"){
-		// switching augmented view to big container
-		augmented_view->setParent(big_container);
-		augmented_view->rescaleImage(big_container->size());
-		big_container->setToolTip("augmented view");
+    QWidget* big_container = this->findChild<QWidget *>("big_container");
+    QWidget* small_container = this->findChild<QWidget *>("small_container");
+    
+    if (big_container->toolTip() == "virtual view"){
+        // switching augmented view to big container
+        augmented_view->setParent(big_container);
+        augmented_view->rescaleImage(big_container->size());
+        big_container->setToolTip("augmented view");
 
-		// switching virtual view to small container
-		QWidget* small_view = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
-		small_view->resize(small_container->size());
-		virtual_view->resize(small_container->size());
-		small_container->setToolTip("virtual view");
+        // switching virtual view to small container
+        QWidget* small_view = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
+        small_view->resize(small_container->size());
+        virtual_view->resize(small_container->size());
+        small_container->setToolTip("virtual view");
 
-		small_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
-		augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
-	}
-	else if (big_container->toolTip() == "augmented view"){
-		// switching augmented view to small container
-		augmented_view->setParent(small_container);
-		augmented_view->rescaleImage(small_container->size());
-		small_container->setToolTip("augmented view");
+        small_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
+        augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+    }
+    else if (big_container->toolTip() == "augmented view"){
+        // switching augmented view to small container
+        augmented_view->setParent(small_container);
+        augmented_view->rescaleImage(small_container->size());
+        small_container->setToolTip("augmented view");
 
-		// switching virtual view to big container
-		QWidget* big_view = QWidget::createWindowContainer(virtual_view, big_container, Qt::Widget);
-		big_view->resize(big_container->size());
-		virtual_view->resize(big_container->size());
-		big_container->setToolTip("virtual view");
+        // switching virtual view to big container
+        QWidget* big_view = QWidget::createWindowContainer(virtual_view, big_container, Qt::Widget);
+        big_view->resize(big_container->size());
+        virtual_view->resize(big_container->size());
+        big_container->setToolTip("virtual view");
 
-		big_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
-		augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
-	}
+        big_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
+        augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+    }
 }
 
 /**
@@ -158,14 +158,14 @@ void GUI::slot_ViewSwitch(){
  * @todo	loading sgf file
  */
 void GUI::slot_MenuOpen(){
-	QString selfilter = tr("SGF (*.sgf)");
-	QString fileName = QFileDialog::getOpenFileName(
+    QString selfilter = tr("SGF (*.sgf)");
+    QString fileName = QFileDialog::getOpenFileName(
         this,
         "open sgf-file",
         NULL,
         tr("SGF (*.sgf)" ),
         &selfilter 
-	);
+    );
 }
 
 /**
@@ -174,16 +174,16 @@ void GUI::slot_MenuOpen(){
  * @todo	prompt for playernames, gamename and send them + filename to Go_Backend per signal
  */
 void GUI::slot_MenuSave(){
-	QString selfilter = tr("SGF (*.sgf)");
-	QString fileName = QFileDialog::getSaveFileName(
+    QString selfilter = tr("SGF (*.sgf)");
+    QString fileName = QFileDialog::getSaveFileName(
         this,
         "save sgf-file",
         NULL,
         tr("SGF (*.sgf)" ),
         &selfilter 
-	);
+    );
 
-	// TODO!
+    // TODO!
 }
 
 /**
@@ -191,23 +191,23 @@ void GUI::slot_MenuSave(){
  *			opens a window with information about the application.
  */
 void GUI::slot_MenuInfo(){
-	// Appliction Info
-	std::string output = "Augmented Go - Interactive Game of Go as Augmented Reality Application\n\n\n";
+    // Appliction Info
+    std::string output = "Augmented Go - Interactive Game of Go as Augmented Reality Application\n\n\n";
 
-	// Build date and time
-	output += "This build of Augmented Go was compiled at " __DATE__ ", " __TIME__ ".\n";
+    // Build date and time
+    output += "This build of Augmented Go was compiled at " __DATE__ ", " __TIME__ ".\n";
 
-	// Copyright
-	std::string year = __DATE__;
-	year = year.substr(year.find_last_of(" "));	// deleting day and month
-	output += "Copyright " + year + "\n";
+    // Copyright
+    std::string year = __DATE__;
+    year = year.substr(year.find_last_of(" "));	// deleting day and month
+    output += "Copyright " + year + "\n";
 
-	// Licence
-	output += "\nThis software is released under the \"MIT License\".\n"
-		"See the file LICENSE for full license and copying terms.\n";
+    // Licence
+    output += "\nThis software is released under the \"MIT License\".\n"
+        "See the file LICENSE for full license and copying terms.\n";
 
-	// Final InfoBox
-	QMessageBox::about(this, "Info", output.c_str());
+    // Final InfoBox
+    QMessageBox::about(this, "Info", output.c_str());
 }
 
 /**
@@ -218,13 +218,13 @@ void GUI::slot_MenuInfo(){
  * @param	QCloseEvent		close event that shall or shall not be executed afterwards.
  */
 void GUI::closeEvent(QCloseEvent *event){
-	auto reply = QMessageBox::question(this, "Quit?", "You really want to quit?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
-	if (reply == QMessageBox::StandardButton::Yes) {
+    auto reply = QMessageBox::question(this, "Quit?", "You really want to quit?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
+    if (reply == QMessageBox::StandardButton::Yes) {
         emit stop_backend_thread();
-		event->accept();
+        event->accept();
     }
-	else
-		event->ignore();
+    else
+        event->ignore();
 }
 
 } // namespace Go_GUI
