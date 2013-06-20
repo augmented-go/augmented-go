@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include <QDebug>
-#include <QImage>
 
 namespace Go_AR {
 
@@ -22,13 +21,13 @@ void BackendThread::run()  {
     // use a timer to periodically scan the camera image
     QTimer timer;
     connect(&timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
-    timer.setInterval(1000); // msec
+    timer.setInterval(1000); // every 1000 msec
     timer.start();   // puts one event in the threads event queue
-    exec();
+    exec(); // this threads event loop
     timer.stop();
 }
 
-void BackendThread::backend_stop()  {
+void BackendThread::stop()  {
     qDebug() << "Stop signal arrived, stopping backend thread...";
 
     this->quit();
@@ -46,10 +45,10 @@ void BackendThread::scan() {
 
     qDebug() << "\nScan finished! new image available!";
     
-    const auto testparam = std::make_shared<QImage>(200, 400, QImage::Format::Format_RGB32);
+    const auto scanner_image = QImage(200, 400, QImage::Format::Format_RGB32);
 
     // send signal to gui
-    emit backend_new_image(testparam);
+    emit backend_new_image(scanner_image);
 
     // send board data to gui
     // the GUI controls the lifetime of this thread,
@@ -77,5 +76,8 @@ void BackendThread::finish() {
     assert(!"Ending a game is not yet implemented");
 }
 
+void BackendThread::resign() {
+    assert(!"Resigning is not yet implemented");
+}
 
 } // namespace Go_AR

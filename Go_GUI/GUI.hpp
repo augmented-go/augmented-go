@@ -30,9 +30,9 @@ public:
 
 public slots:
     // note: just a sample slot demonstrating a signal from the backend thread
-    void new_image(const std::shared_ptr<QImage> param) {
+    void new_image(const QImage image) {
         // TODO: update gui
-        printf(">>> New Image arrived! '%d x %d' <<<\n", param->width(), param->height());
+        printf(">>> New Image arrived! '%d x %d' <<<\n", image.width(), image.height());
     }
 
     void new_game_data(const GoBoard * game_board) {
