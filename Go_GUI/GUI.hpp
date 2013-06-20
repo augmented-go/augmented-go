@@ -21,15 +21,16 @@ public:
     void init();
     void RenderGame(GoBackend::Game game);
 
+
 public slots:
     void slot_MenuOpen();
     void slot_MenuSave();
     void slot_MenuInfo();
     void slot_ViewSwitch();
 
-    void new_image(/*QImage param, int width, int height*/) {
-
-        printf(">>> New Image arrived! <<<\n\n");
+public slots:
+    void new_image(const QImage image) {
+        printf(">>> New Image arrived! '%d x %d' <<<\n", image.width(), image.height());
         //if (param){
         //	augmented_view->setImage(param);
         //  augmented_view->rescaleImage(augmented_view->parentWidget()->size());
@@ -43,11 +44,14 @@ public slots:
             case SG_WHITE:
                 this->findChild<QLabel* >("white_basket")->setPixmap(whitebasket_pixmap);
                 this->findChild<QLabel* >("black_basket")->setPixmap(closedbasket_pixmap);
+                break;
             case SG_BLACK:
                 this->findChild<QLabel* >("white_basket")->setPixmap(closedbasket_pixmap);
                 this->findChild<QLabel* >("black_basket")->setPixmap(blackbasket_pixmap);
+                break;
             default:
                 assert(false);
+                break;
         }
         
         auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
