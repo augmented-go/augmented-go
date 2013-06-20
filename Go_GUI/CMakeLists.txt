@@ -33,6 +33,7 @@ SET(gui_SOURCE
 SET(gui_HEADERS
     GUI.hpp
     VirtualView.hpp
+    AugmentedView.hpp
 )
 
 add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS} ${ui_GUI})
@@ -47,3 +48,4 @@ qt5_use_modules(Go_GUI OpenGL 3D Widgets)
 # copies textures and models to the binary dir of Go_GUI
 file(COPY models DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY textures DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY fonts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
