@@ -84,7 +84,9 @@ namespace GoBackendGameTest
             setup.AddWhite(Pt(5, 5));
 
             Game go_game;
-            go_game.init(9, setup); // WARNING: aborts execution for now (because of invalid stones in setup)
+            auto success = go_game.init(9, setup);
+
+            Assert::AreEqual(false, success);
         }
 
         TEST_METHOD(can_override_game_with_new_board) {
@@ -251,6 +253,32 @@ namespace GoBackendGameTest
             go_game.update(new_setup);
 
             Assert::IsTrue(go_game.getState() == State::Invalid);
+        }
+
+        TEST_METHOD(cannot_update_board_with_faulty_setup) {
+            std::string s(  "....\n"
+                            "....\n"
+                            "O...\n"
+                            ".O..");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            s = "....\n"
+                "....\n"
+                "O...\n"
+                ".O..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            new_setup.AddBlack(SgPointUtil::Pt(10, 10)); // this points is outside the 4x4 grid
+
+            go_game.update(new_setup); // silently skips this setup!
+
+            // initial setup should be present
+            auto board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(setup == board_setup);
         }
 
         TEST_METHOD(can_update_board_and_detect_illegal_move) {

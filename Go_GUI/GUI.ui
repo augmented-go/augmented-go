@@ -2,19 +2,34 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>891</width>
-    <height>581</height>
+    <height>582</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <widget class="QLabel" name="white_basket">
     <property name="geometry">
      <rect>
       <x>600</x>
@@ -39,7 +54,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="black_basket">
     <property name="geometry">
      <rect>
       <x>760</x>
@@ -58,33 +73,11 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QWidget" name="gridLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>581</width>
-      <height>521</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="view_big"/>
-   </widget>
-   <widget class="QWidget" name="gridLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>599</x>
-      <y>9</y>
-      <width>281</width>
-      <height>241</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="view_small"/>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="pass_button">
     <property name="geometry">
      <rect>
       <x>600</x>
-      <y>490</y>
+      <y>500</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -98,7 +91,7 @@
      <string>Pass</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="capturedblack_label">
     <property name="geometry">
      <rect>
       <x>650</x>
@@ -124,7 +117,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QLabel" name="capturedwhite_label">
     <property name="geometry">
      <rect>
       <x>800</x>
@@ -189,11 +182,11 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="newgame_button">
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>490</y>
+      <y>500</y>
       <width>151</width>
       <height>31</height>
      </rect>
@@ -207,7 +200,7 @@
      <string>New Game / Reset</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLabel" name="capturedstones_label">
     <property name="geometry">
      <rect>
       <x>680</x>
@@ -226,6 +219,67 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;captured&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;stones&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="viewswitch_button">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>260</y>
+      <width>21</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;&gt;</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>-23</x>
+      <y>529</y>
+      <width>921</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QWidget" name="small_container" native="true">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>10</y>
+      <width>279</width>
+      <height>239</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"> background-color: black;</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="big_container" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>579</width>
+      <height>519</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"> background-color: black;</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -236,65 +290,72 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
+   <widget class="QMenu" name="file_menu">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen"/>
-    <addaction name="actionSave"/>
+    <addaction name="open_action"/>
+    <addaction name="save_action"/>
     <addaction name="separator"/>
-    <addaction name="actionExit"/>
+    <addaction name="exit_action"/>
    </widget>
-   <widget class="QMenu" name="menuSettings">
+   <widget class="QMenu" name="settings_menu">
     <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="actionThreshold"/>
-    <addaction name="actionRules"/>
-    <addaction name="actionCamera_Resolution"/>
+    <addaction name="threshold_action"/>
+    <addaction name="rules_action"/>
+    <addaction name="cameraresolution_action"/>
    </widget>
-   <widget class="QMenu" name="menuHelp">
+   <widget class="QMenu" name="help_menu">
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionInfo"/>
+    <addaction name="info_action"/>
    </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuSettings"/>
-   <addaction name="menuHelp"/>
+   <addaction name="file_menu"/>
+   <addaction name="settings_menu"/>
+   <addaction name="help_menu"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen">
+  <widget class="QStatusBar" name="statusbar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+  </widget>
+  <action name="open_action">
    <property name="text">
     <string>Open</string>
    </property>
   </action>
-  <action name="actionSave">
+  <action name="save_action">
    <property name="text">
     <string>Save</string>
    </property>
   </action>
-  <action name="actionExit">
+  <action name="exit_action">
    <property name="text">
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionThreshold">
+  <action name="threshold_action">
    <property name="text">
     <string>Threshold</string>
    </property>
   </action>
-  <action name="actionRules">
+  <action name="rules_action">
    <property name="text">
     <string>Rules</string>
    </property>
   </action>
-  <action name="actionCamera_Resolution">
+  <action name="cameraresolution_action">
    <property name="text">
     <string>Camera Resolution</string>
    </property>
   </action>
-  <action name="actionInfo">
+  <action name="info_action">
    <property name="text">
     <string>Info</string>
    </property>
