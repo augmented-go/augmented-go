@@ -13,6 +13,8 @@
 #include <QCloseEvent>
 #include <QFile>
 #include <QFontDatabase>
+#include <qscreen.h>
+#include <QStackedWidget>
 #include "Game.hpp"
 
 #include "VirtualView.hpp"
@@ -39,7 +41,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
 		this->findChild<QLabel* >("white_basket")->setPixmap(whitebasket_pixmap);
 		this->findChild<QLabel* >("black_basket")->setPixmap(blackbasket_pixmap);
 	}
-
+	
+	// loading in font
 	QFontDatabase fontDatabase;
 	if (fontDatabase.addApplicationFont("../Go_GUI/fonts/SHOJUMARU-REGULAR.TTF") == -1)
 		QMessageBox::critical(this, "Font not found", QString("Shojumaru font was not found!"));
@@ -79,29 +82,14 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
 void GUI::init(){
 	this->setWindowTitle("Augmented Go");
 	this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-		
-	//QGraphicsView* graphics_view = central->findChild<QGraphicsView *>("graphics_view");
-
-	QString filename = QString("../Go_GUI/textures/white_stone.png");
-	QImage* image = new QImage(filename);
-	if (!image->load(filename)){
-		QMessageBox m;
-		m.setText("File " + filename + " not found!");
-		m.exec();
-	}
-    QGraphicsPixmapItem* item = new QGraphicsPixmapItem( QPixmap::fromImage(*image));
-    
-	// Adding items
-	QGraphicsScene* scene = new QGraphicsScene;
-    scene->addItem(item);
-
-	//Setting Scene of View
-	//graphics_view->setScene(scene);
 	
 	virtual_view = new VirtualView(this);
 	augmented_view = new AugmentedView(this);
 
-	QWidget* big_container = QWidget::createWindowContainer(augmented_view, this);
+	/** working windows with QGridLayout
+	QWidget* big_container = new QWidget();
+	augmented_view->setParent(big_container);
+	augmented_view->rescaleImage(getBigWindowSize());
 	big_container->setObjectName("big_container");
 	big_container->setToolTip("augmented view");
 	this->findChild<QGridLayout *>("big_layout")->addWidget(big_container);
@@ -109,6 +97,37 @@ void GUI::init(){
 	small_container->setObjectName("small_container");
 	small_container->setToolTip("virtual view");
 	this->findChild<QGridLayout *>("small_layout")->addWidget(small_container);
+	*/
+
+	// working windows with QWidgets (simpler)
+	QWidget* big_container = this->findChild<QWidget *>("big_container");
+	augmented_view->setParent(big_container);
+	augmented_view->rescaleImage(big_container->size());
+	big_container->setToolTip("augmented view");
+
+	QWidget* small_container = this->findChild<QWidget *>("small_container");
+	QSize small_container_size = small_container->size();	// saving size
+	small_container = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
+	small_container->resize(small_container_size);
+	virtual_view->resize(small_container_size);
+	small_container->setToolTip("virtual view");
+	
+
+	/** not working windows with QStackedWidget (ownership is taken away!)
+	QStackedWidget* big_container = this->findChild<QStackedWidget *>("big_container");
+	QStackedWidget* small_container = this->findChild<QStackedWidget *>("small_container");
+
+	big_container->addWidget(augmented_view);
+	small_container->addWidget(augmented_view);
+
+	virtual_container = QWidget::createWindowContainer(virtual_view);
+
+	big_container->addWidget(virtual_container);
+	small_container->addWidget(virtual_container);
+
+	big_container->setCurrentWidget(augmented_view);
+	small_container->setCurrentWidget(virtual_container);
+	*/
 }
 
 /**
@@ -129,24 +148,32 @@ void GUI::RenderGame(GoBackend::Game game) {
  *			To assign a view to something a QWidget has to be created.
  */
 void GUI::slot_ViewSwitch(){
-	QWidget* big_container = this->findChild<QWidget*>("big_container");
-	QWidget* small_container = this->findChild<QWidget*>("small_container");
+	QWidget* big_container = this->findChild<QWidget *>("big_container");
+	QWidget* small_container = this->findChild<QWidget *>("small_container");
 
-	QWidget* newbig_container, *newsmall_container;
+	//QWidget* newbig_container, *newsmall_container;
 
+	/* working windows with QGridLayout
 	if (big_container->toolTip() == "augmented view"){
-		newbig_container = QWidget::createWindowContainer(virtual_view, this);
+		newbig_container = QWidget::createWindowContainer(virtual_view, this->findChild<QGridLayout *>("big_layout")->widget());
 		newbig_container->setObjectName("big_container");
 		newbig_container->setToolTip("virtual view");
-		newsmall_container = QWidget::createWindowContainer(augmented_view, this);
+
+		newsmall_container = new QWidget(this);
+		augmented_view->setParent(newsmall_container);
+		augmented_view->rescaleImage(getSmallWindowSize());
+
 		newsmall_container->setObjectName("small_container");
 		newsmall_container->setToolTip("augmented view");
 	}
 	else {
-		newbig_container = QWidget::createWindowContainer(augmented_view, this);
+		newbig_container = new QWidget(this);
+		augmented_view->setParent(newbig_container);
+		augmented_view->rescaleImage(getBigWindowSize());
 		newbig_container->setObjectName("big_container");
 		newbig_container->setToolTip("augmented view");
-		newsmall_container = QWidget::createWindowContainer(virtual_view, this);
+		
+		newsmall_container = QWidget::createWindowContainer(virtual_view, this->findChild<QGridLayout *>("big_layout")->widget());
 		newsmall_container->setObjectName("small_container");
 		newsmall_container->setToolTip("virtual view");
 	}
@@ -155,6 +182,38 @@ void GUI::slot_ViewSwitch(){
 
 	this->findChild<QGridLayout *>("big_layout")->addWidget(newbig_container);
 	this->findChild<QGridLayout *>("small_layout")->addWidget(newsmall_container);
+	*/
+
+	
+	if (big_container->toolTip() == "virtual view"){
+		augmented_view->setParent(big_container);
+		augmented_view->rescaleImage(big_container->size());
+		big_container->setToolTip("augmented view");
+
+		QWidget* small_view = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
+		small_view->resize(small_container->size());
+		virtual_view->resize(small_container->size());
+		small_container->setToolTip("virtual view");
+
+		small_view->show();	// when changing parent, it gets invisible -> show again! -.- !!
+		augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+	}
+	else if (big_container->toolTip() == "augmented view"){
+		augmented_view->setParent(small_container);
+		augmented_view->rescaleImage(small_container->size());
+		small_container->setToolTip("augmented view");
+
+		QWidget* big_view = QWidget::createWindowContainer(virtual_view, big_container, Qt::Widget);
+		big_view->resize(big_container->size());
+		virtual_view->resize(big_container->size());
+		big_container->setToolTip("virtual view");
+
+		big_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+		augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+	}
+
+	
+	//augmented_view->setFixedSize(this->findChild<QGridLayout *>("big_layout")->totalSizeHint());
 }
 
 /**

@@ -24,13 +24,12 @@ public:
 public slots:
     void slot_MenuOpen();
 	void slot_MenuInfo();
-	void closeEvent(QCloseEvent *event);
 	void slot_ViewSwitch();
     void new_image() {
         // TODO: update gui
         printf(">>> New Image arrived! <<<\n\n");
     }
-
+	void closeEvent(QCloseEvent *event);
 signals:
     void stop_backend_thread();
 

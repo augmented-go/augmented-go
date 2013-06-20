@@ -24,4 +24,5 @@ private:
     QGLAbstractScene *m_scene;
 	QGLSceneNode* m_main;
 	QQuaternion m_pose;
+	QUrl augmented_picture;
 };
