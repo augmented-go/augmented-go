@@ -28,8 +28,11 @@ public:
 	}
 	~AugmentedView(){};
 
-	//QImage: Fast to draw to, slow to display.
-	//QPixmap: Slow to draw to, fast to display.
+	/**
+	 * @brief		scales the pixmap to the width of size
+	 * @parameter	QSize
+	 */
+	
 	void setImage(const uchar* pData, int width, int height){
 		image = QImage(pData, width, height, QImage::Format_ARGB32_Premultiplied);	// augmented picture : QImage::Format_ARGB32_Premultiplied	
 		picture = QPixmap::fromImage(image);//.scaled(this->size());
