@@ -19,3 +19,5 @@ SET(scanner_HEADERS
 add_library(Go_Scanner ${scanner_SOURCE} ${scanner_HEADERS})
 target_link_libraries(Go_Scanner ${OpenCV_LIBS})
 add_fuego_to_target(Go_Scanner)
+
+configure_target(Go_Scanner)
