@@ -6,7 +6,6 @@ SET(scanner_test_SOURCE
 SET(scanner_test_HEADERS
 )
 
-find_package(OpenCV REQUIRED)
 include_directories (${CMAKE_SOURCE_DIR}/Go_Scanner)
 link_directories (${CMAKE_BINARY_DIR}/Go_Scanner)
 
