@@ -3,18 +3,10 @@
 #include <string>
 #include <vector>
 
-#include <Qt3D/qglview.h>
-#include <Qt3D/qglbuilder.h>
-#include <qgraphicsview>
-#include <QGraphicsPixmapItem>
 #include <QMessageBox>
 #include <QAction>
-#include <Qgridlayout>
 #include <QCloseEvent>
-#include <QFile>
 #include <QFontDatabase>
-#include <qscreen.h>
-#include <QStackedWidget>
 #include "Game.hpp"
 
 #include "VirtualView.hpp"
@@ -24,50 +16,56 @@
 namespace Go_GUI {
 	
 /**
- * @brief	Checks for gui elements and connects signals and slots
+ * @brief	Checks for gui elements and fonts and connects signals and slots
  * @param	QWidget/QMainWindow		parent widget that creates this
  */
 GUI::GUI(QWidget *parent) : QMainWindow(parent)
 {
 	ui.setupUi(this);
 
-	// Pixmaps are saved relative to ui-file. 
-	// Here we have to set them again manually to get paths right!
-	QPixmap whitebasket_pixmap = QPixmap("../Go_GUI/textures/white_basket.png");
-	QPixmap blackbasket_pixmap = QPixmap("../Go_GUI/textures/black_basket.png");
-	if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull())
-		QMessageBox::critical(this, "GUI element not found", QString("White and/or black basket textures not found!"));
-	else{
-		this->findChild<QLabel* >("white_basket")->setPixmap(whitebasket_pixmap);
-		this->findChild<QLabel* >("black_basket")->setPixmap(blackbasket_pixmap);
-	}
+	QString texture_path = "../Go_GUI/textures/";
+	whitebasket_pixmap = QPixmap(texture_path + "white_basket.png");
+	blackbasket_pixmap = QPixmap(texture_path + "black_basket.png");
+	closedbasket_pixmap = QPixmap(texture_path + "Closed_basket.png");
+	if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull() || closedbasket_pixmap.isNull())
+		QMessageBox::critical(this, "GUI element not found", QString("White and/or black basket textures not found!\n searched relative to exe in: " + texture_path));
 	
-	// loading in font
+	// loading font
 	QFontDatabase fontDatabase;
-	if (fontDatabase.addApplicationFont("../Go_GUI/fonts/SHOJUMARU-REGULAR.TTF") == -1)
-		QMessageBox::critical(this, "Font not found", QString("Shojumaru font was not found!"));
+	QString font_path = "../Go_GUI/fonts/SHOJUMARU-REGULAR.TTF";
+	if (fontDatabase.addApplicationFont(font_path) == -1)
+		QMessageBox::critical(this, "Font not found", QString("Shojumaru font was not found!\n searched relative to exe in: " + font_path));
 
 	// checking for elements
 	auto open_menuitem	= this->findChild<QAction *>("open_action");
+	auto save_menuitem	= this->findChild<QAction *>("save_action");
 	auto exit_menuitem	= this->findChild<QAction *>("exit_action");
 	auto info_menuitem	= this->findChild<QAction *>("info_action");
-	auto big_layout		= this->findChild<QGridLayout *>("big_layout");
-	auto small_layout	= this->findChild<QGridLayout *>("small_layout");
+	auto big_container	= this->findChild<QWidget *>("big_container");
+	auto small_container= this->findChild<QWidget *>("small_container");
 	auto viewswitch_button = this->findChild<QPushButton *>("viewswitch_button");
+	auto capturedwhite_label = this->findChild<QLabel *>("capturedwhite_label");
+	auto capturedblack_label = this->findChild<QLabel *>("capturedblack_label");
 
+	// throwing an error message of elements that were not found
 	if ( open_menuitem == nullptr || exit_menuitem == nullptr || info_menuitem == nullptr
-		|| big_layout == nullptr || small_layout == nullptr)
+		|| save_menuitem == nullptr	|| big_container == nullptr || small_container == nullptr
+		|| capturedwhite_label == nullptr || capturedblack_label == nullptr)
 		QMessageBox::critical(this, "GUI element not found", 
 							QString("An element of GUI could not be found. (Deleted, renamed?)\n\n Element list:\n " 
 							 + ((open_menuitem) ? open_menuitem->objectName()	: "<Open> not found!") + "\n"
+							 + ((save_menuitem) ? save_menuitem->objectName()	: "<Save> not found!") + "\n"
 							 + ((exit_menuitem) ? exit_menuitem->objectName()	: "<Exit> not found!") + "\n"
 							 + ((info_menuitem) ? info_menuitem->objectName()	: "<Info> not found!") + "\n"
-							 + ((big_layout)	? big_layout->objectName()		: "<Big view> not found!") + "\n"
-							 + ((small_layout)	? small_layout->objectName()	: "<Small view> not found!") + "\n"
+							 + ((big_container)	? big_container->objectName()	: "<Big container> not found!") + "\n"
+							 + ((small_container) ? small_container->objectName()	: "<Small container> not found!") + "\n"
+							 + ((capturedwhite_label) ? capturedwhite_label->objectName()	: "<Captured white label> not found!") + "\n"
+							 + ((capturedblack_label) ? capturedblack_label->objectName()	: "<Captured black label> not found!") + "\n"
 							 ));
 
 	// connections
 	connect(open_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuOpen);
+	connect(save_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuSave);
 	connect(exit_menuitem,		&QAction::triggered,	this, &QWidget::close);	
 	connect(info_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
 	connect(viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
@@ -86,48 +84,26 @@ void GUI::init(){
 	virtual_view = new VirtualView(this);
 	augmented_view = new AugmentedView(this);
 
-	/** working windows with QGridLayout
-	QWidget* big_container = new QWidget();
-	augmented_view->setParent(big_container);
-	augmented_view->rescaleImage(getBigWindowSize());
-	big_container->setObjectName("big_container");
-	big_container->setToolTip("augmented view");
-	this->findChild<QGridLayout *>("big_layout")->addWidget(big_container);
-	QWidget* small_container = QWidget::createWindowContainer(virtual_view, this);
-	small_container->setObjectName("small_container");
-	small_container->setToolTip("virtual view");
-	this->findChild<QGridLayout *>("small_layout")->addWidget(small_container);
-	*/
 
-	// working windows with QWidgets (simpler)
+	// Attaching augmented view to big container
 	QWidget* big_container = this->findChild<QWidget *>("big_container");
 	augmented_view->setParent(big_container);
 	augmented_view->rescaleImage(big_container->size());
 	big_container->setToolTip("augmented view");
 
+	// Attaching virtual view to small container
 	QWidget* small_container = this->findChild<QWidget *>("small_container");
 	QSize small_container_size = small_container->size();	// saving size
 	small_container = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
 	small_container->resize(small_container_size);
 	virtual_view->resize(small_container_size);
 	small_container->setToolTip("virtual view");
-	
 
-	/** not working windows with QStackedWidget (ownership is taken away!)
-	QStackedWidget* big_container = this->findChild<QStackedWidget *>("big_container");
-	QStackedWidget* small_container = this->findChild<QStackedWidget *>("small_container");
+	this->findChild<QLabel* >("white_basket")->setPixmap(closedbasket_pixmap);
+	this->findChild<QLabel* >("black_basket")->setPixmap(closedbasket_pixmap);
 
-	big_container->addWidget(augmented_view);
-	small_container->addWidget(augmented_view);
-
-	virtual_container = QWidget::createWindowContainer(virtual_view);
-
-	big_container->addWidget(virtual_container);
-	small_container->addWidget(virtual_container);
-
-	big_container->setCurrentWidget(augmented_view);
-	small_container->setCurrentWidget(virtual_container);
-	*/
+	this->findChild<QLabel* >("capturedwhite_label")->setText(QString());
+	this->findChild<QLabel* >("capturedblack_label")->setText(QString());
 }
 
 /**
@@ -150,70 +126,37 @@ void GUI::RenderGame(GoBackend::Game game) {
 void GUI::slot_ViewSwitch(){
 	QWidget* big_container = this->findChild<QWidget *>("big_container");
 	QWidget* small_container = this->findChild<QWidget *>("small_container");
-
-	//QWidget* newbig_container, *newsmall_container;
-
-	/* working windows with QGridLayout
-	if (big_container->toolTip() == "augmented view"){
-		newbig_container = QWidget::createWindowContainer(virtual_view, this->findChild<QGridLayout *>("big_layout")->widget());
-		newbig_container->setObjectName("big_container");
-		newbig_container->setToolTip("virtual view");
-
-		newsmall_container = new QWidget(this);
-		augmented_view->setParent(newsmall_container);
-		augmented_view->rescaleImage(getSmallWindowSize());
-
-		newsmall_container->setObjectName("small_container");
-		newsmall_container->setToolTip("augmented view");
-	}
-	else {
-		newbig_container = new QWidget(this);
-		augmented_view->setParent(newbig_container);
-		augmented_view->rescaleImage(getBigWindowSize());
-		newbig_container->setObjectName("big_container");
-		newbig_container->setToolTip("augmented view");
-		
-		newsmall_container = QWidget::createWindowContainer(virtual_view, this->findChild<QGridLayout *>("big_layout")->widget());
-		newsmall_container->setObjectName("small_container");
-		newsmall_container->setToolTip("virtual view");
-	}
-	big_container->deleteLater();
-	small_container->deleteLater();
-
-	this->findChild<QGridLayout *>("big_layout")->addWidget(newbig_container);
-	this->findChild<QGridLayout *>("small_layout")->addWidget(newsmall_container);
-	*/
-
 	
 	if (big_container->toolTip() == "virtual view"){
+		// switching augmented view to big container
 		augmented_view->setParent(big_container);
 		augmented_view->rescaleImage(big_container->size());
 		big_container->setToolTip("augmented view");
 
+		// switching virtual view to small container
 		QWidget* small_view = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
 		small_view->resize(small_container->size());
 		virtual_view->resize(small_container->size());
 		small_container->setToolTip("virtual view");
 
-		small_view->show();	// when changing parent, it gets invisible -> show again! -.- !!
+		small_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
 		augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 	}
 	else if (big_container->toolTip() == "augmented view"){
+		// switching augmented view to small container
 		augmented_view->setParent(small_container);
 		augmented_view->rescaleImage(small_container->size());
 		small_container->setToolTip("augmented view");
 
+		// switching virtual view to big container
 		QWidget* big_view = QWidget::createWindowContainer(virtual_view, big_container, Qt::Widget);
 		big_view->resize(big_container->size());
 		virtual_view->resize(big_container->size());
 		big_container->setToolTip("virtual view");
 
-		big_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+		big_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
 		augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 	}
-
-	
-	//augmented_view->setFixedSize(this->findChild<QGridLayout *>("big_layout")->totalSizeHint());
 }
 
 /**
@@ -230,6 +173,24 @@ void GUI::slot_MenuOpen(){
         tr("SGF (*.sgf)" ),
         &selfilter 
 	);
+}
+
+/**
+ * @brief	SLOT QAction "MenuOpen"
+ *			opens a filedialog that lets the user choose an sgf-file.
+ * @todo	prompt for playernames, gamename and send them + filename to Go_Backend per signal
+ */
+void GUI::slot_MenuSave(){
+	QString selfilter = tr("SGF (*.sgf)");
+	QString fileName = QFileDialog::getSaveFileName(
+        this,
+        "save sgf-file",
+        NULL,
+        tr("SGF (*.sgf)" ),
+        &selfilter 
+	);
+
+	// TODO!
 }
 
 /**

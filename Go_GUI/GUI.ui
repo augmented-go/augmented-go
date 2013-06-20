@@ -91,7 +91,7 @@
      <string>Pass</string>
     </property>
    </widget>
-   <widget class="QLabel" name="capturedwhite_label">
+   <widget class="QLabel" name="capturedblack_label">
     <property name="geometry">
      <rect>
       <x>650</x>
@@ -117,7 +117,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="capturedblack_label">
+   <widget class="QLabel" name="capturedwhite_label">
     <property name="geometry">
      <rect>
       <x>800</x>
@@ -254,6 +254,12 @@
       <height>239</height>
      </rect>
     </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"> background-color: black;</string>
+    </property>
    </widget>
    <widget class="QWidget" name="big_container" native="true">
     <property name="geometry">
@@ -263,6 +269,15 @@
       <width>579</width>
       <height>519</height>
      </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"> background-color: black;</string>
     </property>
    </widget>
   </widget>
