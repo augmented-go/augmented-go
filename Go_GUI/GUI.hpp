@@ -44,11 +44,14 @@ public slots:
             case SG_WHITE:
                 this->findChild<QLabel* >("white_basket")->setPixmap(whitebasket_pixmap);
                 this->findChild<QLabel* >("black_basket")->setPixmap(closedbasket_pixmap);
+                break;
             case SG_BLACK:
                 this->findChild<QLabel* >("white_basket")->setPixmap(closedbasket_pixmap);
                 this->findChild<QLabel* >("black_basket")->setPixmap(blackbasket_pixmap);
+                break;
             default:
                 assert(false);
+                break;
         }
         
         auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
