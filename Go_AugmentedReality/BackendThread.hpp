@@ -6,6 +6,7 @@
 
 #include <QThread>
 #include <QTimer>
+#include <QImage>
 
 #include "Game.hpp"
 
@@ -41,17 +42,23 @@ namespace Go_AR {
         
     // signals and slots
     public slots:
-        void backend_stop();
-        
+        void stop();
+        void save_sgf(QString path) const;
+        void pass(SgBlackWhite player);
+        void reset();
+        void finish();
+        void resign();
+
     private slots:
         void scan();
         
     signals:
-        void backend_new_image();
+        void backend_new_image(const QImage camera_image);
+        void game_data_changed(const GoBoard * game_board);
 
     // Member vars    
     private:
-        std::unique_ptr<GoBackend::Game>    _game;
+        std::unique_ptr<GoBackend::Game>     _game;
         std::unique_ptr<Go_Scanner::Scanner> _scanner;
     };
 }

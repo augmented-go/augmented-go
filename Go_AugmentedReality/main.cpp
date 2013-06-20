@@ -7,6 +7,7 @@
 int main(int argc, char** argv) {
     QApplication qt_app(argc, argv);
 
+    // init fuego
     SgInit();
     GoInit();
 
@@ -19,18 +20,21 @@ int main(int argc, char** argv) {
 
         // connect signal from backend to gui
         QObject::connect(&backend, &BackendThread::backend_new_image, &gui, &GUI::new_image, Qt::QueuedConnection);
+        QObject::connect(&backend, &BackendThread::game_data_changed, &gui, &GUI::new_game_data, Qt::QueuedConnection);
 
         // connect signal from gui to backend
-        QObject::connect(&gui, &GUI::stop_backend_thread, &backend, &BackendThread::backend_stop, Qt::QueuedConnection);
+        QObject::connect(&gui, &GUI::stop_backend_thread, &backend, &BackendThread::stop, Qt::QueuedConnection);
 
-        backend.start(); // backend thread
+        backend.start(); // start backend thread
 
         gui.show();
-        qt_app.exec();    // gui thread
+        qt_app.exec();   // start gui thread (and it's event loop)
     
-        backend.wait();
-    }
+        backend.quit();  // failsafe: explicitly tell the backend thread to stop (if the gui hasn't done this)
+        backend.wait();  // gui was exited, wait for the backend thread (gui should have sent a signal to the backend thread to quit)
+    } 
 
+    // "clean up" fuego
     GoFini();
     SgFini();
 
