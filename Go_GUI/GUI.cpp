@@ -106,13 +106,6 @@ void GUI::init(){
 	this->findChild<QLabel* >("capturedblack_label")->setText(QString());
 }
 
-/**
- * @brief	shows and renders a GoBackend::Game
- */
-void GUI::RenderGame(GoBackend::Game game) {
-	this->show(); // shows Qt5 Window
-}
-
 
 //////////
 //Slots
