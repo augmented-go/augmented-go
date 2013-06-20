@@ -23,14 +23,14 @@ int main(int argc, char** argv) {
         QObject::connect(&backend, &BackendThread::game_data_changed, &gui, &GUI::new_game_data, Qt::QueuedConnection);
 
         // connect signal from gui to backend
-        QObject::connect(&gui, &GUI::stop_backend_thread, &backend, &BackendThread::backend_stop, Qt::QueuedConnection);
+        QObject::connect(&gui, &GUI::stop_backend_thread, &backend, &BackendThread::stop, Qt::QueuedConnection);
 
         backend.start(); // start backend thread
 
         gui.show();
         qt_app.exec();   // start gui thread (and it's event loop)
     
-        backend.quit();
+        backend.quit();  // failsafe: explicitly tell the backend thread to stop (if the gui hasn't done this)
         backend.wait();  // gui was exited, wait for the backend thread (gui should have sent a signal to the backend thread to quit)
     } 
 

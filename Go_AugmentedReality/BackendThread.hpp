@@ -48,7 +48,6 @@ namespace Go_AR {
         void reset();
         void finish();
         void resign();
-        void change_size();
 
     private slots:
         void scan();

@@ -16,8 +16,6 @@ BackendThread::~BackendThread()
 {}
 
 void BackendThread::run()  {
-    qDebug() << "Backend Thread: " << thread()->currentThreadId();
-
     // use a timer to periodically scan the camera image
     QTimer timer;
     connect(&timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
@@ -28,8 +26,6 @@ void BackendThread::run()  {
 }
 
 void BackendThread::stop()  {
-    qDebug() << "Stop signal arrived, stopping backend thread...";
-
     this->quit();
 }
 
@@ -45,6 +41,7 @@ void BackendThread::scan() {
 
     qDebug() << "\nScan finished! new image available!";
     
+    // @todo(jschmer): convert image (OpenCV data type) to QImage (Qt data type)
     const auto scanner_image = QImage(200, 400, QImage::Format::Format_RGB32);
 
     // send signal to gui
@@ -61,7 +58,7 @@ void BackendThread::save_sgf(QString path) const {
     auto filepath = path.toStdString();
 
     if (!_game->saveGame(filepath))
-        std::cout << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
+        std::cerr << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
 }
 
 void BackendThread::pass(SgBlackWhite player) {
