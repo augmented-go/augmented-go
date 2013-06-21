@@ -6,6 +6,8 @@
 
 int main(int argc, char** argv) {
     QApplication qt_app(argc, argv);
+    // changes the current working directory and makes all texture and model paths relative to the executable
+    QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     // init fuego
     SgInit();

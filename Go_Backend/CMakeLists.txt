@@ -9,3 +9,5 @@ SET(backend_HEADERS
 
 add_library (Go_Backend ${backend_SOURCE} ${backend_HEADERS})
 add_fuego_to_target(Go_Backend)
+
+configure_target(Go_Backend)

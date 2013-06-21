@@ -23,7 +23,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
 {
     ui.setupUi(this);
 
-    QString texture_path = "../Go_GUI/textures/";
+    QString texture_path = "res/textures/";
     whitebasket_pixmap = QPixmap(texture_path + "white_basket.png");
     blackbasket_pixmap = QPixmap(texture_path + "black_basket.png");
     closedbasket_pixmap = QPixmap(texture_path + "Closed_basket.png");
@@ -32,7 +32,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
     
     // loading font
     QFontDatabase fontDatabase;
-    QString font_path = "../Go_GUI/fonts/SHOJUMARU-REGULAR.TTF";
+    QString font_path = "res/fonts/SHOJUMARU-REGULAR.TTF";
     if (fontDatabase.addApplicationFont(font_path) == -1)
         QMessageBox::critical(this, "Font not found", QString("Shojumaru font was not found!\n searched relative to exe in: " + font_path));
 

@@ -12,7 +12,7 @@ public:
         this->setParent(parent);
 
         // Setting up warning as standard picture
-        QString warning_image_path = "../Go_GUI/textures/No_camera_picture.png";
+        QString warning_image_path = "res/textures/No_camera_picture.png";
         if(QImage(warning_image_path).isNull())
             QMessageBox::critical(this, "GUI element not found", "Warning image of AugmentedView not found!\n searched relative to exe in" + warning_image_path);
         else{
