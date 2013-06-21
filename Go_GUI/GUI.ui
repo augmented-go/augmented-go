@@ -48,7 +48,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../build/Go_GUI/textures/White_basket.png</pixmap>
+     <pixmap>res/textures/White_basket.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -67,7 +67,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>textures/Black_basket.png</pixmap>
+     <pixmap>res/textures/Black_basket.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>

@@ -17,3 +17,5 @@ add_fuego_to_target(Go_Backend_Test)
 # visual studio testing framework
 set_target_properties(Go_Backend_Test PROPERTIES LINK_FLAGS "/LIBPATH:$(VCInstallDir)UnitTest\\lib")
 set_target_properties(Go_Backend_Test PROPERTIES COMPILE_FLAGS "/I$(VCInstallDir)UnitTest\\include")
+
+configure_target(Go_Backend_Test)
