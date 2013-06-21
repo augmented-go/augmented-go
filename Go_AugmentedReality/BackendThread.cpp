@@ -18,12 +18,17 @@ QImage mat_to_QImage(cv::Mat source)
     assert(source.depth() == CV_8U);
     assert(source.channels() == 3);
 
+    // "cast" or convert to an IplImage to get easier access to needed infos,
+    // no copying involved
     IplImage image = source;
 
     // create QImage from IplImage
     QImage ret((uchar*) image.imageData, image.width, image.height, QImage::Format_RGB888);
 
-    return ret.convertToFormat(QImage::Format_RGB32).rgbSwapped();
+    // swap BGR (opencv format) to RGB
+    ret = ret.rgbSwapped();
+
+    return ret;
 }
 
 BackendThread::BackendThread()
@@ -39,9 +44,9 @@ void BackendThread::run()  {
     // use a timer to periodically scan the camera image
     QTimer timer;
     connect(&timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
-    timer.setInterval(1000); // every 1000 msec
-    timer.start();   // puts one event in the threads event queue
-    exec(); // this threads event loop
+    timer.setInterval(1000); // call the connected slot every 1000 msec
+    timer.start();  // put one event in this threads event queue
+    exec();         // start this threads event loop
     timer.stop();
 }
 
@@ -50,11 +55,11 @@ void BackendThread::stop()  {
 }
 
 void BackendThread::scan() {
+    cv::Mat image;
     GoSetup setup;
     int board_size;
-    cv::Mat image;
 
-    // analyze new camera image
+    // fetch new camera image
     auto got_new_image = _scanner->scanCamera(setup, board_size, image);
 
     qDebug() << "\nScan finished!";
@@ -69,7 +74,7 @@ void BackendThread::scan() {
         // converting image (OpenCV data type) to QImage (Qt data type)
         const auto scanner_image = mat_to_QImage(image);
 
-        // send signal to gui
+        // send signal with new image to gui
         emit backend_new_image(scanner_image);
 
         // send board data to gui
