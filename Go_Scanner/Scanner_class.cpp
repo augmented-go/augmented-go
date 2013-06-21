@@ -8,8 +8,12 @@ using namespace std;
 
 bool Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
     Mat frame;
-    if (!readCameraFrame(frame))
-        return false;
+    if (!readCameraFrame(frame)) {
+        // NOTICE: DEBUG STUFF!
+        frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
+        out_image = frame;
+        return true;
+    }
 
     // do stuff with frame
 

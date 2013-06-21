@@ -9,24 +9,9 @@
 #include <QImage>
 
 #include "Game.hpp"
+#include "Scanner.hpp"
 
 typedef int OpenCVImage;
-
-// using a Scanner dummy until the real implementation is available
-namespace Go_Scanner {
-    class Scanner {
-    public:
-        Scanner() {}
-    private:
-        Scanner(const Scanner&);
-        
-    public:
-        std::pair<GoSetup, OpenCVImage> scanPicture() {
-            return std::make_pair(GoSetup(), OpenCVImage());
-        }
-    };
-}
-
 
 namespace Go_AR {
     class BackendThread : public QThread {
@@ -50,10 +35,10 @@ namespace Go_AR {
         void resign();
 
     private slots:
-        void scan();
+        void scan(); // our main worker function
         
     signals:
-        void backend_new_image(const QImage camera_image);
+        void backend_new_image(QImage camera_image);
         void game_data_changed(const GoBoard * game_board);
 
     // Member vars    
