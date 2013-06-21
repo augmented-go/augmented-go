@@ -2,6 +2,8 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QDebug>
+
 #include "Game.hpp"
 
 #include "ui_GUI.h"
@@ -29,12 +31,11 @@ public slots:
     void slot_ViewSwitch();
 
 public slots:
-    void new_image(const QImage image) {
-        printf(">>> New Image arrived! '%d x %d' <<<\n", image.width(), image.height());
-        //if (param){
-        //	augmented_view->setImage(param);
-        //  augmented_view->rescaleImage(augmented_view->parentWidget()->size());
-        //}
+    void new_image(QImage image) {
+        printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
+
+        augmented_view->setImage(image);
+        augmented_view->rescaleImage(augmented_view->parentWidget()->size());
     }
 
     void new_game_data(const GoBoard * game_board) {
