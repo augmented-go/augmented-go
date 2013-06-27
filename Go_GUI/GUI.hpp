@@ -31,10 +31,10 @@ public slots:
 public slots:
     void new_image(const QImage image) {
         printf(">>> New Image arrived! '%d x %d' <<<\n", image.width(), image.height());
-        //if (param){
-        //	augmented_view->setImage(param);
-        //  augmented_view->rescaleImage(augmented_view->parentWidget()->size());
-        //}
+		if (!image.isNull()){
+        	augmented_view->setImage(image);
+			augmented_view->rescaleImage(augmented_view->parentWidget()->size());
+        }
     }
 
     void new_game_data(const GoBoard * game_board) {
