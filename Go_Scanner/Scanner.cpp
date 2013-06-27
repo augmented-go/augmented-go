@@ -13,7 +13,7 @@ cv::Mat holdImg(int x,int y);
 
 std::string windowName = "Augmented Go Cam";
 
-bool debug = false;
+bool debug = true;
 bool showall = false;
 
 /*
@@ -37,6 +37,8 @@ int point=-1;			//currently selected point
 int nop=4;				//number of points
 
 enum lineType{HORIZONTAL, VERTICAL};
+enum stoneColor{BLACK, WHITE};
+enum lineheading{LEFT, RIGHT};
 
 struct PartitionOperator
 {
@@ -513,27 +515,34 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
 
 bool detectBlobs(cv::Mat warpedImg)
 {
+	// not working!!! alternative: detectStones function
+
+
 	cv::Mat warpedImgGray;
-	cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
+	//cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
 
 	// set up the parameters (check the defaults in opencv's code in blobdetector.cpp)
 	cv::SimpleBlobDetector::Params params;
-	params.minDistBetweenBlobs = 50.0f;
+	//params.minDistBetweenBlobs = 50.0f;
 	params.filterByInertia = false;
 	params.filterByConvexity = false;
-	params.filterByColor = true;
+	//params.filterByColor = true;
 	params.filterByCircularity = false;
-	params.filterByArea = false;
+	params.minCircularity = 15;
+	params.maxCircularity = 80;
+	//params.filterByArea = false;
+	params.minThreshold = 50;
+	params.maxThreshold = 90; 
 	params.blobColor = 0;
 	// ... any other params you don't want default value
 
 	// set up and create the detector using the parameters
-	cv::Ptr<cv::FeatureDetector> blob_detector = new cv::SimpleBlobDetector(params);
-	blob_detector->create("SimpleBlob");
+	cv::SimpleBlobDetector blob_detector(params);
+	//blob_detector.create("SimpleBlob");
 
 	// detect!
 	cv::vector<cv::KeyPoint> keypoints;
-	blob_detector->detect(warpedImgGray, keypoints);
+	blob_detector.detect(warpedImg, keypoints);
 
 	// extract the x y coordinates of the keypoints: 
 
@@ -548,9 +557,129 @@ bool detectBlobs(cv::Mat warpedImg)
 
 	}
 
+	cv::imshow("Wir sind so toll!", warpedImg);
 
 	return true;
 }
+
+int getStoneDistanceAndMidpoint(cv::Mat& warpedImgGray, int x, int y, lineheading heading, cv::Point2f& midpointLine)
+{
+	/**
+	*	Returns the size of a 45°(left headed) or 125°(right headed) line within a circle, 
+	*	starting from any point within that circle 
+	*	mainly used to get the diameters of the stones. 
+	*	This functin also provides the Midpoint of that line. 
+	*/
+
+	int d1, d2, distance, xTmp1, yTmp1, xTmp2, yTmp2;
+
+	if(heading == RIGHT)
+	{	
+		xTmp1 = x;
+		yTmp1 = y;
+		for(int j=1; warpedImgGray.at<uchar>(xTmp1,yTmp1) > 50 ; j++)
+		{
+			xTmp1 -= j;	
+			yTmp1 += j; 
+			d1 = j;
+		}
+
+		xTmp2 = x;
+		yTmp2 = y;
+		for(int j=1; warpedImgGray.at<uchar>(xTmp2,yTmp2) > 50 ; j++)
+		{
+			xTmp2 += j;
+			xTmp2 -= j; 
+			d2 = j;
+		}
+	}
+	else //heading is left
+	{
+
+		xTmp1 = x;
+		yTmp1 = y;
+		for(int j=1; warpedImgGray.at<uchar>(xTmp1,yTmp1) > 50 ; j++)
+		{
+			xTmp1 -= j;	
+			yTmp1 -= j; 
+			d1 = j;
+		}
+
+		xTmp2 = x;
+		yTmp2 = y;
+		for(int j=1; warpedImgGray.at<uchar>(xTmp2,yTmp2) > 50 ; j++)
+		{
+			xTmp2 += j;
+			xTmp2 += j; 
+			d2 = j;
+		}
+	}
+
+
+	//distance of our line
+	distance = d1 + d2;
+
+	// midpoint of our first help line
+	midpointLine.x = (xTmp1 + xTmp2) / 2.0f;
+	midpointLine.y = (yTmp1 + yTmp2) / 2.0f;
+
+	return distance;
+}
+
+bool detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f>& intersectionPoints)
+{
+	//TODO: use black/white image. write function for it. 
+
+	cv::Mat warpedImgGray;
+	cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
+	cv::threshold(warpedImgGray, warpedImgGray, 85, 255, 0);
+
+
+	for(int i=0; i < intersectionPoints.size(); i++)
+	{
+		int x = intersectionPoints[i].x;
+		int y = intersectionPoints[i].y;
+		int distance, diameter45, diameter125;
+
+		/**
+		* Let's check if this is a stone :). We'll read out the diameters at 45° and 125° if they 
+		* are similar -> it's a stone. 
+		*/
+
+		if (warpedImgGray.at<uchar>(x,y) < 50)
+		{
+
+			/**	
+			*	first we produce a help line to get the diameters at 45° and 125°.
+			*	therefore we use the intersectionpoints. 
+			*/ 
+			cv::Point2f midpointLine;
+			distance = getStoneDistanceAndMidpoint(warpedImgGray, x, y, LEFT, midpointLine);
+
+			// Get the Diameter for 125 degree
+			cv::Point2f midpoint125;
+			diameter125 = getStoneDistanceAndMidpoint(warpedImgGray, midpointLine.x, midpointLine.y, RIGHT, midpoint125);
+
+			// Get the Diameter for 45 degree
+			cv::Point2f midpoint45;
+			diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, midpoint125.x, midpoint125.y, RIGHT, midpoint45);
+
+			if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45)
+			{
+				std::cout << "a stone was detected" << std::endl;
+
+				//save stone in data structure. this will be the returntype of this function
+			}
+			else
+				std::cout << "no stone could be detected" << std::endl;
+
+		}
+		else
+			std::cout << "No Stone on this position found" << std::endl;
+
+	}
+}
+
 
 	cv::Mat Thresh;
 	cv::Mat Thresh_res;
@@ -574,7 +703,12 @@ void Threshold_Debug( int, void* )
    */
 	cv::Mat sobel;
 
-	sobel = sobelFiltering(Thresh);
+	//sobel = sobelFiltering(Thresh);
+
+	cv::Mat sub_mat = cv::Mat::ones(Thresh.size(), Thresh.type())*255;
+	//subtract the original matrix by sub_mat to give the negative output new_image
+
+	cv::subtract(sub_mat, Thresh, sobel);
 
 	cv::threshold(sobel, Thresh_res, threshold_value, max_BINARY_value,threshold_type );
 
@@ -584,6 +718,8 @@ void Threshold_Debug( int, void* )
 int main(int argc, char** argv)
 {
 	//TODO: Get imagewidth and size automatically
+	// convert the warped image just once to greyscale! 
+
 	img0 = cv::imread("go_bilder/01.jpg");
 
 	cv::namedWindow(windowName, CV_WINDOW_AUTOSIZE);
@@ -597,6 +733,8 @@ int main(int argc, char** argv)
 	if(showall == true)
 		cv::imshow("Warped Image", warpedImg);
 
+	cv::Mat srcWarpedImg = warpedImg.clone();
+	cv::vector<cv::Point2f> intersectionPoints;
 
 	if (debug == true)
 	{
@@ -617,12 +755,13 @@ int main(int argc, char** argv)
 
 	else
 	{
-		cv::vector<cv::Point2f> intersectionPoints;
+
 		bool intersectionResult = getBoardIntersections(warpedImg, 255, intersectionPoints);
 
 	}
 
-	bool blobResult = detectBlobs(warpedImg);
+	bool detectResult = detectStones(srcWarpedImg, intersectionPoints);
+	//bool blobResult = detectBlobs(srcWarpedImg);
 
 	cv::waitKey(0);
 	cv::destroyWindow(windowName);
