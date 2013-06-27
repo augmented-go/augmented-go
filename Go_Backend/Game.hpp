@@ -29,6 +29,13 @@ enum class State {
  * The fuego type 'GoSetup' is used for updating the board. GoSetup uses
  * 'SgPoints' to add stones to such a setup. The game then automatically tries to read
  * a move out of the current and updated board.
+ *
+ * The rules are:
+ *   Handicap: 0
+ *   Scoring: Japanese
+ *   Komi: 6.5
+ *   2 Passes end a game
+ *   
  * Usage Example:
  *   Game game;
  *   GoSetup setup;

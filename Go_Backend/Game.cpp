@@ -40,7 +40,12 @@ bool Game::init(int size, GoSetup setup) {
     // assert valid board size
     assert(size < 20 && size > 1);
 
-    _go_game.Init(size, GoRules());
+    auto rules = GoRules(0,             // handicap
+                         GoKomi(6.5),   // komi
+                         true,          // japanese scoring
+                         true);         // two passes end a game
+
+    _go_game.Init(size, rules);
 
     // check if setup contains only valid stones!
     if (!validSetup(setup)) {
