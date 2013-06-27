@@ -40,6 +40,7 @@ find_package(OpenCV REQUIRED)
 # our custom cmake functions/macros
 include(cmake/add_fuego_to_target.cmake)
 include(cmake/add_backend_to_target.cmake)
+include(cmake/add_scanner_to_target.cmake)
 include(cmake/add_gui_to_target.cmake)
 include(cmake/add_opencv_to_target.cmake)
 include(cmake/configure_target.cmake)

@@ -29,7 +29,9 @@ wrap_gui_ui_files(ui_GUI)
 add_executable (${TARGETNAME} ${augmented_reality_SOURCE} ${augmented_reality_HEADERS} ${ui_GUI})
 
 add_fuego_to_target(${TARGETNAME})
+add_scanner_to_target(${TARGETNAME})
 add_backend_to_target(${TARGETNAME})
+add_opencv_to_target(${TARGETNAME})
 add_gui_to_target(${TARGETNAME})
 
 configure_target(${TARGETNAME})

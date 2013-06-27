@@ -10,8 +10,7 @@ include_directories (${CMAKE_SOURCE_DIR}/Go_Scanner)
 link_directories (${CMAKE_BINARY_DIR}/Go_Scanner)
 
 add_library(Go_Scanner_Test SHARED ${scanner_test_SOURCE} ${scanner_test_HEADERS})
-target_link_libraries (Go_Scanner_Test Go_Scanner)
-target_link_libraries(Go_Scanner_Test)
+target_link_libraries(Go_Scanner_Test Go_Scanner)
 add_opencv_to_target(Go_Scanner_Test)
 add_fuego_to_target(Go_Scanner_Test)
 
