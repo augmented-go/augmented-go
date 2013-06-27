@@ -4,7 +4,7 @@
 #include "Game.hpp"
 
 // fuego
-#include "GoInit.cpp"
+#include "GoInit.h"
 #include "SgInit.h"
 #include "GoSetupUtil.h"
 
