@@ -1,6 +1,7 @@
 
 SET(backend_test_SOURCE
     backend_test.cpp
+    scoring_test.cpp
 )
 
 SET(backend_test_HEADERS
