@@ -111,6 +111,7 @@ public:
      *               or B+R (Black wins by resign)
      *               or 0 for a drawn game
      *               If the game was not ended properly, this returns an empty string.
+     *               Also doesn't consider any dead stones!
      */
     std::string getResult() const;
 
