@@ -27,8 +27,10 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
     whitebasket_pixmap = QPixmap(texture_path + "white_basket.png");
     blackbasket_pixmap = QPixmap(texture_path + "black_basket.png");
     closedbasket_pixmap = QPixmap(texture_path + "Closed_basket.png");
-    if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull() || closedbasket_pixmap.isNull())
-        QMessageBox::critical(this, "GUI element not found", QString("White and/or black basket textures not found!\n searched relative to exe in: " + texture_path));
+	gotable_pixmap = QPixmap(texture_path + "go_table.png");
+    if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull() 
+		|| closedbasket_pixmap.isNull() || gotable_pixmap.isNull())
+        QMessageBox::critical(this, "GUI element not found", QString("A texture was not found!\n searched relative to exe in: " + texture_path));
     
     // loading font
     QFontDatabase fontDatabase;
@@ -46,11 +48,15 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
     auto viewswitch_button = this->findChild<QPushButton *>("viewswitch_button");
     auto capturedwhite_label = this->findChild<QLabel *>("capturedwhite_label");
     auto capturedblack_label = this->findChild<QLabel *>("capturedblack_label");
+	auto player1_label = this->findChild<QLabel *>("player1_label");
+    auto player2_label = this->findChild<QLabel *>("player2_label");
+	auto go_table_label = this->findChild<QLabel *>("go_table_label");
 
     // throwing an error message of elements that were not found
     if ( open_menuitem == nullptr || exit_menuitem == nullptr || info_menuitem == nullptr
         || save_menuitem == nullptr	|| big_container == nullptr || small_container == nullptr
-        || capturedwhite_label == nullptr || capturedblack_label == nullptr)
+        || capturedwhite_label == nullptr || capturedblack_label == nullptr 
+		|| player1_label == nullptr || player2_label == nullptr || go_table_label == nullptr)
         QMessageBox::critical(this, "GUI element not found", 
                             QString("An element of GUI could not be found. (Deleted, renamed?)\n\n Element list:\n " 
                              + ((open_menuitem) ? open_menuitem->objectName()	: "<Open> not found!") + "\n"
@@ -61,6 +67,9 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
                              + ((small_container) ? small_container->objectName()	: "<Small container> not found!") + "\n"
                              + ((capturedwhite_label) ? capturedwhite_label->objectName()	: "<Captured white label> not found!") + "\n"
                              + ((capturedblack_label) ? capturedblack_label->objectName()	: "<Captured black label> not found!") + "\n"
+							 + ((player1_label) ? player1_label->objectName()	: "<player1 label> not found!") + "\n"
+							 + ((player2_label) ? player2_label->objectName()	: "<player2 label> not found!") + "\n"
+							 + ((go_table_label) ? go_table_label->objectName()	: "<Go table label> not found!") + "\n"
                              ));
 
     // connections
@@ -101,6 +110,7 @@ void GUI::init(){
 
     this->findChild<QLabel* >("white_basket")->setPixmap(closedbasket_pixmap);
     this->findChild<QLabel* >("black_basket")->setPixmap(closedbasket_pixmap);
+	this->findChild<QLabel* >("go_table_label")->setPixmap(gotable_pixmap);
 
     this->findChild<QLabel* >("capturedwhite_label")->setText(QString());
     this->findChild<QLabel* >("capturedblack_label")->setText(QString());

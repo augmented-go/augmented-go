@@ -73,7 +73,7 @@ private:
     Ui::MainWindow ui;
     VirtualView* virtual_view;
     AugmentedView* augmented_view;
-    QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap;
+    QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
 };
 
 } // namespace Go_GUI
