@@ -2,6 +2,8 @@
 
 #include <fstream>
 #include <iostream>
+#include <utility>
+#include <sstream>
 
 #include <boost/date_time/gregorian/gregorian.hpp>
 
@@ -236,4 +238,62 @@ bool Game::saveGame(string file_path, string name_black, string name_white, stri
 
     return true;
 }
+
+std::string Game::finishGame() {
+    pass();
+    pass();
+
+    return getResult();
 }
+
+void Game::pass() {
+    _go_game.AddMove(SG_PASS, getBoard().ToPlay());
+
+    // update result if the game ended with the second pass
+    if (_go_game.EndOfGame()) {
+        // get score and update result
+        float score = FLT_MIN;
+        auto score_successful = GoBoardUtil::ScorePosition(getBoard(), SgPointSet(), score);
+
+        if (score_successful) {
+            if (score == 0) {
+                // this is a draw
+                _go_game.UpdateResult("0");
+            }
+            else {
+                // convert float score to string
+                std::ostringstream stream;
+                stream.precision(3);
+                stream << std::abs(score);
+
+                // a negative score means that black lost
+                // sgf: RE: Result: result, usually in the format "B+3.5" (black wins by 3.5 moku). 
+                auto result = std::string("") + (score < 0 ? "W" : "B") + "+" + stream.str();
+                _go_game.UpdateResult(result);
+            }
+        }
+        else {
+            _go_game.UpdateResult("Couldn't score the board.");
+        }
+    }
+}
+
+void Game::resign() {
+    auto current_player = getBoard().ToPlay();
+
+    // adding a resign comment in the sgf structure
+    _go_game.AddResignNode(current_player);
+
+    // sgf: RE: Result: result, usually in the format "B+R" (Black wins by resign)
+    auto result = std::string("") + (current_player == SG_BLACK ? "W" : "B") + "+R";   
+    _go_game.UpdateResult(result);
+}
+
+std::string Game::getResult() const {
+    if (_go_game.GetResult() != "")
+        return _go_game.GetResult();
+    else
+        return "";
+}
+
+} // 

@@ -82,12 +82,37 @@ public:
     State getState() const;
 
     /**
-    * @brief        Writes the current game state to a sgf file.
-    *               Names for players and game are only added to the file if not empty.
-    *               Also includes the current date.
-    * @returns      false if the file could not be opened
-    */
+     * @brief        Writes the current game state to a sgf file.
+     *               Names for players and game are only added to the file if not empty.
+     *               Also includes the current date.
+     * @returns      false if the file could not be opened
+     */
     bool saveGame(string file_path, string name_black = "", string name_white = "", string game_name = "");
+
+    /**
+     * @brief        Convenience function to quickly finish a game. Plays a pass for each player and
+     *               returns the result (see Game::getResult)
+     */
+    std::string finishGame();
+
+    /**
+     * @brief        Plays a 'pass' for the current player.
+     */
+    void pass();
+
+    /**
+     * @brief        Current player resigns and the game ends.
+     */
+    void resign();
+
+    /**
+     * @brief        Returns the result of the game in a standard way,
+     *               for example W+1.5 (White wins by 1.5 moku)
+     *               or B+R (Black wins by resign)
+     *               or 0 for a drawn game
+     *               If the game was not ended properly, this returns an empty string.
+     */
+    std::string getResult() const;
 
 private:
     // Not implemented
@@ -108,7 +133,7 @@ private:
 
 private:
     GoGame _go_game;
-    State _current_state;
+    State  _current_state;
 };
 
 }
