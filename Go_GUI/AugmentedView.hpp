@@ -23,15 +23,15 @@ public:
 
     /**
      * @brief		Sets the new image that shall be displayed.
-	 *				If the new image is empty, show the same picture as before.
-	 *				Default picture is "no_camera_picture.png".
+     *				If the new image is empty, show the same picture as before.
+     *				Default picture is "no_camera_picture.png".
      * @parameter	QImage	image that shall be displayed. 
      */
     void setImage(QImage image){
-		if(!image.isNull())		// if image is empty take old picture!
-			picture = QPixmap::fromImage(image);
+        if(!image.isNull())		// if image is empty take old picture!
+            picture = QPixmap::fromImage(image);
 
-		this->setPixmap(picture);
+        this->setPixmap(picture);
     }
 
     /**

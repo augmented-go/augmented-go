@@ -69,15 +69,15 @@ public slots:
 signals:
     void stop_backend_thread();
 
-	void signal_saveGame(QString filename, QString blackplayer_name, QString whiteplayer_name, QString game_name);
+    void signal_saveGame(QString filename, QString blackplayer_name, QString whiteplayer_name, QString game_name);
 
 private:
     Ui::MainWindow ui;
     VirtualView* virtual_view;
     AugmentedView* augmented_view;
     QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
-	QString blackplayer_name, whiteplayer_name, game_name;
+    QString blackplayer_name, whiteplayer_name, game_name;
 
-	void setPlayerLabels(QString blackplayer_name, QString whiteplayer_name);
+    void setPlayerLabels(QString blackplayer_name, QString whiteplayer_name);
 };
 } // namespace Go_GUI
