@@ -114,19 +114,20 @@ void GUI::init(){
     this->findChild<QLabel* >("capturedwhite_label")->setText(QString());
     this->findChild<QLabel* >("capturedblack_label")->setText(QString());
 
-	setPlayerLabels("Player 1", "Player 2");
+	setPlayerLabels("Black", "White");
+	this->game_name = QString("Augmented-Go-Game");
 }
 
 /**
  * @brief	sets labels and variables for player names.
- * @param	QString		name of white player (default: "Player 1"
- * @param	QString		name of black player (default: "Player 2"
+ * @param	QString		name of black player (default: "Black"
+ * @param	QString		name of white player (default: "White"
  */
-void GUI::setPlayerLabels(QString whiteplayer_name, QString blackplayer_name){
-	this->findChild<QLabel* >("whiteplayer_label")->setText(whiteplayer_name);
+void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
 	this->findChild<QLabel* >("blackplayer_label")->setText(blackplayer_name);
-	this->whiteplayer_name = whiteplayer_name;
+	this->findChild<QLabel* >("whiteplayer_label")->setText(whiteplayer_name);
 	this->blackplayer_name = blackplayer_name;
+	this->whiteplayer_name = whiteplayer_name;
 }
 
 //////////
@@ -206,7 +207,7 @@ void GUI::slot_MenuSave(){
     );
 	
 	if (!fileName.isNull())
-		emit signal_saveGame(this->whiteplayer_name, this->blackplayer_name, fileName);
+		emit signal_saveGame(fileName, this->blackplayer_name, this->whiteplayer_name, this->game_name);
 }
 
 /**

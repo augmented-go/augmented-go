@@ -831,7 +831,7 @@
      <bool>true</bool>
     </property>
     <property name="text">
-     <string>Player 1</string>
+     <string>White</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -1708,7 +1708,7 @@
      <bool>true</bool>
     </property>
     <property name="text">
-     <string>Player 2</string>
+     <string>Black</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
