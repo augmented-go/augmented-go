@@ -397,7 +397,7 @@
      <string notr="true"> background-color: black;</string>
     </property>
    </widget>
-   <widget class="QLabel" name="player1_label">
+   <widget class="QLabel" name="whiteplayer_label">
     <property name="geometry">
      <rect>
       <x>600</x>
@@ -1274,7 +1274,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="player2_label">
+   <widget class="QLabel" name="blackplayer_label">
     <property name="geometry">
      <rect>
       <x>760</x>
@@ -1738,8 +1738,8 @@
    <zorder>line</zorder>
    <zorder>small_container</zorder>
    <zorder>big_container</zorder>
-   <zorder>player1_label</zorder>
-   <zorder>player2_label</zorder>
+   <zorder>whiteplayer_label</zorder>
+   <zorder>blackplayer_label</zorder>
    <zorder>viewswitch_button</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
