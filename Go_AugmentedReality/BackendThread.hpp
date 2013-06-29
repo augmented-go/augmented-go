@@ -28,7 +28,7 @@ namespace Go_AR {
     // signals and slots
     public slots:
         void stop();
-        void save_sgf(QString path) const;
+        void save_sgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const;
         void pass(SgBlackWhite player);
         void reset();
         void finish();
