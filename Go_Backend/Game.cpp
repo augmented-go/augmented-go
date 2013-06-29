@@ -1,6 +1,15 @@
 #include "Game.hpp"
 
+#include <fstream>
+#include <iostream>
+#include <utility>
+#include <sstream>
+
+#include <boost/date_time/gregorian/gregorian.hpp>
+
 #include "GoSetupUtil.h"
+#include "SgGameWriter.h"
+#include "SgProp.h"
 
 namespace GoBackend {
 Game::Game()
@@ -8,19 +17,50 @@ Game::Game()
     _current_state(State::Valid)
 {}
 
-void Game::init(int size, GoSetup setup) {
+bool Game::validSetup(const GoSetup& setup) const {
+    if (!allValidPoints(setup.m_stones[SG_BLACK])
+        || !allValidPoints(setup.m_stones[SG_WHITE]))
+        return false;
+    return true;
+}
+
+bool Game::allValidPoints(const SgPointSet& stones) const {
+    auto& board = getBoard();
+
+    // check all stones
+    for (auto iter = SgSetIterator(stones); iter; ++iter) {
+        auto point = *iter;
+
+        if (!board.IsValidPoint(point))
+            return false;
+    }
+
+    return true;
+}
+
+bool Game::init(int size, GoSetup setup) {
     // assert valid board size
     assert(size < 20 && size > 1);
 
-    _go_game.Init(size, GoRules());
+    auto rules = GoRules(0,             // handicap
+                         GoKomi(6.5),   // komi
+                         true,          // japanese scoring
+                         true);         // two passes end a game
 
-    // @Todo: check if setup contains only valid stones!
+    _go_game.Init(size, rules);
+
+    // check if setup contains only valid stones!
+    if (!validSetup(setup)) {
+        std::cout << __TIMESTAMP__ << "[" << __FUNCTION__ << "] " << " GoSetup contains invalid stones! Skipping..." << std::endl;
+        return false;
+    }
 
     // a SgBWArray<SgPointSet> is essentially the same as a SgBWSet
     // but SetupPosition wants a SbBWArray...
     _go_game.SetupPosition(SgBWArray<SgPointSet>(setup.m_stones[SG_BLACK], setup.m_stones[SG_WHITE]));
 
     _current_state = State::Valid;
+    return true;
 }
 
 const GoBoard& Game::getBoard() const {
@@ -32,7 +72,13 @@ State Game::getState() const {
 }
 
 void Game::update(GoSetup setup) {
-    // @Todo: check if setup contains only valid stones!
+    // check if setup contains only valid stones!
+    if (!validSetup(setup)) {
+        std::cout << __TIMESTAMP__ << " [" << __FUNCTION__ << "] " << " GoSetup contains invalid stones! Skipping..." << std::endl;
+
+        // "silenty" skip this update (besides the debug output)
+        return;
+    }
 
     // get new and current stones
     auto new_blacks = setup.m_stones[SG_BLACK];
@@ -162,4 +208,92 @@ void Game::updateInvalid(GoSetup new_setup) {
     }
 }
 
+bool Game::saveGame(string file_path, string name_black, string name_white, string game_name) {
+    using boost::gregorian::day_clock;
+    using boost::gregorian::to_simple_string;
+
+    std::ofstream file(file_path.c_str());
+    if (!file.is_open()) {
+        return false;
+    }
+    
+    if (!name_black.empty())
+        _go_game.UpdatePlayerName(SG_BLACK, name_black);
+    if (!name_white.empty())
+        _go_game.UpdatePlayerName(SG_WHITE, name_white);
+    if (!game_name.empty())
+        _go_game.UpdateGameName(game_name);
+
+    // current date
+    string date = to_simple_string(day_clock::local_day());
+    _go_game.UpdateDate(date);
+
+    SgGameWriter writer(file);
+
+    bool all_props = true; // all properties like player names and game name
+    int file_format = 0; // default file format
+    int game_number = SG_PROPPOINTFMT_GO; // the game of go
+    int default_size = 19; // default boardsize, never actually relevant as _go_game.Init gets always called
+    writer.WriteGame(_go_game.Root(), all_props, file_format, game_number, default_size);
+
+    return true;
 }
+
+std::string Game::finishGame() {
+    pass();
+    pass();
+
+    return getResult();
+}
+
+void Game::pass() {
+    _go_game.AddMove(SG_PASS, getBoard().ToPlay());
+
+    // update result if the game ended with the second pass
+    if (_go_game.EndOfGame()) {
+        // get score and update result
+        float score = FLT_MIN;
+        auto score_successful = GoBoardUtil::ScorePosition(getBoard(), SgPointSet(), score);
+
+        if (score_successful) {
+            if (score == 0) {
+                // this is a draw
+                _go_game.UpdateResult("0");
+            }
+            else {
+                // convert float score to string
+                std::ostringstream stream;
+                stream.precision(3);
+                stream << std::abs(score);
+
+                // a negative score means that black lost
+                // sgf: RE: Result: result, usually in the format "B+3.5" (black wins by 3.5 moku). 
+                auto result = std::string("") + (score < 0 ? "W" : "B") + "+" + stream.str();
+                _go_game.UpdateResult(result);
+            }
+        }
+        else {
+            _go_game.UpdateResult("Couldn't score the board.");
+        }
+    }
+}
+
+void Game::resign() {
+    auto current_player = getBoard().ToPlay();
+
+    // adding a resign comment in the sgf structure
+    _go_game.AddResignNode(current_player);
+
+    // sgf: RE: Result: result, usually in the format "B+R" (Black wins by resign)
+    auto result = std::string("") + (current_player == SG_BLACK ? "W" : "B") + "+R";   
+    _go_game.UpdateResult(result);
+}
+
+std::string Game::getResult() const {
+    if (_go_game.GetResult() != "")
+        return _go_game.GetResult();
+    else
+        return "";
+}
+
+} // 

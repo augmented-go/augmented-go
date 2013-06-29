@@ -11,4 +11,6 @@ include_directories (${CMAKE_SOURCE_DIR}/Go_Backend ${CMAKE_SOURCE_DIR}/Go_Gui)
 link_directories (${CMAKE_BINARY_DIR}/Go_Backend ${CMAKE_BINARY_DIR}/Go_Gui)
 
 add_executable (Go_VirtualReality ${virtual_reality_SOURCE} ${virtual_reality_HEADERS})
-target_link_libraries (Go_VirtualReality Go_Backend Go_GUI) 
+target_link_libraries (Go_VirtualReality Go_Backend) #Go_GUI) 
+
+configure_target(Go_VirtualReality)

@@ -4,9 +4,13 @@
 #include "Game.hpp"
 
 // fuego
-#include "GoInit.cpp"
+#include "GoInit.h"
 #include "SgInit.h"
 #include "GoSetupUtil.h"
+
+// other libraries
+#include <string>
+#include <fstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace GoBackendGameTest
@@ -14,6 +18,7 @@ namespace GoBackendGameTest
     using GoBackend::Game;
     using GoBackend::State;
     using SgPointUtil::Pt;
+    using std::string;
 
     // fuego needs those to work
     TEST_MODULE_INITIALIZE(Fugeo_Init) {
@@ -79,7 +84,9 @@ namespace GoBackendGameTest
             setup.AddWhite(Pt(5, 5));
 
             Game go_game;
-            go_game.init(9, setup); // WARNING: aborts execution for now (because of invalid stones in setup)
+            auto success = go_game.init(9, setup);
+
+            Assert::AreEqual(false, success);
         }
 
         TEST_METHOD(can_override_game_with_new_board) {
@@ -248,6 +255,32 @@ namespace GoBackendGameTest
             Assert::IsTrue(go_game.getState() == State::Invalid);
         }
 
+        TEST_METHOD(cannot_update_board_with_faulty_setup) {
+            std::string s(  "....\n"
+                            "....\n"
+                            "O...\n"
+                            ".O..");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            s = "....\n"
+                "....\n"
+                "O...\n"
+                ".O..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            new_setup.AddBlack(SgPointUtil::Pt(10, 10)); // this points is outside the 4x4 grid
+
+            go_game.update(new_setup); // silently skips this setup!
+
+            // initial setup should be present
+            auto board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(setup == board_setup);
+        }
+
         TEST_METHOD(can_update_board_and_detect_illegal_move) {
             std::string s(  "....\n"
                             "....\n"
@@ -377,9 +410,343 @@ namespace GoBackendGameTest
             Assert::IsTrue(go_game.getState() == GoBackend::State::WhileCapturing);
         }
 
+        TEST_METHOD(can_get_board_information) {
+            // set up a board
+            std::string s(  "....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
 
-        TEST_METHOD(capture_move_with_removal) {
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
 
+            Game go_game;
+            go_game.init(size, setup);
+
+            // get a reference to the game board
+            auto& board = go_game.getBoard();
+
+            // get information
+            {
+                // get current player
+                auto current_player = board.ToPlay();
+                Assert::AreEqual(SG_BLACK, current_player);
+
+                // get board size
+                auto board_size = board.Size();
+                Assert::AreEqual(4, board_size);
+
+                // get move number
+                auto move_number = board.MoveNumber();
+                Assert::AreEqual(0, move_number);
+
+                // get number of captured stones for each player
+                auto num_captured_black = board.NumPrisoners(SG_BLACK);
+                Assert::AreEqual(0, num_captured_black);
+
+                auto num_captured_white = board.NumPrisoners(SG_WHITE);
+                Assert::AreEqual(0, num_captured_white);
+
+                // get all stone positions for each color
+                auto black_stones = board.All(SG_BLACK);
+                for (auto iter = SgSetIterator(black_stones); iter; ++iter) {
+                    auto point = *iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(1, column);
+                    Assert::AreEqual(2, row);
+                }
+
+                auto white_stones = board.All(SG_WHITE);
+                for (auto iter = SgSetIterator(white_stones); iter; ++iter) {
+                    auto point = *iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(1, column);
+                    Assert::AreEqual(1, row);
+                }
+            }
+
+            // play a capturing move
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            "OX..");
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
+
+            // remove the captured stone
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            ".X..");
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
+
+            // get information after the capturing move
+            {
+                // get current player
+                auto current_player = board.ToPlay();
+                Assert::AreEqual(SG_WHITE, current_player);
+
+                // get board size
+                auto board_size = board.Size();
+                Assert::AreEqual(4, board_size);
+
+                // get move number
+                auto move_number = board.MoveNumber();
+                Assert::AreEqual(1, move_number);
+
+                // get number of captured stones for each player
+                auto num_captured_black = board.NumPrisoners(SG_BLACK);
+                Assert::AreEqual(0, num_captured_black);
+
+                auto num_captured_white = board.NumPrisoners(SG_WHITE);
+                Assert::AreEqual(1, num_captured_white);
+
+                // get all stone positions for each color
+                auto black_stones = board.All(SG_BLACK);
+            
+                auto black_iter = SgSetIterator(black_stones);
+                {
+                    // first black stone
+                    auto point = *black_iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(2, column);
+                    Assert::AreEqual(1, row);
+                }
+
+                // next black stone
+                ++black_iter;
+
+                {
+                    // second black stone
+                    auto point = *black_iter;
+
+                    auto column = SgPointUtil::Col(point);
+                    auto row    = SgPointUtil::Row(point);
+
+                    Assert::AreEqual(1, column);
+                    Assert::AreEqual(2, row);
+                }
+
+                // no more black stones!
+                ++black_iter;
+                Assert::IsFalse(black_iter);
+
+                // get whites stones
+                auto white_stones = board.All(SG_WHITE);
+                auto white_iter = SgSetIterator(white_stones);
+                
+                // no stones or white! :(
+                Assert::IsFalse(white_iter);
+            }
+        }
+
+        TEST_METHOD(a_player_can_resign) {
+            // set up a board
+            std::string s(  "....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // black resigns
+            go_game.resign();
+            Assert::AreEqual(go_game.getResult().c_str(), "W+R");
+        }
+
+        TEST_METHOD(can_get_the_result_of_a_finished_game_via_passes) {
+            Game go_game;
+            GoSetup setup;
+            int size;
+            std::string s; // setup string
+
+            // no result if the game wasn't finished (e.g. with 2 passes)
+            Assert::AreEqual("", go_game.getResult().c_str());
+
+            // O = White
+            // X = Black
+            //
+            // score negative: white wins
+            // score positive: black wins
+            //----------------------------------------------------------------------------------------
+            // white wins
+            s = std::string(  "....\n"
+                              "OOOO\n"
+                              "XXXX\n"
+                              ".X..");
+            // black = 3
+            // white = 4
+            // black - white - 6.5 = -7.5f
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.init(size, setup);
+
+            go_game.pass();
+            go_game.pass();
+
+            auto res = go_game.getResult();
+            Assert::AreEqual("W+7.5", res.c_str());
+        }
+
+        TEST_METHOD(can_get_the_result_of_a_finished_game) {
+            Game go_game;
+            GoSetup setup;
+            int size;
+            std::string s; // setup string
+
+            // no result if the game wasn't finished (e.g. with 2 passes)
+            Assert::AreEqual("", go_game.getResult().c_str());
+
+            // O = White
+            // X = Black
+            //
+            // score negative: white wins
+            // score positive: black wins
+            //----------------------------------------------------------------------------------------
+            // white wins
+            s = std::string(  "....\n"
+                              "OOOO\n"
+                              "XXXX\n"
+                              ".X..");
+            // black = 3
+            // white = 4
+            // black - white - 6.5 = -7.5f
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.init(size, setup);
+
+            auto res = go_game.finishGame();
+            Assert::AreEqual("W+7.5", res.c_str());
+        }
+
+    };
+
+
+    TEST_CLASS(SgfTest)
+    {
+    public:
+        TEST_METHOD(save_current_game_state_as_sgf_file) {
+            string filename = "save_current_game_state_as_sgf_file.sgf";
+            std::string s(  "....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            s = "....\n"
+                "....\n"
+                "X...\n"
+                "OX..";
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
+
+            go_game.saveGame(filename);
+
+            std::ifstream file(filename);
+            std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+     
+            // probably nice to load the game back in, and check the GoGame instance..
+            Assert::IsTrue(contents.find("(;SZ[4]KM[6.5]") != string::npos);
+            Assert::IsTrue(contents.find("AB[ac]\nAW[ad];B[bd])") != string::npos);
+        }
+
+        TEST_METHOD(save_empty_game_whith_names_as_sgf_file) {
+            string filename = "save_empty_game_whith_names_as_sgf_file.sgf";
+            Game go_game;
+            go_game.init(19);
+            // always nice to not just support ascii ;)
+            go_game.saveGame(filename, "進藤ヒカル", "塔矢アキラ", "第一局");
+            
+            std::ifstream file(filename);
+            std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("(;SZ[19]KM[6.5]\nPB[進藤ヒカル]\nPW[塔矢アキラ]\nGN[第一局]") != string::npos);
+        }
+
+        TEST_METHOD(a_resign_is_commented_in_sgf_file) {
+            string filename = "resignation.sgf";
+            Game go_game;
+            go_game.init(19);
+
+            // black resigns
+            go_game.resign();
+
+            go_game.saveGame(filename);
+            
+            std::ifstream file(filename);
+            std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("C[Black resigned]") != string::npos);
+            file.close();
+
+            
+            go_game.init(19);
+            go_game.pass();
+
+            // white resigns
+            go_game.resign();
+
+            // always nice to not just support ascii ;)
+            go_game.saveGame(filename);
+            
+            file.open(filename);
+            contents = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("C[White resigned]") != string::npos);
+            file.close();
+        }
+
+        TEST_METHOD(result_of_a_finished_game_is_saved_in_sgf_file) {
+            string filename = "two_passes.sgf";
+            Game go_game;
+            go_game.init(19);
+
+            go_game.pass();
+            go_game.pass();
+
+            // white wins by 6.5 moku
+            go_game.saveGame(filename);
+            
+            std::ifstream file(filename);
+            std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("RE[W+6.5]") != string::npos);
+            file.close();
+            
+            // white = 0, black = 8,
+            // 8 - 0 - 6.5 = 1.5, black wins with 1.5 moku
+            std::string s = ".O..\n"
+                            "XXXX\n"
+                            "....\n"
+                            "....";
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.init(size, setup);
+
+            go_game.pass();
+            go_game.pass();
+
+            go_game.saveGame(filename);
+            
+            file.open(filename);
+            contents = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("RE[B+1.5]") != string::npos);
         }
     };
 }
