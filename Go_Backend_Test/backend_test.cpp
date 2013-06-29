@@ -567,7 +567,7 @@ namespace GoBackendGameTest
 
             // black resigns
             go_game.resign();
-
+            Assert::AreEqual(go_game.getResult().c_str(), "W+R");
         }
 
         TEST_METHOD(can_get_the_result_of_a_finished_game_via_passes) {
