@@ -85,10 +85,10 @@ void BackendThread::scan() {
     }
 }
 
-void BackendThread::save_sgf(QString path) const {
+void BackendThread::save_sgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const {
     auto filepath = path.toStdString();
 
-    if (!_game->saveGame(filepath))
+    if (!_game->saveGame(filepath, blackplayer_name.toStdString(), whiteplayer_name.toStdString(), game_name.toStdString()))
         std::cerr << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
 }
 

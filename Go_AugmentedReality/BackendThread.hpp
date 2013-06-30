@@ -34,7 +34,7 @@ namespace Go_AR {
         /**
          * @brief       Saves the current game as sgf at the specified path.
          */
-        void save_sgf(QString path) const;
+        void save_sgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const;
 
         /**
          * @brief       Plays a pass for the current player.

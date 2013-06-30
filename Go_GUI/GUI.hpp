@@ -69,6 +69,7 @@ public slots:
     void closeEvent(QCloseEvent *event);
 
 signals:
+    void signal_saveGame(QString fileName, QString blackplayer_label, QString whiteplayer_label, QString game_name);
     void stop_backend_thread();
 
 private:
