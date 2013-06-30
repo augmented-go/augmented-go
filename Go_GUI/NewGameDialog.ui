@@ -22,6 +22,9 @@
   <property name="sizeGripEnabled">
    <bool>false</bool>
   </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
@@ -31,7 +34,7 @@
      <height>33</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout">
+   <layout class="QHBoxLayout" name="horizontal_layout">
     <property name="spacing">
      <number>6</number>
     </property>
@@ -39,7 +42,7 @@
      <number>0</number>
     </property>
     <item>
-     <spacer>
+     <spacer name="spacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -67,26 +70,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QPlainTextEdit" name="plainTextEdit">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>10</y>
-     <width>121</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="verticalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-   <property name="horizontalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-   <property name="plainText">
-    <string>Augmented-Go-Game</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="gamename_label">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -102,7 +86,7 @@
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QGroupBox" name="groupBox">
+  <widget class="QGroupBox" name="Player_Names">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -114,45 +98,7 @@
    <property name="title">
     <string>Player names</string>
    </property>
-   <widget class="QPlainTextEdit" name="whiteplayername_textedit">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>50</y>
-      <width>91</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="verticalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
-    </property>
-    <property name="horizontalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
-    </property>
-    <property name="plainText">
-     <string>White</string>
-    </property>
-   </widget>
-   <widget class="QPlainTextEdit" name="blackplayername_textedit">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>20</y>
-      <width>91</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="verticalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
-    </property>
-    <property name="horizontalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
-    </property>
-    <property name="plainText">
-     <string>Black</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="blackplayer_label">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -184,8 +130,34 @@
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
+   <widget class="QLineEdit" name="blackplayername_lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>20</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Black</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="whiteplayername_lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>50</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>White</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_2">
+  <widget class="QGroupBox" name="Game_Rules">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -197,7 +169,7 @@
    <property name="title">
     <string>Game rules</string>
    </property>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="komi_label">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -213,7 +185,7 @@
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="doubleSpinBox">
+   <widget class="QDoubleSpinBox" name="komi_spinbox">
     <property name="geometry">
      <rect>
       <x>110</x>
@@ -229,7 +201,7 @@
      <double>6.500000000000000</double>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox">
+   <widget class="QCheckBox" name="japanese_scoring">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -251,7 +223,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox_2">
+   <widget class="QCheckBox" name="two_passes_end_game">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -270,6 +242,28 @@
      <bool>true</bool>
     </property>
    </widget>
+  </widget>
+  <widget class="QLineEdit" name="gamename_lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>10</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Augmented-Go-Game</string>
+   </property>
+   <property name="maxLength">
+    <number>20</number>
+   </property>
+   <property name="cursorPosition">
+    <number>17</number>
+   </property>
+   <property name="placeholderText">
+    <string>Augmented-Go-Game</string>
+   </property>
   </widget>
  </widget>
  <resources/>

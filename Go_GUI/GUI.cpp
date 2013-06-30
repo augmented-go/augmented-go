@@ -9,6 +9,7 @@
 #include <QFontDatabase>
 #include "Game.hpp"
 
+#include "NewGameDialog.hpp"
 #include "VirtualView.hpp"
 #include "AugmentedView.hpp"
 
@@ -119,10 +120,22 @@ void GUI::slot_showFinishedGameResults(QString result){
  *          Opens a Dialog that asks for game rules and names.
  */
 void GUI::slot_ButtonNewGame(){
-    QDialog* newgame = new QDialog;
+    NewGameDialog* newgame = new NewGameDialog(this);
     Ui::Dialog ui_newgame;
     ui_newgame.setupUi(newgame);
-    newgame->show();
+
+    connect(newgame, &NewGameDialog::signal_newgame, this, &GUI::slot_setupNewGame);
+
+    newgame->exec();
+}
+
+void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name){
+
+    // emit to backend that gui wants to set up a new game!
+
+    ui_main.gamename_label->setText(game_name);
+    ui_main.blackplayer_label->setText(blackplayer_name);
+    ui_main.whiteplayer_label->setText(whiteplayer_name);
 }
 
 /**

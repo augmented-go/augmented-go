@@ -28,6 +28,7 @@ public:
 public slots:
     void slot_showFinishedGameResults(QString result);
     void slot_ButtonNewGame();
+    void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name);
     void slot_MenuOpen();
     void slot_MenuSave();
     void slot_MenuInfo();
