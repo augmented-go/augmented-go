@@ -26,6 +26,7 @@ public:
 
 
 public slots:
+    void slot_showFinishedGameResults(QString result);
     void slot_ButtonNewGame();
     void slot_MenuOpen();
     void slot_MenuSave();

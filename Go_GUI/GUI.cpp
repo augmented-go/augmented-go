@@ -103,8 +103,20 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
 //////////
 
 /**
+ * @brief   SLOT "Show finished game results"
+ *          If a game ended, the BackendThread sends a signal with the results.
+ *          Here the results are shown to the user.
+ */
+void GUI::slot_showFinishedGameResults(QString result){
+    QMessageBox::information(this, "Game results", result);
+    auto answer = QMessageBox::question(this, "New Game?", "Do you want to start a new game?");
+    if (answer == QMessageBox::Yes)
+        this->slot_ButtonNewGame();
+}
+
+/**
  * @brief   SLOT "NewGame/Reset"
- *
+ *          Opens a Dialog that asks for game rules and names.
  */
 void GUI::slot_ButtonNewGame(){
     QDialog* newgame = new QDialog;
@@ -158,9 +170,7 @@ void GUI::slot_ViewSwitch(){
         virtual_view->setParent(ui_main.big_container->windowHandle());
         virtual_view->resize(ui_main.big_container->size());
         ui_main.big_container->setToolTip("virtual view");
-        //virtual_view->show();
-        
-        
+        //virtual_view->show(); 
     }
 }
 
