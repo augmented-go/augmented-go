@@ -22,11 +22,15 @@ public:
     ~AugmentedView(){};
 
     /**
-     * @brief		scales the pixmap to the width of size
-     * @parameter	QSize
+     * @brief		Sets the new image that shall be displayed.
+     *				If the new image is empty, show the same picture as before.
+     *				Default picture is "no_camera_picture.png".
+     * @parameter	QImage	image that shall be displayed. 
      */
     void setImage(QImage image){
-        picture = QPixmap::fromImage(image);
+        if(!image.isNull())		// if image is empty take old picture!
+            picture = QPixmap::fromImage(image);
+
         this->setPixmap(picture);
     }
 
