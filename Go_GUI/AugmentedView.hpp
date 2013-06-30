@@ -28,6 +28,7 @@ public:
     void setImage(QImage image){
         picture = QPixmap::fromImage(image);
         this->setPixmap(picture);
+        this->show();
     }
 
     /**
@@ -35,6 +36,7 @@ public:
      * @parameter	QSize
      */
     void rescaleImage(QSize size){
+        this->resize(size);
         if (!picture.isNull())
             setPixmap(picture.scaled(size, Qt::KeepAspectRatio));
     }

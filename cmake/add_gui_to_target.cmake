@@ -10,5 +10,6 @@ endfunction()
 
 function(wrap_gui_ui_files var)
     qt5_wrap_ui(ui_GUI ${CMAKE_SOURCE_DIR}/Go_GUI/GUI.ui)
-    set(${var} ${ui_GUI} PARENT_SCOPE)
+    qt5_wrap_ui(ui_NewGameDialog ${CMAKE_SOURCE_DIR}/Go_GUI/NewGameDialog.ui)
+    set(${var} ${ui_GUI} ${ui_NewGameDialog} PARENT_SCOPE)
 endfunction()

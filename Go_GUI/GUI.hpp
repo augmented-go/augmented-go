@@ -7,6 +7,7 @@
 #include "Game.hpp"
 
 #include "ui_GUI.h"
+#include "ui_NewGameDialog.h"
 #include "AugmentedView.hpp"
 
 class VirtualView;
@@ -25,6 +26,7 @@ public:
 
 
 public slots:
+    void slot_ButtonNewGame();
     void slot_MenuOpen();
     void slot_MenuSave();
     void slot_MenuInfo();
@@ -43,12 +45,12 @@ public slots:
         auto current_player = game_board->ToPlay();
         switch (current_player) {
             case SG_WHITE:
-                this->findChild<QLabel* >("white_basket")->setPixmap(whitebasket_pixmap);
-                this->findChild<QLabel* >("black_basket")->setPixmap(closedbasket_pixmap);
+                ui_main.white_basket->setPixmap(whitebasket_pixmap);
+                ui_main.black_basket->setPixmap(closedbasket_pixmap);
                 break;
             case SG_BLACK:
-                this->findChild<QLabel* >("white_basket")->setPixmap(closedbasket_pixmap);
-                this->findChild<QLabel* >("black_basket")->setPixmap(blackbasket_pixmap);
+                ui_main.white_basket->setPixmap(closedbasket_pixmap);
+                ui_main.black_basket->setPixmap(blackbasket_pixmap);
                 break;
             default:
                 assert(false);
@@ -58,8 +60,8 @@ public slots:
         auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
         auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
 
-        this->findChild<QLabel* >("capturedwhite_label")->setText(QString::number(captured_white_stones));
-        this->findChild<QLabel* >("capturedblack_label")->setText(QString::number(captured_black_stones));
+        ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
+        ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
 
         printf(">>> New Game data! <<<\n");
     }
@@ -70,10 +72,13 @@ signals:
     void stop_backend_thread();
 
 private:
-    Ui::MainWindow ui;
+    Ui::MainWindow ui_main;
     VirtualView* virtual_view;
     AugmentedView* augmented_view;
-    QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap;
+    QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
+    QString game_name;
+
+    void setPlayerLabels(QString blackplayer_name, QString whiteplayer_name);
 };
 
 } // namespace Go_GUI

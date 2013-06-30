@@ -24,6 +24,7 @@ find_package(Qt53D REQUIRED)
 
 # compile Qt Designer files
 qt5_wrap_ui(ui_GUI GUI.ui)
+qt5_wrap_ui(ui_NewGameDialog NewGameDialog.ui)
 
 SET(gui_SOURCE
     GUI.cpp
@@ -36,7 +37,7 @@ SET(gui_HEADERS
     AugmentedView.hpp
 )
 
-add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS} ${ui_GUI})
+add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS} ${ui_GUI} ${ui_NewGameDialog})
 
 # additional modules
 add_backend_to_target(Go_GUI)
