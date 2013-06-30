@@ -27,7 +27,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
     whitebasket_pixmap = QPixmap(texture_path + "white_basket.png");
     blackbasket_pixmap = QPixmap(texture_path + "black_basket.png");
     closedbasket_pixmap = QPixmap(texture_path + "Closed_basket.png");
-    if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull() || closedbasket_pixmap.isNull())
+    gotable_pixmap = QPixmap(texture_path + "go_table.png");
+    if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull() || closedbasket_pixmap.isNull() || gotable_pixmap.isNull())
         QMessageBox::critical(this, "GUI element not found", QString("White and/or black basket textures not found!\n searched relative to exe in: " + texture_path));
     
     // loading font

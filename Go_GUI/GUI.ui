@@ -160,46 +160,74 @@
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,10,1">
-          <property name="margin">
+         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,8,1">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>5</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
            <widget class="QWidget" name="ViewSwitch_GameName" native="true">
-            <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,20">
-             <property name="margin">
-              <number>0</number>
+            <widget class="QPushButton" name="viewswitch_button">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>-1</y>
+               <width>21</width>
+               <height>21</height>
+              </rect>
              </property>
-             <item>
-              <widget class="QPushButton" name="viewswitch_button">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>&lt;&gt;</string>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>16</width>
-                 <height>16</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="gamename_label">
-               <property name="text">
-                <string>Augmented-Go-Game</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>&lt;&gt;</string>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>16</width>
+               <height>16</height>
+              </size>
+             </property>
+            </widget>
+            <widget class="QLabel" name="gamename_label">
+             <property name="geometry">
+              <rect>
+               <x>1</x>
+               <y>0</y>
+               <width>291</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Shojumaru</family>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Augmented-Go-Game</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
            </widget>
           </item>
           <item>
@@ -1079,10 +1107,10 @@
             <widget class="QLabel" name="black_basket">
              <property name="geometry">
               <rect>
-               <x>181</x>
-               <y>-1</y>
-               <width>90</width>
-               <height>70</height>
+               <x>169</x>
+               <y>0</y>
+               <width>101</width>
+               <height>81</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -1110,9 +1138,9 @@
             <widget class="QLabel" name="go_table_label">
              <property name="geometry">
               <rect>
-               <x>2</x>
-               <y>9</y>
-               <width>301</width>
+               <x>0</x>
+               <y>10</y>
+               <width>291</width>
                <height>161</height>
               </rect>
              </property>
@@ -1559,8 +1587,8 @@
             <widget class="QLabel" name="capturedstones_label">
              <property name="geometry">
               <rect>
-               <x>87</x>
-               <y>9</y>
+               <x>80</x>
+               <y>10</y>
                <width>131</width>
                <height>61</height>
               </rect>
@@ -1578,10 +1606,10 @@
             <widget class="QLabel" name="white_basket">
              <property name="geometry">
               <rect>
-               <x>30</x>
+               <x>24</x>
                <y>0</y>
-               <width>90</width>
-               <height>70</height>
+               <width>101</width>
+               <height>81</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -1609,8 +1637,8 @@
             <widget class="QLabel" name="capturedwhite_label">
              <property name="geometry">
               <rect>
-               <x>209</x>
-               <y>27</y>
+               <x>202</x>
+               <y>32</y>
                <width>31</width>
                <height>31</height>
               </rect>
@@ -1836,8 +1864,8 @@
             <widget class="QLabel" name="capturedblack_label">
              <property name="geometry">
               <rect>
-               <x>63</x>
-               <y>32</y>
+               <x>66</x>
+               <y>39</y>
                <width>21</width>
                <height>21</height>
               </rect>
@@ -1983,6 +2011,12 @@
               <set>Qt::AlignCenter</set>
              </property>
             </widget>
+            <zorder>go_table_label</zorder>
+            <zorder>capturedstones_label</zorder>
+            <zorder>white_basket</zorder>
+            <zorder>capturedblack_label</zorder>
+            <zorder>black_basket</zorder>
+            <zorder>capturedwhite_label</zorder>
            </widget>
           </item>
           <item>
@@ -2014,10 +2048,6 @@
            </layout>
           </item>
          </layout>
-         <zorder>whiteplayer_label</zorder>
-         <zorder>newgame_button</zorder>
-         <zorder>blackplayer_label</zorder>
-         <zorder>pass_button</zorder>
          <zorder>widget</zorder>
          <zorder>ViewSwitch_GameName</zorder>
         </widget>
