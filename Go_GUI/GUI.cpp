@@ -100,8 +100,51 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
 }
 
 //////////
-//Slots
+//Public Slots
 //////////
+
+/**
+ * @brief   SLOT "new image"
+ *          If a new image is sent to GUI, refresh and rescale picture.
+ * @param   QImage  new image from scanner
+ */
+void GUI::slot_newImage(QImage image) {
+        printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
+
+        augmented_view->setImage(image);
+        augmented_view->rescaleImage(augmented_view->parentWidget()->size());
+    }
+
+/**
+ * @brief   SLOT "new game data"
+ *          If new game data is sent to GUI, refresh display of current player and captured stones.
+ * @param   GoBoard     new board of current turn
+ */
+void GUI::slot_newGameData(const GoBoard * game_board) {
+        auto current_turn = game_board->MoveNumber();
+        auto current_player = game_board->ToPlay();
+        switch (current_player) {
+            case SG_WHITE:
+                ui_main.white_basket->setPixmap(whitebasket_pixmap);
+                ui_main.black_basket->setPixmap(closedbasket_pixmap);
+                break;
+            case SG_BLACK:
+                ui_main.white_basket->setPixmap(closedbasket_pixmap);
+                ui_main.black_basket->setPixmap(blackbasket_pixmap);
+                break;
+            default:
+                assert(false);
+                break;
+        }
+        
+        auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
+        auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
+
+        ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
+        ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
+
+        printf(">>> New Game data! <<<\n");
+    }    
 
 /**
  * @brief   SLOT "Show finished game results"
@@ -116,6 +159,26 @@ void GUI::slot_showFinishedGameResults(QString result){
 }
 
 /**
+ * @brief   SLOT "setup new game"
+ *          When a new game has been started, setup game name and player names on gui.
+ * @param   QString    game name
+ * @param   QString    black player name
+ * @param   QString    white player name
+ */
+void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name){
+
+    // emit to backend that gui wants to set up a new game!
+
+    ui_main.gamename_label->setText(game_name);
+    ui_main.blackplayer_label->setText(blackplayer_name);
+    ui_main.whiteplayer_label->setText(whiteplayer_name);
+}
+
+//////////
+//Private Slots
+//////////
+
+/**
  * @brief   SLOT "NewGame/Reset"
  *          Opens a Dialog that asks for game rules and names.
  */
@@ -127,15 +190,6 @@ void GUI::slot_ButtonNewGame(){
     connect(newgame, &NewGameDialog::signal_newgame, this, &GUI::slot_setupNewGame);
 
     newgame->exec();
-}
-
-void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name){
-
-    // emit to backend that gui wants to set up a new game!
-
-    ui_main.gamename_label->setText(game_name);
-    ui_main.blackplayer_label->setText(blackplayer_name);
-    ui_main.whiteplayer_label->setText(whiteplayer_name);
 }
 
 /**

@@ -24,50 +24,18 @@ public:
     void init();
     void RenderGame(GoBackend::Game game);
 
-
 public slots:
     void slot_showFinishedGameResults(QString result);
-    void slot_ButtonNewGame();
+    void slot_newImage(QImage image);
+    void slot_newGameData(const GoBoard * game_board);
     void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name);
+
+private slots:
+    void slot_ButtonNewGame();
     void slot_MenuOpen();
     void slot_MenuSave();
     void slot_MenuInfo();
     void slot_ViewSwitch();
-
-public slots:
-    void new_image(QImage image) {
-        printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
-
-        augmented_view->setImage(image);
-        augmented_view->rescaleImage(augmented_view->parentWidget()->size());
-    }
-
-    void new_game_data(const GoBoard * game_board) {
-        auto current_turn = game_board->MoveNumber();
-        auto current_player = game_board->ToPlay();
-        switch (current_player) {
-            case SG_WHITE:
-                ui_main.white_basket->setPixmap(whitebasket_pixmap);
-                ui_main.black_basket->setPixmap(closedbasket_pixmap);
-                break;
-            case SG_BLACK:
-                ui_main.white_basket->setPixmap(closedbasket_pixmap);
-                ui_main.black_basket->setPixmap(blackbasket_pixmap);
-                break;
-            default:
-                assert(false);
-                break;
-        }
-        
-        auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
-        auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
-
-        ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
-        ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
-
-        printf(">>> New Game data! <<<\n");
-    }
-
     void closeEvent(QCloseEvent *event);
 
 signals:
