@@ -1,53 +1,50 @@
 #pragma once
-#include <QApplication>
-#include <qlabel.h>
-#include <QFile>
+#include <QWidget>
+#include <QLabel>
+#include <QPixmap>
 #include <QMessageBox>
-#include <QPicture>
-#include "qwidget.h"
-#include "qglview.h"
-#include "qglbuilder.h"
-
-class QGLSceneNode;
 
 class AugmentedView : public QLabel
 {
     Q_OBJECT
 public:
-	AugmentedView(QWidget *parent = 0) {
-		this->setParent(parent);
+    AugmentedView(QWidget *parent = 0) {
+        this->setParent(parent);
 
-		// loading in testpicture
-		inputImage = QImage("../Go_GUI/textures/example_pic.jpg");
-		if (inputImage.isNull())
-			QMessageBox::warning(this, "file loading error", "could not load file!");
-		printf("%d", inputImage.format());
-		uchar* image_data = inputImage.bits();
-		setImage(image_data, inputImage.width(), inputImage.height());
+        // Setting up warning as standard picture
+        QString warning_image_path = "res/textures/No_camera_picture.png";
+        if(QImage(warning_image_path).isNull())
+            QMessageBox::critical(this, "GUI element not found", "Warning image of AugmentedView not found!\n searched relative to exe in" + warning_image_path);
+        else{
+            setImage(QImage(warning_image_path));
+        }
+    }
+    ~AugmentedView(){};
 
-	}
-	~AugmentedView(){};
+    /**
+     * @brief		Sets the new image that shall be displayed.
+     *				If the new image is empty, show the same picture as before.
+     *				Default picture is "no_camera_picture.png".
+     * @parameter	QImage	image that shall be displayed. 
+     */
+    void setImage(QImage image){
+        if(!image.isNull())		// if image is empty take old picture!
+            picture = QPixmap::fromImage(image);
 
-	//QImage: Fast to draw to, slow to display.
-	//QPixmap: Slow to draw to, fast to display.
-	void setImage(const uchar* pData, int width, int height){
-		image = QImage(pData, width, height, QImage::Format_ARGB32_Premultiplied);	// augmented picture : QImage::Format_ARGB32_Premultiplied	
-		picture = QPixmap::fromImage(image);//.scaled(this->size());
-		//picture.loadFromData(pData, 8*width*height, "JPG");
+        this->setPixmap(picture);
+        this->show();
+    }
 
-		this->setPixmap(picture);
-	}
-
-	/**
-	 * @brief		scales the pixmap to the width of size
-	 * @parameter	QSize
-	 */
-	void rescaleImage(QSize size){
-		setPixmap(picture.scaledToWidth(size.width()));
-	}
+    /**
+     * @brief		scales the pixmap to the width of size
+     * @parameter	QSize
+     */
+    void rescaleImage(QSize size){
+        this->resize(size);
+        if (!picture.isNull())
+            setPixmap(picture.scaled(size, Qt::KeepAspectRatio));
+    }
 
 private:
-	QPixmap picture;
-	QImage image, inputImage;
-
+    QPixmap picture;
 };

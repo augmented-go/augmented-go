@@ -1,3 +1,5 @@
+set(TARGETNAME Go_AugmentedReality)
+
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
@@ -22,13 +24,14 @@ SET(augmented_reality_HEADERS
     BackendThread.hpp
 )
 
-qt5_wrap_ui(ui_GUI ${CMAKE_SOURCE_DIR}/Go_GUI/GUI.ui)
+wrap_gui_ui_files(ui_GUI ui_NewGameDialog)
 
-add_executable (Go_AugmentedReality ${augmented_reality_SOURCE} ${augmented_reality_HEADERS} ${ui_GUI})
+add_executable (${TARGETNAME} ${augmented_reality_SOURCE} ${augmented_reality_HEADERS} ${ui_GUI} ${ui_NewGameDialog})
 
-add_fuego_to_target(Go_AugmentedReality)
-add_backend_to_target(Go_AugmentedReality)
-add_gui_to_target(Go_AugmentedReality)
+add_fuego_to_target(${TARGETNAME})
+add_scanner_to_target(${TARGETNAME})
+add_backend_to_target(${TARGETNAME})
+add_opencv_to_target(${TARGETNAME})
+add_gui_to_target(${TARGETNAME})
 
-# Use Qt5 modules
-qt5_use_modules(Go_AugmentedReality OpenGL 3D Widgets)
+configure_target(${TARGETNAME})

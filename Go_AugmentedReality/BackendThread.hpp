@@ -6,26 +6,10 @@
 
 #include <QThread>
 #include <QTimer>
+#include <QImage>
 
 #include "Game.hpp"
-
-typedef int OpenCVImage;
-
-// using a Scanner dummy until the real implementation is available
-namespace Go_Scanner {
-    class Scanner {
-    public:
-        Scanner() {}
-    private:
-        Scanner(const Scanner&);
-        
-    public:
-        std::pair<GoSetup, OpenCVImage> scanPicture() {
-            return std::make_pair(GoSetup(), OpenCVImage());
-        }
-    };
-}
-
+#include "Scanner.hpp"
 
 namespace Go_AR {
     class BackendThread : public QThread {
@@ -38,20 +22,56 @@ namespace Go_AR {
     private:
         // thread function
         void run() override;
+        void signalGuiGameHasEnded() const;
         
-    // signals and slots
+    // slots
     public slots:
-        void backend_stop();
-        
+        /**
+         * @brief       Stops this thread.
+         */
+        void stop();
+
+        /**
+         * @brief       Saves the current game as sgf at the specified path.
+         */
+        void save_sgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const;
+
+        /**
+         * @brief       Plays a pass for the current player.
+         *              Also emits finished_game_result if the game has ended because of playing a pass.
+         */
+        void pass();
+
+        /**
+         * @brief       The current player resigns. Also emits finished_game_result.
+         */
+        void resign();
+
+        /**
+         * @brief       Finishes a game. This is a convenience function for playing two passes.
+         *              Also emits finished_game_result.
+         */
+        void finish();
+
+        void reset();
+
     private slots:
-        void scan();
+        void scan(); // our main worker function that is called by the timer
         
+    // signals
     signals:
-        void backend_new_image();
+        // signals that a new game image was fetched and processed
+        void backend_new_image(QImage camera_image) const;
+
+        // signals that the game board has changed
+        void game_data_changed(const GoBoard * game_board) const;
+
+        // signals that the game has ended with the given result
+        void finished_game_result(QString result) const;
 
     // Member vars    
     private:
-        std::unique_ptr<GoBackend::Game>    _game;
+        std::unique_ptr<GoBackend::Game>     _game;
         std::unique_ptr<Go_Scanner::Scanner> _scanner;
     };
 }

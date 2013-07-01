@@ -4,7 +4,7 @@
 #include "Game.hpp"
 
 // fuego
-#include "GoInit.cpp"
+#include "GoInit.h"
 #include "SgInit.h"
 #include "GoSetupUtil.h"
 
@@ -551,6 +551,116 @@ namespace GoBackendGameTest
                 Assert::IsFalse(white_iter);
             }
         }
+
+        TEST_METHOD(a_player_can_resign) {
+            // set up a board
+            std::string s(  "....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // black resigns
+            go_game.resign();
+            Assert::AreEqual(go_game.getResult().c_str(), "W+R");
+        }
+
+        TEST_METHOD(can_get_the_result_of_a_finished_game_via_passes) {
+            Game go_game;
+            GoSetup setup;
+            int size;
+            std::string s; // setup string
+
+            // no result if the game wasn't finished (e.g. with 2 passes)
+            Assert::AreEqual("", go_game.getResult().c_str());
+
+            // O = White
+            // X = Black
+            //
+            // score negative: white wins
+            // score positive: black wins
+            //----------------------------------------------------------------------------------------
+            // white wins
+            s = std::string(  "....\n"
+                              "OOOO\n"
+                              "XXXX\n"
+                              ".X..");
+            // black = 3
+            // white = 4
+            // black - white - 6.5 = -7.5f
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.init(size, setup);
+
+            go_game.pass();
+            go_game.pass();
+
+            auto res = go_game.getResult();
+            Assert::AreEqual("W+7.5", res.c_str());
+        }
+
+        TEST_METHOD(can_get_the_result_of_a_finished_game) {
+            Game go_game;
+            GoSetup setup;
+            int size;
+            std::string s; // setup string
+
+            // no result if the game wasn't finished (e.g. with 2 passes)
+            Assert::AreEqual("", go_game.getResult().c_str());
+
+            // O = White
+            // X = Black
+            //
+            // score negative: white wins
+            // score positive: black wins
+            //----------------------------------------------------------------------------------------
+            // white wins
+            s = std::string(  "....\n"
+                              "OOOO\n"
+                              "XXXX\n"
+                              ".X..");
+            // black = 3
+            // white = 4
+            // black - white - 6.5 = -7.5f
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.init(size, setup);
+
+            auto res = go_game.finishGame();
+            Assert::AreEqual("W+7.5", res.c_str());
+        }
+
+        TEST_METHOD(can_check_if_game_has_ended) {
+            Game go_game;
+
+            // two passes end a game
+            go_game.init(9);
+            Assert::AreEqual(false, go_game.hasEnded());
+
+            go_game.pass();
+            go_game.pass();
+            Assert::AreEqual(true, go_game.hasEnded());
+
+            // a resign ends a game
+            go_game.init(9);
+            Assert::AreEqual(false, go_game.hasEnded());
+
+            go_game.resign();
+            Assert::AreEqual(true, go_game.hasEnded());
+
+            // finishing a game ends a game
+            go_game.init(9);
+            Assert::AreEqual(false, go_game.hasEnded());
+
+            go_game.finishGame();
+            Assert::AreEqual(true, go_game.hasEnded());
+        }
+
     };
 
     TEST_CLASS(SgfTest)
@@ -595,6 +705,73 @@ namespace GoBackendGameTest
             std::ifstream file(filename);
             std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
             Assert::IsTrue(contents.find("(;SZ[19]KM[6.5]\nPB[進藤ヒカル]\nPW[塔矢アキラ]\nGN[第一局]") != string::npos);
+        }
+
+        TEST_METHOD(a_resign_is_commented_in_sgf_file) {
+            string filename = "resignation.sgf";
+            Game go_game;
+            go_game.init(19);
+
+            // black resigns
+            go_game.resign();
+
+            go_game.saveGame(filename);
+            
+            std::ifstream file(filename);
+            std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("C[Black resigned]") != string::npos);
+            file.close();
+
+            
+            go_game.init(19);
+            go_game.pass();
+
+            // white resigns
+            go_game.resign();
+
+            // always nice to not just support ascii ;)
+            go_game.saveGame(filename);
+            
+            file.open(filename);
+            contents = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("C[White resigned]") != string::npos);
+            file.close();
+        }
+
+        TEST_METHOD(result_of_a_finished_game_is_saved_in_sgf_file) {
+            string filename = "two_passes.sgf";
+            Game go_game;
+            go_game.init(19);
+
+            go_game.pass();
+            go_game.pass();
+
+            // white wins by 6.5 moku
+            go_game.saveGame(filename);
+            
+            std::ifstream file(filename);
+            std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("RE[W+6.5]") != string::npos);
+            file.close();
+            
+            // white = 0, black = 8,
+            // 8 - 0 - 6.5 = 1.5, black wins with 1.5 moku
+            std::string s = ".O..\n"
+                            "XXXX\n"
+                            "....\n"
+                            "....";
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.init(size, setup);
+
+            go_game.pass();
+            go_game.pass();
+
+            go_game.saveGame(filename);
+            
+            file.open(filename);
+            contents = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            Assert::IsTrue(contents.find("RE[B+1.5]") != string::npos);
         }
     };
 }

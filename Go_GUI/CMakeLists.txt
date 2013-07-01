@@ -24,6 +24,7 @@ find_package(Qt53D REQUIRED)
 
 # compile Qt Designer files
 qt5_wrap_ui(ui_GUI GUI.ui)
+qt5_wrap_ui(ui_NewGameDialog NewGameDialog.ui)
 
 SET(gui_SOURCE
     GUI.cpp
@@ -34,9 +35,10 @@ SET(gui_HEADERS
     GUI.hpp
     VirtualView.hpp
     AugmentedView.hpp
+    NewGameDialog.hpp
 )
 
-add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS} ${ui_GUI})
+add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS} ${ui_GUI} ${ui_NewGameDialog})
 
 # additional modules
 add_backend_to_target(Go_GUI)
@@ -45,7 +47,4 @@ add_fuego_to_target(Go_GUI)
 # Use Qt5 modules
 qt5_use_modules(Go_GUI OpenGL 3D Widgets)
 
-# copies textures and models to the binary dir of Go_GUI
-file(COPY models DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY textures DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY fonts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+configure_target(Go_GUI)
