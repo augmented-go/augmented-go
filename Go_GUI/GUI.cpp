@@ -83,7 +83,7 @@ void GUI::init(){
 	this->setWindowTitle("Augmented Go");
 	this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	
-	virtual_view = new VirtualView(this);
+	virtual_view = new VirtualView();
 	augmented_view = new AugmentedView(this);
 
 	/** working windows with QGridLayout
@@ -106,12 +106,24 @@ void GUI::init(){
 	big_container->setToolTip("augmented view");
 
 	QWidget* small_container = this->findChild<QWidget *>("small_container");
+	virtual_view->setParent(small_container);
+	virtual_view->resize(small_container->size());
+	//TODO::::!!!!!!
+	virtual_view->createAndSetScene(/*board,*/ small_container->size());
+	
+	small_container->setToolTip("virtual view");
+	virtual_view->show();
+	QMessageBox::warning(this, "bla", "Size of scene: " + QString::number(virtual_view->scene()->width()) );
+
+	QMessageBox::warning(this, "bla", "Size of scene: " + QString::number(virtual_view->size().width()) );
+
+	/*QWidget* small_container = this->findChild<QWidget *>("small_container");
 	QSize small_container_size = small_container->size();	// saving size
 	small_container = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
 	small_container->resize(small_container_size);
 	virtual_view->resize(small_container_size);
 	small_container->setToolTip("virtual view");
-	
+	*/
 
 	/** not working windows with QStackedWidget (ownership is taken away!)
 	QStackedWidget* big_container = this->findChild<QStackedWidget *>("big_container");
@@ -184,7 +196,7 @@ void GUI::slot_ViewSwitch(){
 	this->findChild<QGridLayout *>("small_layout")->addWidget(newsmall_container);
 	*/
 
-	
+	/*
 	if (big_container->toolTip() == "virtual view"){
 		augmented_view->setParent(big_container);
 		augmented_view->rescaleImage(big_container->size());
@@ -211,7 +223,7 @@ void GUI::slot_ViewSwitch(){
 		big_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 		augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 	}
-
+	*/
 	
 	//augmented_view->setFixedSize(this->findChild<QGridLayout *>("big_layout")->totalSizeHint());
 }
