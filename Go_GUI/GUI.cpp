@@ -78,7 +78,7 @@ void GUI::init(){
     virtual_view->setParent(ui_main.small_container);
     virtual_view->createAndSetScene(ui_main.big_container->size());
     ui_main.small_container->setToolTip("virtual view");
-    //virtual_view->show();
+    virtual_view->show();
 
 
     ui_main.white_basket->setPixmap(closedbasket_pixmap);
@@ -142,6 +142,9 @@ void GUI::slot_newGameData(const GoBoard * game_board) {
 
         ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
         ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
+
+        // refresh virtual view
+        virtual_view->createAndSetScene(ui_main.big_container->size());
 
         printf(">>> New Game data! <<<\n");
     }    
