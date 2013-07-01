@@ -10,7 +10,7 @@ class VirtualView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    VirtualView();
+    VirtualView(QWidget *parent = 0);
     ~VirtualView();
 	void createAndSetScene(QSize size);
 

@@ -6,11 +6,10 @@
 #include <QMessageBox>
 #include <QGraphicsPixmapItem>
 
-VirtualView::VirtualView()
-{
+VirtualView::VirtualView(QWidget *parent){
+    this->setParent(parent);
 }
-VirtualView::~VirtualView()
-{
+VirtualView::~VirtualView(){
 }
 
 void VirtualView::createAndSetScene(QSize size)
@@ -18,9 +17,10 @@ void VirtualView::createAndSetScene(QSize size)
 	QGraphicsScene* scene = new QGraphicsScene();
 
 	//directories of the images
-	QString board_string = QString("../Go_GUI/textures/go_board_19.png");
-	QString black_stone_string = QString("../Go_GUI/textures/black_stone.png");
-	QString white_stone_string = QString("../Go_GUI/textures/white_stone.png");
+    QString texture_path = "res/textures/";
+	QString board_string = QString(texture_path + "go_board_19.png");
+	QString black_stone_string = QString(texture_path + "black_stone.png");
+	QString white_stone_string = QString(texture_path + "white_stone.png");
 
 	//loads the images
 	QImage* board_image = new QImage(board_string);

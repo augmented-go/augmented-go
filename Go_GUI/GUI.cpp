@@ -75,8 +75,8 @@ void GUI::init(){
     virtual_view->resize(small_container_size);
     ui_main.small_container->setToolTip("virtual view");*/
 
-    virtual_view->setParent(ui_main.small_container->windowHandle());
-    //virtual_view->rescaleImage(ui_main.big_container->size());
+    virtual_view->setParent(ui_main.small_container);
+    virtual_view->createAndSetScene(ui_main.big_container->size());
     ui_main.small_container->setToolTip("virtual view");
     //virtual_view->show();
 
@@ -214,7 +214,7 @@ void GUI::slot_ViewSwitch(){
         //small_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
         
         // new style
-        virtual_view->setParent(ui_main.small_container->windowHandle());
+        virtual_view->setParent(ui_main.small_container);
         virtual_view->resize(ui_main.small_container->size());
         ui_main.small_container->setToolTip("virtual view");
         //virtual_view->show();
@@ -234,7 +234,7 @@ void GUI::slot_ViewSwitch(){
         //ui_main.big_container->setToolTip("virtual view");
         //big_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
 
-        virtual_view->setParent(ui_main.big_container->windowHandle());
+        virtual_view->setParent(ui_main.big_container);
         virtual_view->resize(ui_main.big_container->size());
         ui_main.big_container->setToolTip("virtual view");
         //virtual_view->show(); 
