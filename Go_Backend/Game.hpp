@@ -115,6 +115,12 @@ public:
      */
     std::string getResult() const;
 
+    /**
+     * @brief       Checks if the game has ended. A game ends if a player resigns or if both player
+     *              have played a pass.
+     */
+    bool hasEnded() const;
+
 private:
     // Not implemented
     Game(const Game&);
@@ -135,6 +141,8 @@ private:
 private:
     GoGame _go_game;
     State  _current_state;
+    bool   _game_finished; // we need this variable because fuego doesn't tag a game
+                           // finished if a player resigns
 };
 
 }

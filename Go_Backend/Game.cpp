@@ -14,7 +14,8 @@
 namespace GoBackend {
 Game::Game()
     : _go_game(),
-    _current_state(State::Valid)
+    _current_state(State::Valid),
+    _game_finished(false)
 {}
 
 bool Game::validSetup(const GoSetup& setup) const {
@@ -60,6 +61,8 @@ bool Game::init(int size, GoSetup setup) {
     _go_game.SetupPosition(SgBWArray<SgPointSet>(setup.m_stones[SG_BLACK], setup.m_stones[SG_WHITE]));
 
     _current_state = State::Valid;
+    _game_finished = false;
+
     return true;
 }
 
@@ -275,6 +278,8 @@ void Game::pass() {
         else {
             _go_game.UpdateResult("Couldn't score the board.");
         }
+
+        _game_finished = true;
     }
 }
 
@@ -287,6 +292,8 @@ void Game::resign() {
     // sgf: RE: Result: result, usually in the format "B+R" (Black wins by resign)
     auto result = std::string("") + (current_player == SG_BLACK ? "W" : "B") + "+R";   
     _go_game.UpdateResult(result);
+
+    _game_finished = true;
 }
 
 std::string Game::getResult() const {
@@ -294,6 +301,10 @@ std::string Game::getResult() const {
         return _go_game.GetResult();
     else
         return "";
+}
+
+bool Game::hasEnded() const {
+    return _game_finished;
 }
 
 } // 
