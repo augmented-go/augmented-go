@@ -635,8 +635,33 @@ namespace GoBackendGameTest
             Assert::AreEqual("W+7.5", res.c_str());
         }
 
-    };
+        TEST_METHOD(can_check_if_game_has_ended) {
+            Game go_game;
 
+            // two passes end a game
+            go_game.init(9);
+            Assert::AreEqual(false, go_game.hasEnded());
+
+            go_game.pass();
+            go_game.pass();
+            Assert::AreEqual(true, go_game.hasEnded());
+
+            // a resign ends a game
+            go_game.init(9);
+            Assert::AreEqual(false, go_game.hasEnded());
+
+            go_game.resign();
+            Assert::AreEqual(true, go_game.hasEnded());
+
+            // finishing a game ends a game
+            go_game.init(9);
+            Assert::AreEqual(false, go_game.hasEnded());
+
+            go_game.finishGame();
+            Assert::AreEqual(true, go_game.hasEnded());
+        }
+
+    };
 
     TEST_CLASS(SgfTest)
     {

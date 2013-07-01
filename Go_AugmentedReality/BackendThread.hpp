@@ -11,8 +11,6 @@
 #include "Game.hpp"
 #include "Scanner.hpp"
 
-typedef int OpenCVImage;
-
 namespace Go_AR {
     class BackendThread : public QThread {
         Q_OBJECT
@@ -24,22 +22,52 @@ namespace Go_AR {
     private:
         // thread function
         void run() override;
+        void signalGuiGameHasEnded() const;
         
-    // signals and slots
+    // slots
     public slots:
+        /**
+         * @brief       Stops this thread.
+         */
         void stop();
+
+        /**
+         * @brief       Saves the current game as sgf at the specified path.
+         */
         void save_sgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const;
-        void pass(SgBlackWhite player);
-        void reset();
-        void finish();
+
+        /**
+         * @brief       Plays a pass for the current player.
+         *              Also emits finished_game_result if the game has ended because of playing a pass.
+         */
+        void pass();
+
+        /**
+         * @brief       The current player resigns. Also emits finished_game_result.
+         */
         void resign();
 
+        /**
+         * @brief       Finishes a game. This is a convenience function for playing two passes.
+         *              Also emits finished_game_result.
+         */
+        void finish();
+
+        void reset();
+
     private slots:
-        void scan(); // our main worker function
+        void scan(); // our main worker function that is called by the timer
         
+    // signals
     signals:
-        void backend_new_image(QImage camera_image);
-        void game_data_changed(const GoBoard * game_board);
+        // signals that a new game image was fetched and processed
+        void backend_new_image(QImage camera_image) const;
+
+        // signals that the game board has changed
+        void game_data_changed(const GoBoard * game_board) const;
+
+        // signals that the game has ended with the given result
+        void finished_game_result(QString result) const;
 
     // Member vars    
     private:
