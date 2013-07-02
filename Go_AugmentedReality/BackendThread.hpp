@@ -73,5 +73,6 @@ namespace Go_AR {
     private:
         std::unique_ptr<GoBackend::Game>     _game;
         std::unique_ptr<Go_Scanner::Scanner> _scanner;
+        bool _game_is_initialized;
     };
 }

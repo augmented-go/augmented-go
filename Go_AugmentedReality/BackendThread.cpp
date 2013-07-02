@@ -33,7 +33,8 @@ QImage mat_to_QImage(cv::Mat source)
 
 BackendThread::BackendThread()
     : _game(new GoBackend::Game),
-    _scanner(new Go_Scanner::Scanner)
+    _scanner(new Go_Scanner::Scanner),
+    _game_is_initialized(false)
 {}
 
 
@@ -68,8 +69,11 @@ void BackendThread::scan() {
     if (got_new_image) {
         qDebug() << " New image available!";
 
-        // update game state
-        _game->update(setup);
+        if (_game_is_initialized)
+            // update game state
+            _game->update(setup);
+        else
+            _game->init(board_size, setup);
 
         // converting image (OpenCV data type) to QImage (Qt data type)
         const auto scanner_image = mat_to_QImage(image);
@@ -100,7 +104,7 @@ void BackendThread::pass() {
 }
 
 void BackendThread::reset() {
-    assert(!"Resetting a game is not yet implemented");
+    _game_is_initialized = false;
 }
 
 void BackendThread::finish() {
