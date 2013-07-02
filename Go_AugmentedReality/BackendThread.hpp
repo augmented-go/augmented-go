@@ -69,9 +69,6 @@ namespace Go_AR {
         // signals that the game has ended with the given result
         void finished_game_result(QString result) const;
 
-        // sends the pointer to the game board to the gui
-        void board_init(const GoBoard * board) const;
-
 
     // Member vars    
     private:

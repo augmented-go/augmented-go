@@ -43,9 +43,6 @@ BackendThread::~BackendThread()
 {}
 
 void BackendThread::run()  {
-    // send the pointer to the game board to the gui
-    emit board_init(&_game->getBoard());
-
     // use a timer to periodically scan the camera image
     QTimer timer;
     connect(&timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);

@@ -69,10 +69,8 @@ void GUI::init(){
 
     // Attaching virtual view to small container
     virtual_view->setParent(ui_main.small_container);
-    virtual_view->createAndSetScene(ui_main.small_container->size(), game_board);
     ui_main.small_container->setToolTip("virtual view");
     virtual_view->show();
-
 
     ui_main.white_basket->setPixmap(closedbasket_pixmap);
     ui_main.black_basket->setPixmap(closedbasket_pixmap);
@@ -113,9 +111,10 @@ void GUI::slot_newImage(QImage image) {
  *          If new game data is sent to GUI, refresh display of current player and captured stones.
  * @param   GoBoard     new board of current turn
  */
-void GUI::slot_newGameData() {
-    // game_board has to be set up at this point
-    assert(game_board != nullptr);
+void GUI::slot_newGameData(const GoBoard* board) {
+    // update internal pointer if the board has been changed
+    if (game_board != board)
+        game_board = board;
 
     auto current_turn = game_board->MoveNumber();
     auto current_player = game_board->ToPlay();
@@ -302,10 +301,6 @@ void GUI::closeEvent(QCloseEvent *event){
     }
     else
         event->ignore();
-}
-
-void GUI::slot_board_init(const GoBoard * board) {
-    game_board = board;
 }
 
 } // namespace Go_GUI
