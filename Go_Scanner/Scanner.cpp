@@ -569,8 +569,10 @@ bool detectBlobs(cv::Mat warpedImg)
     return true;
 }
 
-int getStoneDistanceAndMidpoint(cv::Mat& warpedImgGray, int x, int y, lineheading heading, cv::Point2f& midpointLine)
+int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, lineheading heading, cv::Point2f& midpointLine)
 {
+    //TODO: xtmp, ytmp < imageheight & imagewidth
+
     /**
     *    Returns the size of a 45°(left headed) or 135°(right headed) line within a circle, 
     *    starting from any point within that circle 
@@ -584,20 +586,22 @@ int getStoneDistanceAndMidpoint(cv::Mat& warpedImgGray, int x, int y, lineheadin
     {    
         xTmp1 = x;
         yTmp1 = y;
-        for(int j=1; warpedImgGray.at<uchar>(yTmp1,xTmp1) > 50 ; j++)
+        while(warpedImgGray.at<uchar>(yTmp1,xTmp1) < 50)
         {
-            xTmp1 -= j;    
-            yTmp1 += j; 
-            d1 = j;
+            //runs to bottom left
+            xTmp1 -= 1;    
+            yTmp1 += 1; 
+            d1++;
         }
 
         xTmp2 = x;
         yTmp2 = y;
-        for(int j=1; warpedImgGray.at<uchar>(yTmp2,xTmp2) > 50 ; j++)
+        while(warpedImgGray.at<uchar>(yTmp2,xTmp2) < 50)
         {
-            xTmp2 += j;
-            xTmp2 -= j; 
-            d2 = j;
+            //runs to top right
+            xTmp2 += 1;
+            yTmp2 -= 1; 
+            d2++;
         }
     }
     else //heading is left
@@ -605,20 +609,22 @@ int getStoneDistanceAndMidpoint(cv::Mat& warpedImgGray, int x, int y, lineheadin
 
         xTmp1 = x;
         yTmp1 = y;
-        for(int j=1; warpedImgGray.at<uchar>(yTmp1,xTmp1) > 50 ; j++)
+        while(warpedImgGray.at<uchar>(yTmp1,xTmp1) < 50)
         {
-            xTmp1 -= j;    
-            yTmp1 -= j; 
-            d1 = j;
+            //runs to top left
+            xTmp1 -= 1;    
+            yTmp1 -= 1; 
+            d1++;
         }
 
         xTmp2 = x;
         yTmp2 = y;
-        for(int j=1; warpedImgGray.at<uchar>(yTmp2,xTmp2) > 50 ; j++)
+        while(warpedImgGray.at<uchar>(yTmp2,xTmp2) < 50)
         {
-            xTmp2 += j;
-            xTmp2 += j; 
-            d2 = j;
+            //runs to bottom right
+            xTmp2 += 1;
+            yTmp2 += 1; 
+            d2++;
         }
     }
 
@@ -642,7 +648,7 @@ bool detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints)
 
     cv::threshold(tmp, warpedImgGray, 85, 255, 0);
 
-
+    cv::imshow("Testing", warpedImgGray);
     for(int i=0; i < intersectionPoints.size(); i++)
     {
         int x = intersectionPoints[i].x;
@@ -670,11 +676,12 @@ bool detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints)
 
             // Get the Diameter for 45 degree
             cv::Point2f midpoint45;
-            diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, midpoint125.x, midpoint125.y, RIGHT, midpoint45);
+            diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, midpoint125.x, midpoint125.y, LEFT, midpoint45);
 
-            if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 != 0 && diameter125 != 0)
+            if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= 10 && diameter125 >= 10  )
             {
-                std::cout << "a stone was detected" << std::endl;
+                std::cout << "Stone ("<< x << ", "<< y << ")" << std::endl;
+
 
                 //save stone in data structure. this will be the returntype of this function
             }
@@ -683,7 +690,7 @@ bool detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints)
 
         }
         else
-            std::cout << "+";
+            std::cout << "-";
 
     }
 
