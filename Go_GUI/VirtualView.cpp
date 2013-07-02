@@ -16,6 +16,9 @@ void VirtualView::createAndSetScene(QSize size)
 {
 	QGraphicsScene* scene = new QGraphicsScene();
 
+	//TODO: load board size from backend
+	int board_size = 19;
+
 	//directories of the images
     QString texture_path = "res/textures/";
 	QString board_string = QString(texture_path + "go_board_19.png");
@@ -34,11 +37,14 @@ void VirtualView::createAndSetScene(QSize size)
 	if (white_stone_image->isNull())
 		QMessageBox::warning(this, "file loading error", "could not laod white stone image!");
 
-	//scale the images to the right size
-
+	//scale_x and scale_y are the scaling factors of the virtual board
 	float scale_x = size.width() / float(board_image->width());
 	float scale_y = size.height() / float(board_image->height());
 
+	float cell_width = float(board_image->width()) / (board_size+1);
+	float cell_height = float(board_image->height()) / (board_size+1);
+
+	//scale the images to the right size
 	QPixmap board_image_scaled = QPixmap::fromImage(*board_image);
 	board_image_scaled = board_image_scaled.scaled(size.width(),size.height());
 
@@ -59,25 +65,25 @@ void VirtualView::createAndSetScene(QSize size)
 	scene->addItem(new QGraphicsPixmapItem(board_image_scaled));
 
 	//this is a 19x19 test array to display a board with stones. (0 = noone; 1 = black; 2 = white)
-	int test [19][19] = {	{1,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 
-							{1,1,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0},
-							{0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0},
-							{0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,2,0,2,0,0,0,0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,1,1,2,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,1,2,1,1,0,0,0,0,0,0},
-							{0,0,0,0,0,0,1,1,1,1,2,2,1,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0},
-							{0,0,0,0,0,0,0,0,0,2,2,2,2,1,1,1,0,0,0} }; 
+	int test [19][19] = {	{1,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1}, 
+							{1,1,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,1},
+							{0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1},
+							{0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1},
+							{0,0,0,0,2,0,2,0,0,0,0,0,0,0,0,0,0,0,1},
+							{0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,1,1,2,0,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,1,2,1,1,0,0,0,0,0,1},
+							{0,0,0,0,0,0,1,1,1,1,2,2,1,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1},
+							{0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,1},
+							{1,0,0,0,0,0,0,0,0,2,2,2,2,1,1,1,0,0,1} }; 
 	
 	//add the stones to the scene at the right position like in the test array above
 	for(int row = 0; row<19; row++)
@@ -87,15 +93,15 @@ void VirtualView::createAndSetScene(QSize size)
 			if(test[row][col] == 1)
 			{
 				QGraphicsPixmapItem* black_stone_item = new QGraphicsPixmapItem(black_stone_image_scaled);
-				black_stone_item->setPos(black_stone_image_scaled.width()*float(col),black_stone_image_scaled.width()*float(row));
-				black_stone_item->setOffset(black_stone_image_scaled.width()/2.0,black_stone_image_scaled.height()/2.0);
+				black_stone_item->setPos(cell_width * scale_x * col, cell_height * scale_y * row);
+				black_stone_item->setOffset(cell_width * scale_x - black_stone_image_scaled.width()/2, cell_height * scale_y - black_stone_image_scaled.height()/2);
 				scene->addItem(black_stone_item);
 			}
 			if(test[row][col] == 2)
 			{
 				QGraphicsPixmapItem* white_stone_item = new QGraphicsPixmapItem(white_stone_image_scaled);
-				white_stone_item->setPos(white_stone_image_scaled.width()*float(col),white_stone_image_scaled.width()*float(row));
-				white_stone_item->setOffset(white_stone_image_scaled.width()*0.5,white_stone_image_scaled.height()*0.5);
+				white_stone_item->setPos(cell_width * scale_x * col, cell_height * scale_y * row);
+				white_stone_item->setOffset(cell_width * scale_x - white_stone_image_scaled.width()/2, cell_height * scale_y - white_stone_image_scaled.height()/2);
 				scene->addItem(white_stone_item);
 			}
 		}
