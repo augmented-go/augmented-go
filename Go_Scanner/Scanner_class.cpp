@@ -11,12 +11,12 @@ bool Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
     if (!readCameraFrame(frame)) {
         // NOTICE: DEBUG STUFF!
         frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
-        out_image = frame;
-        return true;
+        //out_image = frame;
+        //return false;
     }
 
-    // do stuff with frame
-
+    scanner_main(frame);
+    cv::imshow("Intersections", frame);
     out_image = frame;
     return true;
 }
@@ -29,7 +29,7 @@ bool Scanner::readCameraFrame(cv::Mat& frame) {
         if (!opened)
             return false;
 
-        // just to have _last_frame initialized with the correct size (needed for compaision)
+        // just to have _last_frame initialized with the correct size (needed for comparision)
         _camera.read(_last_frame);
         // successive calls to read give the same data pointer
         // setting the matrix to zero would then also set it to zero for the frame read below

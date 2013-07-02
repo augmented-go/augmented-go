@@ -8,6 +8,8 @@
 
 namespace Go_Scanner {
 
+int scanner_main(cv::Mat& camera_frame);
+
 class Scanner {
 public:
     Scanner() {}
