@@ -24,21 +24,21 @@ bool asked_for_board_contour = false;
 
 Rectangle Order: 
 0-------1
-|		|
-|		|
+|        |
+|        |
 3-------2
 
 */
 
 //point coordinates
-int boardCornerX[]={10, 50, 50, 10};	
-int boardCornerY[]={10, 10, 50, 50};
+int boardCornerX[]={180, 643, 660, 157};    
+int boardCornerY[]={80, 87, 530, 525};
 int imagewidth = 768;
 int imageheight = 576;
 
 
-int point=-1;			//currently selected point
-int nop=4;				//number of points
+int point=-1;            //currently selected point
+int nop=4;                //number of points
 
 enum lineType{HORIZONTAL, VERTICAL};
 enum stoneColor{BLACK, WHITE};
@@ -69,11 +69,11 @@ void mouseHandler(int event, int x, int y, int flags, void *param)
 
     switch(event) 
     {
-    case CV_EVENT_LBUTTONDOWN:		
+    case CV_EVENT_LBUTTONDOWN:        
         selectedImg = holdImg(x, y);
         break;
 
-    case CV_EVENT_LBUTTONUP:	
+    case CV_EVENT_LBUTTONUP:    
         if((selectedImg.empty()!= true)&& point!=-1)
         {
             releaseImg(selectedImg,x,y);
@@ -178,7 +178,7 @@ void showImage()
 
     //draw the points
     for(int j=0;j<nop;j++)
-    {		
+    {        
         img1 = img1.clone();
         cv::rectangle(img1, 
             cv::Point(boardCornerX[j] - 1, boardCornerY[j] - 1), 
@@ -205,11 +205,11 @@ cv::Mat warpImage()
     /*
     Rectangle Order: 
     0-------1
-    |		|
-    |		|
+    |        |
+    |        |
     2-------3
     */
-    cv::Point2f selCorners[4];		
+    cv::Point2f selCorners[4];        
     selCorners[0] = cv::Point2f(boardCornerX[0], boardCornerY[0]);
     selCorners[1] = cv::Point2f(boardCornerX[1], boardCornerY[1]);
     selCorners[2] = cv::Point2f(boardCornerX[3], boardCornerY[3]);
@@ -284,7 +284,7 @@ float calcBetweenAngle(cv::Vec2f v1, cv::Vec2f v2)
     return angle;
 }
 
-void getIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>& horizontalLines, cv::vector<cv::Vec4i>& verticalLines)
+void groupIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>& horizontalLines, cv::vector<cv::Vec4i>& verticalLines)
 {
     cv::Vec2f baseVector, lineVector;
 
@@ -434,6 +434,9 @@ bool intersection(cv::Vec4i horizontalLine, cv::Vec4i verticalLine, cv::Point2f 
 
     double t1 = (x.x * d2.y - x.y * d2.x)/cross;
     r = o1 + d1 * t1;
+    if(r.x>=imagewidth || r.y>=imageheight)
+        return false;
+
     return true;
 }
 
@@ -471,7 +474,7 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     cv::vector<cv::Vec4i> lines, horizontalLines, verticalLines;
     cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 80, 60, 10 );
 
-    getIntersectionLines(lines, horizontalLines, verticalLines);
+    groupIntersectionLines(lines, horizontalLines, verticalLines);
 
     cv::vector<cv::Vec4i> newhorizontalLines = getBoardLines(horizontalLines, HORIZONTAL);
     cv::vector<cv::Vec4i> newverticalLines = getBoardLines(verticalLines, VERTICAL);
@@ -512,7 +515,7 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     }
 
 
-    //cv::imshow("Intersections", warpedImg);
+    cv::imshow("Intersections", warpedImg);
     
     return true;
 }
@@ -569,28 +572,28 @@ bool detectBlobs(cv::Mat warpedImg)
 int getStoneDistanceAndMidpoint(cv::Mat& warpedImgGray, int x, int y, lineheading heading, cv::Point2f& midpointLine)
 {
     /**
-    *	Returns the size of a 45°(left headed) or 125°(right headed) line within a circle, 
-    *	starting from any point within that circle 
-    *	mainly used to get the diameters of the stones. 
-    *	This functin also provides the Midpoint of that line. 
+    *    Returns the size of a 45°(left headed) or 135°(right headed) line within a circle, 
+    *    starting from any point within that circle 
+    *    mainly used to get the diameters of the stones. 
+    *    This functin also provides the Midpoint of that line. 
     */
 
-    int d1, d2, distance, xTmp1, yTmp1, xTmp2, yTmp2;
+    int d1=0, d2=0, distance, xTmp1, yTmp1, xTmp2, yTmp2;
 
     if(heading == RIGHT)
-    {	
+    {    
         xTmp1 = x;
         yTmp1 = y;
-        for(int j=1; warpedImgGray.at<uchar>(xTmp1,yTmp1) > 50 ; j++)
+        for(int j=1; warpedImgGray.at<uchar>(yTmp1,xTmp1) > 50 ; j++)
         {
-            xTmp1 -= j;	
+            xTmp1 -= j;    
             yTmp1 += j; 
             d1 = j;
         }
 
         xTmp2 = x;
         yTmp2 = y;
-        for(int j=1; warpedImgGray.at<uchar>(xTmp2,yTmp2) > 50 ; j++)
+        for(int j=1; warpedImgGray.at<uchar>(yTmp2,xTmp2) > 50 ; j++)
         {
             xTmp2 += j;
             xTmp2 -= j; 
@@ -602,16 +605,16 @@ int getStoneDistanceAndMidpoint(cv::Mat& warpedImgGray, int x, int y, lineheadin
 
         xTmp1 = x;
         yTmp1 = y;
-        for(int j=1; warpedImgGray.at<uchar>(xTmp1,yTmp1) > 50 ; j++)
+        for(int j=1; warpedImgGray.at<uchar>(yTmp1,xTmp1) > 50 ; j++)
         {
-            xTmp1 -= j;	
+            xTmp1 -= j;    
             yTmp1 -= j; 
             d1 = j;
         }
 
         xTmp2 = x;
         yTmp2 = y;
-        for(int j=1; warpedImgGray.at<uchar>(xTmp2,yTmp2) > 50 ; j++)
+        for(int j=1; warpedImgGray.at<uchar>(yTmp2,xTmp2) > 50 ; j++)
         {
             xTmp2 += j;
             xTmp2 += j; 
@@ -630,13 +633,14 @@ int getStoneDistanceAndMidpoint(cv::Mat& warpedImgGray, int x, int y, lineheadin
     return distance;
 }
 
-bool detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f>& intersectionPoints)
+bool detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints)
 {
     //TODO: use black/white image. write function for it. 
 
-    cv::Mat warpedImgGray;
-    cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
-    cv::threshold(warpedImgGray, warpedImgGray, 85, 255, 0);
+    cv::Mat tmp, warpedImgGray;
+    cv::cvtColor(warpedImg, tmp, CV_RGB2GRAY);
+
+    cv::threshold(tmp, warpedImgGray, 85, 255, 0);
 
 
     for(int i=0; i < intersectionPoints.size(); i++)
@@ -650,12 +654,12 @@ bool detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f>& intersectionPoints
         * are similar -> it's a stone. 
         */
 
-        if (warpedImgGray.at<uchar>(x,y) < 50)
+        if (warpedImgGray.at<uchar>(y,x) < 50)
         {
 
-            /**	
-            *	first we produce a help line to get the diameters at 45° and 125°.
-            *	therefore we use the intersectionpoints. 
+            /**    
+            *    first we produce a help line to get the diameters at 45° and 125°.
+            *    therefore we use the intersectionpoints. 
             */ 
             cv::Point2f midpointLine;
             distance = getStoneDistanceAndMidpoint(warpedImgGray, x, y, LEFT, midpointLine);
@@ -668,23 +672,22 @@ bool detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f>& intersectionPoints
             cv::Point2f midpoint45;
             diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, midpoint125.x, midpoint125.y, RIGHT, midpoint45);
 
-            if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45)
+            if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 != 0 && diameter125 != 0)
             {
                 std::cout << "a stone was detected" << std::endl;
 
                 //save stone in data structure. this will be the returntype of this function
             }
             else
-                std::cout << "no stone could be detected" << std::endl;
+                std::cout << "+";
 
         }
         else
-            std::cout << "No Stone on this position found" << std::endl;
+            std::cout << "+";
 
     }
 
-    // todo(mihi314): only for now
-    return true;
+    return true; 
 }
 
 
@@ -775,10 +778,8 @@ int scanner_main(cv::Mat& camera_frame)
 
     }
 
-    // still buggy, throws exception when accessing Mat
-    //bool detectResult = detectStones(srcWarpedImg, intersectionPoints);
+    bool detectResult = detectStones(srcWarpedImg, intersectionPoints);
     //bool blobResult = detectBlobs(srcWarpedImg);
-    cv::imshow("Intersections", warpedImg);
 
     camera_frame = warpedImg;
 
