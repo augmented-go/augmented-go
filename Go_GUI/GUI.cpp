@@ -45,6 +45,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
     connect(ui_main.info_action,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
     connect(ui_main.viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
+	connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
+	connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
 
     // setting initial values
     this->init();
@@ -190,6 +192,26 @@ void GUI::slot_ButtonNewGame(){
     connect(newgame, &NewGameDialog::signal_newgame, this, &GUI::slot_setupNewGame);
 
     newgame->exec();
+}
+
+/**
+ * @brief   SLOT "Resign"
+ *          Opens a Dialog that asks for confirmation.
+ *			If answered yes, a signal is sent to backend that the current player surrenders.
+ */
+void GUI::slot_ButtonResign(){
+	if (QMessageBox::question(this, "Resign", "Do you really want to admit defeat?") == QMessageBox::Yes)
+		emit signal_resign();
+}
+
+/**
+ * @brief   SLOT "Pass"
+ *          Opens a Dialog that asks for confirmation.
+ *			If answered yes, a signal is sent to backend that the current player passes.
+ */
+void GUI::slot_ButtonPass(){
+	if (QMessageBox::question(this, "Pass", "Do you really want to pass?") == QMessageBox::Yes)
+		emit signal_pass();
 }
 
 /**
