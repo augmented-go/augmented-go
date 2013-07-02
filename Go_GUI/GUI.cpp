@@ -20,7 +20,7 @@ namespace Go_GUI {
  * @brief	Checks for gui elements and fonts and connects signals and slots
  * @param	QWidget/QMainWindow		parent widget that creates this
  */
-GUI::GUI(QWidget *parent) : QMainWindow(parent)
+GUI::GUI(QWidget *parent) : QMainWindow(parent), game_board(nullptr)
 {
     ui_main.setupUi(this);
 
@@ -69,7 +69,7 @@ void GUI::init(){
 
     // Attaching virtual view to small container
     virtual_view->setParent(ui_main.small_container);
-    virtual_view->createAndSetScene(ui_main.small_container->size());
+    virtual_view->createAndSetScene(ui_main.small_container->size(), game_board);
     ui_main.small_container->setToolTip("virtual view");
     virtual_view->show();
 
@@ -113,34 +113,38 @@ void GUI::slot_newImage(QImage image) {
  *          If new game data is sent to GUI, refresh display of current player and captured stones.
  * @param   GoBoard     new board of current turn
  */
-void GUI::slot_newGameData(const GoBoard * game_board) {
-        auto current_turn = game_board->MoveNumber();
-        auto current_player = game_board->ToPlay();
-        switch (current_player) {
-            case SG_WHITE:
-                ui_main.white_basket->setPixmap(whitebasket_pixmap);
-                ui_main.black_basket->setPixmap(closedbasket_pixmap);
-                break;
-            case SG_BLACK:
-                ui_main.white_basket->setPixmap(closedbasket_pixmap);
-                ui_main.black_basket->setPixmap(blackbasket_pixmap);
-                break;
-            default:
-                assert(false);
-                break;
-        }
-        
-        auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
-        auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
+void GUI::slot_newGameData() {
+    // game_board has to be set up at this point
+    assert(game_board != nullptr);
 
-        ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
-        ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
+    auto current_turn = game_board->MoveNumber();
+    auto current_player = game_board->ToPlay();
 
-        // refresh virtual view
-        virtual_view->createAndSetScene(virtual_view->parentWidget()->size());
+    switch (current_player) {
+    case SG_WHITE:
+        ui_main.white_basket->setPixmap(whitebasket_pixmap);
+        ui_main.black_basket->setPixmap(closedbasket_pixmap);
+        break;
+    case SG_BLACK:
+        ui_main.white_basket->setPixmap(closedbasket_pixmap);
+        ui_main.black_basket->setPixmap(blackbasket_pixmap);
+        break;
+    default:
+        assert(false);
+        break;
+    }
 
-        printf(">>> New Game data! <<<\n");
-    }    
+    auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
+    auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
+
+    ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
+    ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
+
+    // refresh virtual view
+    virtual_view->createAndSetScene(virtual_view->parentWidget()->size(), game_board);
+
+    printf(">>> New Game data! <<<\n");
+}    
 
 /**
  * @brief   SLOT "Show finished game results"
@@ -204,7 +208,7 @@ void GUI::slot_ViewSwitch(){
 
         // new style
         virtual_view->setParent(ui_main.small_container);
-        virtual_view->createAndSetScene(ui_main.small_container->size());
+        virtual_view->createAndSetScene(ui_main.small_container->size(), game_board);
         ui_main.small_container->setToolTip("virtual view");
         virtual_view->show();
         
@@ -217,7 +221,7 @@ void GUI::slot_ViewSwitch(){
         augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
         virtual_view->setParent(ui_main.big_container);
-        virtual_view->createAndSetScene(ui_main.big_container->size());
+        virtual_view->createAndSetScene(ui_main.big_container->size(), game_board);
         ui_main.big_container->setToolTip("virtual view");
         virtual_view->show(); 
     }
@@ -298,6 +302,10 @@ void GUI::closeEvent(QCloseEvent *event){
     }
     else
         event->ignore();
+}
+
+void GUI::slot_board_init(const GoBoard * board) {
+    game_board = board;
 }
 
 } // namespace Go_GUI
