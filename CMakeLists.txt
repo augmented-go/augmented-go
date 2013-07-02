@@ -50,12 +50,13 @@ add_subdirectory(Go_AugmentedReality)
 add_subdirectory(Go_Backend)
 add_subdirectory(Go_GUI)
 add_subdirectory(Go_Scanner)
+add_subdirectory(Go_Scanner_Test)
 add_subdirectory(Go_VirtualReality)
 
 # the tests currently only run with visual studio 2012
 if(MSVC11)
-    add_subdirectory(Go_Backend_Test)
-    add_subdirectory(Go_Scanner_Test)
+    add_subdirectory(Go_Backend_Unittest)
+    add_subdirectory(Go_Scanner_Unittest)
 endif(MSVC11)
 
 # copies res folder to output directory

@@ -24,9 +24,9 @@ SET(augmented_reality_HEADERS
     BackendThread.hpp
 )
 
-wrap_gui_ui_files(ui_GUI)
+wrap_gui_ui_files(ui_GUI ui_NewGameDialog)
 
-add_executable (${TARGETNAME} ${augmented_reality_SOURCE} ${augmented_reality_HEADERS} ${ui_GUI})
+add_executable (${TARGETNAME} ${augmented_reality_SOURCE} ${augmented_reality_HEADERS} ${ui_GUI} ${ui_NewGameDialog})
 
 add_fuego_to_target(${TARGETNAME})
 add_scanner_to_target(${TARGETNAME})

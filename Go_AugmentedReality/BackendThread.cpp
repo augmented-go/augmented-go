@@ -85,15 +85,18 @@ void BackendThread::scan() {
     }
 }
 
-void BackendThread::save_sgf(QString path) const {
+void BackendThread::save_sgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const {
     auto filepath = path.toStdString();
 
-    if (!_game->saveGame(filepath))
+    if (!_game->saveGame(filepath, blackplayer_name.toStdString(), whiteplayer_name.toStdString(), game_name.toStdString()))
         std::cerr << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
 }
 
-void BackendThread::pass(SgBlackWhite player) {
-    assert(!"Passing is not yet implemented");
+void BackendThread::pass() {
+    _game->pass();
+    
+    if (_game->hasEnded())
+        signalGuiGameHasEnded();
 }
 
 void BackendThread::reset() {
@@ -101,11 +104,22 @@ void BackendThread::reset() {
 }
 
 void BackendThread::finish() {
-    assert(!"Ending a game is not yet implemented");
+    _game->finishGame();
+
+    signalGuiGameHasEnded();
 }
 
 void BackendThread::resign() {
-    assert(!"Resigning is not yet implemented");
+    _game->resign();
+
+    signalGuiGameHasEnded();
+}
+
+void BackendThread::signalGuiGameHasEnded() const {
+    auto result = _game->getResult();
+
+    // signal gui that game has ended with this result
+    emit finished_game_result(QString(result.c_str()));
 }
 
 } // namespace Go_AR

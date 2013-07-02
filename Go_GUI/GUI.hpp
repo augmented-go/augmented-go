@@ -7,6 +7,7 @@
 #include "Game.hpp"
 
 #include "ui_GUI.h"
+#include "ui_NewGameDialog.h"
 #include "AugmentedView.hpp"
 
 class VirtualView;
@@ -23,57 +24,32 @@ public:
     void init();
     void RenderGame(GoBackend::Game game);
 
-
 public slots:
+    void slot_showFinishedGameResults(QString result);
+    void slot_newImage(QImage image);
+    void slot_newGameData(const GoBoard * game_board);
+    void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name);
+
+private slots:
+    void slot_ButtonNewGame();
     void slot_MenuOpen();
     void slot_MenuSave();
     void slot_MenuInfo();
     void slot_ViewSwitch();
-
-public slots:
-    void new_image(QImage image) {
-        printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
-
-        augmented_view->setImage(image);
-        augmented_view->rescaleImage(augmented_view->parentWidget()->size());
-    }
-
-    void new_game_data(const GoBoard * game_board) {
-        auto current_turn = game_board->MoveNumber();
-        auto current_player = game_board->ToPlay();
-        switch (current_player) {
-            case SG_WHITE:
-                this->findChild<QLabel* >("white_basket")->setPixmap(whitebasket_pixmap);
-                this->findChild<QLabel* >("black_basket")->setPixmap(closedbasket_pixmap);
-                break;
-            case SG_BLACK:
-                this->findChild<QLabel* >("white_basket")->setPixmap(closedbasket_pixmap);
-                this->findChild<QLabel* >("black_basket")->setPixmap(blackbasket_pixmap);
-                break;
-            default:
-                assert(false);
-                break;
-        }
-        
-        auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
-        auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
-
-        this->findChild<QLabel* >("capturedwhite_label")->setText(QString::number(captured_white_stones));
-        this->findChild<QLabel* >("capturedblack_label")->setText(QString::number(captured_black_stones));
-
-        printf(">>> New Game data! <<<\n");
-    }
-
     void closeEvent(QCloseEvent *event);
 
 signals:
+    void signal_saveGame(QString fileName, QString blackplayer_label, QString whiteplayer_label, QString game_name);
     void stop_backend_thread();
 
 private:
-    Ui::MainWindow ui;
+    Ui::MainWindow ui_main;
     VirtualView* virtual_view;
     AugmentedView* augmented_view;
-    QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap;
+    QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
+    QString game_name;
+
+    void setPlayerLabels(QString blackplayer_name, QString whiteplayer_name);
 };
 
 } // namespace Go_GUI

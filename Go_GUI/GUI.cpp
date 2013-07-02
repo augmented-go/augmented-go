@@ -9,6 +9,7 @@
 #include <QFontDatabase>
 #include "Game.hpp"
 
+#include "NewGameDialog.hpp"
 #include "VirtualView.hpp"
 #include "AugmentedView.hpp"
 
@@ -21,13 +22,14 @@ namespace Go_GUI {
  */
 GUI::GUI(QWidget *parent) : QMainWindow(parent)
 {
-    ui.setupUi(this);
+    ui_main.setupUi(this);
 
     QString texture_path = "res/textures/";
     whitebasket_pixmap = QPixmap(texture_path + "white_basket.png");
     blackbasket_pixmap = QPixmap(texture_path + "black_basket.png");
     closedbasket_pixmap = QPixmap(texture_path + "Closed_basket.png");
-    if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull() || closedbasket_pixmap.isNull())
+    gotable_pixmap = QPixmap(texture_path + "go_table.png");
+    if (blackbasket_pixmap.isNull() || whitebasket_pixmap.isNull() || closedbasket_pixmap.isNull() || gotable_pixmap.isNull())
         QMessageBox::critical(this, "GUI element not found", QString("White and/or black basket textures not found!\n searched relative to exe in: " + texture_path));
     
     // loading font
@@ -36,39 +38,13 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
     if (fontDatabase.addApplicationFont(font_path) == -1)
         QMessageBox::critical(this, "Font not found", QString("Shojumaru font was not found!\n searched relative to exe in: " + font_path));
 
-    // checking for elements
-    auto open_menuitem	= this->findChild<QAction *>("open_action");
-    auto save_menuitem	= this->findChild<QAction *>("save_action");
-    auto exit_menuitem	= this->findChild<QAction *>("exit_action");
-    auto info_menuitem	= this->findChild<QAction *>("info_action");
-    auto big_container	= this->findChild<QWidget *>("big_container");
-    auto small_container= this->findChild<QWidget *>("small_container");
-    auto viewswitch_button = this->findChild<QPushButton *>("viewswitch_button");
-    auto capturedwhite_label = this->findChild<QLabel *>("capturedwhite_label");
-    auto capturedblack_label = this->findChild<QLabel *>("capturedblack_label");
-
-    // throwing an error message of elements that were not found
-    if ( open_menuitem == nullptr || exit_menuitem == nullptr || info_menuitem == nullptr
-        || save_menuitem == nullptr	|| big_container == nullptr || small_container == nullptr
-        || capturedwhite_label == nullptr || capturedblack_label == nullptr)
-        QMessageBox::critical(this, "GUI element not found", 
-                            QString("An element of GUI could not be found. (Deleted, renamed?)\n\n Element list:\n " 
-                             + ((open_menuitem) ? open_menuitem->objectName()	: "<Open> not found!") + "\n"
-                             + ((save_menuitem) ? save_menuitem->objectName()	: "<Save> not found!") + "\n"
-                             + ((exit_menuitem) ? exit_menuitem->objectName()	: "<Exit> not found!") + "\n"
-                             + ((info_menuitem) ? info_menuitem->objectName()	: "<Info> not found!") + "\n"
-                             + ((big_container)	? big_container->objectName()	: "<Big container> not found!") + "\n"
-                             + ((small_container) ? small_container->objectName()	: "<Small container> not found!") + "\n"
-                             + ((capturedwhite_label) ? capturedwhite_label->objectName()	: "<Captured white label> not found!") + "\n"
-                             + ((capturedblack_label) ? capturedblack_label->objectName()	: "<Captured black label> not found!") + "\n"
-                             ));
-
     // connections
-    connect(open_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuOpen);
-    connect(save_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuSave);
-    connect(exit_menuitem,		&QAction::triggered,	this, &QWidget::close);	
-    connect(info_menuitem,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
-    connect(viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
+    connect(ui_main.open_action,		&QAction::triggered,	this, &GUI::slot_MenuOpen);
+    connect(ui_main.save_action,		&QAction::triggered,	this, &GUI::slot_MenuSave);
+    connect(ui_main.exit_action,		&QAction::triggered,	this, &QWidget::close);	
+    connect(ui_main.info_action,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
+    connect(ui_main.viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
+    connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
 
     // setting initial values
     this->init();
@@ -86,30 +62,135 @@ void GUI::init(){
 
 
     // Attaching augmented view to big container
-    QWidget* big_container = this->findChild<QWidget *>("big_container");
-    augmented_view->setParent(big_container);
-    augmented_view->rescaleImage(big_container->size());
-    big_container->setToolTip("augmented view");
+    augmented_view->setParent(ui_main.big_container);
+    augmented_view->rescaleImage(ui_main.big_container->size());
+    ui_main.big_container->setToolTip("augmented view");
+    augmented_view->show();
 
     // Attaching virtual view to small container
-    QWidget* small_container = this->findChild<QWidget *>("small_container");
-    QSize small_container_size = small_container->size();	// saving size
-    small_container = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
-    small_container->resize(small_container_size);
+    /*QWidget* small_container = ui_main.small_container;
+    QSize small_container_size = ui_main.small_container->size();	// saving size
+    ui_main.small_container = QWidget::createWindowContainer(virtual_view, ui_main.small_container, Qt::Widget);
+    ui_main.small_container->resize(small_container_size);
     virtual_view->resize(small_container_size);
-    small_container->setToolTip("virtual view");
+    ui_main.small_container->setToolTip("virtual view");*/
 
-    this->findChild<QLabel* >("white_basket")->setPixmap(closedbasket_pixmap);
-    this->findChild<QLabel* >("black_basket")->setPixmap(closedbasket_pixmap);
+    virtual_view->setParent(ui_main.small_container->windowHandle());
+    //virtual_view->rescaleImage(ui_main.big_container->size());
+    ui_main.small_container->setToolTip("virtual view");
+    //virtual_view->show();
 
-    this->findChild<QLabel* >("capturedwhite_label")->setText(QString());
-    this->findChild<QLabel* >("capturedblack_label")->setText(QString());
+
+    ui_main.white_basket->setPixmap(closedbasket_pixmap);
+    ui_main.black_basket->setPixmap(closedbasket_pixmap);
+    ui_main.go_table_label->setPixmap(gotable_pixmap);
+
+    ui_main.capturedwhite_label->setText(QString());
+    ui_main.capturedblack_label->setText(QString());
 }
 
+/**
+ * @brief	sets labels and variables for player names.
+ * @param	QString		name of black player (default: "Black"
+ * @param	QString		name of white player (default: "White"
+ */
+void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
+    ui_main.blackplayer_label->setText(blackplayer_name);
+    ui_main.whiteplayer_label->setText(whiteplayer_name);
+}
 
 //////////
-//Slots
+//Public Slots
 //////////
+
+/**
+ * @brief   SLOT "new image"
+ *          If a new image is sent to GUI, refresh and rescale picture.
+ * @param   QImage  new image from scanner
+ */
+void GUI::slot_newImage(QImage image) {
+        printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
+
+        augmented_view->setImage(image);
+        augmented_view->rescaleImage(augmented_view->parentWidget()->size());
+    }
+
+/**
+ * @brief   SLOT "new game data"
+ *          If new game data is sent to GUI, refresh display of current player and captured stones.
+ * @param   GoBoard     new board of current turn
+ */
+void GUI::slot_newGameData(const GoBoard * game_board) {
+        auto current_turn = game_board->MoveNumber();
+        auto current_player = game_board->ToPlay();
+        switch (current_player) {
+            case SG_WHITE:
+                ui_main.white_basket->setPixmap(whitebasket_pixmap);
+                ui_main.black_basket->setPixmap(closedbasket_pixmap);
+                break;
+            case SG_BLACK:
+                ui_main.white_basket->setPixmap(closedbasket_pixmap);
+                ui_main.black_basket->setPixmap(blackbasket_pixmap);
+                break;
+            default:
+                assert(false);
+                break;
+        }
+        
+        auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
+        auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
+
+        ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
+        ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
+
+        printf(">>> New Game data! <<<\n");
+    }    
+
+/**
+ * @brief   SLOT "Show finished game results"
+ *          If a game ended, the BackendThread sends a signal with the results.
+ *          Here the results are shown to the user.
+ */
+void GUI::slot_showFinishedGameResults(QString result){
+    QMessageBox::information(this, "Game results", result);
+    auto answer = QMessageBox::question(this, "New Game?", "Do you want to start a new game?");
+    if (answer == QMessageBox::Yes)
+        this->slot_ButtonNewGame();
+}
+
+/**
+ * @brief   SLOT "setup new game"
+ *          When a new game has been started, setup game name and player names on gui.
+ * @param   QString    game name
+ * @param   QString    black player name
+ * @param   QString    white player name
+ */
+void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name){
+
+    // emit to backend that gui wants to set up a new game!
+
+    ui_main.gamename_label->setText(game_name);
+    ui_main.blackplayer_label->setText(blackplayer_name);
+    ui_main.whiteplayer_label->setText(whiteplayer_name);
+}
+
+//////////
+//Private Slots
+//////////
+
+/**
+ * @brief   SLOT "NewGame/Reset"
+ *          Opens a Dialog that asks for game rules and names.
+ */
+void GUI::slot_ButtonNewGame(){
+    NewGameDialog* newgame = new NewGameDialog(this);
+    Ui::Dialog ui_newgame;
+    ui_newgame.setupUi(newgame);
+
+    connect(newgame, &NewGameDialog::signal_newgame, this, &GUI::slot_setupNewGame);
+
+    newgame->exec();
+}
 
 /**
  * @brief	SLOT "ViewSwitch"
@@ -117,38 +198,46 @@ void GUI::init(){
  *			To assign a view to something a QWidget has to be created.
  */
 void GUI::slot_ViewSwitch(){
-    QWidget* big_container = this->findChild<QWidget *>("big_container");
-    QWidget* small_container = this->findChild<QWidget *>("small_container");
-    
-    if (big_container->toolTip() == "virtual view"){
+    if (ui_main.big_container->toolTip() == "virtual view"){
         // switching augmented view to big container
-        augmented_view->setParent(big_container);
-        augmented_view->rescaleImage(big_container->size());
-        big_container->setToolTip("augmented view");
+        augmented_view->setParent(ui_main.big_container);
+        augmented_view->rescaleImage(ui_main.big_container->size());
+        ui_main.big_container->setToolTip("augmented view");
+        augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
         // switching virtual view to small container
-        QWidget* small_view = QWidget::createWindowContainer(virtual_view, small_container, Qt::Widget);
-        small_view->resize(small_container->size());
-        virtual_view->resize(small_container->size());
-        small_container->setToolTip("virtual view");
-
-        small_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
-        augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+        // old style
+        //QWidget* small_view = QWidget::createWindowContainer(virtual_view, ui_main.small_container, Qt::Widget);
+        //small_view->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        //small_view->resize(ui_main.small_container->size());
+        //ui_main.small_container->setToolTip("virtual view");
+        //small_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
+        
+        // new style
+        virtual_view->setParent(ui_main.small_container->windowHandle());
+        virtual_view->resize(ui_main.small_container->size());
+        ui_main.small_container->setToolTip("virtual view");
+        //virtual_view->show();
+        
     }
-    else if (big_container->toolTip() == "augmented view"){
+    else if (ui_main.big_container->toolTip() == "augmented view"){
         // switching augmented view to small container
-        augmented_view->setParent(small_container);
-        augmented_view->rescaleImage(small_container->size());
-        small_container->setToolTip("augmented view");
+        augmented_view->setParent(ui_main.small_container);
+        augmented_view->rescaleImage(ui_main.small_container->size());
+        ui_main.small_container->setToolTip("augmented view");
+        augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
         // switching virtual view to big container
-        QWidget* big_view = QWidget::createWindowContainer(virtual_view, big_container, Qt::Widget);
-        big_view->resize(big_container->size());
-        virtual_view->resize(big_container->size());
-        big_container->setToolTip("virtual view");
+        //QWidget* big_view = QWidget::createWindowContainer(virtual_view, ui_main.big_container, Qt::Widget);
+        //big_view->resize(ui_main.big_container->size());
+        //virtual_view->resize(ui_main.big_container->size());
+        //ui_main.big_container->setToolTip("virtual view");
+        //big_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
 
-        big_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
-        augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+        virtual_view->setParent(ui_main.big_container->windowHandle());
+        virtual_view->resize(ui_main.big_container->size());
+        ui_main.big_container->setToolTip("virtual view");
+        //virtual_view->show(); 
     }
 }
 
@@ -183,7 +272,9 @@ void GUI::slot_MenuSave(){
         &selfilter 
     );
 
-    // TODO!
+    
+    if (!fileName.isNull())
+        emit signal_saveGame(fileName, ui_main.blackplayer_label->text(), ui_main.whiteplayer_label->text(), this->game_name);
 }
 
 /**
