@@ -28,8 +28,6 @@ int main(int argc, char** argv) {
         // connect signal from gui to backend
         QObject::connect(&gui, &GUI::stop_backend_thread, &backend, &BackendThread::stop, Qt::QueuedConnection);
         QObject::connect(&gui, &GUI::signal_saveGame, &backend, &BackendThread::save_sgf, Qt::QueuedConnection);
-		QObject::connect(&gui, &GUI::signal_pass, &backend, &BackendThread::pass, Qt::QueuedConnection);
-		QObject::connect(&gui, &GUI::signal_resign, &backend, &BackendThread::resign, Qt::QueuedConnection);
 
         backend.start(); // start backend thread
 
