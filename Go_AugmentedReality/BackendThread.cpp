@@ -58,7 +58,7 @@ void BackendThread::stop()  {
 void BackendThread::scan() {
     cv::Mat image;
     GoSetup setup;
-    int board_size;
+    int board_size = 19;
 
     // fetch new camera image
     auto got_new_image = _scanner->scanCamera(setup, board_size, image);
