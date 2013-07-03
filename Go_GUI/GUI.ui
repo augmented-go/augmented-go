@@ -160,17 +160,11 @@
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,8,1">
-          <property name="leftMargin">
+         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,8,2">
+          <property name="spacing">
            <number>0</number>
           </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>5</number>
-          </property>
-          <property name="bottomMargin">
+          <property name="margin">
            <number>0</number>
           </property>
           <item>
@@ -233,9 +227,12 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="player_label">
+           <layout class="QHBoxLayout" name="player_label" stretch="1,1">
             <property name="spacing">
              <number>6</number>
+            </property>
+            <property name="sizeConstraint">
+             <enum>QLayout::SetDefaultConstraint</enum>
             </property>
             <item>
              <widget class="QLabel" name="whiteplayer_label">
@@ -2034,9 +2031,15 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="lower_buttons">
+           <layout class="QHBoxLayout" name="Lower_Buttons" stretch="2,1,1">
             <item>
              <widget class="QPushButton" name="pass_button">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="font">
                <font>
                 <family>Shojumaru</family>
@@ -2048,7 +2051,31 @@
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="resign_button">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <family>Shojumaru</family>
+               </font>
+              </property>
+              <property name="text">
+               <string>Resign</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="newgame_button">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="font">
                <font>
                 <family>Shojumaru</family>
@@ -2064,6 +2091,7 @@
          </layout>
          <zorder>table_container</zorder>
          <zorder>ViewSwitch_GameName</zorder>
+         <zorder>resign_button</zorder>
         </widget>
        </item>
       </layout>

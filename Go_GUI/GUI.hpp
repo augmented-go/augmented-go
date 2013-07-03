@@ -32,6 +32,8 @@ public slots:
 
 private slots:
     void slot_ButtonNewGame();
+    void slot_ButtonPass();
+    void slot_ButtonResign();
     void slot_MenuOpen();
     void slot_MenuSave();
     void slot_MenuInfo();
@@ -40,6 +42,8 @@ private slots:
 
 signals:
     void signal_saveGame(QString fileName, QString blackplayer_label, QString whiteplayer_label, QString game_name);
+    void signal_pass();
+    void signal_resign();
     void stop_backend_thread();
 
 private:
