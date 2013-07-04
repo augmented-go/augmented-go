@@ -49,8 +49,8 @@ private:
     QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
     QString game_name;
 
-    // Pointer to the game board, will be set exactly once ("slot_board_init") as soon as the backend
-    // send it here. This pointer will be valid until the GUI exits the application.
+    // Pointer to the game board, will be set & cached in the slot "slot_newGameData".
+    // This pointer will be valid until the GUI exits the application or the backend sends a new one.
     const GoBoard* game_board;
 
     void setPlayerLabels(QString blackplayer_name, QString whiteplayer_name);
