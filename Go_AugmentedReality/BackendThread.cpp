@@ -35,7 +35,8 @@ BackendThread::BackendThread()
     : _game(new GoBackend::Game),
     _scanner(new Go_Scanner::Scanner),
     _game_is_initialized(false)
-{}
+{
+}
 
 
 BackendThread::~BackendThread()

@@ -69,6 +69,7 @@ namespace Go_AR {
         // signals that the game has ended with the given result
         void finished_game_result(QString result) const;
 
+
     // Member vars    
     private:
         std::unique_ptr<GoBackend::Game>     _game;

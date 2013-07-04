@@ -20,7 +20,7 @@ namespace Go_GUI {
  * @brief	Checks for gui elements and fonts and connects signals and slots
  * @param	QWidget/QMainWindow		parent widget that creates this
  */
-GUI::GUI(QWidget *parent) : QMainWindow(parent)
+GUI::GUI(QWidget *parent) : QMainWindow(parent), game_board(nullptr)
 {
     ui_main.setupUi(this);
 
@@ -70,18 +70,9 @@ void GUI::init(){
     augmented_view->show();
 
     // Attaching virtual view to small container
-    /*QWidget* small_container = ui_main.small_container;
-    QSize small_container_size = ui_main.small_container->size();	// saving size
-    ui_main.small_container = QWidget::createWindowContainer(virtual_view, ui_main.small_container, Qt::Widget);
-    ui_main.small_container->resize(small_container_size);
-    virtual_view->resize(small_container_size);
-    ui_main.small_container->setToolTip("virtual view");*/
-
-    virtual_view->setParent(ui_main.small_container->windowHandle());
-    //virtual_view->rescaleImage(ui_main.big_container->size());
+    virtual_view->setParent(ui_main.small_container);
     ui_main.small_container->setToolTip("virtual view");
-    //virtual_view->show();
-
+    virtual_view->show();
 
     ui_main.white_basket->setPixmap(closedbasket_pixmap);
     ui_main.black_basket->setPixmap(closedbasket_pixmap);
@@ -122,31 +113,39 @@ void GUI::slot_newImage(QImage image) {
  *          If new game data is sent to GUI, refresh display of current player and captured stones.
  * @param   GoBoard     new board of current turn
  */
-void GUI::slot_newGameData(const GoBoard * game_board) {
-        auto current_turn = game_board->MoveNumber();
-        auto current_player = game_board->ToPlay();
-        switch (current_player) {
-            case SG_WHITE:
-                ui_main.white_basket->setPixmap(whitebasket_pixmap);
-                ui_main.black_basket->setPixmap(closedbasket_pixmap);
-                break;
-            case SG_BLACK:
-                ui_main.white_basket->setPixmap(closedbasket_pixmap);
-                ui_main.black_basket->setPixmap(blackbasket_pixmap);
-                break;
-            default:
-                assert(false);
-                break;
-        }
-        
-        auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
-        auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
+void GUI::slot_newGameData(const GoBoard* board) {
+    // update internal pointer if the board has been changed
+    if (game_board != board)
+        game_board = board;
 
-        ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
-        ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
+    auto current_turn = game_board->MoveNumber();
+    auto current_player = game_board->ToPlay();
 
-        printf(">>> New Game data! <<<\n");
-    }    
+    switch (current_player) {
+    case SG_WHITE:
+        ui_main.white_basket->setPixmap(whitebasket_pixmap);
+        ui_main.black_basket->setPixmap(closedbasket_pixmap);
+        break;
+    case SG_BLACK:
+        ui_main.white_basket->setPixmap(closedbasket_pixmap);
+        ui_main.black_basket->setPixmap(blackbasket_pixmap);
+        break;
+    default:
+        assert(false);
+        break;
+    }
+
+    auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
+    auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
+
+    ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
+    ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
+
+    // refresh virtual view
+    virtual_view->createAndSetScene(virtual_view->parentWidget()->size(), game_board);
+
+    printf(">>> New Game data! <<<\n");
+}    
 
 /**
  * @brief   SLOT "Show finished game results"
@@ -221,25 +220,18 @@ void GUI::slot_ButtonPass(){
  */
 void GUI::slot_ViewSwitch(){
     if (ui_main.big_container->toolTip() == "virtual view"){
+
         // switching augmented view to big container
         augmented_view->setParent(ui_main.big_container);
         augmented_view->rescaleImage(ui_main.big_container->size());
         ui_main.big_container->setToolTip("augmented view");
         augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
-        // switching virtual view to small container
-        // old style
-        //QWidget* small_view = QWidget::createWindowContainer(virtual_view, ui_main.small_container, Qt::Widget);
-        //small_view->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        //small_view->resize(ui_main.small_container->size());
-        //ui_main.small_container->setToolTip("virtual view");
-        //small_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
-        
         // new style
-        virtual_view->setParent(ui_main.small_container->windowHandle());
-        virtual_view->resize(ui_main.small_container->size());
+        virtual_view->setParent(ui_main.small_container);
+        virtual_view->createAndSetScene(ui_main.small_container->size(), game_board);
         ui_main.small_container->setToolTip("virtual view");
-        //virtual_view->show();
+        virtual_view->show();
         
     }
     else if (ui_main.big_container->toolTip() == "augmented view"){
@@ -249,17 +241,10 @@ void GUI::slot_ViewSwitch(){
         ui_main.small_container->setToolTip("augmented view");
         augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
-        // switching virtual view to big container
-        //QWidget* big_view = QWidget::createWindowContainer(virtual_view, ui_main.big_container, Qt::Widget);
-        //big_view->resize(ui_main.big_container->size());
-        //virtual_view->resize(ui_main.big_container->size());
-        //ui_main.big_container->setToolTip("virtual view");
-        //big_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
-
-        virtual_view->setParent(ui_main.big_container->windowHandle());
-        virtual_view->resize(ui_main.big_container->size());
+        virtual_view->setParent(ui_main.big_container);
+        virtual_view->createAndSetScene(ui_main.big_container->size(), game_board);
         ui_main.big_container->setToolTip("virtual view");
-        //virtual_view->show(); 
+        virtual_view->show(); 
     }
 }
 
