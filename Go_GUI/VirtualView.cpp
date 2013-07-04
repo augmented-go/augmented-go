@@ -25,10 +25,10 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
 
     QGraphicsScene* scene = new QGraphicsScene();
 
-	// loads the board size and checks if its a valid size
-	int board_size = game_board->Size();
-	if(board_size != 9 && board_size != 13 && board_size != 19)
-		QMessageBox::warning(this, "board size error", "invalid size of the board!");
+    // loads the board size and checks if its a valid size
+    int board_size = game_board->Size();
+    if(board_size != 9 && board_size != 13 && board_size != 19)
+        QMessageBox::warning(this, "board size error", "invalid size of the board!");
 
     // directories of the images
     QString texture_path = "res/textures/";
