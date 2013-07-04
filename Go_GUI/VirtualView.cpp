@@ -101,7 +101,6 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
         black_stone_item->setOffset(cell_width * scale_x - white_stone_image_scaled.width()/2, cell_height * scale_y - black_stone_image_scaled.height()/2);
         scene->addItem(black_stone_item);
     }
-
     this->setScene(scene);
 }
 
