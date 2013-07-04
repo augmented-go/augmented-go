@@ -69,11 +69,14 @@ void BackendThread::scan() {
     if (got_new_image) {
         qDebug() << " New image available!";
 
-        if (_game_is_initialized)
+        if (_game_is_initialized) {
             // update game state
             _game->update(setup);
-        else
+        }
+        else {
             _game->init(board_size, setup);
+            _game_is_initialized = true;
+        }
 
         // converting image (OpenCV data type) to QImage (Qt data type)
         const auto scanner_image = mat_to_QImage(image);
