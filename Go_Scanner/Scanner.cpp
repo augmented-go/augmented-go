@@ -200,7 +200,7 @@ void showImage()
     img1 = cv::Mat();
 }
 
-cv::Mat warpImage()
+cv::Mat warpImage(cv::Mat img, cv::Point2f p0, cv::Point2f p1, cv::Point2f p2, cv::Point2f p3)
 {
     /*
     Rectangle Order: 
@@ -210,29 +210,59 @@ cv::Mat warpImage()
     2-------3
     */
     cv::Point2f selCorners[4];        
-    selCorners[0] = cv::Point2f(boardCornerX[0], boardCornerY[0]);
-    selCorners[1] = cv::Point2f(boardCornerX[1], boardCornerY[1]);
-    selCorners[2] = cv::Point2f(boardCornerX[3], boardCornerY[3]);
-    selCorners[3] = cv::Point2f(boardCornerX[2], boardCornerY[2]);
-
-    for (int i=0; i < 4; i ++)
-        std::cout << boardCornerX[i] << " " << boardCornerY[i] << std::endl;
+    selCorners[0] = p0;
+    selCorners[1] = p1;
+    selCorners[2] = p2;
+    selCorners[3] = p3;
 
     cv::Point2f dstCorners[4]; 
     dstCorners[0] = cv::Point2f(0.0, 0.0);
-    dstCorners[1] = cv::Point2f(imagewidth-1, 0.0);
-    dstCorners[2] = cv::Point2f(0.0, imageheight-1);
-    dstCorners[3] = cv::Point2f(imagewidth-1, imageheight-1);
-
+    dstCorners[1] = cv::Point2f((float)img.cols, 0.0);
+    dstCorners[2] = cv::Point2f(0.0, (float)img.rows);
+    dstCorners[3] = cv::Point2f((float)img.cols, (float)img.rows);
 
     cv::Mat transformationMatrix;
     transformationMatrix = cv::getPerspectiveTransform(selCorners, dstCorners);
 
     cv::Mat warpedImg;
-    cv::warpPerspective(img0, warpedImg, transformationMatrix, warpedImg.size(), 1, 0 ,0);
+    cv::warpPerspective(img, warpedImg, transformationMatrix, warpedImg.size(), 1, 0 ,0);
 
     return warpedImg;
 }
+
+//cv::Mat warpImage()
+//{
+//    /*
+//    Rectangle Order: 
+//    0-------1
+//    |        |
+//    |        |
+//    2-------3
+//    */
+//    cv::Point2f selCorners[4];        
+//    selCorners[0] = cv::Point2f(boardCornerX[0], boardCornerY[0]);
+//    selCorners[1] = cv::Point2f(boardCornerX[1], boardCornerY[1]);
+//    selCorners[2] = cv::Point2f(boardCornerX[3], boardCornerY[3]);
+//    selCorners[3] = cv::Point2f(boardCornerX[2], boardCornerY[2]);
+//
+//    for (int i=0; i < 4; i ++)
+//        std::cout << boardCornerX[i] << " " << boardCornerY[i] << std::endl;
+//
+//    cv::Point2f dstCorners[4]; 
+//    dstCorners[0] = cv::Point2f(0.0, 0.0);
+//    dstCorners[1] = cv::Point2f(imagewidth-1, 0.0);
+//    dstCorners[2] = cv::Point2f(0.0, imageheight-1);
+//    dstCorners[3] = cv::Point2f(imagewidth-1, imageheight-1);
+//
+//
+//    cv::Mat transformationMatrix;
+//    transformationMatrix = cv::getPerspectiveTransform(selCorners, dstCorners);
+//
+//    cv::Mat warpedImg;
+//    cv::warpPerspective(img0, warpedImg, transformationMatrix, warpedImg.size(), 1, 0 ,0);
+//
+//    return warpedImg;
+//}
 
 cv::Mat sobelFiltering(cv::Mat warpedImgGray)
 {
@@ -754,7 +784,12 @@ int scanner_main(cv::Mat& camera_frame)
         asked_for_board_contour = true;
     }
     
-    cv::Mat warpedImg = warpImage();
+    cv::Mat warpedImg = warpImage(img0,
+        cv::Point2f(boardCornerX[0], boardCornerY[0]),
+        cv::Point2f(boardCornerX[1], boardCornerY[1]),
+        cv::Point2f(boardCornerX[3], boardCornerY[3]),
+        cv::Point2f(boardCornerX[2], boardCornerY[2]));
+
     if(showall == true)
         cv::imshow("Warped Image", warpedImg);
 
