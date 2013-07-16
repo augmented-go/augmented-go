@@ -160,7 +160,7 @@
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,8,2">
+         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="2,1,8,2">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -168,62 +168,123 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QWidget" name="ViewSwitch_GameName" native="true">
-            <widget class="QPushButton" name="viewswitch_button">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>-1</y>
-               <width>21</width>
-               <height>21</height>
-              </rect>
+           <widget class="QWidget" name="widget" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>0</number>
              </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+             <property name="margin">
+              <number>0</number>
              </property>
-             <property name="text">
-              <string>&lt;&gt;</string>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>16</width>
-               <height>16</height>
-              </size>
-             </property>
-            </widget>
-            <widget class="QLabel" name="gamename_label">
-             <property name="geometry">
-              <rect>
-               <x>1</x>
-               <y>0</y>
-               <width>291</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Shojumaru</family>
-               <pointsize>12</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Augmented-Go-Game</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-            <zorder>gamename_label</zorder>
-            <zorder>viewswitch_button</zorder>
+             <item>
+              <widget class="QWidget" name="ViewSwitch_GameName" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,40">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="margin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QPushButton" name="viewswitch_button">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>&lt;&gt;</string>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>16</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="gamename_label">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Shojumaru</family>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Augmented-Go-Game</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+               <zorder>gamename_label</zorder>
+               <zorder>viewswitch_button</zorder>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="movelabel_container" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_2">
+                <property name="spacing">
+                 <number>10</number>
+                </property>
+                <property name="margin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="move_label">
+                  <property name="font">
+                   <font>
+                    <family>Shojumaru</family>
+                    <pointsize>11</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Move:</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="movenumber_label">
+                  <property name="font">
+                   <font>
+                    <family>Shojumaru</family>
+                    <pointsize>15</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
@@ -2089,9 +2150,6 @@
            </layout>
           </item>
          </layout>
-         <zorder>table_container</zorder>
-         <zorder>ViewSwitch_GameName</zorder>
-         <zorder>resign_button</zorder>
         </widget>
        </item>
       </layout>

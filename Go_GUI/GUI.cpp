@@ -138,6 +138,7 @@ void GUI::slot_newGameData(const GoBoard* board) {
     auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
     auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
 
+    ui_main.movenumber_label->setText(QString::number(current_turn));
     ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
     ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
 
