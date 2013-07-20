@@ -21,13 +21,13 @@ int main(int argc, char** argv) {
         GUI gui;
 
         // connect signal from backend to gui
-        QObject::connect(&backend, &BackendThread::backend_new_image, &gui, &GUI::slot_newImage, Qt::QueuedConnection);
-        QObject::connect(&backend, &BackendThread::game_data_changed, &gui, &GUI::slot_newGameData, Qt::QueuedConnection);
-        QObject::connect(&backend, &BackendThread::finished_game_result, &gui, &GUI::slot_showFinishedGameResults, Qt::QueuedConnection);
+        QObject::connect(&backend, &BackendThread::newImage, &gui, &GUI::slot_newImage, Qt::QueuedConnection);
+        QObject::connect(&backend, &BackendThread::gameDataChanged, &gui, &GUI::slot_newGameData, Qt::QueuedConnection);
+        QObject::connect(&backend, &BackendThread::finishedGameResult, &gui, &GUI::slot_showFinishedGameResults, Qt::QueuedConnection);
 
         // connect signal from gui to backend
         QObject::connect(&gui, &GUI::stop_backend_thread, &backend, &BackendThread::stop, Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_saveGame, &backend, &BackendThread::save_sgf, Qt::QueuedConnection);
+        QObject::connect(&gui, &GUI::signal_saveGame, &backend, &BackendThread::saveSgf, Qt::QueuedConnection);
         QObject::connect(&gui, &GUI::signal_pass, &backend, &BackendThread::pass, Qt::QueuedConnection);
         QObject::connect(&gui, &GUI::signal_resign, &backend, &BackendThread::resign, Qt::QueuedConnection);
 
