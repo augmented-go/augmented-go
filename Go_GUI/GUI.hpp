@@ -45,6 +45,7 @@ signals:
     void signal_pass();
     void signal_resign();
     void stop_backend_thread();
+    void signal_newGame(GoRules rules);
 
 private:
     Ui::MainWindow ui_main;

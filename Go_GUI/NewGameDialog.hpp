@@ -20,7 +20,7 @@ public:
      */
     void accept(){
         // TODO emit changes made inside dialog
-        //emit signal_newgame();
+        emit signal_newgame("game", "black", "white");
         close();
     }
 
