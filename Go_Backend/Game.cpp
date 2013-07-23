@@ -60,7 +60,13 @@ bool Game::init(int size, GoSetup setup) {
     // but SetupPosition wants a SbBWArray...
     _go_game.SetupPosition(SgBWArray<SgPointSet>(setup.m_stones[SG_BLACK], setup.m_stones[SG_WHITE]));
 
-    _current_state = State::Valid;
+    if (setup.IsEmpty()) {
+        _current_state = State::SettingHandicap;
+    }
+    else {
+        _current_state = State::Valid;
+    }
+
     _game_finished = false;
 
     return true;
@@ -90,22 +96,32 @@ void Game::update(GoSetup setup) {
     auto current_blacks = getBoard().All(SG_BLACK);
     auto current_whites = getBoard().All(SG_WHITE);
 
-    if (_current_state == State::Valid) {
-        // extract new played stones with respect to the current board
-        auto added_blacks = new_blacks - current_blacks;
-        auto added_whites = new_whites - current_whites;
+    // extract new played stones with respect to the current board
+    auto added_blacks = new_blacks - current_blacks;
+    auto added_whites = new_whites - current_whites;
 
-        auto removed_blacks = current_blacks - new_blacks;
-        auto removed_whites = current_whites - new_whites;
+    auto removed_blacks = current_blacks - new_blacks;
+    auto removed_whites = current_whites - new_whites;
+
+
+    switch (_current_state) {
+    case State::Valid:
         updateValid(added_blacks, added_whites, removed_blacks, removed_whites);
-    }
-    else if (_current_state == State::WhileCapturing) {
+        break;
+
+    case State::SettingHandicap:
+        updateSettingHandicap(setup);
+        break;
+
+    case State::Invalid:
         updateInvalid(setup);
-    }
-    else if (_current_state == State::Invalid) {
+        break;
+
+    case State::WhileCapturing:
         updateInvalid(setup);
-    }
-    else {
+        break;
+
+    default:
         assert(false);
     }
 }
@@ -155,49 +171,36 @@ void Game::updateValid(SgPointSet added_blacks, SgPointSet added_whites, SgPoint
     }
 }
 
-//void Game::updateWhileCapturing(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
-//    // the pointsets are calculated with respect to the board where the capturing move has already been played,
-//    // the board would be in a invalid state otherwise
-//    // this means, added_black or added_whites are the stones that are still to capture
-//
-//    // example:
-//    // internal state after capturingmove at B1:
-//    // ....
-//    // X...
-//    // .X..
-//    // .X..
-//    // received through update:
-//    // ....
-//    // X...
-//    // .X..
-//    // OX..
-//    // this means added_whites contains A1 and is still to capture
-//
-//    const GoPointList& captured_list = getBoard().CapturedStones();
-//    assert(!captured_list.IsEmpty());
-//    SgPointSet to_capture;
-//    for(GoPointList::Iterator it(captured_list); it; ++it)
-//        to_capture.Include(*it);
-//
-//    if (!removed_blacks.IsEmpty() && !removed_whites.IsEmpty()) {
-//        assert(!"not impl");
-//        _current_state = State::Invalid;
-//    }
-//
-//    // the player who got his stones captured has the current turn
-//    SgBlackWhite to_play = getBoard().ToPlay();
-//
-//    if (added_blacks.Size() == 0 && added_whites.Size() != 0) {
-//        // black stones are still to capture
-//    }
-//    else if (added_blacks.Size() != 0 && added_whites.Size() == 0) {
-//        // white stones are still to capture
-//    }
-//    else { // both empty
-//
-//    }
-//
-//}
+void Game::updateSettingHandicap(GoSetup new_setup) {
+    auto blacks = new_setup.m_stones[SG_BLACK];
+    auto whites = new_setup.m_stones[SG_WHITE];
+
+    // the handicap is placed when the first white stone gets added
+    if (!whites.IsEmpty()) {
+        _current_state = State::Valid;
+
+        if (blacks.Size() == 1) {
+            // only a single black stone played and is therefore not a handicap stone
+
+            GoSetup black_move_setup;
+            black_move_setup.AddBlack(blacks.PointOf());
+            // play the black stone just like any other move
+            update(black_move_setup);
+        }
+        else if (blacks.Size() == 0) {
+            // no handicap, but white stone played
+            // let the update(new_setup) call handle this illegal move
+        }
+        else {
+            SgVector<SgPoint> handicap_stones;
+            blacks.ToVector(&handicap_stones);
+            _go_game.PlaceHandicap(handicap_stones);
+        }
+
+        // play the added white stone just like any other move
+        update(new_setup);
+    }
+}
 
 void Game::updateInvalid(GoSetup new_setup) {
     auto board_setup = GoSetupUtil::CurrentPosSetup(getBoard());

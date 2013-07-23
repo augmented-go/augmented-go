@@ -9,7 +9,7 @@
 namespace GoBackend {
 using std::string;
 
-// possible states of the Game
+// possible states of the game
 enum class State {
     Valid,
 
@@ -18,7 +18,12 @@ enum class State {
     Invalid,
 
     // basically the same as Invalid, but can only be reached through a capturing move
-    WhileCapturing
+    WhileCapturing,
+
+    // in this state, the black player can set handicap stones until a white move is played
+    // playing only one move is not considered as a handicap
+    // if a game is initialized without a setup, this is the state the game starts with
+    SettingHandicap
 };
 
 /**
@@ -131,9 +136,8 @@ private:
     // they may change the state
     void updateValid(SgPointSet added_blacks, SgPointSet added_whites, 
                      SgPointSet removed_blacks, SgPointSet removed_whites);
-    //void updateWhileCapturing(SgPointSet added_blacks, SgPointSet added_whites, 
-    //                          SgPointSet removed_blacks, SgPointSet removed_whites);
     void updateInvalid(GoSetup new_setup);
+    void updateSettingHandicap(GoSetup new_setup);
 
     bool validSetup(const GoSetup& setup) const;
     bool allValidPoints(const SgPointSet& stones) const;

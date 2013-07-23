@@ -661,6 +661,90 @@ namespace GoBackendGameTest
             Assert::AreEqual(true, go_game.hasEnded());
         }
 
+        TEST_METHOD(allow_playing_handicap_stones_when_board_is_empty) {
+            Game go_game;
+            GoSetup setup;
+
+            go_game.init(4, setup);
+            Assert::IsTrue(go_game.getState() == State::SettingHandicap);
+
+            //
+            // more than one handicap stone placed
+            std::string s(  "....\n"
+                            "..X.\n"
+                            ".X..\n"
+                            "....");
+            int size;
+            GoSetup handicap_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(handicap_setup);
+            // still able to place handicap
+            Assert::IsTrue(go_game.getState() == State::SettingHandicap);
+
+            //
+            // white move
+            s = "....\n"
+                "..X.\n"
+                ".XO.\n"
+                "....";
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
+            Assert::IsTrue(go_game.getState() == State::Valid);
+
+            auto& board = go_game.getBoard();
+            // all stones present on the board
+            Assert::AreEqual(1, board.TotalNumStones(SG_WHITE));
+            Assert::AreEqual(2, board.TotalNumStones(SG_BLACK));
+
+            // the GoGame initializes the board with the handicap stones
+            handicap_setup.m_player = SG_WHITE;
+            Assert::IsTrue(board.Setup() == handicap_setup);
+        }
+
+        TEST_METHOD(dont_allow_playing_handicap_stones_when_board_is_not_empty) {
+            Game go_game;
+            std::string s(  "....\n"
+                            "..X.\n"
+                            ".X..\n"
+                            "....");
+            int size;
+            GoSetup setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.init(size, setup);
+
+            Assert::IsTrue(go_game.getState() == State::Valid);
+        }
+
+        TEST_METHOD(allow_playing_handicap_stones_when_board_contains_only_black_stones) {
+            Assert::IsTrue(false);
+        }
+
+        TEST_METHOD(dont_consider_single_black_stone_as_handicap) {
+            Game go_game;
+            go_game.init(19);
+
+            GoSetup setup;
+            setup.AddBlack(Pt(1, 1));
+            setup.AddWhite(Pt(1, 2));
+
+            go_game.update(setup);
+
+            GoSetup empty_setup;
+            empty_setup.m_player = SG_BLACK;
+
+            // the GoGame initializes the board with the handicap stones
+            Assert::IsTrue(go_game.getBoard().Setup() == empty_setup);
+        }
+
+        TEST_METHOD(black_has_to_play_first) {
+            Game go_game;
+            go_game.init(19);
+
+            GoSetup setup;
+            setup.AddWhite(Pt(1, 2));
+            go_game.update(setup);
+
+            Assert::IsTrue(go_game.getState() == State::Invalid);
+        }
+
     };
 
     TEST_CLASS(SgfTest)
