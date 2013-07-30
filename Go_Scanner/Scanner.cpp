@@ -342,13 +342,15 @@ void groupIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>&
             
             horizontalLines.push_back(lines[i]);
         }
+
         //vertical lines
         else if(angle >= 89.7f && angle <= 90.2f)
         {
             cv::Vec4i v = lines[i];
 
+            //Problem: For completely vertical lines, there is no m 
             // y = m*x+n
-            float m = ((float)v[1] - v[3]) / (v[0] - v[2] + 1);
+            float m = (v[1] - v[3]) / (v[0] - v[2] - 0.000001f);
             float n = v[1] - m * v[0];
 
             lines[i][0] = (-n)/m;
@@ -500,11 +502,21 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     //sobelImg = sobelFiltering(cannyImg);
     cv::threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
 
-    if(showall == true)
-        cv::imshow("Threshed Image", threshedImg);
+   // if(showall == true)
+        //cv::imshow("Threshed Image", threshedImg);
 
     cv::vector<cv::Vec4i> lines, horizontalLines, verticalLines;
     cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 80, 60, 10 );
+
+    //Draw the lines
+    for( size_t i = 0; i < lines.size(); i++ )
+    {
+        cv::line(warpedImg, cv::Point(lines[i][0], lines[i][1]),
+            cv::Point(lines[i][2], lines[i][3]), cv::Scalar(0,0,255), 1, 8 );
+    }
+        cv::imshow("HoughLines Image", warpedImg);
+
+
 
     groupIntersectionLines(lines, horizontalLines, verticalLines);
 
