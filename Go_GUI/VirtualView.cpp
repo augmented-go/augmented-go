@@ -10,6 +10,24 @@
 
 VirtualView::VirtualView(QWidget *parent){
     this->setParent(parent);
+    
+    scene = new QGraphicsScene();
+
+    // directories of the images
+    QString texture_path = "res/textures/";
+    QString board_directory_size9 = QString(texture_path + "go_board_" + QString::number(9)+".png");
+    QString board_directory_size13 = QString(texture_path + "go_board_" + QString::number(13)+".png");
+    QString board_directory_size19 = QString(texture_path + "go_board_" + QString::number(19)+".png");
+    QString black_stone_directory = QString(texture_path + "black_stone.png");
+    QString white_stone_directory = QString(texture_path + "white_stone.png");
+
+    // loads the images and checks if the image could loaded
+    board_image_size9 = new QImage(board_directory_size9);
+    board_image_size13 = new QImage(board_directory_size13);
+    board_image_size19 = new QImage(board_directory_size19);
+    black_stone_image = new QImage(black_stone_directory);
+    white_stone_image = new QImage(white_stone_directory);
+
 }
 VirtualView::~VirtualView(){
 }
@@ -23,23 +41,26 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     if (game_board == nullptr)
         return;
 
-    QGraphicsScene* scene = new QGraphicsScene();
-
+    scene->clear();
+    
     // loads the board size and checks if its a valid size
     int board_size = game_board->Size();
-    if(board_size != 9 && board_size != 13 && board_size != 19)
+
+    QImage* board_image;
+
+    switch(board_size){
+    case 9:
+        board_image = board_image_size9;
+        break;
+    case 13:
+        board_image = board_image_size13;
+        break;
+    case 19:
+        board_image = board_image_size19;
+        break;
+    default:
         QMessageBox::warning(this, "board size error", "invalid size of the board!");
-
-    // directories of the images
-    QString texture_path = "res/textures/";
-    QString board_directory = QString(texture_path + "go_board_"+QString::number(board_size)+".png");
-    QString black_stone_directory = QString(texture_path + "black_stone.png");
-    QString white_stone_directory = QString(texture_path + "white_stone.png");
-
-    // loads the images and checks if the image could loaded
-    QImage* board_image = new QImage(board_directory);
-    QImage* black_stone_image = new QImage(black_stone_directory);
-    QImage* white_stone_image = new QImage(white_stone_directory);
+    }
 
     if (board_image->isNull())
         QMessageBox::warning(this, "file loading error", "could not load board image!");
