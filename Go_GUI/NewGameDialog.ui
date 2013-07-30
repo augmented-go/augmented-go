@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>211</width>
-    <height>290</height>
+    <width>214</width>
+    <height>317</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,7 +29,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>250</y>
+     <y>280</y>
      <width>191</width>
      <height>33</height>
     </rect>
@@ -163,7 +163,7 @@
      <x>10</x>
      <y>140</y>
      <width>191</width>
-     <height>101</height>
+     <height>131</height>
     </rect>
    </property>
    <property name="title">
@@ -172,7 +172,7 @@
    <widget class="QLabel" name="komi_label">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>20</y>
       <width>51</width>
       <height>20</height>
@@ -188,7 +188,7 @@
    <widget class="QDoubleSpinBox" name="komi_spinbox">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>100</x>
       <y>20</y>
       <width>51</width>
       <height>22</height>
@@ -204,8 +204,8 @@
    <widget class="QCheckBox" name="japanese_scoring">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>50</y>
+      <x>40</x>
+      <y>80</y>
       <width>111</width>
       <height>20</height>
      </rect>
@@ -226,8 +226,8 @@
    <widget class="QCheckBox" name="two_passes_end_game">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>70</y>
+      <x>30</x>
+      <y>100</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -240,6 +240,38 @@
     </property>
     <property name="checked">
      <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="handicap_spinbox">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>50</y>
+      <width>51</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="decimals">
+     <number>0</number>
+    </property>
+    <property name="value">
+     <double>0.000000000000000</double>
+    </property>
+   </widget>
+   <widget class="QLabel" name="komi_label_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>51</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Handicap:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
   </widget>

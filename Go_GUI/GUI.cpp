@@ -139,6 +139,9 @@ void GUI::slot_newGameData(const GoBoard* board) {
     auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
 
     ui_main.movenumber_label->setText(QString::number(current_turn));
+    // TODO set standard komi and handicap settings
+    //ui_main.kominumber_label->setText(QString::number(komi));
+    //ui_main.handicapnumber_label->setText(QString::number(handicap));
     ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
     ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
 
@@ -167,15 +170,17 @@ void GUI::slot_showFinishedGameResults(QString result){
  * @param   QString    black player name
  * @param   QString    white player name
  */
-void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name){
+void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi, int handicap){
 
     // emit to backend that gui wants to set up a new game!
-    auto rules = GoRules(5, GoKomi(1.5), true, true);
+    auto rules = GoRules(handicap, GoKomi(komi), true, true);
     emit signal_newGame(rules);
 
     ui_main.gamename_label->setText(game_name);
     ui_main.blackplayer_label->setText(blackplayer_name);
     ui_main.whiteplayer_label->setText(whiteplayer_name);
+    ui_main.kominumber_label->setText(QString::number(komi));
+    ui_main.handicapnumber_label->setText(QString::number(handicap));
 }
 
 //////////
@@ -188,11 +193,6 @@ void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString
  */
 void GUI::slot_ButtonNewGame(){
     NewGameDialog* newgame = new NewGameDialog(this);
-    Ui::Dialog ui_newgame;
-    ui_newgame.setupUi(newgame);
-
-    connect(newgame, &NewGameDialog::signal_newgame, this, &GUI::slot_setupNewGame);
-
     newgame->exec();
 }
 
