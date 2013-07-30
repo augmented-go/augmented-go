@@ -101,11 +101,12 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     for (auto iter = SgSetIterator(black_stones); iter; ++iter) {
         auto point = *iter;
 
-        auto col = SgPointUtil::Col(point);
-        auto row = SgPointUtil::Row(point);
+        // Reducing by -1 because board starts at 1,1
+        auto col = SgPointUtil::Col(point) - 1;
+        auto row = SgPointUtil::Row(point) - 1;
 
         //Vertically mirroring stones 
-        row = board_size - row;
+        row = board_size - row - 1;        
 
         QGraphicsPixmapItem* black_stone_item = new QGraphicsPixmapItem(black_stone_image_scaled);
         black_stone_item->setPos(cell_width * scale_x * col, cell_height * scale_y * row);
@@ -117,11 +118,12 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     for (auto iter = SgSetIterator(white_stones); iter; ++iter) {
         auto point = *iter;
 
-        auto col = SgPointUtil::Col(point);
-        auto row = SgPointUtil::Row(point);
+        // Reducing by -1 because board starts at 1,1
+        auto col = SgPointUtil::Col(point) - 1;
+        auto row = SgPointUtil::Row(point) - 1;
 
         //Vertically mirroring stones 
-        row = board_size - row;
+        row = board_size - row - 1;
 
         QGraphicsPixmapItem* black_stone_item = new QGraphicsPixmapItem(white_stone_image_scaled);
         black_stone_item->setPos(cell_width * scale_x * col, cell_height * scale_y * row);
