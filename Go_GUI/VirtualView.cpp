@@ -76,13 +76,13 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
 
     // scale the images to the right size
     QPixmap board_image_scaled = QPixmap::fromImage(board_image);
-    board_image_scaled = board_image_scaled.scaled(size.width(),size.height());
+    board_image_scaled = board_image_scaled.scaled(size.width(),size.height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     QPixmap black_stone_image_scaled = QPixmap::fromImage(black_stone_image);
-    black_stone_image_scaled = black_stone_image_scaled.scaled(black_stone_image.width()*scale_x, black_stone_image.height()*scale_y);
+    black_stone_image_scaled = black_stone_image_scaled.scaled(black_stone_image.width()*scale_x, black_stone_image.height()*scale_y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     QPixmap white_stone_image_scaled = QPixmap::fromImage(white_stone_image);
-    white_stone_image_scaled = white_stone_image_scaled.scaled(white_stone_image.width()*scale_x, white_stone_image.height()*scale_y);
+    white_stone_image_scaled = white_stone_image_scaled.scaled(white_stone_image.width()*scale_x, white_stone_image.height()*scale_y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     if (board_image_scaled.isNull())
         QMessageBox::warning(this, "image scale error", "could not scale board!");
