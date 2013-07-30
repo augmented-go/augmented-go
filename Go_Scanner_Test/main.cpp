@@ -17,5 +17,6 @@ int main(int argc, char** argv) {
     // read camera, else debug picture and call scanner_main
     bool success = scanner.scanCamera(setup, size, image);
 
+    cvWaitKey(0);
     return 0;
 }

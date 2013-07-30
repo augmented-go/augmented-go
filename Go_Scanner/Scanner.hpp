@@ -1,7 +1,7 @@
 #pragma once
 
-#include "opencv2/opencv.hpp"
-#include "GoSetup.h"
+#include <opencv2/opencv.hpp>
+#include <GoSetup.h>
 
 #include <tuple>
 
