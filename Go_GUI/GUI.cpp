@@ -170,6 +170,8 @@ void GUI::slot_showFinishedGameResults(QString result){
 void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name){
 
     // emit to backend that gui wants to set up a new game!
+    auto rules = GoRules(5, GoKomi(1.5), true, true);
+    emit signal_newGame(rules);
 
     ui_main.gamename_label->setText(game_name);
     ui_main.blackplayer_label->setText(blackplayer_name);
