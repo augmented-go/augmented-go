@@ -143,7 +143,13 @@ void GUI::slot_newGameData(const GoBoard* board) {
     ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
 
     // refresh virtual view
-    virtual_view->createAndSetScene(virtual_view->parentWidget()->size(), game_board);
+    if (ui_main.big_container->toolTip() == "virtual view"){
+        virtual_view->createAndSetScene(ui_main.big_container->size(), game_board);
+    }
+    else if (ui_main.big_container->toolTip() == "augmented view"){
+        virtual_view->createAndSetScene(ui_main.small_container->size(), game_board);
+    }
+
 
     printf(">>> New Game data! <<<\n");
 }    
