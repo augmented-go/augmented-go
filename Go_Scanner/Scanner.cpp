@@ -358,26 +358,26 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
         imagesize = imagewidth;
     }
 
-    //Horizontal Lines. X is 0 or the width of the picture. 
+    //Put the Starting Points of a Line into the lineStarts Vector
     cv::vector<int> lineStarts(lines.size());
-    cv::vector<int> resultStarts(lines.size());
 
     for(size_t i=0; i<lines.size(); i++)
     {
         lineStarts[i] = lines[i][valueIndex];
     }
 
-    // clustering of linedata
+    //clustering of linedata. Creating the Clusters with the PartitionOperator and store them into ClusterNum.
+    cv::vector<int> clusterNum(lines.size());
     PartitionOperator Oper(imagesize);
-    int clusterNum = cv::partition<int, PartitionOperator>(lineStarts, resultStarts, Oper);
+    int clusterSize = cv::partition<int, PartitionOperator>(lineStarts, clusterNum, Oper);
 
 
-    // put the lines in there cluster
-    cv::vector<cv::vector<int>> clusteredLineStarts(clusterNum);
+    //put the lines in there cluster
+    cv::vector<cv::vector<int>> clusteredLineStarts(clusterSize);
 
-    for(size_t i = 0; i < resultStarts.size(); i++)
+    for(size_t i = 0; i < clusterNum.size(); i++)
     {
-        int j = resultStarts[i];
+        int j = clusterNum[i];
 
         clusteredLineStarts[j].push_back(lineStarts[i]);
     }
@@ -386,7 +386,7 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
     cv::vector<cv::Vec4i> middledLines;
     cv::Vec4i middle;
 
-    for(int i=0; i < clusterNum; i++)
+    for(int i=0; i < clusterSize; i++)
     {
         int numLines = clusteredLineStarts[i].size();
         int sum=0;
@@ -453,6 +453,8 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
 
         what if there are not enough intersections points? 
         what if there are to many intersections points? 
+
+        if intersections is not on a black or white point. get him to one. 
     */
 
     //Set the right Threshold for the image
@@ -517,55 +519,6 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
 
     cv::imshow("Intersections", warpedImg);
     
-    return true;
-}
-
-bool detectBlobs(cv::Mat warpedImg)
-{
-    // not working!!! alternative: detectStones function
-
-
-    cv::Mat warpedImgGray;
-    //cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
-
-    // set up the parameters (check the defaults in opencv's code in blobdetector.cpp)
-    cv::SimpleBlobDetector::Params params;
-    //params.minDistBetweenBlobs = 50.0f;
-    params.filterByInertia = false;
-    params.filterByConvexity = false;
-    //params.filterByColor = true;
-    params.filterByCircularity = false;
-    params.minCircularity = 15;
-    params.maxCircularity = 80;
-    //params.filterByArea = false;
-    params.minThreshold = 50;
-    params.maxThreshold = 90; 
-    params.blobColor = 0;
-    // ... any other params you don't want default value
-
-    // set up and create the detector using the parameters
-    cv::SimpleBlobDetector blob_detector(params);
-    //blob_detector.create("SimpleBlob");
-
-    // detect!
-    cv::vector<cv::KeyPoint> keypoints;
-    blob_detector.detect(warpedImg, keypoints);
-
-    // extract the x y coordinates of the keypoints: 
-
-    for (int i=0; i<keypoints.size(); i++){
-        float X=keypoints[i].pt.x; 
-        float Y=keypoints[i].pt.y;
-
-        cv::rectangle( warpedImg, 
-        cv::Point(X-1, Y-1),
-        cv::Point(X+1, Y+1), 
-        cv::Scalar(0, 0,  255, 0), 2, 8, 0);
-
-    }
-
-    cv::imshow("Wir sind so toll!", warpedImg);
-
     return true;
 }
 
