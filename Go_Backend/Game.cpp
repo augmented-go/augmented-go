@@ -106,19 +106,19 @@ void Game::update(GoSetup setup) {
 
     switch (_current_state) {
     case State::Valid:
-        updateValid(added_blacks, added_whites, removed_blacks, removed_whites);
+        onUpdateValid(added_blacks, added_whites, removed_blacks, removed_whites);
         break;
 
     case State::SettingHandicap:
-        updateSettingHandicap(setup);
+        onUpdateSettingHandicap(setup);
         break;
 
     case State::Invalid:
-        updateInvalid(setup);
+        onUpdateInvalid(setup);
         break;
 
     case State::WhileCapturing:
-        updateInvalid(setup);
+        onUpdateInvalid(setup);
         break;
 
     default:
@@ -126,7 +126,7 @@ void Game::update(GoSetup setup) {
     }
 }
 
-void Game::updateValid(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
+void Game::onUpdateValid(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
     SgPoint point;
     SgBlackWhite player;
 
@@ -171,7 +171,7 @@ void Game::updateValid(SgPointSet added_blacks, SgPointSet added_whites, SgPoint
     }
 }
 
-void Game::updateSettingHandicap(GoSetup new_setup) {
+void Game::onUpdateSettingHandicap(GoSetup new_setup) {
     auto blacks = new_setup.m_stones[SG_BLACK];
     auto whites = new_setup.m_stones[SG_WHITE];
 
@@ -189,7 +189,7 @@ void Game::updateSettingHandicap(GoSetup new_setup) {
         }
         else if (blacks.Size() == 0) {
             // no handicap, but white stone played
-            // let the update(new_setup) call handle this illegal move
+            // let the update() call handle this illegal move
         }
         else {
             SgVector<SgPoint> handicap_stones;
@@ -202,7 +202,7 @@ void Game::updateSettingHandicap(GoSetup new_setup) {
     }
 }
 
-void Game::updateInvalid(GoSetup new_setup) {
+void Game::onUpdateInvalid(GoSetup new_setup) {
     auto board_setup = GoSetupUtil::CurrentPosSetup(getBoard());
 
     // the player of the setup is ignored

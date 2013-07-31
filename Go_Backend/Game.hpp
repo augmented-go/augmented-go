@@ -134,10 +134,10 @@ private:
 private:
     // these functions are called on update with the current state matching
     // they may change the state
-    void updateValid(SgPointSet added_blacks, SgPointSet added_whites, 
+    void onUpdateValid(SgPointSet added_blacks, SgPointSet added_whites, 
                      SgPointSet removed_blacks, SgPointSet removed_whites);
-    void updateInvalid(GoSetup new_setup);
-    void updateSettingHandicap(GoSetup new_setup);
+    void onUpdateInvalid(GoSetup new_setup);
+    void onUpdateSettingHandicap(GoSetup new_setup);
 
     bool validSetup(const GoSetup& setup) const;
     bool allValidPoints(const SgPointSet& stones) const;
