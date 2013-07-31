@@ -56,15 +56,16 @@ bool Game::init(int size, GoSetup setup) {
         return false;
     }
 
-    // a SgBWArray<SgPointSet> is essentially the same as a SgBWSet
-    // but SetupPosition wants a SbBWArray...
-    _go_game.SetupPosition(SgBWArray<SgPointSet>(setup.m_stones[SG_BLACK], setup.m_stones[SG_WHITE]));
-
-    if (setup.IsEmpty()) {
+    if (setup.m_stones[SG_WHITE].Size() == 0) {
+        // no or only black stones, consider them to be handicap stones
         _current_state = State::SettingHandicap;
+        onUpdateSettingHandicap(setup);
     }
     else {
         _current_state = State::Valid;
+        // a SgBWArray<SgPointSet> is essentially the same as a SgBWSet
+        // but SetupPosition wants a SbBWArray...
+        _go_game.SetupPosition(SgBWArray<SgPointSet>(setup.m_stones[SG_BLACK], setup.m_stones[SG_WHITE]));
     }
 
     _game_finished = false;

@@ -22,7 +22,7 @@ enum class State {
 
     // in this state, the black player can set handicap stones until a white move is played
     // playing only one move is not considered as a handicap
-    // if a game is initialized without a setup, this is the state the game starts with
+    // if a game is initialized with only black stones, this is the state the game starts with
     SettingHandicap
 };
 

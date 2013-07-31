@@ -155,6 +155,7 @@ namespace GoBackendGameTest
 
             int size;
             auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            setup.m_player = SG_WHITE;
 
             Game go_game;
             go_game.init(size, setup);
@@ -700,11 +701,11 @@ namespace GoBackendGameTest
             Assert::IsTrue(board.Setup() == handicap_setup);
         }
 
-        TEST_METHOD(dont_allow_playing_handicap_stones_when_setup_is_not_empty) {
+        TEST_METHOD(dont_allow_playing_handicap_stones_when_setup_has_white_stones) {
             Game go_game;
             std::string s(  "....\n"
                             "..X.\n"
-                            ".X..\n"
+                            ".O..\n"
                             "....");
             int size;
             GoSetup setup = GoSetupUtil::CreateSetupFromString(s, size);
@@ -714,7 +715,12 @@ namespace GoBackendGameTest
         }
 
         TEST_METHOD(allow_playing_handicap_stones_when_setup_contains_only_black_stones) {
-            Assert::IsTrue(false);
+            GoSetup setup;
+            setup.AddBlack(Pt(1, 1));
+
+            Game go_game;
+            go_game.init(19, setup);
+            Assert::IsTrue(go_game.getState() == State::SettingHandicap);
         }
 
         TEST_METHOD(dont_consider_single_black_stone_as_handicap) {
