@@ -42,6 +42,7 @@ private slots:
 
 signals:
     void signal_saveGame(QString fileName, QString blackplayer_label, QString whiteplayer_label, QString game_name);
+    void signal_openGame(QString fileName);
     void signal_pass();
     void signal_resign();
     void stop_backend_thread();
