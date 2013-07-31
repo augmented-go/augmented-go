@@ -181,7 +181,12 @@ void Game::onUpdateSettingHandicap(GoSetup new_setup) {
         // the GoGame class only allows adding handicap stones all at once
         // when getting a new handicap stone, the GoGame is therefore reset and 
         // and all handicap stones ar added anew
-        _go_game.Init(getBoard().Size(), getBoard().Rules());
+
+        // the PlaceHandicap() call also increases the handicap inside the rules of the board
+        // these would then be placed automatically by the Init() call, we don't want that
+        GoRules rules = getBoard().Rules();
+        rules.SetHandicap(0);
+        _go_game.Init(getBoard().Size(), rules);
 
         if (blacks.Size() == 1) {
             // only a single black stone played and is therefore not a handicap stone

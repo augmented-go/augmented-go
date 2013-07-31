@@ -755,6 +755,11 @@ namespace GoBackendGameTest
             setup.AddBlack(Pt(1, 2));
             go_game.update(setup);
             Assert::AreEqual(2, go_game.getBoard().TotalNumStones(SG_BLACK));
+
+
+            setup.AddBlack(Pt(1, 3));
+            go_game.update(setup);
+            Assert::AreEqual(3, go_game.getBoard().TotalNumStones(SG_BLACK));
         }
 
         TEST_METHOD(black_has_to_play_first) {
