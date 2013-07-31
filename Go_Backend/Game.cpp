@@ -172,32 +172,35 @@ void Game::onUpdateValid(SgPointSet added_blacks, SgPointSet added_whites, SgPoi
 }
 
 void Game::onUpdateSettingHandicap(GoSetup new_setup) {
+    auto previous_blacks = getBoard().All(SG_BLACK);
     auto blacks = new_setup.m_stones[SG_BLACK];
     auto whites = new_setup.m_stones[SG_WHITE];
 
-    // the handicap is placed when the first white stone gets added
-    if (!whites.IsEmpty()) {
-        _current_state = State::Valid;
+    if (!blacks.IsEmpty() && blacks.Size() != previous_blacks.Size()) {
+        // the GoGame class only allows adding handicap stones all at once
+        // when getting a new handicap stone, the GoGame is therefore reset and 
+        // and all handicap stones ar added anew
+        _go_game.Init(getBoard().Size(), getBoard().Rules());
 
         if (blacks.Size() == 1) {
             // only a single black stone played and is therefore not a handicap stone
-
-            GoSetup black_move_setup;
-            black_move_setup.AddBlack(blacks.PointOf());
-            // play the black stone just like any other move
-            update(black_move_setup);
-        }
-        else if (blacks.Size() == 0) {
-            // no handicap, but white stone played
-            // let the update() call handle this illegal move
+            // play the black stone just like a regular move
+            onUpdateValid(blacks, SgPointSet(), SgPointSet(), SgPointSet());
         }
         else {
             SgVector<SgPoint> handicap_stones;
             blacks.ToVector(&handicap_stones);
             _go_game.PlaceHandicap(handicap_stones);
         }
+    }
+
+    // first white stone gets added, no placing of handicap stones anymore from then on
+    if (!whites.IsEmpty()) {
+        _current_state = State::Valid;
 
         // play the added white stone just like any other move
+        // in case not a single black stone has been played, 
+        // the update() call correctly identifies this as an illegal move
         update(new_setup);
     }
 }

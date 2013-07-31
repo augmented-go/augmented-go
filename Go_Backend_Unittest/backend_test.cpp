@@ -700,7 +700,7 @@ namespace GoBackendGameTest
             Assert::IsTrue(board.Setup() == handicap_setup);
         }
 
-        TEST_METHOD(dont_allow_playing_handicap_stones_when_board_is_not_empty) {
+        TEST_METHOD(dont_allow_playing_handicap_stones_when_setup_is_not_empty) {
             Game go_game;
             std::string s(  "....\n"
                             "..X.\n"
@@ -713,7 +713,7 @@ namespace GoBackendGameTest
             Assert::IsTrue(go_game.getState() == State::Valid);
         }
 
-        TEST_METHOD(allow_playing_handicap_stones_when_board_contains_only_black_stones) {
+        TEST_METHOD(allow_playing_handicap_stones_when_setup_contains_only_black_stones) {
             Assert::IsTrue(false);
         }
 
@@ -721,17 +721,34 @@ namespace GoBackendGameTest
             Game go_game;
             go_game.init(19);
 
-            GoSetup setup;
-            setup.AddBlack(Pt(1, 1));
-            setup.AddWhite(Pt(1, 2));
-
-            go_game.update(setup);
-
             GoSetup empty_setup;
             empty_setup.m_player = SG_BLACK;
 
-            // the GoGame initializes the board with the handicap stones
+            // first black move
+            GoSetup setup;
+            setup.AddBlack(Pt(1, 1));
+            go_game.update(setup);
+            // GoGame initializes the board with the handicap stones if there are any
             Assert::IsTrue(go_game.getBoard().Setup() == empty_setup);
+
+            // first white move
+            setup.AddWhite(Pt(1, 2));
+            go_game.update(setup);
+            Assert::IsTrue(go_game.getBoard().Setup() == empty_setup);
+        }
+
+        TEST_METHOD(board_gets_updated_when_handicap_stones_get_added) {
+            Game go_game;
+            go_game.init(19);
+
+            GoSetup setup;
+            setup.AddBlack(Pt(1, 1));
+            go_game.update(setup);
+            Assert::AreEqual(1, go_game.getBoard().TotalNumStones(SG_BLACK));
+
+            setup.AddBlack(Pt(1, 2));
+            go_game.update(setup);
+            Assert::AreEqual(2, go_game.getBoard().TotalNumStones(SG_BLACK));
         }
 
         TEST_METHOD(black_has_to_play_first) {
