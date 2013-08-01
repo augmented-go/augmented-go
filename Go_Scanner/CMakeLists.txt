@@ -8,6 +8,7 @@ ENDIF()
 SET(scanner_SOURCE
     Scanner.cpp
     Scanner_class.cpp
+    auto_warp.cpp
 )
 
 SET(scanner_HEADERS
