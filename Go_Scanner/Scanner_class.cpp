@@ -10,7 +10,14 @@ bool Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
     Mat frame;
     if (!readCameraFrame(frame)) {
         // NOTICE: DEBUG STUFF!
-        frame = imread("res/textures/02.jpg", CV_LOAD_IMAGE_COLOR);
+        frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
+
+        if (frame.empty()) {
+            std::cout << "Failed to load sample image from filesystem!" << std::endl;
+            std::cout << "In " << __FUNCTION__ << std::endl;
+            return false;
+        }
+
         //out_image = frame;
         //return false;
     }
