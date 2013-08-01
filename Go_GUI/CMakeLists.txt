@@ -41,7 +41,7 @@ SET(gui_HEADERS
 add_library (Go_GUI ${gui_SOURCE} ${gui_HEADERS} ${ui_GUI} ${ui_NewGameDialog})
 
 # additional modules
-add_backend_to_target(Go_GUI)
+add_game_to_target(Go_GUI)
 add_fuego_to_target(Go_GUI)
 
 # Use Qt5 modules

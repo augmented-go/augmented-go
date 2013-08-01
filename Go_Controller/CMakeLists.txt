@@ -1,4 +1,4 @@
-set(TARGETNAME Go_AugmentedReality)
+set(TARGETNAME Go_Controller)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -30,7 +30,7 @@ add_executable (${TARGETNAME} ${augmented_reality_SOURCE} ${augmented_reality_HE
 
 add_fuego_to_target(${TARGETNAME})
 add_scanner_to_target(${TARGETNAME})
-add_backend_to_target(${TARGETNAME})
+add_game_to_target(${TARGETNAME})
 add_opencv_to_target(${TARGETNAME})
 add_gui_to_target(${TARGETNAME})
 

@@ -39,23 +39,22 @@ find_package(OpenCV REQUIRED)
 
 # our custom cmake functions/macros
 include(cmake/add_fuego_to_target.cmake)
-include(cmake/add_backend_to_target.cmake)
+include(cmake/add_game_to_target.cmake)
 include(cmake/add_scanner_to_target.cmake)
 include(cmake/add_gui_to_target.cmake)
 include(cmake/add_opencv_to_target.cmake)
 include(cmake/configure_target.cmake)
 
 add_subdirectory(fuego)
-add_subdirectory(Go_AugmentedReality)
-add_subdirectory(Go_Backend)
+add_subdirectory(Go_Controller)
+add_subdirectory(Go_Game)
 add_subdirectory(Go_GUI)
 add_subdirectory(Go_Scanner)
 add_subdirectory(Go_Scanner_Test)
-add_subdirectory(Go_VirtualReality)
 
 # the tests currently only run with visual studio 2012
 if(MSVC11)
-    add_subdirectory(Go_Backend_Unittest)
+    add_subdirectory(Go_Game_Unittest)
     add_subdirectory(Go_Scanner_Unittest)
 endif(MSVC11)
 
