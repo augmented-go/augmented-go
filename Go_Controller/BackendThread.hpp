@@ -67,8 +67,8 @@ namespace Go_AR {
         // signals that a new game image was fetched and processed
         void newImage(QImage camera_image) const;
 
-        // signals that the game board has changed
-        void gameDataChanged(const GoBoard * game_board) const;
+        // signals that the game state has changed
+        void gameDataChanged(const GoBackend::Game * game) const;
 
         // signals that the game has ended with the given result
         void finishedGameResult(QString result) const;

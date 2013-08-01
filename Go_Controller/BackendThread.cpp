@@ -96,7 +96,7 @@ void BackendThread::scan() {
         // the GUI controls the lifetime of this thread,
         // so passing a pointer to the GoBoard is safe and won't be invalidated
         // as long as the GUI says so
-        emit gameDataChanged(&(_game->getBoard()));
+        emit gameDataChanged(_game.get());
     }
 }
 

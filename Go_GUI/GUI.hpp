@@ -27,7 +27,7 @@ public:
 public slots:
     void slot_showFinishedGameResults(QString result);
     void slot_newImage(QImage image);
-    void slot_newGameData(const GoBoard* board);
+    void slot_newGameData(const GoBackend::Game* game);
     void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi);
 
 private slots:
@@ -57,7 +57,7 @@ private:
 
     // Pointer to the game board, will be set & cached in the slot "slot_newGameData".
     // This pointer will be valid until the GUI exits the application or the backend sends a new one.
-    const GoBoard* game_board;
+    const GoBackend::Game* go_game;
 
     void setPlayerLabels(QString blackplayer_name, QString whiteplayer_name);
 };
