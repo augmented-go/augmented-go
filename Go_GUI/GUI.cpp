@@ -62,7 +62,6 @@ void GUI::init(){
     virtual_view = new VirtualView(this);
     augmented_view = new AugmentedView(this);
 
-
     // Attaching augmented view to big container
     augmented_view->setParent(ui_main.big_container);
     augmented_view->rescaleImage(ui_main.big_container->size());
@@ -118,9 +117,9 @@ void GUI::slot_newGameData(const GoBoard* board) {
     if (game_board != board)
         game_board = board;
 
-    auto current_turn = game_board->MoveNumber();
     auto current_player = game_board->ToPlay();
 
+    // Updating basket pictures
     switch (current_player) {
     case SG_WHITE:
         ui_main.white_basket->setPixmap(whitebasket_pixmap);
@@ -135,15 +134,20 @@ void GUI::slot_newGameData(const GoBoard* board) {
         break;
     }
 
-    auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
-    auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
-
-    ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
-    ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
+    // Updating Game-Settings
+    ui_main.movenumber_label->setText(QString::number(game_board->MoveNumber()));
+    ui_main.kominumber_label->setText(QString::number(board->Rules().Komi().ToFloat()));
+    ui_main.handicapnumber_label->setText(QString::number(board->Rules().Handicap()));
+    ui_main.capturedwhite_label->setText(QString::number(game_board->NumPrisoners(SG_WHITE)));
+    ui_main.capturedblack_label->setText(QString::number(game_board->NumPrisoners(SG_BLACK)));
 
     // refresh virtual view
-    virtual_view->createAndSetScene(virtual_view->parentWidget()->size(), game_board);
-
+    if (ui_main.big_container->toolTip() == "virtual view")
+        virtual_view->createAndSetScene(ui_main.big_container->size(), game_board);
+    
+    else if (ui_main.big_container->toolTip() == "augmented view")
+        virtual_view->createAndSetScene(ui_main.small_container->size(), game_board);
+    
     printf(">>> New Game data! <<<\n");
 }    
 
@@ -166,13 +170,18 @@ void GUI::slot_showFinishedGameResults(QString result){
  * @param   QString    black player name
  * @param   QString    white player name
  */
-void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name){
+void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi){
 
     // emit to backend that gui wants to set up a new game!
+    auto rules = GoRules(0, GoKomi(komi), true, true);
+    emit signal_newGame(rules);
 
+    // Setting up new names for players
     ui_main.gamename_label->setText(game_name);
     ui_main.blackplayer_label->setText(blackplayer_name);
     ui_main.whiteplayer_label->setText(whiteplayer_name);
+    ui_main.kominumber_label->setText(QString::number(komi));
+    ui_main.handicapnumber_label->setText(QString::number(0));
 }
 
 //////////
@@ -185,11 +194,6 @@ void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString
  */
 void GUI::slot_ButtonNewGame(){
     NewGameDialog* newgame = new NewGameDialog(this);
-    Ui::Dialog ui_newgame;
-    ui_newgame.setupUi(newgame);
-
-    connect(newgame, &NewGameDialog::signal_newgame, this, &GUI::slot_setupNewGame);
-
     newgame->exec();
 }
 
@@ -262,12 +266,16 @@ void GUI::slot_MenuOpen(){
         tr("SGF (*.sgf)" ),
         &selfilter 
     );
+
+    if (!fileName.isNull()){
+        // TODO ask if user wants to save the current game!
+        emit signal_openGame(fileName);
+    }
 }
 
 /**
- * @brief	SLOT QAction "MenuOpen"
+ * @brief	SLOT QAction "MenuSave"
  *			opens a filedialog that lets the user choose an sgf-file.
- * @todo	prompt for playernames, gamename and send them + filename to Go_Backend per signal
  */
 void GUI::slot_MenuSave(){
     QString selfilter = tr("SGF (*.sgf)");
@@ -316,13 +324,22 @@ void GUI::slot_MenuInfo(){
  * @param	QCloseEvent		close event that shall or shall not be executed afterwards.
  */
 void GUI::closeEvent(QCloseEvent *event){
-    auto reply = QMessageBox::question(this, "Quit?", "You really want to quit?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
-    if (reply == QMessageBox::StandardButton::Yes) {
+
+    // If at least one move was was done
+    // TODO If game loaded -> move number greater than start number!
+    if (ui_main.movenumber_label->text().toInt() > 0){
+        if (QMessageBox::question(this, "Save?", "Save current game?") == QMessageBox::Yes)
+            this->slot_MenuSave();
+    }
+
+    // Ask if the user wants to quit
+    if (QMessageBox::question(this, "Quit?", "Do you really want to quit?") == QMessageBox::Yes){
         emit stop_backend_thread();
         event->accept();
     }
     else
         event->ignore();
+    
 }
 
 } // namespace Go_GUI

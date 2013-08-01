@@ -52,13 +52,21 @@ public:
     Game();
 
     /**
-     * @brief       Initializes the game board with given size and setup (starting positions)
+     * @brief       Initializes the game board with given size, setup (starting positions) and rules.
+     *              The setup defaults to an empty board.
+     *              The rules default to
+     *                  handicap: 0
+     *                  komi:     6.5
+     *                  scoring:  japanese
+     *                  game end: after 2 consecutive passes
+     *
      * @param[in]   size    board size (size x size)
      * @param[in]   setup   initial board setup
+     * @param[in]   rules   game rules for this setup/game
      * @returns     false - the setup contains invalid stones\n
      *              true  - init successful
      */
-    bool init(int size, GoSetup setup = GoSetup());
+    bool init(int size, GoSetup setup = GoSetup(), GoRules rules = GoRules(0, GoKomi(6.5), true, true));
 
     /**
      * @brief       Updates the game with the given setup. Tries to extract a valid move from the setup.
