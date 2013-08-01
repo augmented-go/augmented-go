@@ -663,6 +663,97 @@ namespace GoBackendGameTest
 
     };
 
+    TEST_CLASS(GoRulesTest)
+    {
+    public:
+        TEST_METHOD(can_set_default_rules) {
+            Game go_game;
+            go_game.init(9);
+
+            auto& board_rules = go_game.getBoard().Rules();
+            Assert::AreEqual(0,    board_rules.Handicap());
+            Assert::AreEqual(6.5f, board_rules.Komi().ToFloat());
+            Assert::AreEqual(true, board_rules.JapaneseScoring());
+            Assert::AreEqual(true, board_rules.TwoPassesEndGame());
+        }
+
+        TEST_METHOD(can_set_a_custom_komi) {
+            Game go_game;
+            GoSetup setup;
+            GoRules rules;
+            int size;
+            std::string s; // setup string
+
+            // O = White
+            // X = Black
+            //
+            // score negative: white wins
+            // score positive: black wins
+            //----------------------------------------------------------------------------------------
+            // white wins
+            s = std::string(  "....\n"
+                              "OOOO\n"
+                              "XXXX\n"
+                              ".X..");
+            // black = 8
+            // white = 8
+            // black - white - 4.5 = -4.5f
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            rules.SetKomi(GoKomi(4.5));
+            go_game.init(size, setup, rules);
+
+            // check rules
+            auto& board_rules = go_game.getBoard().Rules();
+            Assert::AreEqual(0,     board_rules.Handicap());
+            Assert::AreEqual(4.5f,  board_rules.Komi().ToFloat());
+            Assert::AreEqual(false, board_rules.JapaneseScoring());
+            Assert::AreEqual(true,  board_rules.TwoPassesEndGame());
+
+            // check if rules are applied properly
+            auto res = go_game.finishGame();
+            Assert::AreEqual("W+4.5", res.c_str());
+        }
+
+        TEST_METHOD(can_set_a_custom_scoring_type) {
+            Game go_game;
+            GoSetup setup;
+            GoRules rules;
+            int size;
+            std::string s; // setup string
+
+            // O = White
+            // X = Black
+            //
+            // score negative: white wins
+            // score positive: black wins
+            //----------------------------------------------------------------------------------------
+            // white wins
+            s = std::string(  "....\n"
+                              "OOOO\n"
+                              "XXXX\n"
+                              ".X..");
+            // black = 4
+            // white = 3
+            // black - white - 6.5 = -7.5f
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            rules.SetJapaneseScoring(true);
+            go_game.init(size, setup, rules);
+
+            // check rules
+            auto& board_rules = go_game.getBoard().Rules();
+            Assert::AreEqual(0,     board_rules.Handicap());
+            Assert::AreEqual(6.5f,  board_rules.Komi().ToFloat());
+            Assert::AreEqual(true, board_rules.JapaneseScoring());
+            Assert::AreEqual(true,  board_rules.TwoPassesEndGame());
+
+            // check if rules are applied properly
+            auto res = go_game.finishGame();
+            Assert::AreEqual("W+7.5", res.c_str());
+        }
+    };
+
     TEST_CLASS(SgfTest)
     {
     public:

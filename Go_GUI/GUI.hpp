@@ -28,7 +28,7 @@ public slots:
     void slot_showFinishedGameResults(QString result);
     void slot_newImage(QImage image);
     void slot_newGameData(const GoBoard* board);
-    void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name);
+    void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi);
 
 private slots:
     void slot_ButtonNewGame();
@@ -42,9 +42,11 @@ private slots:
 
 signals:
     void signal_saveGame(QString fileName, QString blackplayer_label, QString whiteplayer_label, QString game_name);
+    void signal_openGame(QString fileName);
     void signal_pass();
     void signal_resign();
     void stop_backend_thread();
+    void signal_newGame(GoRules rules);
 
 private:
     Ui::MainWindow ui_main;

@@ -36,6 +36,13 @@ BackendThread::BackendThread()
     _scanner(new Go_Scanner::Scanner),
     _game_is_initialized(false)
 {
+    /* define default game rules
+     *     handicap: 0
+     *     komi:     6.5
+     *     scoring:  japanese
+     *     game end: after 2 consecutive passes
+     */
+    _new_game_rules = GoRules(0, GoKomi(6.5), true, true);
 }
 
 
@@ -75,7 +82,7 @@ void BackendThread::scan() {
             _game->update(setup);
         }
         else {
-            _game->init(board_size, setup);
+            _game->init(board_size, setup, _new_game_rules);
             _game_is_initialized = true;
         }
 
@@ -83,17 +90,17 @@ void BackendThread::scan() {
         const auto scanner_image = mat_to_QImage(image);
 
         // send signal with new image to gui
-        emit backend_new_image(scanner_image);
+        emit newImage(scanner_image);
 
         // send board data to gui
         // the GUI controls the lifetime of this thread,
         // so passing a pointer to the GoBoard is safe and won't be invalidated
         // as long as the GUI says so
-        emit game_data_changed(&(_game->getBoard()));
+        emit gameDataChanged(&(_game->getBoard()));
     }
 }
 
-void BackendThread::save_sgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const {
+void BackendThread::saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const {
     auto filepath = path.toStdString();
 
     if (!_game->saveGame(filepath, blackplayer_name.toStdString(), whiteplayer_name.toStdString(), game_name.toStdString()))
@@ -107,8 +114,9 @@ void BackendThread::pass() {
         signalGuiGameHasEnded();
 }
 
-void BackendThread::reset() {
+void BackendThread::resetGame(GoRules rules) {
     _game_is_initialized = false;
+    _new_game_rules      = rules;
 }
 
 void BackendThread::finish() {
@@ -127,7 +135,7 @@ void BackendThread::signalGuiGameHasEnded() const {
     auto result = _game->getResult();
 
     // signal gui that game has ended with this result
-    emit finished_game_result(QString(result.c_str()));
+    emit finishedGameResult(QString(result.c_str()));
 }
 
 } // namespace Go_AR

@@ -39,14 +39,9 @@ bool Game::allValidPoints(const SgPointSet& stones) const {
     return true;
 }
 
-bool Game::init(int size, GoSetup setup) {
+bool Game::init(int size, GoSetup setup, GoRules rules) {
     // assert valid board size
     assert(size < 20 && size > 1);
-
-    auto rules = GoRules(0,             // handicap
-                         GoKomi(6.5),   // komi
-                         true,          // japanese scoring
-                         true);         // two passes end a game
 
     _go_game.Init(size, rules);
 
