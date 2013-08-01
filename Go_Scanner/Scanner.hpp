@@ -1,12 +1,14 @@
 #pragma once
 
-#include "opencv2/opencv.hpp"
-#include "GoSetup.h"
+#include <opencv2/opencv.hpp>
+#include <GoSetup.h>
 
 #include <tuple>
 
 
 namespace Go_Scanner {
+
+int scanner_main(cv::Mat& camera_frame);
 
 class Scanner {
 public:
