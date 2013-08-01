@@ -1,4 +1,4 @@
-set(TARGETNAME Go_Game)
+set(TARGETNAME Go_Backend)
 
 SET(backend_SOURCE
     Game.cpp
