@@ -59,6 +59,13 @@ namespace Go_AR {
          */
         void resetGame(GoRules rules);
 
+        /**
+         * @brief       Triggers the manual board selection in the Scanner.
+         *              Blocks this thread until the selection was made.
+         */
+        void selectBoardManually();
+
+
     private slots:
         void scan(); // our main worker function that is called by the timer
         

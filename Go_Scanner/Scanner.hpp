@@ -23,6 +23,12 @@ public:
     */
     bool scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image);
 
+    /**
+    * @brief        Displays a window to let the user select the go board manually.
+    *               This call blocks until the user is finished.
+    */
+    void selectBoardManually();
+
 private:
     /**
     * @returns      true if a new image could be retrieved, false otherwise (camera disconnected)

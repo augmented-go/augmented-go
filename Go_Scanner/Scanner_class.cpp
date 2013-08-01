@@ -72,4 +72,8 @@ bool Scanner::readCameraFrame(cv::Mat& frame) {
     return true;
 }
 
+void Scanner::selectBoardManually() {
+    // @todo: call the manual board selection :)
+}
+
 }

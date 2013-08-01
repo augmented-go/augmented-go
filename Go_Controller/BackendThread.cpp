@@ -138,4 +138,8 @@ void BackendThread::signalGuiGameHasEnded() const {
     emit finishedGameResult(QString(result.c_str()));
 }
 
+void BackendThread::selectBoardManually() {
+    _scanner->selectBoardManually();
+}
+
 } // namespace Go_AR
