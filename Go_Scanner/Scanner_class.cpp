@@ -5,28 +5,18 @@
 namespace Go_Scanner {
 using namespace cv;
 using namespace std;
-using SgPointUtil::Pt;
 
 bool Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
     Mat frame;
     if (!readCameraFrame(frame)) {
         // NOTICE: DEBUG STUFF!
-        frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
-        //return true;
+        frame = imread("res/textures/02.jpg", CV_LOAD_IMAGE_COLOR);
+        //out_image = frame;
+        //return false;
     }
 
-    // do stuff with frame
-    
-    // NOTICE: DEBUG STUFF!
-    board_size = 19;
-    
-    setup.AddBlack(Pt(2, 2));
-    setup.AddBlack(Pt(2, 3));
-    setup.AddBlack(Pt(2, 4));
-    setup.AddWhite(Pt(3, 2));
-    setup.AddWhite(Pt(3, 3));
-    //
-
+    scanner_main(frame);
+    cv::imshow("Intersections", frame);
     out_image = frame;
     return true;
 }
@@ -39,7 +29,7 @@ bool Scanner::readCameraFrame(cv::Mat& frame) {
         if (!opened)
             return false;
 
-        // just to have _last_frame initialized with the correct size (needed for compaision)
+        // just to have _last_frame initialized with the correct size (needed for comparision)
         _camera.read(_last_frame);
         // successive calls to read give the same data pointer
         // setting the matrix to zero would then also set it to zero for the frame read below
