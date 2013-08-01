@@ -9,6 +9,8 @@
 namespace Go_Scanner {
 
 int scanner_main(cv::Mat& camera_frame);
+void ask_for_board_contour();
+void do_auto_board_detection();
 
 class Scanner {
 public:
@@ -24,6 +26,18 @@ public:
     * @returns      true if a new image could be retrieved, false otherwise, may be changed to an enum or so
     */
     bool scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image);
+
+    /**
+    * @brief        Displays a window to let the user select the go board manually.
+    *               This call blocks until the user is finished.
+    */
+    void selectBoardManually();
+
+    /**
+    * @brief        Tries to detect the go board automatically. Displays the result if its successfully found a board.
+    *               This call blocks until the user pressed a key to close the result window.
+    */
+    void selectBoardAutomatically();
 
 private:
     /**
