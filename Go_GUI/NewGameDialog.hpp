@@ -32,8 +32,7 @@ public:
         emit signal_newgame(ui_newgame.gamename_lineEdit->text(), 
                             ui_newgame.blackplayername_lineEdit->text(), 
                             ui_newgame.whiteplayername_lineEdit->text(), 
-                            static_cast<float>(ui_newgame.komi_spinbox->value()),
-                            static_cast<int>(ui_newgame.handicap_spinbox->value()));
+                            static_cast<float>(ui_newgame.komi_spinbox->value()));
         close();
     }
 
@@ -44,7 +43,7 @@ signals:
      * @param   QString     Name of black player
      * @param   QString     Name of white player
      */
-    void signal_newgame(QString gamename, QString blackplayername, QString whiteplayername, float komi, int handicap);
+    void signal_newgame(QString gamename, QString blackplayername, QString whiteplayername, float komi);
 
 private:
     Ui::Dialog ui_newgame;

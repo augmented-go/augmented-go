@@ -28,7 +28,7 @@ public slots:
     void slot_showFinishedGameResults(QString result);
     void slot_newImage(QImage image);
     void slot_newGameData(const GoBoard* board);
-    void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi, int handicap);
+    void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi);
 
 private slots:
     void slot_ButtonNewGame();

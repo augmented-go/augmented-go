@@ -171,10 +171,10 @@ void GUI::slot_showFinishedGameResults(QString result){
  * @param   QString    black player name
  * @param   QString    white player name
  */
-void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi, int handicap){
+void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi){
 
     // emit to backend that gui wants to set up a new game!
-    auto rules = GoRules(handicap, GoKomi(komi), true, true);
+    auto rules = GoRules(0, GoKomi(komi), true, true);
     emit signal_newGame(rules);
 
     // Setting up new names for players
@@ -182,7 +182,7 @@ void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString
     ui_main.blackplayer_label->setText(blackplayer_name);
     ui_main.whiteplayer_label->setText(whiteplayer_name);
     ui_main.kominumber_label->setText(QString::number(komi));
-    ui_main.handicapnumber_label->setText(QString::number(handicap));
+    ui_main.handicapnumber_label->setText(QString::number(0));
 }
 
 //////////
