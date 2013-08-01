@@ -74,4 +74,8 @@ void Scanner::selectBoardManually() {
     ask_for_board_contour();
 }
 
+void Scanner::selectBoardAutomatically() {
+    do_auto_board_detection();
+}
+
 }

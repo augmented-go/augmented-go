@@ -142,4 +142,8 @@ void BackendThread::selectBoardManually() {
     _scanner->selectBoardManually();
 }
 
+void BackendThread::selectBoardAutomatically() {
+    _scanner->selectBoardAutomatically();
+}
+
 } // namespace Go_AR

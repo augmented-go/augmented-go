@@ -65,6 +65,11 @@ namespace Go_AR {
          */
         void selectBoardManually();
 
+        /**
+         * @brief       Triggers the autmatic board detection in the Scanner.
+         */
+        void selectBoardAutomatically();
+
 
     private slots:
         void scan(); // our main worker function that is called by the timer

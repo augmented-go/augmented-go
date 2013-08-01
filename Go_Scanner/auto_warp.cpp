@@ -20,7 +20,7 @@ namespace Go_Scanner {
 
     RNG rng(12345);
 
-    Mat automatic_warp(const Mat& input)
+    void automatic_warp(const Mat& input, Point2f& p0, Point2f& p1, Point2f& p2, Point2f& p3)
     {
         // CONVERT TO HSV
         Mat imgHSV;
@@ -40,7 +40,7 @@ namespace Go_Scanner {
         Mat edges;
         const int threshold = 70;
         Canny(source_channel, edges, threshold, threshold*2, 3);
-        imshow( thresh_window, edges );
+        //imshow( thresh_window, edges );
 
         // MORPHING FOR BETTER AREAS AND THUS CONTOURS
         const int morph_size = 4;
@@ -49,7 +49,7 @@ namespace Go_Scanner {
         // Apply the specified morphology operation
         Mat morph;
         morphologyEx(edges, morph, MORPH_GRADIENT, element);
-        imshow( morph_window, morph );
+        //imshow( morph_window, morph );
 
         // FINDING CONTOURS
         Mat morph_clone = morph.clone();
@@ -136,7 +136,6 @@ namespace Go_Scanner {
             // 2--------3
 
             auto center = Point(board_bbox.x + board_bbox.width/2, board_bbox.y + board_bbox.height/2);
-            Point p0, p1, p2, p3;
 
             // splitting points in upper and lower half
             vector<Point> uppers, lowers;
@@ -160,13 +159,13 @@ namespace Go_Scanner {
             // lower side
             p2 = lowers[0];
             p3 = lowers[1];
-            if (p2.x > p3.x)
+            if (p2.x < p3.x)
                 std::swap(p2, p3);
 
             // WARPING THE IMAGE
-            auto warped = warpImage(input, p0, p1, p2, p3);
-            imshow("Warped", warped);
-            return warped;
+            //auto warped = warpImage(input, p0, p1, p2, p3);
+            //imshow("Warped", warped);
+            return;
         }
 
         // DRAWING ALL LEFTOVER CONTOURS
@@ -181,8 +180,8 @@ namespace Go_Scanner {
             rectangle(drawing, rect.tl(), rect.br(), Scalar(255, 255, 255), 2, 8);
         }
 
-        imshow("Contours", drawing);
-        return Mat();
+        //imshow("Contours", drawing);
+        return;
     }
 
 }

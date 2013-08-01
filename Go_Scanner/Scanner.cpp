@@ -763,6 +763,44 @@ void ask_for_board_contour() {
     asked_for_board_contour = true;
 }
 
+void automatic_warp(const cv::Mat& input, cv::Point2f& p0, cv::Point2f& p1, cv::Point2f& p2, cv::Point2f& p3);
+void do_auto_board_detection() {
+    cv::Point2f p0, p1, p2, p3;
+    automatic_warp(img0, p0, p1, p2, p3);
+
+    // automatic_warp failed and board wasn't found
+    if ((p0 == p1) || (p2 == p3)) {
+        std::cout << "!!ERROR >> Failed to automatically detect the go board!" << std::endl;
+        return;
+    }
+
+    // HACK: adjust the coordinates a bit to snap them closer to the board grid
+    const auto gap = 5.f;
+    p0 += cv::Point2f(gap, gap);
+    p1 += cv::Point2f(-gap, gap);
+    p2 += cv::Point2f(-gap, -gap);
+    p3 += cv::Point2f(gap, -gap);
+
+    boardCornerX[0] = p0.x;
+    boardCornerX[1] = p1.x;
+    boardCornerX[2] = p2.x;
+    boardCornerX[3] = p3.x;
+
+    boardCornerY[0] = p0.y;
+    boardCornerY[1] = p1.y;
+    boardCornerY[2] = p2.y;
+    boardCornerY[3] = p3.y;
+
+    cv::namedWindow(windowName, CV_WINDOW_AUTOSIZE);
+    cv::putText(img0, "Result of automatically detecting the Go board.", 
+                cvPoint(20,20), 1, 0.8, cv::Scalar(64, 64, 255), 1, CV_AA);
+    showImage();
+    cv::waitKey(0);
+    cv::destroyWindow(windowName);
+
+    asked_for_board_contour = true;
+}
+
 int scanner_main(cv::Mat& camera_frame)
 {
     //TODO: Get imagewidth and size automatically

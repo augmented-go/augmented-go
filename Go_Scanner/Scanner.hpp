@@ -10,6 +10,7 @@ namespace Go_Scanner {
 
 int scanner_main(cv::Mat& camera_frame);
 void ask_for_board_contour();
+void do_auto_board_detection();
 
 class Scanner {
 public:
@@ -31,6 +32,12 @@ public:
     *               This call blocks until the user is finished.
     */
     void selectBoardManually();
+
+    /**
+    * @brief        Tries to detect the go board automatically. Displays the result if its successfully found a board.
+    *               This call blocks until the user pressed a key to close the result window.
+    */
+    void selectBoardAutomatically();
 
 private:
     /**
