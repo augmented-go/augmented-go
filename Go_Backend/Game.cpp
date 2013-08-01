@@ -218,6 +218,25 @@ void Game::onUpdateInvalid(GoSetup new_setup) {
     }
 }
 
+void Game::playMove(SgPoint position) {
+    auto setup = GoSetupUtil::CurrentPosSetup(getBoard());
+
+    auto current_player = getBoard().ToPlay();
+
+    switch (current_player) {
+    case SG_BLACK:
+        setup.AddBlack(position);
+        break;
+    case SG_WHITE:
+        setup.AddWhite(position);
+        break;
+    default:
+        assert(!"current player is nobody?!");
+    }
+
+    update(setup);
+}
+
 bool Game::saveGame(string file_path, string name_black, string name_white, string game_name) {
     using boost::gregorian::day_clock;
     using boost::gregorian::to_simple_string;

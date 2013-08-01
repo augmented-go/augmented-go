@@ -977,4 +977,132 @@ namespace GoBackendGameTest
             Assert::IsTrue(contents.find("RE[B+1.5]") != string::npos);
         }
     };
+
+    TEST_CLASS(PlayMoveTest) {
+        TEST_METHOD(can_play_valid_moves) {
+            std::string s;
+            int size;
+            GoSetup expected_setup, board_setup;
+
+            Game go_game;
+            go_game.init(9);
+
+
+            // BLACK plays a move
+            go_game.playMove(SgPointUtil::Pt(1, 1));
+
+            s = std::string("....\n"
+                            "....\n"
+                            "....\n"
+                            "X...");
+
+            expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_WHITE;
+
+            board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(expected_setup == board_setup);
+
+            // WHITE plays a move
+            go_game.playMove(SgPointUtil::Pt(2, 3));
+
+            s = std::string(  "....\n"
+                              ".O..\n"
+                              "....\n"
+                              "X...");
+
+            expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_BLACK;
+
+            board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(expected_setup == board_setup);
+        }
+
+        TEST_METHOD(cannot_play_invalid_moves) {
+            std::string s;
+            int size;
+            GoSetup expected_setup, board_setup;
+
+            Game go_game;
+
+            s = std::string("....\n"
+                            "....\n"
+                            ".O..\n"
+                            "O.O.");
+            auto init_setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            go_game.init(size, init_setup);
+
+            // BLACK tries to play a move on a white stone
+            go_game.playMove(SgPointUtil::Pt(1, 1));
+
+            s = std::string("....\n"
+                            "....\n"
+                            ".O..\n"
+                            "O.O.");
+
+            expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_BLACK;
+
+            board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(expected_setup == board_setup);
+
+            // BLACK tries to play a suicide move
+            go_game.playMove(SgPointUtil::Pt(2, 1));
+
+            s = std::string("....\n"
+                            "....\n"
+                            ".O..\n"
+                            "O.O.");
+
+            expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_BLACK;
+
+            board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(expected_setup == board_setup);
+        }
+
+        TEST_METHOD(cannot_play_a_valid_move_after_a_invalid_move) {
+            std::string s;
+            int size;
+            GoSetup expected_setup, board_setup;
+
+            Game go_game;
+
+            s = std::string("....\n"
+                            "....\n"
+                            "....\n"
+                            "..O.");
+            auto init_setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            go_game.init(size, init_setup);
+
+            // BLACK tries to play a move on a white stone
+            go_game.playMove(SgPointUtil::Pt(3, 1));
+
+            s = std::string("....\n"
+                            "....\n"
+                            "....\n"
+                            "..O.");
+
+            expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_BLACK;
+
+            board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(expected_setup == board_setup);
+
+            // BLACK tries to play a valid move
+            go_game.playMove(SgPointUtil::Pt(1, 2));
+
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            "..O.");
+
+            expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_BLACK;
+
+            board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(expected_setup == board_setup);
+        }
+    };
 }

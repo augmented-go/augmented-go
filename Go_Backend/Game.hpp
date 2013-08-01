@@ -83,6 +83,13 @@ public:
     void update(GoSetup setup);
 
     /**
+     * @brief       Plays a move at given position for the current player.
+     *              Emulates a new GoSetup with this new move and uses the available functions for updating the game board.
+     * @param[in]   setup   new board setup
+     */
+    void playMove(SgPoint position);
+
+    /**
      * @brief       Get current board information
      * @returns     reference to current board instance
      */
