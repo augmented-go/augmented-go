@@ -134,6 +134,18 @@ public:
      */
     bool hasEnded() const;
 
+
+    /** 
+     * @brief        aa
+     */
+    void navigateHistory(SgNode::Direction dir);
+
+    /** Return whether there is a next node in the given direction. */
+    /** 
+     * @brief        aa
+     */
+    bool canNavigateHistory(SgNode::Direction dir) const;
+
 private:
     // Not implemented
     Game(const Game&);
