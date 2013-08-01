@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <fstream>
 
 namespace Go_Scanner {
 
@@ -884,6 +885,38 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     {
         bool intersectionResult = getBoardIntersections(warpedImg, 255, intersectionPoints);
     }
+
+    // check the color at the intersection points
+    cv::Mat warped_grey;
+    cv::cvtColor(srcWarpedImg, warped_grey, CV_RGB2HSV);
+    std::vector<cv::Mat> channels;
+    cv::split(warped_grey, channels);
+
+    warped_grey = channels[1];
+
+    std::vector<uchar> colors;
+
+    for (const auto& point : intersectionPoints) {
+        auto color = warped_grey.at<uchar>(point.y, point.x);
+        colors.emplace_back(color);
+    }
+
+    std::sort(std::begin(colors), std::end(colors));
+
+    // write a histogram to filesystem
+    std::ofstream out("colors_hist.csv");
+    out << "Color" << ";" << "Count" << std::endl;
+    auto iter = std::begin(colors);
+    for (auto x = 0u; x < 255; ++x) {
+        auto count = 0;
+        while (iter != std::end(colors) && *iter == x) {
+            ++count;
+            ++iter;
+        }
+        out << x << ";" << count << std::endl;
+    }
+    out.close();
+
 
 
     // @todo: assert that the number of intersection points are a quadratic number
