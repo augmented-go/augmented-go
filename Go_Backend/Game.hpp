@@ -136,13 +136,13 @@ public:
 
 
     /** 
-     * @brief        aa
+     * @brief        Navigates the history in the given direction and updates the board accordingly.
+                     Make sure that going in that direction is even possible, by calling canNavigateHistory.
      */
     void navigateHistory(SgNode::Direction dir);
 
-    /** Return whether there is a next node in the given direction. */
     /** 
-     * @brief        aa
+     * @brief        Returns whether there is actually any history in the given direction.
      */
     bool canNavigateHistory(SgNode::Direction dir) const;
 
