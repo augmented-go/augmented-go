@@ -13,6 +13,7 @@ SET(scanner_SOURCE
 
 SET(scanner_HEADERS
     Scanner.hpp
+    Scanner_implementation.hpp
 )
 
 add_library(Go_Scanner ${scanner_SOURCE} ${scanner_HEADERS})

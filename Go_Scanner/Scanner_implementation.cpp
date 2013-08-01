@@ -1,7 +1,7 @@
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include "Scanner_implementation.hpp"
 
-#include <GoSetup.h>
+#include <SgSystem.h>
+#include <SgPoint.h>
 
 #include <algorithm>
 #include <iostream>
@@ -657,7 +657,7 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
     return distance;
 }
 
-GoSetup detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints)
+GoSetup detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords)
 {
     //TODO: use black/white image. write function for it. 
     
@@ -671,6 +671,8 @@ GoSetup detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoin
     cv::imshow("Image for detecting black stones", warpedImgGray);
     for(int i=0; i < intersectionPoints.size(); i++)
     {
+        auto& intersection_point = intersectionPoints[i];
+
         int x = intersectionPoints[i].x;
         int y = intersectionPoints[i].y;
         int distance, diameter45, diameter125;
@@ -700,10 +702,9 @@ GoSetup detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoin
 
             if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= 10 && diameter125 >= 10  )
             {
-                std::cout << "Stone ("<< x << ", "<< y << ")" << std::endl;
+                std::cout << "Black Stone ("<< x << ", "<< y << ")" << std::endl;
 
-
-                //save stone in data structure. this will be the returntype of this function
+                setup.AddBlack(to_board_coords[intersection_point]);
             }
             else
                 std::cout << "+";
@@ -764,7 +765,6 @@ void ask_for_board_contour() {
     asked_for_board_contour = true;
 }
 
-void automatic_warp(const cv::Mat& input, cv::Point2f& p0, cv::Point2f& p1, cv::Point2f& p2, cv::Point2f& p3);
 void do_auto_board_detection() {
     cv::Point2f p0, p1, p2, p3;
     automatic_warp(img0, p0, p1, p2, p3);
@@ -800,6 +800,38 @@ void do_auto_board_detection() {
     cv::destroyWindow(windowName);
 
     asked_for_board_contour = true;
+}
+
+// map pixel coordinates (intersection points) to board coordinates
+// begins at the left of the lowermost line and gradually moves the lines from left to right upwards
+std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv::Point2f> intersectionPoints) {
+    std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coordinates;
+
+    // get all unique y-values (lines)
+    auto unique_ys = filter_unique<cv::Point2f, float>(intersectionPoints, [](const cv::Point2f& pt) { return pt.y; });
+    
+    // begin at line closest to the bottom because board coordinates have its origin in the lower left corner!
+    // -> sort descending
+    std::sort(std::begin(unique_ys), std::end(unique_ys), [](const float& left, const float& right) { return left > right; });
+
+    // walk through each line (unique y-value of the points) from left to right and map a board coordinate to each point
+    int line_idx = 1;
+    for (const auto& unique_y_value : unique_ys) {
+        auto points_on_this_line = filter_vector<cv::Point2f>(intersectionPoints, [=](const cv::Point2f& pt) { return pt.y == unique_y_value; });
+
+        // sort by ascending x values of the points
+        std::sort(std::begin(points_on_this_line), std::end(points_on_this_line), [](const cv::Point2f& left, const cv::Point2f& right) { return left.x < right.x; });
+
+        // add an entry for each point to the map
+        int column_idx = 1;
+        for (const auto& pt : points_on_this_line) {
+            to_board_coordinates[pt] = SgPointUtil::Pt(column_idx++, line_idx);
+        }
+
+        ++line_idx;
+    }
+
+    return to_board_coordinates;
 }
 
 bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
@@ -864,7 +896,9 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     board_size = std::count_if(begin(intersectionPoints), end(intersectionPoints), [=](const cv::Point2f& pt) { return pt.y == ref_point.y; });
     printf("Board size: %d\n", board_size);
 
-    setup = detectStones(srcWarpedImg, intersectionPoints);
+    auto to_board_coords = getBoardCoordMapFor(intersectionPoints);
+
+    setup = detectStones(srcWarpedImg, intersectionPoints, to_board_coords);
 
     return true;
 }
