@@ -62,7 +62,6 @@ void GUI::init(){
     virtual_view = new VirtualView(this);
     augmented_view = new AugmentedView(this);
 
-
     // Attaching augmented view to big container
     augmented_view->setParent(ui_main.big_container);
     augmented_view->rescaleImage(ui_main.big_container->size());

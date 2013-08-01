@@ -11,6 +11,10 @@
 VirtualView::VirtualView(QWidget *parent){
     this->setParent(parent);
 
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->resize(parent->size());
+
     // directories of the images
     QString texture_path = "res/textures/";
     QString board_directory_size9 = QString(texture_path + "go_board_" + QString::number(9)+".png");
@@ -38,6 +42,8 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
 {
     if (game_board == nullptr)
         return;
+
+    this->resize(this->parentWidget()->size());
 
     scene.clear();
     
@@ -130,4 +136,3 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     }
     this->setScene(&scene);
 }
-
