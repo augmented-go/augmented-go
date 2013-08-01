@@ -507,10 +507,10 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     //reduce the noise
     cv::blur(warpedImg, warpedImg , cv::Size(3,3));
     cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
-    cv::imshow("blur", warpedImgGray);
+    //cv::imshow("blur", warpedImgGray);
 
     cv::Canny(warpedImgGray, cannyImg, 100, 150, 3);
-    cv::imshow("Canny", cannyImg);
+    //cv::imshow("Canny", cannyImg);
 
     //sobelImg = sobelFiltering(cannyImg);
     cv::threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
@@ -538,7 +538,7 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
             cv::Point(lines[i][2], lines[i][3]), cv::Scalar(0,0,255), 1, 8 );
     }
 
-        cv::imshow("HoughLines Image", houghimage);
+        //cv::imshow("HoughLines Image", houghimage);
 
 
 
@@ -583,7 +583,7 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     }
 
 
-    cv::imshow("Intersections", warpedImg);
+    //cv::imshow("Intersections", warpedImg);
     
     return true;
 }
@@ -667,7 +667,7 @@ bool detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints)
 
     cv::threshold(tmp, warpedImgGray, 85, 255, 0);
 
-    cv::imshow("Testing", warpedImgGray);
+    //cv::imshow("Testing", warpedImgGray);
     for(int i=0; i < intersectionPoints.size(); i++)
     {
         int x = intersectionPoints[i].x;
@@ -748,7 +748,7 @@ void Threshold_Debug( int, void* )
 
     cv::threshold(sobel, Thresh_res, threshold_value, max_BINARY_value,threshold_type );
 
-    cv::imshow( window_name_thre, Thresh_res );
+    //cv::imshow( window_name_thre, Thresh_res );
 }
 
 void ask_for_board_contour() {

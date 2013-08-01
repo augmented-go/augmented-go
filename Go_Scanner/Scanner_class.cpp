@@ -23,8 +23,9 @@ bool Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
     }
 
     scanner_main(frame);
-    cv::imshow("Intersections", frame);
+    
     out_image = frame;
+
     return true;
 }
 
