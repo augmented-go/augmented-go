@@ -1325,7 +1325,7 @@ namespace GoBackendGameTest
             // can't navigate into "future"
             Assert::IsFalse(go_game.canNavigateHistory(SgNode::Direction::NEXT));
 
-            // back on step
+            // back one step
             go_game.navigateHistory(SgNode::Direction::PREVIOUS);
             Assert::IsTrue(GoSetupUtil::CurrentPosSetup(go_game.getBoard()) == setup);
             
@@ -1345,7 +1345,7 @@ namespace GoBackendGameTest
             first_move.m_player = SG_WHITE;
             go_game.update(first_move);
 
-            // fist white move
+            // first white move
             GoSetup first_variation = first_move;
             first_variation.AddWhite(Pt(1, 2));
             first_variation.m_player = SG_BLACK;
