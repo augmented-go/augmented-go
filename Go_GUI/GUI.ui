@@ -2268,6 +2268,13 @@
     <addaction name="rules_action"/>
     <addaction name="cameraresolution_action"/>
    </widget>
+   <widget class="QMenu" name="board_detection_menu">
+    <property name="title">
+     <string>Board Detection</string>
+    </property>
+    <addaction name="manually_action"/>
+    <addaction name="automatic_action"/>
+   </widget>
    <widget class="QMenu" name="help_menu">
     <property name="title">
      <string>Help</string>
@@ -2276,6 +2283,7 @@
    </widget>
    <addaction name="file_menu"/>
    <addaction name="settings_menu"/>
+   <addaction name="board_detection_menu"/>
    <addaction name="help_menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
@@ -2309,6 +2317,16 @@
   <action name="rules_action">
    <property name="text">
     <string>Rules</string>
+   </property>
+  </action>
+  <action name="manually_action">
+   <property name="text">
+    <string>Manually</string>
+   </property>
+  </action>
+  <action name="automatic_action">
+   <property name="text">
+    <string>Automatically</string>
    </property>
   </action>
   <action name="cameraresolution_action">

@@ -38,6 +38,8 @@ private slots:
     void slot_MenuSave();
     void slot_MenuInfo();
     void slot_ViewSwitch();
+    void slot_BoardDetectionManually();
+    void slot_BoardDetectionAutomatically();
     void closeEvent(QCloseEvent *event);
 
 signals:
@@ -45,6 +47,8 @@ signals:
     void signal_openGame(QString fileName);
     void signal_pass();
     void signal_resign();
+    void signal_boardDetectionManually();
+    void signal_boardDetectionAutomatically();
     void stop_backend_thread();
     void signal_newGame(GoRules rules);
 
