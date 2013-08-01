@@ -22,7 +22,7 @@ bool Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
         //return false;
     }
 
-    scanner_main(frame);
+    scanner_main(frame, setup, board_size);
     
     out_image = frame;
 
