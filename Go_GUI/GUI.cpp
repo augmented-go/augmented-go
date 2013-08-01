@@ -20,7 +20,7 @@ namespace Go_GUI {
  * @brief	Checks for gui elements and fonts and connects signals and slots
  * @param	QWidget/QMainWindow		parent widget that creates this
  */
-GUI::GUI(QWidget *parent) : QMainWindow(parent)
+GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
 {
     ui_main.setupUi(this);
 
@@ -45,6 +45,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent)
     connect(ui_main.info_action,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
     connect(ui_main.viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
+    connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
+    connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
 
     // setting initial values
     this->init();
@@ -60,7 +62,6 @@ void GUI::init(){
     virtual_view = new VirtualView(this);
     augmented_view = new AugmentedView(this);
 
-
     // Attaching augmented view to big container
     augmented_view->setParent(ui_main.big_container);
     augmented_view->rescaleImage(ui_main.big_container->size());
@@ -68,18 +69,9 @@ void GUI::init(){
     augmented_view->show();
 
     // Attaching virtual view to small container
-    /*QWidget* small_container = ui_main.small_container;
-    QSize small_container_size = ui_main.small_container->size();	// saving size
-    ui_main.small_container = QWidget::createWindowContainer(virtual_view, ui_main.small_container, Qt::Widget);
-    ui_main.small_container->resize(small_container_size);
-    virtual_view->resize(small_container_size);
-    ui_main.small_container->setToolTip("virtual view");*/
-
-    virtual_view->setParent(ui_main.small_container->windowHandle());
-    //virtual_view->rescaleImage(ui_main.big_container->size());
+    virtual_view->setParent(ui_main.small_container);
     ui_main.small_container->setToolTip("virtual view");
-    //virtual_view->show();
-
+    virtual_view->show();
 
     ui_main.white_basket->setPixmap(closedbasket_pixmap);
     ui_main.black_basket->setPixmap(closedbasket_pixmap);
@@ -118,33 +110,48 @@ void GUI::slot_newImage(QImage image) {
 /**
  * @brief   SLOT "new game data"
  *          If new game data is sent to GUI, refresh display of current player and captured stones.
- * @param   GoBoard     new board of current turn
+ * @param   game     new game representation
  */
-void GUI::slot_newGameData(const GoBoard * game_board) {
-        auto current_turn = game_board->MoveNumber();
-        auto current_player = game_board->ToPlay();
-        switch (current_player) {
-            case SG_WHITE:
-                ui_main.white_basket->setPixmap(whitebasket_pixmap);
-                ui_main.black_basket->setPixmap(closedbasket_pixmap);
-                break;
-            case SG_BLACK:
-                ui_main.white_basket->setPixmap(closedbasket_pixmap);
-                ui_main.black_basket->setPixmap(blackbasket_pixmap);
-                break;
-            default:
-                assert(false);
-                break;
-        }
-        
-        auto captured_black_stones = game_board->NumPrisoners(SG_BLACK);
-        auto captured_white_stones = game_board->NumPrisoners(SG_WHITE);
+void GUI::slot_newGameData(const GoBackend::Game* game) {
+    // update internal pointer if the board has been changed
+    if (game != game)
+        game = game;
 
-        ui_main.capturedwhite_label->setText(QString::number(captured_white_stones));
-        ui_main.capturedblack_label->setText(QString::number(captured_black_stones));
+    auto& board = game->getBoard();
 
-        printf(">>> New Game data! <<<\n");
-    }    
+    auto current_player = board.ToPlay();
+
+    // Updating basket pictures
+    switch (current_player) {
+    case SG_WHITE:
+        ui_main.white_basket->setPixmap(whitebasket_pixmap);
+        ui_main.black_basket->setPixmap(closedbasket_pixmap);
+        break;
+    case SG_BLACK:
+        ui_main.white_basket->setPixmap(closedbasket_pixmap);
+        ui_main.black_basket->setPixmap(blackbasket_pixmap);
+        break;
+    default:
+        assert(false);
+        break;
+    }
+
+    // Updating Game-Settings
+    ui_main.movenumber_label->setText(QString::number(board.MoveNumber()));
+    ui_main.kominumber_label->setText(QString::number(board.Rules().Komi().ToFloat()));
+    ui_main.handicapnumber_label->setText(QString::number(board.Rules().Handicap()));
+    ui_main.capturedwhite_label->setText(QString::number(board.NumPrisoners(SG_WHITE)));
+    ui_main.capturedblack_label->setText(QString::number(board.NumPrisoners(SG_BLACK)));
+
+    // refresh virtual view
+    if (ui_main.big_container->toolTip() == "virtual view")
+        virtual_view->createAndSetScene(ui_main.big_container->size(), &board);
+    
+    else if (ui_main.big_container->toolTip() == "augmented view")
+        virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
+    
+    printf(">>> New Game data! <<<\n");
+}    
 
 /**
  * @brief   SLOT "Show finished game results"
@@ -165,13 +172,18 @@ void GUI::slot_showFinishedGameResults(QString result){
  * @param   QString    black player name
  * @param   QString    white player name
  */
-void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name){
+void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi){
 
     // emit to backend that gui wants to set up a new game!
+    auto rules = GoRules(0, GoKomi(komi), true, true);
+    emit signal_newGame(rules);
 
+    // Setting up new names for players
     ui_main.gamename_label->setText(game_name);
     ui_main.blackplayer_label->setText(blackplayer_name);
     ui_main.whiteplayer_label->setText(whiteplayer_name);
+    ui_main.kominumber_label->setText(QString::number(komi));
+    ui_main.handicapnumber_label->setText(QString::number(0));
 }
 
 //////////
@@ -184,12 +196,27 @@ void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString
  */
 void GUI::slot_ButtonNewGame(){
     NewGameDialog* newgame = new NewGameDialog(this);
-    Ui::Dialog ui_newgame;
-    ui_newgame.setupUi(newgame);
-
-    connect(newgame, &NewGameDialog::signal_newgame, this, &GUI::slot_setupNewGame);
-
     newgame->exec();
+}
+
+/**
+ * @brief   SLOT "Resign"
+ *          Opens a Dialog that asks for confirmation.
+ *			If answered yes, a signal is sent to backend that the current player surrenders.
+ */
+void GUI::slot_ButtonResign(){
+    if (QMessageBox::question(this, "Resign", "Do you really want to admit defeat?") == QMessageBox::Yes)
+        emit signal_resign();
+}
+
+/**
+ * @brief   SLOT "Pass"
+ *          Opens a Dialog that asks for confirmation.
+ *			If answered yes, a signal is sent to backend that the current player passes.
+ */
+void GUI::slot_ButtonPass(){
+    if (QMessageBox::question(this, "Pass", "Do you really want to pass?") == QMessageBox::Yes)
+        emit signal_pass();
 }
 
 /**
@@ -199,25 +226,18 @@ void GUI::slot_ButtonNewGame(){
  */
 void GUI::slot_ViewSwitch(){
     if (ui_main.big_container->toolTip() == "virtual view"){
+
         // switching augmented view to big container
         augmented_view->setParent(ui_main.big_container);
         augmented_view->rescaleImage(ui_main.big_container->size());
         ui_main.big_container->setToolTip("augmented view");
         augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
-        // switching virtual view to small container
-        // old style
-        //QWidget* small_view = QWidget::createWindowContainer(virtual_view, ui_main.small_container, Qt::Widget);
-        //small_view->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        //small_view->resize(ui_main.small_container->size());
-        //ui_main.small_container->setToolTip("virtual view");
-        //small_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
-        
         // new style
-        virtual_view->setParent(ui_main.small_container->windowHandle());
-        virtual_view->resize(ui_main.small_container->size());
+        virtual_view->setParent(ui_main.small_container);
+        virtual_view->createAndSetScene(ui_main.small_container->size(), &(go_game->getBoard()));
         ui_main.small_container->setToolTip("virtual view");
-        //virtual_view->show();
+        virtual_view->show();
         
     }
     else if (ui_main.big_container->toolTip() == "augmented view"){
@@ -227,17 +247,10 @@ void GUI::slot_ViewSwitch(){
         ui_main.small_container->setToolTip("augmented view");
         augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
-        // switching virtual view to big container
-        //QWidget* big_view = QWidget::createWindowContainer(virtual_view, ui_main.big_container, Qt::Widget);
-        //big_view->resize(ui_main.big_container->size());
-        //virtual_view->resize(ui_main.big_container->size());
-        //ui_main.big_container->setToolTip("virtual view");
-        //big_view->show();			// when changing parent, it gets invisible -> show again! -.- !!
-
-        virtual_view->setParent(ui_main.big_container->windowHandle());
-        virtual_view->resize(ui_main.big_container->size());
+        virtual_view->setParent(ui_main.big_container);
+        virtual_view->createAndSetScene(ui_main.big_container->size(), &(go_game->getBoard()));
         ui_main.big_container->setToolTip("virtual view");
-        //virtual_view->show(); 
+        virtual_view->show(); 
     }
 }
 
@@ -255,12 +268,16 @@ void GUI::slot_MenuOpen(){
         tr("SGF (*.sgf)" ),
         &selfilter 
     );
+
+    if (!fileName.isNull()){
+        // TODO ask if user wants to save the current game!
+        emit signal_openGame(fileName);
+    }
 }
 
 /**
- * @brief	SLOT QAction "MenuOpen"
+ * @brief	SLOT QAction "MenuSave"
  *			opens a filedialog that lets the user choose an sgf-file.
- * @todo	prompt for playernames, gamename and send them + filename to Go_Backend per signal
  */
 void GUI::slot_MenuSave(){
     QString selfilter = tr("SGF (*.sgf)");
@@ -309,13 +326,22 @@ void GUI::slot_MenuInfo(){
  * @param	QCloseEvent		close event that shall or shall not be executed afterwards.
  */
 void GUI::closeEvent(QCloseEvent *event){
-    auto reply = QMessageBox::question(this, "Quit?", "You really want to quit?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
-    if (reply == QMessageBox::StandardButton::Yes) {
+
+    // If at least one move was was done
+    // TODO If game loaded -> move number greater than start number!
+    if (ui_main.movenumber_label->text().toInt() > 0){
+        if (QMessageBox::question(this, "Save?", "Save current game?") == QMessageBox::Yes)
+            this->slot_MenuSave();
+    }
+
+    // Ask if the user wants to quit
+    if (QMessageBox::question(this, "Quit?", "Do you really want to quit?") == QMessageBox::Yes){
         emit stop_backend_thread();
         event->accept();
     }
     else
         event->ignore();
+    
 }
 
 } // namespace Go_GUI

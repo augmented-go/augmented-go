@@ -1,3 +1,4 @@
+set(TARGETNAME Go_Backend)
 
 SET(backend_SOURCE
     Game.cpp
@@ -7,7 +8,7 @@ SET(backend_HEADERS
     Game.hpp
 )
 
-add_library (Go_Backend ${backend_SOURCE} ${backend_HEADERS})
-add_fuego_to_target(Go_Backend)
+add_library (${TARGETNAME} ${backend_SOURCE} ${backend_HEADERS})
+add_fuego_to_target(${TARGETNAME})
 
-configure_target(Go_Backend)
+configure_target(${TARGETNAME})

@@ -34,7 +34,7 @@ namespace Go_AR {
         /**
          * @brief       Saves the current game as sgf at the specified path.
          */
-        void save_sgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const;
+        void saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const;
 
         /**
          * @brief       Plays a pass for the current player.
@@ -53,7 +53,11 @@ namespace Go_AR {
          */
         void finish();
 
-        void reset();
+        /**
+         * @brief       Resets the current game and starts a new one with the given rules and
+         *              the current board as the starting setup.
+         */
+        void resetGame(GoRules rules);
 
     private slots:
         void scan(); // our main worker function that is called by the timer
@@ -61,17 +65,20 @@ namespace Go_AR {
     // signals
     signals:
         // signals that a new game image was fetched and processed
-        void backend_new_image(QImage camera_image) const;
+        void newImage(QImage camera_image) const;
 
-        // signals that the game board has changed
-        void game_data_changed(const GoBoard * game_board) const;
+        // signals that the game state has changed
+        void gameDataChanged(const GoBackend::Game * game) const;
 
         // signals that the game has ended with the given result
-        void finished_game_result(QString result) const;
+        void finishedGameResult(QString result) const;
+
 
     // Member vars    
     private:
         std::unique_ptr<GoBackend::Game>     _game;
         std::unique_ptr<Go_Scanner::Scanner> _scanner;
+        bool _game_is_initialized;
+        GoRules _new_game_rules;
     };
 }

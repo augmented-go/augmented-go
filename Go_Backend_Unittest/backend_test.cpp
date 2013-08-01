@@ -155,6 +155,7 @@ namespace GoBackendGameTest
 
             int size;
             auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            setup.m_player = SG_WHITE;
 
             Game go_game;
             go_game.init(size, setup);
@@ -661,6 +662,208 @@ namespace GoBackendGameTest
             Assert::AreEqual(true, go_game.hasEnded());
         }
 
+        TEST_METHOD(allow_playing_handicap_stones_when_board_is_empty) {
+            Game go_game;
+            GoSetup setup;
+
+            go_game.init(4, setup);
+            Assert::IsTrue(go_game.getState() == State::SettingHandicap);
+
+            //
+            // more than one handicap stone placed
+            std::string s(  "....\n"
+                            "..X.\n"
+                            ".X..\n"
+                            "....");
+            int size;
+            GoSetup handicap_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(handicap_setup);
+            // still able to place handicap
+            Assert::IsTrue(go_game.getState() == State::SettingHandicap);
+
+            //
+            // white move
+            s = "....\n"
+                "..X.\n"
+                ".XO.\n"
+                "....";
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup);
+            Assert::IsTrue(go_game.getState() == State::Valid);
+
+            auto& board = go_game.getBoard();
+            // all stones present on the board
+            Assert::AreEqual(1, board.TotalNumStones(SG_WHITE));
+            Assert::AreEqual(2, board.TotalNumStones(SG_BLACK));
+
+            // the GoGame initializes the board with the handicap stones
+            handicap_setup.m_player = SG_WHITE;
+            Assert::IsTrue(board.Setup() == handicap_setup);
+        }
+
+        TEST_METHOD(dont_allow_playing_handicap_stones_when_setup_has_white_stones) {
+            Game go_game;
+            std::string s(  "....\n"
+                            "..X.\n"
+                            ".O..\n"
+                            "....");
+            int size;
+            GoSetup setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.init(size, setup);
+
+            Assert::IsTrue(go_game.getState() == State::Valid);
+        }
+
+        TEST_METHOD(allow_playing_handicap_stones_when_setup_contains_only_black_stones) {
+            GoSetup setup;
+            setup.AddBlack(Pt(1, 1));
+
+            Game go_game;
+            go_game.init(19, setup);
+            Assert::IsTrue(go_game.getState() == State::SettingHandicap);
+        }
+
+        TEST_METHOD(dont_consider_single_black_stone_as_handicap) {
+            Game go_game;
+            go_game.init(19);
+
+            GoSetup empty_setup;
+            empty_setup.m_player = SG_BLACK;
+
+            // first black move
+            GoSetup setup;
+            setup.AddBlack(Pt(1, 1));
+            go_game.update(setup);
+            // GoGame initializes the board with the handicap stones if there are any
+            Assert::IsTrue(go_game.getBoard().Setup() == empty_setup);
+
+            // first white move
+            setup.AddWhite(Pt(1, 2));
+            go_game.update(setup);
+            Assert::IsTrue(go_game.getBoard().Setup() == empty_setup);
+        }
+
+        TEST_METHOD(board_gets_updated_when_handicap_stones_get_added) {
+            Game go_game;
+            go_game.init(19);
+
+            GoSetup setup;
+            setup.AddBlack(Pt(1, 1));
+            go_game.update(setup);
+            Assert::AreEqual(1, go_game.getBoard().TotalNumStones(SG_BLACK));
+
+            setup.AddBlack(Pt(1, 2));
+            go_game.update(setup);
+            Assert::AreEqual(2, go_game.getBoard().TotalNumStones(SG_BLACK));
+
+
+            setup.AddBlack(Pt(1, 3));
+            go_game.update(setup);
+            Assert::AreEqual(3, go_game.getBoard().TotalNumStones(SG_BLACK));
+        }
+
+        TEST_METHOD(black_has_to_play_first) {
+            Game go_game;
+            go_game.init(19);
+
+            GoSetup setup;
+            setup.AddWhite(Pt(1, 2));
+            go_game.update(setup);
+
+            Assert::IsTrue(go_game.getState() == State::Invalid);
+        }
+
+    };
+
+    TEST_CLASS(GoRulesTest)
+    {
+    public:
+        TEST_METHOD(can_set_default_rules) {
+            Game go_game;
+            go_game.init(9);
+
+            auto& board_rules = go_game.getBoard().Rules();
+            Assert::AreEqual(0,    board_rules.Handicap());
+            Assert::AreEqual(6.5f, board_rules.Komi().ToFloat());
+            Assert::AreEqual(true, board_rules.JapaneseScoring());
+            Assert::AreEqual(true, board_rules.TwoPassesEndGame());
+        }
+
+        TEST_METHOD(can_set_a_custom_komi) {
+            Game go_game;
+            GoSetup setup;
+            GoRules rules;
+            int size;
+            std::string s; // setup string
+
+            // O = White
+            // X = Black
+            //
+            // score negative: white wins
+            // score positive: black wins
+            //----------------------------------------------------------------------------------------
+            // white wins
+            s = std::string(  "....\n"
+                              "OOOO\n"
+                              "XXXX\n"
+                              ".X..");
+            // black = 8
+            // white = 8
+            // black - white - 4.5 = -4.5f
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            rules.SetKomi(GoKomi(4.5));
+            go_game.init(size, setup, rules);
+
+            // check rules
+            auto& board_rules = go_game.getBoard().Rules();
+            Assert::AreEqual(0,     board_rules.Handicap());
+            Assert::AreEqual(4.5f,  board_rules.Komi().ToFloat());
+            Assert::AreEqual(false, board_rules.JapaneseScoring());
+            Assert::AreEqual(true,  board_rules.TwoPassesEndGame());
+
+            // check if rules are applied properly
+            auto res = go_game.finishGame();
+            Assert::AreEqual("W+4.5", res.c_str());
+        }
+
+        TEST_METHOD(can_set_a_custom_scoring_type) {
+            Game go_game;
+            GoSetup setup;
+            GoRules rules;
+            int size;
+            std::string s; // setup string
+
+            // O = White
+            // X = Black
+            //
+            // score negative: white wins
+            // score positive: black wins
+            //----------------------------------------------------------------------------------------
+            // white wins
+            s = std::string(  "....\n"
+                              "OOOO\n"
+                              "XXXX\n"
+                              ".X..");
+            // black = 4
+            // white = 3
+            // black - white - 6.5 = -7.5f
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            rules.SetJapaneseScoring(true);
+            go_game.init(size, setup, rules);
+
+            // check rules
+            auto& board_rules = go_game.getBoard().Rules();
+            Assert::AreEqual(0,     board_rules.Handicap());
+            Assert::AreEqual(6.5f,  board_rules.Komi().ToFloat());
+            Assert::AreEqual(true, board_rules.JapaneseScoring());
+            Assert::AreEqual(true,  board_rules.TwoPassesEndGame());
+
+            // check if rules are applied properly
+            auto res = go_game.finishGame();
+            Assert::AreEqual("W+7.5", res.c_str());
+        }
     };
 
     TEST_CLASS(SgfTest)
