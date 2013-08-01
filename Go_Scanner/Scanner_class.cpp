@@ -10,7 +10,7 @@ bool Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
     Mat frame;
     if (!readCameraFrame(frame)) {
         // NOTICE: DEBUG STUFF!
-        frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
+        frame = imread("res/textures/02.jpg", CV_LOAD_IMAGE_COLOR);
         //out_image = frame;
         //return false;
     }

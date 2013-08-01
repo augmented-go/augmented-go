@@ -31,10 +31,10 @@ Rectangle Order:
 */
 
 //point coordinates
-int boardCornerX[]={180, 643, 660, 157};    
-int boardCornerY[]={80, 87, 530, 525};
-int imagewidth = 768;
-int imageheight = 576;
+int boardCornerX[]={80, 443, 460, 157};    
+int boardCornerY[]={80, 87, 430, 325};
+int imagewidth;
+int imageheight;
 
 
 int point=-1;            //currently selected point
@@ -344,20 +344,30 @@ void groupIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>&
         }
 
         //vertical lines
-        else if(angle >= 89.7f && angle <= 90.2f)
+        else if(angle >= 89.0f && angle <= 91.0f)
         {
             cv::Vec4i v = lines[i];
 
             //Problem: For completely vertical lines, there is no m 
             // y = m*x+n
-            float m = (v[1] - v[3]) / (v[0] - v[2] - 0.000001f);
-            float n = v[1] - m * v[0];
 
-            lines[i][0] = (-n)/m;
-            lines[i][1] = 0; 
-            lines[i][2] = (imageheight-n)/m;
-            lines[i][3] = imageheight;
+            if((v[0] - v[2]) != 0)
+            {
+                float m = (v[1] - v[3]) / (v[0] - v[2]);
+                float n = v[1] - m * v[0];
 
+                lines[i][0] = (-n)/m;               //x_start         
+                lines[i][1] = 0;                    //y_start
+                lines[i][2] = (imageheight-n)/m;    //x_end
+                lines[i][3] = imageheight;          //y_end
+            }
+            else
+            {
+                lines[i][0] = v[0];                 //x_start         
+                lines[i][1] = 0;                    //y_start
+                lines[i][2] = v[0];                 //x_end
+                lines[i][3] = imageheight;          //y_end
+            }
             verticalLines.push_back(lines[i]);
         }
         //other lines
@@ -495,10 +505,13 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     int thresholdType = 4;
 
     //reduce the noise
-    cv::GaussianBlur(warpedImg, warpedImg , cv::Size(3,3), 0, 0, 0);
+    cv::blur(warpedImg, warpedImg , cv::Size(3,3));
     cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
+    cv::imshow("blur", warpedImgGray);
 
-    cv::Canny(warpedImgGray, cannyImg, 100, 200, 3);
+    cv::Canny(warpedImgGray, cannyImg, 100, 150, 3);
+    cv::imshow("Canny", cannyImg);
+
     //sobelImg = sobelFiltering(cannyImg);
     cv::threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
 
@@ -506,15 +519,26 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
         //cv::imshow("Threshed Image", threshedImg);
 
     cv::vector<cv::Vec4i> lines, horizontalLines, verticalLines;
-    cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 80, 60, 10 );
+    cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 100, 40, 10 );
+
+    cv::Mat houghimage = warpedImg.clone();
 
     //Draw the lines
+    /*
+        Structure of line Vector:
+
+        lines[i][0] = x_start         
+        lines[i][1] = y_start
+        lines[i][2] = x_end
+        lines[i][3] = y_end      
+    */
     for( size_t i = 0; i < lines.size(); i++ )
     {
-        cv::line(warpedImg, cv::Point(lines[i][0], lines[i][1]),
+        cv::line(houghimage, cv::Point(lines[i][0], lines[i][1]),
             cv::Point(lines[i][2], lines[i][3]), cv::Scalar(0,0,255), 1, 8 );
     }
-        cv::imshow("HoughLines Image", warpedImg);
+
+        cv::imshow("HoughLines Image", houghimage);
 
 
 
@@ -743,6 +767,9 @@ int scanner_main(cv::Mat& camera_frame)
     // convert the warped image just once to greyscale! 
 
     img0 = camera_frame; //cv::imread("go_bilder/01.jpg");
+
+    imagewidth = img0.cols;
+    imageheight = img0.rows;
 
     if (!asked_for_board_contour) {
         ask_for_board_contour();
