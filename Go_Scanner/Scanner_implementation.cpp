@@ -3,6 +3,7 @@
 
 #include <GoSetup.h>
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -803,17 +804,15 @@ void do_auto_board_detection() {
 
 bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
 {
-    //TODO: Get imagewidth and size automatically
-    // convert the warped image just once to greyscale! 
+    // TODO: convert the warped image just once to greyscale! 
 
     img0 = camera_frame; //cv::imread("go_bilder/01.jpg");
 
-
-    imagewidth = img0.cols;
+    imagewidth  = img0.cols;
     imageheight = img0.rows;
 
-    // only process the image if the user intially selected the board with "ask_for_board_contour"
-    // this is triggered through the GUI
+    // only process the image if the user  selected the board with "ask_for_board_contour" or "do_auto_board_detection" once.
+    // this is triggered through the GUI (and the Scanners selectBoardManually() and selectBoardAutomatically() methods)
     if (!asked_for_board_contour) {
         return 0;
     }
@@ -853,6 +852,17 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     {
         bool intersectionResult = getBoardIntersections(warpedImg, 255, intersectionPoints);
     }
+
+
+    // @todo: assert that the number of intersection points are a quadratic number
+
+
+    // extract the board size
+    // board dimensions are quadratic, meaning width and height are the same
+    // i then count the number of points on one line
+    const auto ref_point = intersectionPoints[0];
+    board_size = std::count_if(begin(intersectionPoints), end(intersectionPoints), [=](const cv::Point2f& pt) { return pt.y == ref_point.y; });
+    printf("Board size: %d\n", board_size);
 
     setup = detectStones(srcWarpedImg, intersectionPoints);
 
