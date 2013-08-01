@@ -71,7 +71,7 @@ bool Scanner::readCameraFrame(cv::Mat& frame) {
 }
 
 void Scanner::selectBoardManually() {
-    // @todo: call the manual board selection :)
+    ask_for_board_contour();
 }
 
 }

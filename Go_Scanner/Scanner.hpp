@@ -9,6 +9,7 @@
 namespace Go_Scanner {
 
 int scanner_main(cv::Mat& camera_frame);
+void ask_for_board_contour();
 
 class Scanner {
 public:

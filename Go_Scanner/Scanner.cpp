@@ -759,6 +759,8 @@ void ask_for_board_contour() {
     showImage();
     cv::waitKey(0);
     cv::destroyWindow(windowName);
+
+    asked_for_board_contour = true;
 }
 
 int scanner_main(cv::Mat& camera_frame)
@@ -771,9 +773,10 @@ int scanner_main(cv::Mat& camera_frame)
     imagewidth = img0.cols;
     imageheight = img0.rows;
 
+    // only process the image if the user intially selected the board with "ask_for_board_contour"
+    // this is triggered through the GUI
     if (!asked_for_board_contour) {
-        ask_for_board_contour();
-        asked_for_board_contour = true;
+        return 0;
     }
     
     cv::Mat warpedImg = warpImage(img0,
