@@ -7,7 +7,7 @@ ENDIF()
 
 SET(scanner_SOURCE
     Scanner.cpp
-    Scanner_class.cpp
+    Scanner_implementation.cpp
     auto_warp.cpp
 )
 
