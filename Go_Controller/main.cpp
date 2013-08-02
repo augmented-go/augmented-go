@@ -36,6 +36,8 @@ int main(int argc, char** argv) {
         QObject::connect(&gui, &GUI::signal_pass,         &worker, &BackendWorker::pass,      Qt::QueuedConnection);
         QObject::connect(&gui, &GUI::signal_resign,       &worker, &BackendWorker::resign,    Qt::QueuedConnection);
         QObject::connect(&gui, &GUI::signal_newGame,      &worker, &BackendWorker::resetGame, Qt::QueuedConnection);
+        QObject::connect(&gui, &GUI::signal_boardDetectionAutomatically, &backend, &BackendThread::selectBoardAutomatically, Qt::QueuedConnection);
+        QObject::connect(&gui, &GUI::signal_boardDetectionManually,      &backend, &BackendThread::selectBoardManually,      Qt::QueuedConnection);
 
         worker_thread.start(); // start worker thread
 
