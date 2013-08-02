@@ -666,7 +666,7 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
     return distance;
 }
 
-void detectBlackStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup)
+void detectBlackStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup, float stone_diameter)
 {
     //TODO: use black/white image. write function for it. 
     
@@ -723,18 +723,20 @@ void detectBlackStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPo
     }
 }
 
-void detectWhiteStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup)
-{
-    //TODO: use black/white image. write function for it. 
-    
-    cv::Mat tmp, warpedImgGray;
-    cv::cvtColor(warpedImg, tmp, CV_RGB2GRAY);
+void detectWhiteStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup, float stone_diameter)
+{   
+    using namespace cv;
+    cv::Mat detectWhite;
 
-    cv::threshold(tmp, warpedImgGray, 85, 255, 0);
-    cv::bitwise_not(warpedImgGray, warpedImgGray);
-    cv::imshow("Image for detecting white stones", warpedImgGray);
-    //cv::imwrite("white_stone_detection.jpg", warpedImgGray);
-    //cvWaitKey();
+    cv::cvtColor(warpedImg, detectWhite, CV_RGB2GRAY);
+    cv::Canny(detectWhite, detectWhite, 180, 255, 3);
+
+    // MORPHING FOR BETTER AREAS AND THUS CONTOURS
+    const int morph_size = 1;
+    auto element = getStructuringElement(MORPH_RECT, Size( 2*morph_size + 1, 2*morph_size+1 ), Point( morph_size, morph_size ));
+    cv::morphologyEx(detectWhite, detectWhite, MORPH_GRADIENT, element); // Apply the specified morphology operation
+
+    cv::imshow("Image for detecting white stones", detectWhite);
 
     for(int i=0; i < intersectionPoints.size(); i++)
     {
@@ -749,17 +751,17 @@ void detectWhiteStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPo
         * are similar -> it's a stone. 
         */
 
-        if (warpedImgGray.at<uchar>(y,x) < 50)
+        if (detectWhite.at<uchar>(y,x) < 50)
         {
             // Get the Diameter for 125 degree
             cv::Point2f midpoint125;
-            diameter125 = getStoneDistanceAndMidpoint(warpedImgGray, x, y, RIGHT, midpoint125);
+            diameter125 = getStoneDistanceAndMidpoint(detectWhite, x, y, RIGHT, midpoint125);
 
             // Get the Diameter for 45 degree
             cv::Point2f midpoint45;
-            diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, x, y, LEFT, midpoint45);
+            diameter45 = getStoneDistanceAndMidpoint(detectWhite, x, y, LEFT, midpoint45);
 
-            if(diameter125 >= 40 || diameter45 >= 40)
+            if(diameter125 >= stone_diameter || diameter45 >= stone_diameter)
             {
                 std::cout << "White Stone ("<< x << ", "<< y << ")" << std::endl;
 
@@ -942,53 +944,32 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
         bool intersectionResult = getBoardIntersections(warpedImg, 255, intersectionPoints);
     }
 
-    // check the color at the intersection points
-    cv::Mat warped_grey;
-    cv::cvtColor(srcWarpedImg, warped_grey, CV_RGB2HSV);
-    std::vector<cv::Mat> channels;
-    cv::split(warped_grey, channels);
-
-    warped_grey = channels[1];
-
-    std::vector<uchar> colors;
-
-    for (const auto& point : intersectionPoints) {
-        auto color = warped_grey.at<uchar>(point.y, point.x);
-        colors.emplace_back(color);
-    }
-
-    std::sort(std::begin(colors), std::end(colors));
-
-    // write a histogram to filesystem
-    std::ofstream out("colors_hist.csv");
-    out << "Color" << ";" << "Count" << std::endl;
-    auto iter = std::begin(colors);
-    for (auto x = 0u; x < 255; ++x) {
-        auto count = 0;
-        while (iter != std::end(colors) && *iter == x) {
-            ++count;
-            ++iter;
-        }
-        out << x << ";" << count << std::endl;
-    }
-    out.close();
-
-
-
     // @todo: assert that the number of intersection points are a quadratic number
 
 
+    // calc the minimum distance between the first intersection point to all others
+    // the minimum distance is approximately the diameter of a stone
+    vector<float> distances;
+    const auto& ref_point_min = *begin(intersectionPoints);
+    for (const auto& point : intersectionPoints) {
+        if (point != ref_point_min)
+            distances.push_back(cv::norm(point - ref_point_min));
+    }
+    auto approx_stone_diameter = *std::min_element(begin(distances), end(distances));
+
     // extract the board size
     // board dimensions are quadratic, meaning width and height are the same
-    // i then count the number of points on one line
+    // i therefore count the number of points on one line
     const auto ref_point = intersectionPoints[0];
     board_size = std::count_if(begin(intersectionPoints), end(intersectionPoints), [=](const cv::Point2f& pt) { return pt.y == ref_point.y; });
     printf("Board size: %d\n", board_size);
 
+    // get map from intersection points to board coordinates (SgPoint)
     auto to_board_coords = getBoardCoordMapFor(intersectionPoints);
 
-    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, setup);
-    detectWhiteStones(srcWarpedImg, intersectionPoints, to_board_coords, setup);
+    // detect the stones!
+    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, approx_stone_diameter);
+    detectWhiteStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, approx_stone_diameter);
 
     return true;
 }
