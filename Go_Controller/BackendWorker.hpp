@@ -21,6 +21,8 @@ namespace Go_AR {
             
     private:
         void signalGuiGameHasEnded() const;
+        void signalGuiGameDataChanged() const;
+        bool virtualModeActive() const;
         
     // slots
     public slots:

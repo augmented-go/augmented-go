@@ -78,11 +78,7 @@ void BackendWorker::scan() {
                 _game_is_initialized = true;
             }
             
-            // send board data to gui
-            // the GUI controls the lifetime of this thread,
-            // so passing a pointer to the GoBoard is safe and won't be invalidated
-            // as long as the GUI says so
-            emit gameDataChanged(&_game);
+            signalGuiGameDataChanged();
 
             // don't break because Success implies getting an image,
             // so let control flow fall through to ScanResult::Image_Only
@@ -114,11 +110,19 @@ void BackendWorker::pass() {
     
     if (_game.hasEnded())
         signalGuiGameHasEnded();
+
+    signalGuiGameDataChanged();
 }
 
 void BackendWorker::resetGame(GoRules rules) {
     _game_is_initialized = false;
     _new_game_rules      = rules;
+
+    if (virtualModeActive()) {
+        _game.init(19, GoSetup(), _new_game_rules);
+
+        signalGuiGameDataChanged();
+    }
 }
 
 void BackendWorker::finish() {
@@ -141,7 +145,11 @@ void BackendWorker::signalGuiGameHasEnded() const {
 }
 
 void BackendWorker::toggleAppMode() {
-    if (_scan_timer.isActive()) {
+    if (virtualModeActive()) {
+        // go into augmented mode -> do the scanning!
+        _scan_timer.start();
+    }
+    else {
         // go into virtual mode -> no scanning!
         _scan_timer.stop();
 
@@ -149,11 +157,7 @@ void BackendWorker::toggleAppMode() {
         if (!_game_is_initialized)
             _game.init(19, GoSetup(), _new_game_rules);
 
-        emit gameDataChanged(&_game);
-    }
-    else {
-        // go into augmented mode -> do the scanning!
-        _scan_timer.start();
+        signalGuiGameDataChanged();
     }
 }
 
@@ -161,7 +165,7 @@ void BackendWorker::playMove(const int x, const int y){
     auto position = SgPointUtil::Pt(x, y);
     _game.playMove(position);
 
-    emit gameDataChanged(&_game);
+    signalGuiGameDataChanged();
 }
 
 void BackendWorker::selectBoardManually() {
@@ -170,6 +174,18 @@ void BackendWorker::selectBoardManually() {
 
 void BackendWorker::selectBoardAutomatically() {
     _scanner.selectBoardAutomatically();
+}
+
+bool BackendWorker::virtualModeActive() const {
+    return !_scan_timer.isActive();
+}
+
+void BackendWorker::signalGuiGameDataChanged() const {
+    // send board data to gui
+    // the GUI controls the lifetime of this thread,
+    // so passing a pointer to the GoBoard is safe and won't be invalidated
+    // as long as the GUI says so
+    emit gameDataChanged(&_game);
 }
 
 } // namespace Go_AR
