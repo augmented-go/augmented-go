@@ -34,7 +34,7 @@ BackendWorker::BackendWorker()
     : _game(),
     _scanner(),
     _game_is_initialized(false),
-    _scan_timer()
+    _scan_timer(this) // this makes sure that the timer has the same thread affinity as its parent (this)
 {
     /* define default game rules
      *     handicap: 0
