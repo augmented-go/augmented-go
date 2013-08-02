@@ -1,7 +1,7 @@
 #include "SgInit.h"
 #include "GoInit.h"
 
-#include "BackendThread.hpp"
+#include "BackendWorker.hpp"
 #include "GUI.hpp"
 
 int main(int argc, char** argv) {
@@ -14,37 +14,44 @@ int main(int argc, char** argv) {
     GoInit();
 
     {
-        using Go_AR::BackendThread;
+        using Go_AR::BackendWorker;
         using Go_GUI::GUI;
 
-        BackendThread backend;
+        QThread worker_thread;
+        BackendWorker worker;
+        worker.moveToThread(&worker_thread);
+
         GUI gui;
 
         qRegisterMetaType<GoRules>("GoRules");
 
-        // connect signal from backend to gui
-        QObject::connect(&backend, &BackendThread::newImage,           &gui, &GUI::slot_newImage,                Qt::QueuedConnection);
-        QObject::connect(&backend, &BackendThread::gameDataChanged,    &gui, &GUI::slot_newGameData,             Qt::QueuedConnection);
-        QObject::connect(&backend, &BackendThread::finishedGameResult, &gui, &GUI::slot_showFinishedGameResults, Qt::QueuedConnection);
+        // connect signal from worker to gui
+        QObject::connect(&worker, &BackendWorker::newImage,           &gui, &GUI::slot_newImage);
+        QObject::connect(&worker, &BackendWorker::gameDataChanged,    &gui, &GUI::slot_newGameData);
+        QObject::connect(&worker, &BackendWorker::finishedGameResult, &gui, &GUI::slot_showFinishedGameResults);
 
-        // connect signal from gui to backend
-        QObject::connect(&gui, &GUI::stop_backend_thread, &backend, &BackendThread::stop,      Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_saveGame,     &backend, &BackendThread::saveSgf,   Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_pass,         &backend, &BackendThread::pass,      Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_resign,       &backend, &BackendThread::resign,    Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_newGame,      &backend, &BackendThread::resetGame, Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_toggleAppMode,      &backend, &BackendThread::toggleAppMode, Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_playMove,     &backend, &BackendThread::playMove,  Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_boardDetectionAutomatically, &backend, &BackendThread::selectBoardAutomatically, Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_boardDetectionManually,      &backend, &BackendThread::selectBoardManually,      Qt::QueuedConnection);
+        // connect quit signal from gui to the thread
+        QObject::connect(&gui, &GUI::stop_backend_thread,                &worker_thread, &QThread::quit);
 
-        backend.start(); // start backend thread
+
+
+        // connect signal from gui to worker
+        QObject::connect(&gui, &GUI::signal_saveGame,                    &worker, &BackendWorker::saveSgf);
+        QObject::connect(&gui, &GUI::signal_pass,                        &worker, &BackendWorker::pass);
+        QObject::connect(&gui, &GUI::signal_resign,                      &worker, &BackendWorker::resign);
+        QObject::connect(&gui, &GUI::signal_newGame,                     &worker, &BackendWorker::resetGame);
+        QObject::connect(&gui, &GUI::signal_boardDetectionAutomatically, &worker, &BackendWorker::selectBoardAutomatically);
+        QObject::connect(&gui, &GUI::signal_boardDetectionManually,      &worker, &BackendWorker::selectBoardManually);
+        QObject::connect(&gui, &GUI::signal_toggleAppMode, &worker, &BackendThread::toggleAppMode);
+        QObject::connect(&gui, &GUI::signal_playMove,      &worker, &BackendThread::playMove);
+
+        worker_thread.start(); // start worker thread
 
         gui.show();
         qt_app.exec();   // start gui thread (and it's event loop)
     
-        backend.quit();  // failsafe: explicitly tell the backend thread to stop (if the gui hasn't done this already for whatever reason)
-        backend.wait();  // gui was exited, wait for the backend thread
+        worker_thread.quit();  // failsafe: explicitly tell the worker thread to stop (if the gui hasn't done this already for whatever reason)
+        worker_thread.wait();  // gui was exited, wait for the worker thread
     } 
 
     // "clean up" fuego

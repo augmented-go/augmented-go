@@ -1,4 +1,4 @@
-#include "BackendThread.hpp"
+#include "BackendWorker.hpp"
 
 #include <iostream>
 
@@ -33,11 +33,11 @@ QImage mat_to_QImage(cv::Mat source)
     return ret;
 }
 
-BackendThread::BackendThread()
-    : _game(new GoBackend::Game),
-    _scanner(new Go_Scanner::Scanner),
+BackendWorker::BackendWorker()
+    : _game(),
+    _scanner(),
     _game_is_initialized(false),
-    _scan_timer(new QTimer)
+    _scan_timer()
 {
     /* define default game rules
      *     handicap: 0
@@ -47,27 +47,22 @@ BackendThread::BackendThread()
      */
     _new_game_rules = GoRules(0, GoKomi(6.5), true, true);
 
-    // initialize the scan timer
-    connect(_scan_timer.get(), SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
-    _scan_timer->setInterval(2000);// call the connected slot every 2000 msec
-    _scan_timer->start();
+    connect(&_scan_timer, SIGNAL(timeout()), this, SLOT(scan()));
+    _scan_timer.setInterval(2000);// call the connected slot every 1000 msec
+    _scan_timer.start();  // put one event in this threads event queue
 }
 
 
-BackendThread::~BackendThread()
+BackendWorker::~BackendWorker()
 {}
 
-void BackendThread::stop()  {
-    this->quit();
-}
-
-void BackendThread::scan() {
+void BackendWorker::scan() {
     cv::Mat image;
     GoSetup setup;
     int board_size = 19;
 
     // fetch new camera image
-    auto scan_result = _scanner->scanCamera(setup, board_size, image);
+    auto scan_result = _scanner.scanCamera(setup, board_size, image);
 
     using Go_Scanner::ScanResult;
 
@@ -76,10 +71,10 @@ void BackendThread::scan() {
         {
             if (_game_is_initialized) {
                 // update game state
-                _game->update(setup);
+                _game.update(setup);
             }
             else {
-                _game->init(board_size, setup, _new_game_rules);
+                _game.init(board_size, setup, _new_game_rules);
                 _game_is_initialized = true;
             }
             
@@ -87,7 +82,7 @@ void BackendThread::scan() {
             // the GUI controls the lifetime of this thread,
             // so passing a pointer to the GoBoard is safe and won't be invalidated
             // as long as the GUI says so
-            emit gameDataChanged(_game.get());
+            emit gameDataChanged(&_game);
 
             // don't break because Success implies getting an image,
             // so let control flow fall through to ScanResult::Image_Only
@@ -107,39 +102,39 @@ void BackendThread::scan() {
     }
 }
 
-void BackendThread::saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const {
+void BackendWorker::saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) {
     auto filepath = path.toStdString();
 
-    if (!_game->saveGame(filepath, blackplayer_name.toStdString(), whiteplayer_name.toStdString(), game_name.toStdString()))
+    if (!_game.saveGame(filepath, blackplayer_name.toStdString(), whiteplayer_name.toStdString(), game_name.toStdString()))
         std::cerr << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
 }
 
-void BackendThread::pass() {
-    _game->pass();
+void BackendWorker::pass() {
+    _game.pass();
     
-    if (_game->hasEnded())
+    if (_game.hasEnded())
         signalGuiGameHasEnded();
 }
 
-void BackendThread::resetGame(GoRules rules) {
+void BackendWorker::resetGame(GoRules rules) {
     _game_is_initialized = false;
     _new_game_rules      = rules;
 }
 
-void BackendThread::finish() {
-    _game->finishGame();
+void BackendWorker::finish() {
+    _game.finishGame();
 
     signalGuiGameHasEnded();
 }
 
-void BackendThread::resign() {
-    _game->resign();
+void BackendWorker::resign() {
+    _game.resign();
 
     signalGuiGameHasEnded();
 }
 
-void BackendThread::signalGuiGameHasEnded() const {
-    auto result = _game->getResult();
+void BackendWorker::signalGuiGameHasEnded() const {
+    auto result = _game.getResult();
 
     // signal gui that game has ended with this result
     emit finishedGameResult(QString(result.c_str()));
@@ -167,8 +162,8 @@ void BackendThread::selectBoardManually() {
     _scanner->selectBoardManually();
 }
 
-void BackendThread::selectBoardAutomatically() {
-    _scanner->selectBoardAutomatically();
+void BackendWorker::selectBoardAutomatically() {
+    _scanner.selectBoardAutomatically();
 }
 
 } // namespace Go_AR

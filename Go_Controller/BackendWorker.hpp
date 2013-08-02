@@ -12,12 +12,12 @@
 #include "Scanner.hpp"
 
 namespace Go_AR {
-    class BackendThread : public QThread {
+    class BackendWorker : public QObject {
         Q_OBJECT
 
     public:
-        BackendThread();
-        ~BackendThread();
+        BackendWorker();
+        ~BackendWorker();
             
     private:
         void signalGuiGameHasEnded() const;
@@ -25,14 +25,9 @@ namespace Go_AR {
     // slots
     public slots:
         /**
-         * @brief       Stops this thread.
-         */
-        void stop();
-
-        /**
          * @brief       Saves the current game as sgf at the specified path.
          */
-        void saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const;
+        void saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name);
 
         /**
          * @brief       Plays a pass for the current player.
@@ -96,10 +91,10 @@ namespace Go_AR {
 
     // Member vars    
     private:
-        std::unique_ptr<GoBackend::Game>     _game;
-        std::unique_ptr<Go_Scanner::Scanner> _scanner;
-        std::unique_ptr<QTimer>              _scan_timer;
-        bool _game_is_initialized;
+        GoBackend::Game     _game;
+        Go_Scanner::Scanner _scanner;
+        QTimer              _scan_timer;
         GoRules _new_game_rules;
+        bool    _game_is_initialized;
     };
 }
