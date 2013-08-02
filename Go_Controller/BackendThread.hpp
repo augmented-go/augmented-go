@@ -67,6 +67,18 @@ namespace Go_AR {
          */
         void playMove(const int x, const int y);
 
+        /**
+         * @brief       Triggers the manual board selection in the Scanner.
+         *              Blocks this thread until the selection was made.
+         */
+        void selectBoardManually();
+
+        /**
+         * @brief       Triggers the autmatic board detection in the Scanner.
+         */
+        void selectBoardAutomatically();
+
+
     private slots:
         void scan(); // our main worker function that is called by the timer
         

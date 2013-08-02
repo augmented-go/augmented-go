@@ -153,4 +153,12 @@ void BackendThread::playMove(const int x, const int y){
     _game->playMove(position);
 }
 
+void BackendThread::selectBoardManually() {
+    _scanner->selectBoardManually();
+}
+
+void BackendThread::selectBoardAutomatically() {
+    _scanner->selectBoardAutomatically();
+}
+
 } // namespace Go_AR
