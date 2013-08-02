@@ -37,7 +37,8 @@ QImage mat_to_QImage(cv::Mat source)
 BackendThread::BackendThread()
     : _game(new GoBackend::Game),
     _scanner(new Go_Scanner::Scanner),
-    _game_is_initialized(false)
+    _game_is_initialized(false),
+    _scan_timer(new QTimer)
 {
     /* define default game rules
      *     handicap: 0
@@ -46,21 +47,16 @@ BackendThread::BackendThread()
      *     game end: after 2 consecutive passes
      */
     _new_game_rules = GoRules(0, GoKomi(6.5), true, true);
+
+    // initialize the scan timer
+    connect(_scan_timer.get(), SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
+    _scan_timer->setInterval(2000);// call the connected slot every 2000 msec
+    _scan_timer->start();
 }
 
 
 BackendThread::~BackendThread()
 {}
-
-void BackendThread::run()  {
-    // use a timer to periodically scan the camera image
-    QTimer timer;
-    connect(&timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
-    timer.setInterval(2000);// call the connected slot every 1000 msec
-    timer.start();  // put one event in this threads event queue
-    exec();         // start this threads event loop
-    timer.stop();
-}
 
 void BackendThread::stop()  {
     this->quit();
@@ -139,6 +135,17 @@ void BackendThread::signalGuiGameHasEnded() const {
 
     // signal gui that game has ended with this result
     emit finishedGameResult(QString(result.c_str()));
+}
+
+void BackendThread::toggleGameMode() {
+    if (_scan_timer->isActive()) {
+        // go into virtual mode -> no scanning!
+        _scan_timer->stop();
+    }
+    else {
+        // go into augmented mode -> do the scanning!
+        _scan_timer->start();
+    }
 }
 
 void BackendThread::playMove(const int x, const int y){

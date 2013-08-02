@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
         QObject::connect(&gui, &GUI::signal_pass,         &backend, &BackendThread::pass,      Qt::QueuedConnection);
         QObject::connect(&gui, &GUI::signal_resign,       &backend, &BackendThread::resign,    Qt::QueuedConnection);
         QObject::connect(&gui, &GUI::signal_newGame,      &backend, &BackendThread::resetGame, Qt::QueuedConnection);
+        QObject::connect(&gui, &GUI::signal_toggle_app_mode,      &backend, &BackendThread::toggleGameMode, Qt::QueuedConnection);
         QObject::connect(&gui, &GUI::signal_playMove,     &backend, &BackendThread::playMove,  Qt::QueuedConnection);
 
         backend.start(); // start backend thread

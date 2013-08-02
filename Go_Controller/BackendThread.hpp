@@ -20,8 +20,6 @@ namespace Go_AR {
         ~BackendThread();
             
     private:
-        // thread function
-        void run() override;
         void signalGuiGameHasEnded() const;
         
     // slots
@@ -60,6 +58,11 @@ namespace Go_AR {
         void resetGame(GoRules rules);
 
         /**
+         * @brief       Toggles between completely virtual and augmented application mode.
+         */
+        void toggleGameMode();
+
+        /**
          * @brief       Sends a move to game
          */
         void playMove(const int x, const int y);
@@ -83,6 +86,7 @@ namespace Go_AR {
     private:
         std::unique_ptr<GoBackend::Game>     _game;
         std::unique_ptr<Go_Scanner::Scanner> _scanner;
+        std::unique_ptr<QTimer>              _scan_timer;
         bool _game_is_initialized;
         GoRules _new_game_rules;
     };
