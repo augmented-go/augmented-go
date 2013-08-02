@@ -1032,7 +1032,7 @@ namespace GoBackendGameTest
 
             go_game.init(size, init_setup);
 
-            // BLACK tries to play a move on a white stone
+            // BLACK tries to play a move on a white stone -> INVALID MOVE
             go_game.playMove(SgPointUtil::Pt(1, 1));
 
             s = std::string("....\n"
@@ -1046,7 +1046,7 @@ namespace GoBackendGameTest
             board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
             Assert::IsTrue(expected_setup == board_setup);
 
-            // BLACK tries to play a suicide move
+            // BLACK tries to play a suicide move -> INVALID MOVE
             go_game.playMove(SgPointUtil::Pt(2, 1));
 
             s = std::string("....\n"
@@ -1061,7 +1061,7 @@ namespace GoBackendGameTest
             Assert::IsTrue(expected_setup == board_setup);
         }
 
-        TEST_METHOD(cannot_play_a_valid_move_after_a_invalid_move) {
+        TEST_METHOD(can_play_a_valid_move_after_a_invalid_move) {
             std::string s;
             int size;
             GoSetup expected_setup, board_setup;
@@ -1076,7 +1076,7 @@ namespace GoBackendGameTest
 
             go_game.init(size, init_setup);
 
-            // BLACK tries to play a move on a white stone
+            // BLACK tries to play a move on a white stone -> INVALID MOVE
             go_game.playMove(SgPointUtil::Pt(3, 1));
 
             s = std::string("....\n"
