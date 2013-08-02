@@ -17,6 +17,7 @@ VirtualView::VirtualView(QWidget *parent){
     this->resize(parent->size());
 
     this->setMouseTracking(true);
+    this->setting_stone_valid = false;
 
     // directories of the images
     QString texture_path = "res/textures/";
@@ -140,14 +141,24 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
         black_stone_item->setOffset(cell_width * scale_x - white_stone_image_scaled.width()/2, cell_height * scale_y - black_stone_image_scaled.height()/2);
         scene.addItem(black_stone_item);
     }
+    
+    // Stone that could be placed on board when user chooses to
+    this->ghost_stone = new QGraphicsEllipseItem(QRectF());
+    ghost_stone->setRect(selection_ellipse);
+    QBrush ghost_brush(white_stone_image_scaled);
+    this->ghost_stone->setOpacity(50);
+    this->ghost_stone->setBrush(ghost_brush);
+    this->scene.addItem(this->ghost_stone);
+
     this->setScene(&scene);
+
+    setting_stone_valid = true;
 }
 
 void VirtualView::mousePressEvent(QMouseEvent* event){
-    if (event->button() == Qt::LeftButton){
-        QPointF mousePoint = this->mapToScene(event->pos());
-        //scene.sceneRect().size();
-        //scene.col
+    if (event->button() == Qt::LeftButton && setting_stone_valid){
+        emit signal_setStoneAt(mouse_hover_coord.x(), mouse_hover_coord.y());
+        setting_stone_valid = false;
     }
 }
 
@@ -169,23 +180,33 @@ void VirtualView::mouseMoveEvent(QMouseEvent* event){
         break;
     }
 
+    // calculate the board coordinates of mouseposition (example {1,1} or {5,2})
     float scale_x = this->size().width() * 1.0f/board_pix * 1.0f;
     float scale_y = this->size().height() * 1.0f/board_pix * 1.0f;
-
     float xCoordAccurate = (event->pos().x() - pic_boarder_x * scale_x) / (this->cell_width * scale_x);
     float yCoordAccurate = (event->pos().y() - pic_boarder_y * scale_y) / (this->cell_height * scale_y);
+    int board_x_coord = static_cast<int>(xCoordAccurate);
+    int board_y_coord = static_cast<int>(yCoordAccurate);
+    board_x_coord = xCoordAccurate - board_x_coord < 0.5 ? board_x_coord : board_x_coord + 1; 
+    board_y_coord = yCoordAccurate - board_y_coord < 0.5 ? board_y_coord : board_y_coord + 1; 
 
-    int xCoord = static_cast<int>(xCoordAccurate);
-    int yCoord = static_cast<int>(yCoordAccurate);
+    QPoint new_mouse_hover_coord = QPoint(board_x_coord + 1,board_y_coord + 1);
+    
+    // If mouse hover coordinates differ -> move ellipse to new coordinates
+    if (new_mouse_hover_coord != mouse_hover_coord
+        && board_x_coord < board_size && board_y_coord < board_size){
 
-    xCoord = xCoordAccurate - xCoord < 0.5 ? xCoord : xCoord + 1; 
-    yCoord = yCoordAccurate - yCoord < 0.5 ? yCoord : yCoord + 1; 
+        // calculate exact position of where to draw new ellipse
+        qreal ellipse_xPos = (pic_boarder_x * scale_x) + (board_x_coord * this->cell_width * scale_x) - (this->cell_width * scale_x)/2;
+        qreal ellipse_yPos = (pic_boarder_y * scale_y) + (board_y_coord * this->cell_height * scale_y) - (this->cell_height * scale_y)/2;
 
-    scene.addEllipse((pic_boarder_x * scale_x) + (xCoord * this->cell_width * scale_x), 
-                     (pic_boarder_y * scale_y) + (yCoord * this->cell_height * scale_y),
-                     this->cell_width, this->cell_height);
-    qDebug()  << xCoord << ", " << yCoord;
+        QRectF new_selection_ellipse = QRectF(ellipse_xPos, ellipse_yPos, this->cell_width * scale_x, this->cell_height * scale_y);
+        ghost_stone->setRect(new_selection_ellipse);
+        selection_ellipse = new_selection_ellipse;
 
-    this->cell_height;
-    this->cell_width;
+        // save new mouse hover coordinates
+        mouse_hover_coord = new_mouse_hover_coord;
+    }
+
+    
 }
