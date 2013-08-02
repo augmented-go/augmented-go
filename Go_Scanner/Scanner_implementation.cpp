@@ -518,7 +518,7 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     //sobelImg = sobelFiltering(cannyImg);
     cv::threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
 
-    cv::imshow("Threshed Image for HoughLinesP", threshedImg);
+    //cv::imshow("Threshed Image for HoughLinesP", threshedImg);
 
     cv::vector<cv::Vec4i> lines, horizontalLines, verticalLines;
     cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 100, 40, 10 );
@@ -540,7 +540,7 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
             cv::Point(lines[i][2], lines[i][3]), cv::Scalar(0,0,255), 1, 8 );
     }
 
-    cv::imshow("HoughLines Image", houghimage);
+    //cv::imshow("HoughLines Image", houghimage);
 
     groupIntersectionLines(lines, horizontalLines, verticalLines);
 
@@ -583,7 +583,7 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     }
 
 
-    cv::imshow("Intersections", warpedImg);
+    //cv::imshow("Intersections", warpedImg);
     
     return true;
 }
@@ -675,7 +675,7 @@ void detectBlackStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPo
 
     cv::threshold(tmp, warpedImgGray, 85, 255, 0);
 
-    cv::imshow("Image for detecting black stones", warpedImgGray);
+    //cv::imshow("Image for detecting black stones", warpedImgGray);
     for(int i=0; i < intersectionPoints.size(); i++)
     {
         auto& intersection_point = intersectionPoints[i];
@@ -736,7 +736,7 @@ void detectWhiteStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPo
     auto element = getStructuringElement(MORPH_RECT, Size( 2*morph_size + 1, 2*morph_size+1 ), Point( morph_size, morph_size ));
     cv::morphologyEx(detectWhite, detectWhite, MORPH_GRADIENT, element); // Apply the specified morphology operation
 
-    cv::imshow("Image for detecting white stones", detectWhite);
+    //cv::imshow("Image for detecting white stones", detectWhite);
 
     for(int i=0; i < intersectionPoints.size(); i++)
     {
