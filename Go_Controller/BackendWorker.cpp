@@ -144,6 +144,12 @@ void BackendWorker::toggleAppMode() {
     if (_scan_timer.isActive()) {
         // go into virtual mode -> no scanning!
         _scan_timer.stop();
+
+        // initialize a game
+        if (!_game_is_initialized)
+            _game.init(19, GoSetup(), _new_game_rules);
+
+        emit gameDataChanged(&_game);
     }
     else {
         // go into augmented mode -> do the scanning!
