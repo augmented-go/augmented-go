@@ -21,8 +21,8 @@ namespace MyTest
             Mat image;
 
             while(true) {
-                bool success = scanner.scanCamera(setup, size, image);
-                if (success)
+                auto result = scanner.scanCamera(setup, size, image);
+                if (result == Go_Scanner::ScanResult::Image_Only || Go_Scanner::ScanResult::Success)
                     imshow("after scanning: ", image);
 
                 if(waitKey(30) >= 0)

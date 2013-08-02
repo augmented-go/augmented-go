@@ -2,12 +2,14 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include <QMessageBox>
 #include <QAction>
 #include <QCloseEvent>
 #include <QFontDatabase>
-#include "Game.hpp"
+
+#include <Game.hpp>
 
 #include "NewGameDialog.hpp"
 #include "VirtualView.hpp"
@@ -43,6 +45,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.save_action,		&QAction::triggered,	this, &GUI::slot_MenuSave);
     connect(ui_main.exit_action,		&QAction::triggered,	this, &QWidget::close);	
     connect(ui_main.info_action,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
+    connect(ui_main.automatic_action,   &QAction::triggered,	this, &GUI::slot_BoardDetectionAutomatically);
+    connect(ui_main.manually_action,	&QAction::triggered,	this, &GUI::slot_BoardDetectionManually);
     connect(ui_main.viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
@@ -101,7 +105,7 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
  * @param   QImage  new image from scanner
  */
 void GUI::slot_newImage(QImage image) {
-        printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
+        std::cerr << ">>> New Image arrived in GUI! '" << image.width() << " x " << image.height() << "' -- Format: " << image.format() << " <<<" << std::endl;
 
         augmented_view->setImage(image);
         augmented_view->rescaleImage(augmented_view->parentWidget()->size());
@@ -150,7 +154,7 @@ void GUI::slot_newGameData(const GoBackend::Game* game) {
     else if (ui_main.big_container->toolTip() == "augmented view")
         virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
     
-    printf(">>> New Game data! <<<\n");
+    std::cerr << ">>> New Game data arrived in GUI! <<<" << std::endl;
 }    
 
 /**
@@ -316,6 +320,14 @@ void GUI::slot_MenuInfo(){
 
     // Final InfoBox
     QMessageBox::about(this, "Info", output.c_str());
+}
+
+void GUI::slot_BoardDetectionManually() {
+    emit signal_boardDetectionManually();
+}
+
+void GUI::slot_BoardDetectionAutomatically() {
+    emit signal_boardDetectionAutomatically();
 }
 
 /**
