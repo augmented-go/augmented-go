@@ -53,8 +53,12 @@ void BackendThread::run()  {
     // use a timer to periodically scan the camera image
     QTimer timer;
     connect(&timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
-    timer.setInterval(2000);// call the connected slot every 1000 msec
-    timer.start();  // put one event in this threads event queue
+    timer.setInterval(2000);// call the connected slot every 2000 msec
+    timer.start();
+
+    // manually execute the first scan once to have the image faster on the gui
+    scan();
+
     exec();         // start this threads event loop
     timer.stop();
 }
