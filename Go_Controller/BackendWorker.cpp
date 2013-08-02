@@ -32,8 +32,8 @@ QImage mat_to_QImage(cv::Mat source)
 }
 
 BackendWorker::BackendWorker()
-    : _game(new GoBackend::Game),
-    _scanner(new Go_Scanner::Scanner),
+    : _game(),
+    _scanner(),
     _game_is_initialized(false),
     _scan_timer()
 {
@@ -60,7 +60,7 @@ void BackendWorker::scan() {
     int board_size = 19;
 
     // fetch new camera image
-    auto got_new_image = _scanner->scanCamera(setup, board_size, image);
+    auto got_new_image = _scanner.scanCamera(setup, board_size, image);
 
     qDebug() << "\nScan finished!";
 
@@ -70,10 +70,10 @@ void BackendWorker::scan() {
 
         if (_game_is_initialized) {
             // update game state
-            _game->update(setup);
+            _game.update(setup);
         }
         else {
-            _game->init(board_size, setup, _new_game_rules);
+            _game.init(board_size, setup, _new_game_rules);
             _game_is_initialized = true;
         }
 
@@ -87,21 +87,21 @@ void BackendWorker::scan() {
         // the GUI controls the lifetime of this thread,
         // so passing a pointer to the GoBoard is safe and won't be invalidated
         // as long as the GUI says so
-        emit gameDataChanged(_game.get());
+        emit gameDataChanged(&_game);
     }
 }
 
-void BackendWorker::saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const {
+void BackendWorker::saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) {
     auto filepath = path.toStdString();
 
-    if (!_game->saveGame(filepath, blackplayer_name.toStdString(), whiteplayer_name.toStdString(), game_name.toStdString()))
+    if (!_game.saveGame(filepath, blackplayer_name.toStdString(), whiteplayer_name.toStdString(), game_name.toStdString()))
         std::cerr << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
 }
 
 void BackendWorker::pass() {
-    _game->pass();
+    _game.pass();
     
-    if (_game->hasEnded())
+    if (_game.hasEnded())
         signalGuiGameHasEnded();
 }
 
@@ -111,30 +111,30 @@ void BackendWorker::resetGame(GoRules rules) {
 }
 
 void BackendWorker::finish() {
-    _game->finishGame();
+    _game.finishGame();
 
     signalGuiGameHasEnded();
 }
 
 void BackendWorker::resign() {
-    _game->resign();
+    _game.resign();
 
     signalGuiGameHasEnded();
 }
 
 void BackendWorker::signalGuiGameHasEnded() const {
-    auto result = _game->getResult();
+    auto result = _game.getResult();
 
     // signal gui that game has ended with this result
     emit finishedGameResult(QString(result.c_str()));
 }
 
 void BackendWorker::selectBoardManually() {
-    _scanner->selectBoardManually();
+    _scanner.selectBoardManually();
 }
 
 void BackendWorker::selectBoardAutomatically() {
-    _scanner->selectBoardAutomatically();
+    _scanner.selectBoardAutomatically();
 }
 
 } // namespace Go_AR

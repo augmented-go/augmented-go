@@ -27,7 +27,7 @@ namespace Go_AR {
         /**
          * @brief       Saves the current game as sgf at the specified path.
          */
-        void saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const;
+        void saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name);
 
         /**
          * @brief       Plays a pass for the current player.
@@ -81,10 +81,10 @@ namespace Go_AR {
 
     // Member vars    
     private:
-        std::unique_ptr<GoBackend::Game>     _game;
-        std::unique_ptr<Go_Scanner::Scanner> _scanner;
-        bool _game_is_initialized;
+        GoBackend::Game     _game;
+        Go_Scanner::Scanner _scanner;
+        QTimer              _scan_timer;
         GoRules _new_game_rules;
-        QTimer _scan_timer;
+        bool    _game_is_initialized;
     };
 }
