@@ -39,6 +39,7 @@ private slots:
     void slot_MenuInfo();
     void slot_ViewSwitch();
     void closeEvent(QCloseEvent *event);
+    void slot_passOnVirtualViewPlayMove(const int x, const int y);
 
 signals:
     void signal_saveGame(QString fileName, QString blackplayer_label, QString whiteplayer_label, QString game_name);
@@ -47,6 +48,7 @@ signals:
     void signal_resign();
     void stop_backend_thread();
     void signal_newGame(GoRules rules);
+    void signal_playMove(const int x, const int y);
 
 private:
     Ui::MainWindow ui_main;

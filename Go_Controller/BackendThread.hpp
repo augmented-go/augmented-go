@@ -59,6 +59,11 @@ namespace Go_AR {
          */
         void resetGame(GoRules rules);
 
+        /**
+         * @brief       Sends a move to game
+         */
+        void playMove(const int x, const int y);
+
     private slots:
         void scan(); // our main worker function that is called by the timer
         

@@ -5,6 +5,9 @@
 #include <QDebug>
 #include <opencv2/opencv.hpp>
 
+#include "SgPoint.h"
+#include "SgSystem.h"
+
 namespace Go_AR {
 
 // converts a cv::Mat to a QImage
@@ -136,6 +139,11 @@ void BackendThread::signalGuiGameHasEnded() const {
 
     // signal gui that game has ended with this result
     emit finishedGameResult(QString(result.c_str()));
+}
+
+void BackendThread::playMove(const int x, const int y){
+    auto position = SgPointUtil::Pt(x, y);
+    _game->playMove(position);
 }
 
 } // namespace Go_AR

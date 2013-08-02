@@ -24,6 +24,9 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
 {
     ui_main.setupUi(this);
 
+    virtual_view = new VirtualView(this);
+    augmented_view = new AugmentedView(this);
+
     QString texture_path = "res/textures/";
     whitebasket_pixmap = QPixmap(texture_path + "white_basket.png");
     blackbasket_pixmap = QPixmap(texture_path + "black_basket.png");
@@ -47,6 +50,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
+    connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
 
     // setting initial values
     this->init();
@@ -59,9 +63,6 @@ void GUI::init(){
     this->setWindowTitle("Augmented Go");
     this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     
-    virtual_view = new VirtualView(this);
-    augmented_view = new AugmentedView(this);
-
     // Attaching augmented view to big container
     augmented_view->setParent(ui_main.big_container);
     augmented_view->rescaleImage(ui_main.big_container->size());
@@ -342,6 +343,10 @@ void GUI::closeEvent(QCloseEvent *event){
     else
         event->ignore();
     
+}
+
+void GUI::slot_passOnVirtualViewPlayMove(const int x, const int y){
+    emit this->signal_playMove(x, y);
 }
 
 } // namespace Go_GUI

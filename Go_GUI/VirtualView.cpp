@@ -157,7 +157,8 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
 
 void VirtualView::mousePressEvent(QMouseEvent* event){
     if (event->button() == Qt::LeftButton && setting_stone_valid){
-        emit signal_setStoneAt(mouse_hover_coord.x(), mouse_hover_coord.y());
+        int ycoord = board_size - mouse_hover_coord.y() - 1;
+        emit signal_virtualViewplayMove(mouse_hover_coord.x(), ycoord);
         setting_stone_valid = false;
     }
 }

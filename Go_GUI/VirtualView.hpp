@@ -18,7 +18,7 @@ public:
 
 signals:
     // sends a signal with game board coordinates where to set a new stone
-    void signal_setStoneAt(int coord_x, int coord_y);
+    void signal_virtualViewplayMove(const int coord_x, const int coord_y);
 
 private:
     int board_size;
