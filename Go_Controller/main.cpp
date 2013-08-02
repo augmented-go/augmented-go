@@ -26,18 +26,20 @@ int main(int argc, char** argv) {
         qRegisterMetaType<GoRules>("GoRules");
 
         // connect signal from worker to gui
-        QObject::connect(&worker, &BackendWorker::newImage,           &gui, &GUI::slot_newImage,                Qt::QueuedConnection);
-        QObject::connect(&worker, &BackendWorker::gameDataChanged,    &gui, &GUI::slot_newGameData,             Qt::QueuedConnection);
-        QObject::connect(&worker, &BackendWorker::finishedGameResult, &gui, &GUI::slot_showFinishedGameResults, Qt::QueuedConnection);
+        QObject::connect(&worker, &BackendWorker::newImage,           &gui, &GUI::slot_newImage);
+        QObject::connect(&worker, &BackendWorker::gameDataChanged,    &gui, &GUI::slot_newGameData);
+        QObject::connect(&worker, &BackendWorker::finishedGameResult, &gui, &GUI::slot_showFinishedGameResults);
 
-        // connect signal from gui to backend
-        QObject::connect(&gui, &GUI::stop_backend_thread, &worker_thread, &QThread::quit,      Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_saveGame,     &worker, &BackendWorker::saveSgf,   Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_pass,         &worker, &BackendWorker::pass,      Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_resign,       &worker, &BackendWorker::resign,    Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_newGame,      &worker, &BackendWorker::resetGame, Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_boardDetectionAutomatically, &backend, &BackendThread::selectBoardAutomatically, Qt::QueuedConnection);
-        QObject::connect(&gui, &GUI::signal_boardDetectionManually,      &backend, &BackendThread::selectBoardManually,      Qt::QueuedConnection);
+        // connect quit signal from gui to the thread
+        QObject::connect(&gui, &GUI::stop_backend_thread,                &worker_thread, &QThread::quit);
+
+        // connect signal from gui to worker
+        QObject::connect(&gui, &GUI::signal_saveGame,                    &worker, &BackendWorker::saveSgf);
+        QObject::connect(&gui, &GUI::signal_pass,                        &worker, &BackendWorker::pass);
+        QObject::connect(&gui, &GUI::signal_resign,                      &worker, &BackendWorker::resign);
+        QObject::connect(&gui, &GUI::signal_newGame,                     &worker, &BackendWorker::resetGame);
+        QObject::connect(&gui, &GUI::signal_boardDetectionAutomatically, &worker, &BackendWorker::selectBoardAutomatically);
+        QObject::connect(&gui, &GUI::signal_boardDetectionManually,      &worker, &BackendWorker::selectBoardManually);
 
         worker_thread.start(); // start worker thread
 

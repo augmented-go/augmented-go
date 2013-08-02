@@ -44,7 +44,7 @@ BackendWorker::BackendWorker()
      */
     _new_game_rules = GoRules(0, GoKomi(6.5), true, true);
 
-    connect(&_scan_timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
+    connect(&_scan_timer, SIGNAL(timeout()), this, SLOT(scan()));
     _scan_timer.setInterval(2000);// call the connected slot every 1000 msec
     _scan_timer.start();  // put one event in this threads event queue
 }
@@ -59,7 +59,7 @@ void BackendWorker::scan() {
     int board_size = 19;
 
     // fetch new camera image
-    auto scan_result = _scanner->scanCamera(setup, board_size, image);
+    auto scan_result = _scanner.scanCamera(setup, board_size, image);
 
     using Go_Scanner::ScanResult;
 
@@ -68,10 +68,10 @@ void BackendWorker::scan() {
         {
             if (_game_is_initialized) {
                 // update game state
-                _game->update(setup);
+                _game.update(setup);
             }
             else {
-                _game->init(board_size, setup, _new_game_rules);
+                _game.init(board_size, setup, _new_game_rules);
                 _game_is_initialized = true;
             }
             
@@ -79,7 +79,7 @@ void BackendWorker::scan() {
             // the GUI controls the lifetime of this thread,
             // so passing a pointer to the GoBoard is safe and won't be invalidated
             // as long as the GUI says so
-            emit gameDataChanged(_game.get());
+            emit gameDataChanged(&_game);
 
             // don't break because Success implies getting an image,
             // so let control flow fall through to ScanResult::Image_Only
