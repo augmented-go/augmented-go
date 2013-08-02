@@ -6,7 +6,7 @@ namespace Go_Scanner {
 using namespace cv;
 using namespace std;
 
-bool Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
+ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
     Mat frame;
     if (!readCameraFrame(frame)) {
         // NOTICE: DEBUG STUFF!
@@ -15,18 +15,18 @@ bool Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
         if (frame.empty()) {
             std::cout << "Failed to load sample image from filesystem!" << std::endl;
             std::cout << "In " << __FUNCTION__ << std::endl;
-            return false;
+            return ScanResult::Failed;
         }
 
         //out_image = frame;
         //return false;
     }
 
-    scanner_main(frame, setup, board_size);
+    auto result = scanner_main(frame, setup, board_size);
     
     out_image = frame;
 
-    return true;
+    return result ? ScanResult::Success : ScanResult::Image_Only;
 }
 
 bool Scanner::readCameraFrame(cv::Mat& frame) {

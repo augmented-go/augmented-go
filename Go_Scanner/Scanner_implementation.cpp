@@ -893,6 +893,10 @@ std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv
     return to_board_coordinates;
 }
 
+/**
+ * @returns     true, if the user marked the board, and lines as well as stones could be found
+ *              false, if the board wasn't marked before or if any of the operations fail (detecting stones, finding lines, etc.)
+ */
 bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
 {
     // TODO: convert the warped image just once to greyscale! 
@@ -905,7 +909,7 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     // only process the image if the user  selected the board with "ask_for_board_contour" or "do_auto_board_detection" once.
     // this is triggered through the GUI (and the Scanners selectBoardManually() and selectBoardAutomatically() methods)
     if (!asked_for_board_contour) {
-        return 0;
+        return false;
     }
 
     //imshow("Camera Input", img0);

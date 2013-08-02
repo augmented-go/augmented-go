@@ -12,6 +12,12 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size);
 void ask_for_board_contour();
 void do_auto_board_detection();
 
+enum ScanResult {
+    Failed,
+    Image_Only,
+    Success
+};
+
 class Scanner {
 public:
     Scanner() {}
@@ -23,9 +29,10 @@ private:
 public:
     /**
     * @brief        currently only sets out_image to the read camera image
-    * @returns      true if a new image could be retrieved, false otherwise, may be changed to an enum or so
+    * @returns      true if a new image could be retrieved and lines as well as stones could be detected
+    *               false otherwise, may be changed to an enum or so
     */
-    bool scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image);
+    ScanResult scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image);
 
     /**
     * @brief        Displays a window to let the user select the go board manually.
