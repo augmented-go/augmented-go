@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-#include <QDebug>
 #include <opencv2/opencv.hpp>
 
 #include "SgPoint.h"
@@ -68,34 +67,43 @@ void BackendThread::scan() {
     int board_size = 19;
 
     // fetch new camera image
-    auto got_new_image = _scanner->scanCamera(setup, board_size, image);
+    auto scan_result = _scanner->scanCamera(setup, board_size, image);
 
-    qDebug() << "\nScan finished!";
+    using Go_Scanner::ScanResult;
 
-    // only process results if a new image was scanned
-    if (got_new_image) {
-        qDebug() << " New image available!";
+    switch (scan_result) {
+    case ScanResult::Success:
+        {
+            if (_game_is_initialized) {
+                // update game state
+                _game->update(setup);
+            }
+            else {
+                _game->init(board_size, setup, _new_game_rules);
+                _game_is_initialized = true;
+            }
+            
+            // send board data to gui
+            // the GUI controls the lifetime of this thread,
+            // so passing a pointer to the GoBoard is safe and won't be invalidated
+            // as long as the GUI says so
+            emit gameDataChanged(_game.get());
 
-        if (_game_is_initialized) {
-            // update game state
-            _game->update(setup);
+            // don't break because Success implies getting an image,
+            // so let control flow fall through to ScanResult::Image_Only
         }
-        else {
-            _game->init(board_size, setup, _new_game_rules);
-            _game_is_initialized = true;
+    case ScanResult::Image_Only:
+        {
+            // converting image (OpenCV data type) to QImage (Qt data type)
+            const auto scanner_image = mat_to_QImage(image);
+
+            // send signal with new image to gui
+            emit newImage(scanner_image);
         }
-
-        // converting image (OpenCV data type) to QImage (Qt data type)
-        const auto scanner_image = mat_to_QImage(image);
-
-        // send signal with new image to gui
-        emit newImage(scanner_image);
-
-        // send board data to gui
-        // the GUI controls the lifetime of this thread,
-        // so passing a pointer to the GoBoard is safe and won't be invalidated
-        // as long as the GUI says so
-        emit gameDataChanged(_game.get());
+    case ScanResult::Failed:
+        break;
+    default:
+        assert(!"Unknown ScanResult?!");
     }
 }
 
