@@ -17,7 +17,12 @@ public:
     void createAndSetScene(QSize size, const GoBoard * game_board = nullptr);
     
 private:
+    int board_size;
     QGraphicsScene scene;
     QImage board_image_size9, board_image_size13, board_image_size19,
         black_stone_image, white_stone_image;
+
+    void mousePressEvent(QMouseEvent *event);
+    void VirtualView::mouseMoveEvent(QMouseEvent* event);
+    float cell_width, cell_height;
 };

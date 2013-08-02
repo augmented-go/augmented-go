@@ -5,6 +5,7 @@
 #include <QGLAbstractScene>
 #include <QMessageBox>
 #include <QGraphicsPixmapItem>
+#include <QtGui\QMouseEvent>
 
 #include <GoBoard.h>
 
@@ -14,6 +15,8 @@ VirtualView::VirtualView(QWidget *parent){
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->resize(parent->size());
+
+    this->setMouseTracking(true);
 
     // directories of the images
     QString texture_path = "res/textures/";
@@ -48,7 +51,7 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     scene.clear();
     
     // loads the board size and checks if its a valid size
-    int board_size = game_board->Size();
+    board_size = game_board->Size();
 
     QImage board_image;
 
@@ -77,8 +80,9 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     float scale_x = size.width() / float(board_image.width());
     float scale_y = size.height() / float(board_image.height());
 
-    float cell_width = float(board_image.width()) / (board_size+1);
-    float cell_height = float(board_image.height()) / (board_size+1);
+    cell_width = float(board_image.width()) / (board_size+1);
+    cell_height = float(board_image.height()) / (board_size+1);
+    
 
     // scale the images to the right size
     QPixmap board_image_scaled = QPixmap::fromImage(board_image);
@@ -100,6 +104,8 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     // add the board image to the scene
     scene.addItem(new QGraphicsPixmapItem(board_image_scaled));
 
+    
+
     // get all stone positions for each color and add them on the right position to the scene
     auto black_stones = game_board->All(SG_BLACK);
     for (auto iter = SgSetIterator(black_stones); iter; ++iter) {
@@ -117,7 +123,7 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
         black_stone_item->setOffset(cell_width * scale_x - black_stone_image_scaled.width()/2, cell_height * scale_y - black_stone_image_scaled.height()/2);
         scene.addItem(black_stone_item);
     }
-
+    
     auto white_stones = game_board->All(SG_WHITE);
     for (auto iter = SgSetIterator(white_stones); iter; ++iter) {
         auto point = *iter;
@@ -135,4 +141,51 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
         scene.addItem(black_stone_item);
     }
     this->setScene(&scene);
+}
+
+void VirtualView::mousePressEvent(QMouseEvent* event){
+    if (event->button() == Qt::LeftButton){
+        QPointF mousePoint = this->mapToScene(event->pos());
+        //scene.sceneRect().size();
+        //scene.col
+    }
+}
+
+void VirtualView::mouseMoveEvent(QMouseEvent* event){
+    int pic_boarder_x = 60, pic_boarder_y = 55, board_pix;
+
+    switch(this->board_size){
+    case 9: 
+        board_pix = this->board_image_size9.size().width();
+        break;
+    case 13:
+        board_pix = this->board_image_size13.size().width();
+        break;
+    case 19:
+        board_pix = this->board_image_size19.size().width();
+        break;
+    default:
+        return;
+        break;
+    }
+
+    float scale_x = this->size().width() * 1.0f/board_pix * 1.0f;
+    float scale_y = this->size().height() * 1.0f/board_pix * 1.0f;
+
+    float xCoordAccurate = (event->pos().x() - pic_boarder_x * scale_x) / (this->cell_width * scale_x);
+    float yCoordAccurate = (event->pos().y() - pic_boarder_y * scale_y) / (this->cell_height * scale_y);
+
+    int xCoord = static_cast<int>(xCoordAccurate);
+    int yCoord = static_cast<int>(yCoordAccurate);
+
+    xCoord = xCoordAccurate - xCoord < 0.5 ? xCoord : xCoord + 1; 
+    yCoord = yCoordAccurate - yCoord < 0.5 ? yCoord : yCoord + 1; 
+
+    scene.addEllipse((pic_boarder_x * scale_x) + (xCoord * this->cell_width * scale_x), 
+                     (pic_boarder_y * scale_y) + (yCoord * this->cell_height * scale_y),
+                     this->cell_width, this->cell_height);
+    qDebug()  << xCoord << ", " << yCoord;
+
+    this->cell_height;
+    this->cell_width;
 }
