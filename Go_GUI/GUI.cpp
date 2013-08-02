@@ -20,7 +20,7 @@ namespace Go_GUI {
  * @brief	Checks for gui elements and fonts and connects signals and slots
  * @param	QWidget/QMainWindow		parent widget that creates this
  */
-GUI::GUI(QWidget *parent) : QMainWindow(parent), game_board(nullptr)
+GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
 {
     ui_main.setupUi(this);
 
@@ -110,14 +110,16 @@ void GUI::slot_newImage(QImage image) {
 /**
  * @brief   SLOT "new game data"
  *          If new game data is sent to GUI, refresh display of current player and captured stones.
- * @param   GoBoard     new board of current turn
+ * @param   game     new game representation
  */
-void GUI::slot_newGameData(const GoBoard* board) {
+void GUI::slot_newGameData(const GoBackend::Game* game) {
     // update internal pointer if the board has been changed
-    if (game_board != board)
-        game_board = board;
+    if (game != game)
+        game = game;
 
-    auto current_player = game_board->ToPlay();
+    auto& board = game->getBoard();
+
+    auto current_player = board.ToPlay();
 
     // Updating basket pictures
     switch (current_player) {
@@ -135,18 +137,18 @@ void GUI::slot_newGameData(const GoBoard* board) {
     }
 
     // Updating Game-Settings
-    ui_main.movenumber_label->setText(QString::number(game_board->MoveNumber()));
-    ui_main.kominumber_label->setText(QString::number(board->Rules().Komi().ToFloat()));
-    ui_main.handicapnumber_label->setText(QString::number(board->Rules().Handicap()));
-    ui_main.capturedwhite_label->setText(QString::number(game_board->NumPrisoners(SG_WHITE)));
-    ui_main.capturedblack_label->setText(QString::number(game_board->NumPrisoners(SG_BLACK)));
+    ui_main.movenumber_label->setText(QString::number(board.MoveNumber()));
+    ui_main.kominumber_label->setText(QString::number(board.Rules().Komi().ToFloat()));
+    ui_main.handicapnumber_label->setText(QString::number(board.Rules().Handicap()));
+    ui_main.capturedwhite_label->setText(QString::number(board.NumPrisoners(SG_WHITE)));
+    ui_main.capturedblack_label->setText(QString::number(board.NumPrisoners(SG_BLACK)));
 
     // refresh virtual view
     if (ui_main.big_container->toolTip() == "virtual view")
-        virtual_view->createAndSetScene(ui_main.big_container->size(), game_board);
+        virtual_view->createAndSetScene(ui_main.big_container->size(), &board);
     
     else if (ui_main.big_container->toolTip() == "augmented view")
-        virtual_view->createAndSetScene(ui_main.small_container->size(), game_board);
+        virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
     
     printf(">>> New Game data! <<<\n");
 }    
@@ -233,7 +235,7 @@ void GUI::slot_ViewSwitch(){
 
         // new style
         virtual_view->setParent(ui_main.small_container);
-        virtual_view->createAndSetScene(ui_main.small_container->size(), game_board);
+        virtual_view->createAndSetScene(ui_main.small_container->size(), &(go_game->getBoard()));
         ui_main.small_container->setToolTip("virtual view");
         virtual_view->show();
         
@@ -246,7 +248,7 @@ void GUI::slot_ViewSwitch(){
         augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
         virtual_view->setParent(ui_main.big_container);
-        virtual_view->createAndSetScene(ui_main.big_container->size(), game_board);
+        virtual_view->createAndSetScene(ui_main.big_container->size(), &(go_game->getBoard()));
         ui_main.big_container->setToolTip("virtual view");
         virtual_view->show(); 
     }

@@ -53,7 +53,7 @@ void BackendThread::run()  {
     // use a timer to periodically scan the camera image
     QTimer timer;
     connect(&timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
-    timer.setInterval(1000); // call the connected slot every 1000 msec
+    timer.setInterval(2000);// call the connected slot every 1000 msec
     timer.start();  // put one event in this threads event queue
     exec();         // start this threads event loop
     timer.stop();
@@ -96,7 +96,7 @@ void BackendThread::scan() {
         // the GUI controls the lifetime of this thread,
         // so passing a pointer to the GoBoard is safe and won't be invalidated
         // as long as the GUI says so
-        emit gameDataChanged(&(_game->getBoard()));
+        emit gameDataChanged(_game.get());
     }
 }
 

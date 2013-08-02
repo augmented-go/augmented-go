@@ -1,4 +1,4 @@
-set(TARGETNAME Go_AugmentedReality)
+set(TARGETNAME Go_Controller)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
