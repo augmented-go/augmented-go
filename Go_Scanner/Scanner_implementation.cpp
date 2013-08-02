@@ -966,7 +966,7 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     // i therefore count the number of points on one line
     const auto ref_point = intersectionPoints[0];
     board_size = std::count_if(begin(intersectionPoints), end(intersectionPoints), [=](const cv::Point2f& pt) { return pt.y == ref_point.y; });
-    printf("Board size: %d\n", board_size);
+    std::cerr << "Board size: " << board_size << std::endl;
 
     // get map from intersection points to board coordinates (SgPoint)
     auto to_board_coords = getBoardCoordMapFor(intersectionPoints);

@@ -2,12 +2,14 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include <QMessageBox>
 #include <QAction>
 #include <QCloseEvent>
 #include <QFontDatabase>
-#include "Game.hpp"
+
+#include <Game.hpp>
 
 #include "NewGameDialog.hpp"
 #include "VirtualView.hpp"
@@ -103,7 +105,7 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
  * @param   QImage  new image from scanner
  */
 void GUI::slot_newImage(QImage image) {
-        printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
+        std::cerr << ">>> New Image arrived in GUI! '" << image.width() << " x " << image.height() << "' -- Format: " << image.format() << " <<<" << std::endl;
 
         augmented_view->setImage(image);
         augmented_view->rescaleImage(augmented_view->parentWidget()->size());
@@ -152,7 +154,7 @@ void GUI::slot_newGameData(const GoBackend::Game* game) {
     else if (ui_main.big_container->toolTip() == "augmented view")
         virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
     
-    printf(">>> New Game data! <<<\n");
+    std::cerr << ">>> New Game data arrived in GUI! <<<" << std::endl;
 }    
 
 /**

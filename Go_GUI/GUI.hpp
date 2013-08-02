@@ -2,7 +2,6 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
-#include <QDebug>
 
 #include "Game.hpp"
 

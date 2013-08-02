@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-#include <QDebug>
 #include <opencv2/opencv.hpp>
 
 namespace Go_AR {
@@ -74,8 +73,6 @@ void BackendThread::scan() {
 
     // fetch new camera image
     auto scan_result = _scanner->scanCamera(setup, board_size, image);
-
-    qDebug() << "\nScan finished!";
 
     using Go_Scanner::ScanResult;
 
