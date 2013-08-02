@@ -12,7 +12,7 @@
 #include "Scanner.hpp"
 
 namespace Go_AR {
-    class BackendWorker : public QThread {
+    class BackendWorker : public QObject {
         Q_OBJECT
 
     public:
@@ -20,17 +20,10 @@ namespace Go_AR {
         ~BackendWorker();
             
     private:
-        // thread function
-        void run() override;
         void signalGuiGameHasEnded() const;
         
     // slots
     public slots:
-        /**
-         * @brief       Stops this thread.
-         */
-        void stop();
-
         /**
          * @brief       Saves the current game as sgf at the specified path.
          */
@@ -92,5 +85,6 @@ namespace Go_AR {
         std::unique_ptr<Go_Scanner::Scanner> _scanner;
         bool _game_is_initialized;
         GoRules _new_game_rules;
+        QTimer _scan_timer;
     };
 }

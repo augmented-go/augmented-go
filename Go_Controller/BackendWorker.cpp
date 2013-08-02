@@ -34,7 +34,8 @@ QImage mat_to_QImage(cv::Mat source)
 BackendWorker::BackendWorker()
     : _game(new GoBackend::Game),
     _scanner(new Go_Scanner::Scanner),
-    _game_is_initialized(false)
+    _game_is_initialized(false),
+    _scan_timer()
 {
     /* define default game rules
      *     handicap: 0
@@ -43,25 +44,15 @@ BackendWorker::BackendWorker()
      *     game end: after 2 consecutive passes
      */
     _new_game_rules = GoRules(0, GoKomi(6.5), true, true);
+
+    connect(&_scan_timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
+    _scan_timer.setInterval(2000);// call the connected slot every 1000 msec
+    _scan_timer.start();  // put one event in this threads event queue
 }
 
 
 BackendWorker::~BackendWorker()
 {}
-
-void BackendWorker::run()  {
-    // use a timer to periodically scan the camera image
-    QTimer timer;
-    connect(&timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
-    timer.setInterval(2000);// call the connected slot every 1000 msec
-    timer.start();  // put one event in this threads event queue
-    exec();         // start this threads event loop
-    timer.stop();
-}
-
-void BackendWorker::stop()  {
-    this->quit();
-}
 
 void BackendWorker::scan() {
     cv::Mat image;
