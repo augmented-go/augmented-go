@@ -137,7 +137,7 @@ void BackendThread::signalGuiGameHasEnded() const {
     emit finishedGameResult(QString(result.c_str()));
 }
 
-void BackendThread::toggleGameMode() {
+void BackendThread::toggleAppMode() {
     if (_scan_timer->isActive()) {
         // go into virtual mode -> no scanning!
         _scan_timer->stop();

@@ -48,6 +48,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.info_action,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
     connect(ui_main.automatic_action,   &QAction::triggered,	this, &GUI::slot_BoardDetectionAutomatically);
     connect(ui_main.manually_action,	&QAction::triggered,	this, &GUI::slot_BoardDetectionManually);
+    connect(ui_main.toggle_app_mode_action,	&QAction::triggered, this, &GUI::slot_ToggleAppMode);
     connect(ui_main.viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
@@ -327,6 +328,10 @@ void GUI::slot_BoardDetectionManually() {
 
 void GUI::slot_BoardDetectionAutomatically() {
     emit signal_boardDetectionAutomatically();
+}
+
+void GUI::slot_ToggleAppMode() {
+    emit signal_toggleAppMode();
 }
 
 /**

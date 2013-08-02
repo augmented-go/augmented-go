@@ -40,6 +40,7 @@ private slots:
     void slot_ViewSwitch();
     void slot_BoardDetectionManually();
     void slot_BoardDetectionAutomatically();
+    void slot_ToggleAppMode();
     void closeEvent(QCloseEvent *event);
     void slot_passOnVirtualViewPlayMove(const int x, const int y);
 
@@ -50,6 +51,7 @@ signals:
     void signal_resign();
     void signal_boardDetectionManually();
     void signal_boardDetectionAutomatically();
+    void signal_toggleAppMode();
     void stop_backend_thread();
     void signal_newGame(GoRules rules);
     void signal_playMove(const int x, const int y);

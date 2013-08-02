@@ -2267,6 +2267,7 @@
     <addaction name="threshold_action"/>
     <addaction name="rules_action"/>
     <addaction name="cameraresolution_action"/>
+    <addaction name="toggle_app_mode_action"/>
    </widget>
    <widget class="QMenu" name="board_detection_menu">
     <property name="title">
@@ -2329,6 +2330,11 @@
     <string>Automatically</string>
    </property>
   </action>
+  <action name="toggle_app_mode_action">
+   <property name="text">
+    <string>Toggle App Mode</string>
+   </property>
+  </action> 
   <action name="cameraresolution_action">
    <property name="text">
     <string>Camera Resolution</string>
