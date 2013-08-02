@@ -605,7 +605,9 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
     {    
         xTmp1 = x;
         yTmp1 = y;
-        while(warpedImgGray.at<uchar>(yTmp1,xTmp1) < 50)
+        while (xTmp1 > 0 && xTmp1 < imagewidth
+            && yTmp1 > 0 && yTmp1 < imageheight
+            && warpedImgGray.at<uchar>(yTmp1,xTmp1) < 50)
         {
             //runs to bottom left
             xTmp1 -= 1;    
@@ -615,7 +617,9 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
 
         xTmp2 = x;
         yTmp2 = y;
-        while(warpedImgGray.at<uchar>(yTmp2,xTmp2) < 50)
+        while(xTmp2 > 0 && xTmp2 < imagewidth
+            && yTmp2 > 0 && yTmp2 < imageheight
+            && warpedImgGray.at<uchar>(yTmp2,xTmp2) < 50)
         {
             //runs to top right
             xTmp2 += 1;
@@ -628,7 +632,9 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
 
         xTmp1 = x;
         yTmp1 = y;
-        while(warpedImgGray.at<uchar>(yTmp1,xTmp1) < 50)
+        while(xTmp1 > 0 && xTmp1 < imagewidth
+            && yTmp1 > 0 && yTmp1 < imageheight
+            && warpedImgGray.at<uchar>(yTmp1,xTmp1) < 50)
         {
             //runs to top left
             xTmp1 -= 1;    
@@ -638,7 +644,9 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
 
         xTmp2 = x;
         yTmp2 = y;
-        while(warpedImgGray.at<uchar>(yTmp2,xTmp2) < 50)
+        while(xTmp2 > 0 && xTmp2 < imagewidth
+            && yTmp2 > 0 && yTmp2 < imageheight
+            && warpedImgGray.at<uchar>(yTmp2,xTmp2) < 50)
         {
             //runs to bottom right
             xTmp2 += 1;
@@ -658,12 +666,10 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
     return distance;
 }
 
-GoSetup detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords)
+void detectBlackStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup)
 {
     //TODO: use black/white image. write function for it. 
     
-    GoSetup setup;
-
     cv::Mat tmp, warpedImgGray;
     cv::cvtColor(warpedImg, tmp, CV_RGB2GRAY);
 
@@ -715,8 +721,58 @@ GoSetup detectStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoin
             std::cout << "-";
 
     }
+}
 
-    return setup; 
+void detectWhiteStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup)
+{
+    //TODO: use black/white image. write function for it. 
+    
+    cv::Mat tmp, warpedImgGray;
+    cv::cvtColor(warpedImg, tmp, CV_RGB2GRAY);
+
+    cv::threshold(tmp, warpedImgGray, 85, 255, 0);
+    cv::bitwise_not(warpedImgGray, warpedImgGray);
+    cv::imshow("Image for detecting white stones", warpedImgGray);
+    //cv::imwrite("white_stone_detection.jpg", warpedImgGray);
+    //cvWaitKey();
+
+    for(int i=0; i < intersectionPoints.size(); i++)
+    {
+        auto& intersection_point = intersectionPoints[i];
+
+        int x = intersection_point.x;
+        int y = intersection_point.y;
+        int distance, diameter45, diameter125;
+
+        /**
+        * Let's check if this is a stone :). We'll read out the diameters at 45° and 125° if they 
+        * are similar -> it's a stone. 
+        */
+
+        if (warpedImgGray.at<uchar>(y,x) < 50)
+        {
+            // Get the Diameter for 125 degree
+            cv::Point2f midpoint125;
+            diameter125 = getStoneDistanceAndMidpoint(warpedImgGray, x, y, RIGHT, midpoint125);
+
+            // Get the Diameter for 45 degree
+            cv::Point2f midpoint45;
+            diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, x, y, LEFT, midpoint45);
+
+            if(diameter125 >= 40 || diameter45 >= 40)
+            {
+                std::cout << "White Stone ("<< x << ", "<< y << ")" << std::endl;
+
+                setup.AddWhite(to_board_coords[intersection_point]);
+            }
+            else
+                std::cout << "+";
+
+        }
+        else
+            std::cout << "-";
+
+    }
 }
 
 
@@ -931,7 +987,8 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
 
     auto to_board_coords = getBoardCoordMapFor(intersectionPoints);
 
-    setup = detectStones(srcWarpedImg, intersectionPoints, to_board_coords);
+    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, setup);
+    detectWhiteStones(srcWarpedImg, intersectionPoints, to_board_coords, setup);
 
     return true;
 }
