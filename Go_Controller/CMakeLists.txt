@@ -16,12 +16,12 @@ find_package(Qt53D REQUIRED)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 SET(augmented_reality_SOURCE
-    BackendThread.cpp
+    BackendWorker.cpp
     main.cpp
 )
 
 SET(augmented_reality_HEADERS
-    BackendThread.hpp
+    BackendWorker.hpp
 )
 
 wrap_gui_ui_files(ui_GUI ui_NewGameDialog)
