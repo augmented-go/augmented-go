@@ -140,26 +140,26 @@ void BackendWorker::signalGuiGameHasEnded() const {
     emit finishedGameResult(QString(result.c_str()));
 }
 
-void BackendThread::toggleAppMode() {
-    if (_scan_timer->isActive()) {
+void BackendWorker::toggleAppMode() {
+    if (_scan_timer.isActive()) {
         // go into virtual mode -> no scanning!
-        _scan_timer->stop();
+        _scan_timer.stop();
     }
     else {
         // go into augmented mode -> do the scanning!
-        _scan_timer->start();
+        _scan_timer.start();
     }
 }
 
-void BackendThread::playMove(const int x, const int y){
+void BackendWorker::playMove(const int x, const int y){
     auto position = SgPointUtil::Pt(x, y);
-    _game->playMove(position);
+    _game.playMove(position);
 
-    emit gameDataChanged(_game.get());
+    emit gameDataChanged(&_game);
 }
 
-void BackendThread::selectBoardManually() {
-    _scanner->selectBoardManually();
+void BackendWorker::selectBoardManually() {
+    _scanner.selectBoardManually();
 }
 
 void BackendWorker::selectBoardAutomatically() {

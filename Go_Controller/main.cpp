@@ -33,8 +33,6 @@ int main(int argc, char** argv) {
         // connect quit signal from gui to the thread
         QObject::connect(&gui, &GUI::stop_backend_thread,                &worker_thread, &QThread::quit);
 
-
-
         // connect signal from gui to worker
         QObject::connect(&gui, &GUI::signal_saveGame,                    &worker, &BackendWorker::saveSgf);
         QObject::connect(&gui, &GUI::signal_pass,                        &worker, &BackendWorker::pass);
@@ -42,8 +40,8 @@ int main(int argc, char** argv) {
         QObject::connect(&gui, &GUI::signal_newGame,                     &worker, &BackendWorker::resetGame);
         QObject::connect(&gui, &GUI::signal_boardDetectionAutomatically, &worker, &BackendWorker::selectBoardAutomatically);
         QObject::connect(&gui, &GUI::signal_boardDetectionManually,      &worker, &BackendWorker::selectBoardManually);
-        QObject::connect(&gui, &GUI::signal_toggleAppMode, &worker, &BackendThread::toggleAppMode);
-        QObject::connect(&gui, &GUI::signal_playMove,      &worker, &BackendThread::playMove);
+        QObject::connect(&gui, &GUI::signal_toggleAppMode,               &worker, &BackendWorker::toggleAppMode);
+        QObject::connect(&gui, &GUI::signal_playMove,                    &worker, &BackendWorker::playMove);
 
         worker_thread.start(); // start worker thread
 
