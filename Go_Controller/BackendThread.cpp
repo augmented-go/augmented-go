@@ -159,6 +159,8 @@ void BackendThread::toggleAppMode() {
 void BackendThread::playMove(const int x, const int y){
     auto position = SgPointUtil::Pt(x, y);
     _game->playMove(position);
+
+    emit gameDataChanged(_game.get());
 }
 
 void BackendThread::selectBoardManually() {
