@@ -1,4 +1,4 @@
-#include "BackendThread.hpp"
+#include "BackendWorker.hpp"
 
 #include <iostream>
 
@@ -31,7 +31,7 @@ QImage mat_to_QImage(cv::Mat source)
     return ret;
 }
 
-BackendThread::BackendThread()
+BackendWorker::BackendWorker()
     : _game(new GoBackend::Game),
     _scanner(new Go_Scanner::Scanner),
     _game_is_initialized(false)
@@ -46,10 +46,10 @@ BackendThread::BackendThread()
 }
 
 
-BackendThread::~BackendThread()
+BackendWorker::~BackendWorker()
 {}
 
-void BackendThread::run()  {
+void BackendWorker::run()  {
     // use a timer to periodically scan the camera image
     QTimer timer;
     connect(&timer, SIGNAL(timeout()), this, SLOT(scan()), Qt::DirectConnection);
@@ -59,11 +59,11 @@ void BackendThread::run()  {
     timer.stop();
 }
 
-void BackendThread::stop()  {
+void BackendWorker::stop()  {
     this->quit();
 }
 
-void BackendThread::scan() {
+void BackendWorker::scan() {
     cv::Mat image;
     GoSetup setup;
     int board_size = 19;
@@ -100,49 +100,49 @@ void BackendThread::scan() {
     }
 }
 
-void BackendThread::saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const {
+void BackendWorker::saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const {
     auto filepath = path.toStdString();
 
     if (!_game->saveGame(filepath, blackplayer_name.toStdString(), whiteplayer_name.toStdString(), game_name.toStdString()))
         std::cerr << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
 }
 
-void BackendThread::pass() {
+void BackendWorker::pass() {
     _game->pass();
     
     if (_game->hasEnded())
         signalGuiGameHasEnded();
 }
 
-void BackendThread::resetGame(GoRules rules) {
+void BackendWorker::resetGame(GoRules rules) {
     _game_is_initialized = false;
     _new_game_rules      = rules;
 }
 
-void BackendThread::finish() {
+void BackendWorker::finish() {
     _game->finishGame();
 
     signalGuiGameHasEnded();
 }
 
-void BackendThread::resign() {
+void BackendWorker::resign() {
     _game->resign();
 
     signalGuiGameHasEnded();
 }
 
-void BackendThread::signalGuiGameHasEnded() const {
+void BackendWorker::signalGuiGameHasEnded() const {
     auto result = _game->getResult();
 
     // signal gui that game has ended with this result
     emit finishedGameResult(QString(result.c_str()));
 }
 
-void BackendThread::selectBoardManually() {
+void BackendWorker::selectBoardManually() {
     _scanner->selectBoardManually();
 }
 
-void BackendThread::selectBoardAutomatically() {
+void BackendWorker::selectBoardAutomatically() {
     _scanner->selectBoardAutomatically();
 }
 

@@ -12,12 +12,12 @@
 #include "Scanner.hpp"
 
 namespace Go_AR {
-    class BackendThread : public QThread {
+    class BackendWorker : public QThread {
         Q_OBJECT
 
     public:
-        BackendThread();
-        ~BackendThread();
+        BackendWorker();
+        ~BackendWorker();
             
     private:
         // thread function
