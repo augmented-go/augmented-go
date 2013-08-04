@@ -68,7 +68,8 @@ public:
      *
      * @param[in]   size    board size (size x size)
      * @param[in]   setup   initial board setup
-     * @param[in]   rules   game rules for this setup/game
+     * @param[in]   rules   game rules for this setup/game, 
+                            only allows a handicap of 0, the placement of handicap stones is handled in a differnt way
      * @returns     false - the setup contains invalid stones\n
      *              true  - init successful
      */
@@ -76,7 +77,7 @@ public:
 
     /**
      * @brief       Updates the game with the given setup. Tries to extract a valid move from the setup.
-     *              Note: Ignores current player information in setup.
+     *              Note: Ignores current player information in setup. 
      * @param[in]   setup   new board setup
      * @returns     See UpadateResult class. Also returns Illegal when the setup includes invalid stones.
      */
