@@ -16,7 +16,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace GoBackendGameTest
 {
     using GoBackend::Game;
-    using GoBackend::UpadateResult;
+    using GoBackend::UpdateResult;
     using SgPointUtil::Pt;
     using std::string;
 
@@ -215,7 +215,7 @@ namespace GoBackendGameTest
             auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             auto result = go_game.update(new_setup);
 
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             // black moved while whites turn
             go_game.init(size, setup);
@@ -227,7 +227,7 @@ namespace GoBackendGameTest
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
 
-            Assert::IsTrue(result == UpadateResult::Legal);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
             // ...then the illegal black move
             s = "....\n"
@@ -237,7 +237,7 @@ namespace GoBackendGameTest
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
 
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
         TEST_METHOD(cannot_update_board_with_faulty_setup) {
@@ -260,7 +260,7 @@ namespace GoBackendGameTest
             new_setup.AddBlack(SgPointUtil::Pt(10, 10)); // this points is outside the 4x4 grid
 
             auto result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             // initial setup should be present
             auto board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
@@ -286,7 +286,7 @@ namespace GoBackendGameTest
                 "XO..";
             auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             auto result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             // valid again after removing illegal move
             s = "....\n"
@@ -295,7 +295,7 @@ namespace GoBackendGameTest
                 ".O..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpadateResult::Legal);
+            Assert::IsTrue(result == UpdateResult::Legal);
         }
 
         TEST_METHOD(detect_invalid_updates) {
@@ -316,7 +316,7 @@ namespace GoBackendGameTest
                 ".O..";
             auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             auto result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             go_game.init(size, setup);
             // added two stones
@@ -326,7 +326,7 @@ namespace GoBackendGameTest
                 ".O..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             go_game.init(size, setup);
             // added stones of both colors
@@ -336,7 +336,7 @@ namespace GoBackendGameTest
                 ".O..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             go_game.init(size, setup);
             // played black stone and removed white stone
@@ -347,7 +347,7 @@ namespace GoBackendGameTest
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
 
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
         TEST_METHOD(recognize_captures) {
@@ -371,7 +371,7 @@ namespace GoBackendGameTest
 
             auto result = go_game.update(new_setup);
             // internal board and real life board do not match
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             // internal board state should automatically removes stones
             s = "..OX\n"
@@ -385,7 +385,7 @@ namespace GoBackendGameTest
 
             // back to legal result after the stones have been removed by the user
             result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpadateResult::Legal);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
             // whites capture
             s = "..OX\n"
@@ -394,7 +394,7 @@ namespace GoBackendGameTest
                 ".X..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
         TEST_METHOD(after_capturing_allow_playing_where_caputred_stones_were) {
@@ -415,7 +415,7 @@ namespace GoBackendGameTest
                 ".X..";
             setup = GoSetupUtil::CreateSetupFromString(s, size);
             auto result = go_game.update(setup);
-            Assert::IsTrue(result == UpadateResult::Legal);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
             // white move into captured area
             // this case makes the white_capturing state necessary
@@ -425,7 +425,7 @@ namespace GoBackendGameTest
                 "OX..";
             setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(setup);
-            Assert::IsTrue(result == UpadateResult::Legal);
+            Assert::IsTrue(result == UpdateResult::Legal);
         }
 
         TEST_METHOD(very_fist_move_is_capturing_move_and_captures_every_white_stone) {
@@ -449,12 +449,12 @@ namespace GoBackendGameTest
 
             setup = GoSetupUtil::CreateSetupFromString(s, size);
             auto result = go_game.update(setup);
-            Assert::IsTrue(result == UpadateResult::Legal);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
             // try placing a handicap stone
             setup.AddBlack(Pt(1,1));
             result = go_game.update(setup);
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
 
@@ -725,7 +725,7 @@ namespace GoBackendGameTest
             GoSetup handicap_setup = GoSetupUtil::CreateSetupFromString(s, size);
             auto result = go_game.update(handicap_setup);
             // still able to place handicap
-            Assert::IsTrue(result == UpadateResult::Legal);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
             //
             // white move
@@ -735,7 +735,7 @@ namespace GoBackendGameTest
                 "....";
             setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(setup);
-            Assert::IsTrue(result == UpadateResult::Legal);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
             auto& board = go_game.getBoard();
             // all stones present on the board
@@ -761,7 +761,7 @@ namespace GoBackendGameTest
             setup.AddBlack(Pt(1,2));
             auto result = go_game.update(setup);
 
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
         TEST_METHOD(allow_playing_handicap_stones_when_setup_contains_only_black_stones) {
@@ -775,7 +775,7 @@ namespace GoBackendGameTest
             setup.AddBlack(Pt(1,3));
             auto result = go_game.update(setup);
 
-            Assert::IsTrue(result == UpadateResult::Legal);
+            Assert::IsTrue(result == UpdateResult::Legal);
         }
 
         TEST_METHOD(dont_consider_single_black_stone_as_handicap) {
@@ -825,7 +825,7 @@ namespace GoBackendGameTest
             setup.AddWhite(Pt(1, 2));
             auto result = go_game.update(setup);
 
-            Assert::IsTrue(result == UpadateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
     };

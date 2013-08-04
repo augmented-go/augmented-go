@@ -9,7 +9,7 @@
 namespace GoBackend {
 using std::string;
 
-enum class UpadateResult {
+enum class UpdateResult {
     /**
      * The internal board state after the update() call does not match the real life board.
      * This may happen due to an invalid move according to the rules or captured stone have not yet been removed completely.
@@ -79,9 +79,9 @@ public:
      * @brief       Updates the game with the given setup. Tries to extract a valid move from the setup.
      *              Note: Ignores current player information in setup. 
      * @param[in]   setup   new board setup
-     * @returns     See UpadateResult class. Also returns Illegal when the setup includes invalid stones.
+     * @returns     See UpdateResult class. Also returns Illegal when the setup includes invalid stones.
      */
-    UpadateResult update(GoSetup setup);
+    UpdateResult update(GoSetup setup);
 
     /**
      * @brief       Get current board information
@@ -135,8 +135,8 @@ private:
     Game& operator=(const Game&);
 
 private:
-    UpadateResult updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites);
-    UpadateResult updateWhileCapturing(GoSetup new_setup);
+    UpdateResult updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites);
+    UpdateResult updateWhileCapturing(GoSetup new_setup);
 
     void placeHandicap(GoSetup new_setup);
 
@@ -146,7 +146,7 @@ private:
      *              Gets called inside updateNormal.
      * @returns     Whether the move was legal or illegal.
      */
-    UpadateResult playMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent);
+    UpdateResult playMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent);
 
     /**
      * @brief       Returns the possibly captured stones when current player of cons_board would play at point.

@@ -77,11 +77,11 @@ const GoBoard& Game::getBoard() const {
 }
 
 
-UpadateResult Game::update(GoSetup setup) {
+UpdateResult Game::update(GoSetup setup) {
     // check if setup contains only valid stones!
     if (!validSetup(setup)) {
         std::cout << __TIMESTAMP__ << " [" << __FUNCTION__ << "] " << " GoSetup contains invalid stones! Skipping..." << std::endl;
-        return UpadateResult::Illegal;
+        return UpdateResult::Illegal;
     }
 
     // get new and current stones
@@ -105,7 +105,7 @@ UpadateResult Game::update(GoSetup setup) {
 
         if (noWhites(current_whites, new_whites)) {
             placeHandicap(setup);
-            return UpadateResult::Legal;
+            return UpdateResult::Legal;
         }
         else {
             // white stone has been added, no handicap stones from now on
@@ -128,17 +128,17 @@ bool Game::noWhites(SgPointSet current_whites, SgPointSet new_whites) {
 }
 
 
-UpadateResult Game::updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
+UpdateResult Game::updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
     assert(_while_capturing == false);
 
     if (added_blacks.IsEmpty() && added_whites.IsEmpty()) {
         if (removed_blacks.IsEmpty() && removed_whites.IsEmpty()) {
-            return UpadateResult::Legal;
+            return UpdateResult::Legal;
         }
         else {
             // just removing stones from the board is illegal
             // capturing is not covered here
-            return UpadateResult::Illegal;
+            return UpdateResult::Illegal;
         }
     }
     else if (added_blacks.Size() == 1 && added_whites.Size() == 0) {
@@ -151,11 +151,11 @@ UpadateResult Game::updateNormal(SgPointSet added_blacks, SgPointSet added_white
     }
     else {
         // more than a single stone added
-        return UpadateResult::Illegal;
+        return UpdateResult::Illegal;
     }
 }
 
-UpadateResult Game::updateWhileCapturing(GoSetup new_setup) {
+UpdateResult Game::updateWhileCapturing(GoSetup new_setup) {
     auto board_setup = GoSetupUtil::CurrentPosSetup(getBoard());
 
     // the player of the setup is ignored
@@ -164,18 +164,18 @@ UpadateResult Game::updateWhileCapturing(GoSetup new_setup) {
     if (new_setup == board_setup) {
         // all stones that are to capture have been removed from the board
         _while_capturing = false;
-        return UpadateResult::Legal;
+        return UpdateResult::Legal;
     }
     else {
         // real life board dosn't match internal state
-        return UpadateResult::Illegal;
+        return UpdateResult::Illegal;
     }
 }
 
-UpadateResult Game::playMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent) {
+UpdateResult Game::playMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent) {
     if (getBoard().ToPlay() != player || !getBoard().IsLegal(point, player)) {
         // illegal move by game rules
-        return UpadateResult::Illegal;
+        return UpdateResult::Illegal;
     }
     
     SgPointSet captured_stones = possibleCapturedStones(getBoard(), point);
@@ -185,11 +185,11 @@ UpadateResult Game::playMove(SgPoint point, SgBlackWhite player, SgPointSet remo
         if (removed_of_player.IsEmpty() && removed_of_opponent.IsEmpty()) {
             // completely valid move
             _go_game.AddMove(point, player);
-            return UpadateResult::Legal;
+            return UpdateResult::Legal;
         }
         else {
             // played a valid move, but stones have been removed
-            return UpadateResult::Illegal;
+            return UpdateResult::Illegal;
         }
     }
     else {
@@ -197,13 +197,13 @@ UpadateResult Game::playMove(SgPoint point, SgBlackWhite player, SgPointSet remo
 
         if (!removed_of_player.IsEmpty()) {
             // only the enemy's stones can be captured
-            return UpadateResult::Illegal;
+            return UpdateResult::Illegal;
         }
 
         if (removed_of_opponent == captured_stones) {
             // all stones that are to capture have already been removed
             _go_game.AddMove(point, player);
-            return UpadateResult::Legal;
+            return UpdateResult::Legal;
         }
         else if (removed_of_opponent.IsEmpty() || removed_of_opponent.SubsetOf(captured_stones)) {
             // legal capturing move
@@ -212,11 +212,11 @@ UpadateResult Game::playMove(SgPoint point, SgBlackWhite player, SgPointSet remo
             // some stones may have already been removed after playing the move,
             // but there are still stones left to be removed, tell the user to remove them as well
             _while_capturing = true;
-            return UpadateResult::Illegal;
+            return UpdateResult::Illegal;
         }
         else {
             // stones that are not beeing captured have been removed
-            return UpadateResult::Illegal;
+            return UpdateResult::Illegal;
         }
     }
 }
