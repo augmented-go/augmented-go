@@ -163,8 +163,8 @@ UpadateResult Game::updateWhileCapturing(GoSetup new_setup) {
 
     if (new_setup == board_setup) {
         // all stones that are to capture have been removed from the board
-        return UpadateResult::Legal;
         _while_capturing = false;
+        return UpadateResult::Legal;
     }
     else {
         // real life board dosn't match internal state
