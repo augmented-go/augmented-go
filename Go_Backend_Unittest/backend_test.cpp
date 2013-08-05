@@ -1162,5 +1162,49 @@ namespace GoBackendGameTest
             board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
             Assert::IsTrue(expected_setup == board_setup);
         }
+
+        TEST_METHOD(can_play_a_valid_move_after_a_capturing_move) {
+            std::string s;
+            int size;
+            GoSetup expected_setup, board_setup;
+
+            Game go_game;
+
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
+            auto init_setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            go_game.init(size, init_setup);
+
+            // BLACK captures the WHITE stone -> VALID
+            go_game.playMove(SgPointUtil::Pt(2, 1));
+
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            ".X..");
+
+            expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_WHITE;
+
+            board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(expected_setup == board_setup);
+
+            // WHITE plays a valid move
+            go_game.playMove(SgPointUtil::Pt(4, 2));
+
+            s = std::string("....\n"
+                            "....\n"
+                            "X..O\n"
+                            ".X..");
+
+            expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_BLACK;
+
+            board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(expected_setup == board_setup);
+        }
     };
 }
