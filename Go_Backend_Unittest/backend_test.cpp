@@ -1157,7 +1157,7 @@ namespace GoBackendGameTest
                             "..O.");
 
             expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            expected_setup.m_player = SG_BLACK;
+            expected_setup.m_player = SG_WHITE;
 
             board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
             Assert::IsTrue(expected_setup == board_setup);
