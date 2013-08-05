@@ -138,6 +138,10 @@ private:
     UpdateResult updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites);
     UpdateResult updateWhileCapturing(GoSetup new_setup);
 
+    /**
+     * @brief       Checks whether handicap stones are being placed or not.
+     */
+    bool isPlacingHandicap(SgPointSet current_blacks, SgPointSet current_whites, SgPointSet new_whites);
     void placeHandicap(GoSetup new_setup);
 
     /**
@@ -153,7 +157,6 @@ private:
      */
     SgPointSet possibleCapturedStones(const GoBoard& const_board, SgPoint point);
 
-    bool noWhites(SgPointSet current_whites, SgPointSet new_whites);
     bool validSetup(const GoSetup& setup) const;
     bool allValidPoints(const SgPointSet& stones) const;
 
@@ -163,7 +166,6 @@ private:
                          // finished if a player resigns
 
     bool _while_capturing;
-    bool _allow_placing_handicap;
 };
 
 }

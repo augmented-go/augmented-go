@@ -16,8 +16,7 @@ namespace GoBackend {
 Game::Game()
     : _go_game(),
       _game_finished(false),
-      _while_capturing(false),
-      _allow_placing_handicap(false)
+      _while_capturing(false)
 {}
 
 bool Game::validSetup(const GoSetup& setup) const {
@@ -56,11 +55,9 @@ bool Game::init(int size, GoSetup setup, GoRules rules) {
 
     if (setup.m_stones[SG_WHITE].Size() == 0) {
         // no or only black stones, consider them to be handicap stones
-        _allow_placing_handicap = true;
         placeHandicap(setup);
     }
     else {
-        _allow_placing_handicap = false;
         // a SgBWArray<SgPointSet> is essentially the same as a SgBWSet
         // but SetupPosition wants a SbBWArray...
         _go_game.SetupPosition(SgBWArray<SgPointSet>(setup.m_stones[SG_BLACK], setup.m_stones[SG_WHITE]));
@@ -100,17 +97,10 @@ UpdateResult Game::update(GoSetup setup) {
 
 
     // handicap
-    if (_allow_placing_handicap) {
+    if (isPlacingHandicap(current_blacks, current_whites, new_whites)) {
         assert(_while_capturing == false);
-
-        if (noWhites(current_whites, new_whites)) {
-            placeHandicap(setup);
-            return UpdateResult::Legal;
-        }
-        else {
-            // white stone has been added, no handicap stones from now on
-            _allow_placing_handicap = false;
-        }
+        placeHandicap(setup);
+        return UpdateResult::Legal;
     }
 
 
@@ -123,9 +113,6 @@ UpdateResult Game::update(GoSetup setup) {
     }
 }
 
-bool Game::noWhites(SgPointSet current_whites, SgPointSet new_whites) {
-    return current_whites.IsEmpty() && new_whites.IsEmpty();
-}
 
 
 UpdateResult Game::updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
@@ -238,6 +225,18 @@ SgPointSet Game::possibleCapturedStones(const GoBoard& const_board, SgPoint move
         captured_set.Include(*it);
     }
     return captured_set;
+}
+
+bool Game::isPlacingHandicap(SgPointSet current_blacks, SgPointSet current_whites, SgPointSet new_whites) {
+    // only allow placing handicap when no move has been played
+    bool no_moves_played = getBoard().MoveNumber() == 0;
+
+    // this gets the case where we play a move instead of placing the handicap on the very first black stone
+    // see placeHandicap()
+    bool only_one_black_move = getBoard().MoveNumber() == 1 && current_blacks.Size() == 1;
+    
+    // only black stones (now whites) and no move played
+    return current_whites.IsEmpty() && new_whites.IsEmpty() && (no_moves_played || only_one_black_move);
 }
 
 void Game::placeHandicap(GoSetup new_setup) {
