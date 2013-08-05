@@ -457,6 +457,69 @@ namespace GoBackendGameTest
             Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
+        TEST_METHOD(removing_too_many_own_stones_when_capturing) {
+            std::string s("....\n"
+                          ".OX.\n"
+                          "X...\n"
+                          "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            Game go_game;
+            go_game.init(size, setup);
+
+            // play the capturing move and remove additional own stone
+            s = std::string("....\n"
+                            ".O..\n"
+                            "X...\n"
+                            ".X..");
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            auto result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+        }
+
+        TEST_METHOD(removing_too_many_enemy_stones_when_capturing) {
+            std::string s("....\n"
+                          ".OX.\n"
+                          "X...\n"
+                          "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            Game go_game;
+            go_game.init(size, setup);
+
+            // play the capturing move and remove additional own stone
+            s = std::string("....\n"
+                            "..X.\n"
+                            "X...\n"
+                            ".X..");
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            auto result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+        }
+
+        TEST_METHOD(detect_invalid_setup_while_capturing) {
+            std::string s("....\n"
+                          "....\n"
+                          "X...\n"
+                          "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            Game go_game;
+            go_game.init(size, setup);
+
+            // play the capturing move
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            "OX..");
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            auto result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+
+            // another update with still illegal setup
+            result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+        }
 
         TEST_METHOD(can_get_board_information) {
             // set up a board
