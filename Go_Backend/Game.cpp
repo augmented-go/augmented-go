@@ -130,11 +130,11 @@ UpdateResult Game::updateNormal(SgPointSet added_blacks, SgPointSet added_whites
     }
     else if (added_blacks.Size() == 1 && added_whites.Size() == 0) {
         // black move
-        return playMove(added_blacks.PointOf(), SG_BLACK, removed_blacks, removed_whites);
+        return updateSingleMove(added_blacks.PointOf(), SG_BLACK, removed_blacks, removed_whites);
     }
     else if (added_blacks.Size() == 0 && added_whites.Size() == 1) {
         // white move
-        return playMove(added_whites.PointOf(), SG_WHITE, removed_whites, removed_blacks);
+        return updateSingleMove(added_whites.PointOf(), SG_WHITE, removed_whites, removed_blacks);
     }
     else {
         // more than a single stone added
@@ -159,7 +159,7 @@ UpdateResult Game::updateWhileCapturing(GoSetup new_setup) {
     }
 }
 
-UpdateResult Game::playMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent) {
+UpdateResult Game::updateSingleMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent) {
     if (getBoard().ToPlay() != player || !getBoard().IsLegal(point, player)) {
         // illegal move by game rules
         return UpdateResult::Illegal;

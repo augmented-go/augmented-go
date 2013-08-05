@@ -150,7 +150,7 @@ private:
      *              Gets called inside updateNormal.
      * @returns     Whether the move was legal or illegal.
      */
-    UpdateResult playMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent);
+    UpdateResult updateSingleMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent);
 
     /**
      * @brief       Returns the possibly captured stones when current player of cons_board would play at point.
