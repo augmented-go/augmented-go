@@ -10,12 +10,14 @@
 #include "GoSetupUtil.h"
 #include "SgGameWriter.h"
 #include "SgProp.h"
+#include "GoModBoard.h"
 
 namespace GoBackend {
 Game::Game()
     : _go_game(),
-    _current_state(State::Valid),
-    _game_finished(false)
+      _game_finished(false),
+      _while_capturing(false),
+      _allow_placing_handicap(false)
 {}
 
 bool Game::validSetup(const GoSetup& setup) const {
@@ -42,6 +44,7 @@ bool Game::allValidPoints(const SgPointSet& stones) const {
 bool Game::init(int size, GoSetup setup, GoRules rules) {
     // assert valid board size
     assert(size < 20 && size > 1);
+    assert(rules.Handicap() == 0);
 
     _go_game.Init(size, rules);
 
@@ -53,17 +56,18 @@ bool Game::init(int size, GoSetup setup, GoRules rules) {
 
     if (setup.m_stones[SG_WHITE].Size() == 0) {
         // no or only black stones, consider them to be handicap stones
-        _current_state = State::SettingHandicap;
-        onUpdateSettingHandicap(setup);
+        _allow_placing_handicap = true;
+        placeHandicap(setup);
     }
     else {
-        _current_state = State::Valid;
+        _allow_placing_handicap = false;
         // a SgBWArray<SgPointSet> is essentially the same as a SgBWSet
         // but SetupPosition wants a SbBWArray...
         _go_game.SetupPosition(SgBWArray<SgPointSet>(setup.m_stones[SG_BLACK], setup.m_stones[SG_WHITE]));
     }
 
     _game_finished = false;
+    _while_capturing = false;
 
     return true;
 }
@@ -72,17 +76,12 @@ const GoBoard& Game::getBoard() const {
     return _go_game.Board();
 }
 
-State Game::getState() const {
-    return _current_state;
-}
 
-void Game::update(GoSetup setup) {
+UpdateResult Game::update(GoSetup setup) {
     // check if setup contains only valid stones!
     if (!validSetup(setup)) {
         std::cout << __TIMESTAMP__ << " [" << __FUNCTION__ << "] " << " GoSetup contains invalid stones! Skipping..." << std::endl;
-
-        // "silenty" skip this update (besides the debug output)
-        return;
+        return UpdateResult::Illegal;
     }
 
     // get new and current stones
@@ -100,84 +99,159 @@ void Game::update(GoSetup setup) {
     auto removed_whites = current_whites - new_whites;
 
 
-    switch (_current_state) {
-    case State::Valid:
-        onUpdateValid(added_blacks, added_whites, removed_blacks, removed_whites);
-        break;
+    // handicap
+    if (_allow_placing_handicap) {
+        assert(_while_capturing == false);
 
-    case State::SettingHandicap:
-        onUpdateSettingHandicap(setup);
-        break;
+        if (noWhites(current_whites, new_whites)) {
+            placeHandicap(setup);
+            return UpdateResult::Legal;
+        }
+        else {
+            // white stone has been added, no handicap stones from now on
+            _allow_placing_handicap = false;
+        }
+    }
 
-    case State::Invalid:
-        onUpdateInvalid(setup);
-        break;
 
-    case State::WhileCapturing:
-        onUpdateInvalid(setup);
-        break;
-
-    default:
-        assert(false);
+    if (_while_capturing) {
+        assert(getBoard().CapturingMove());
+        return updateWhileCapturing(setup);
+    }
+    else {
+        return updateNormal(added_blacks, added_whites, removed_blacks, removed_whites);
     }
 }
 
-void Game::onUpdateValid(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
-    SgPoint point;
-    SgBlackWhite player;
+bool Game::noWhites(SgPointSet current_whites, SgPointSet new_whites) {
+    return current_whites.IsEmpty() && new_whites.IsEmpty();
+}
 
-    // check if nothing has changed
-    if (added_blacks.IsEmpty() && added_whites.IsEmpty() && 
-        removed_blacks.IsEmpty() && removed_whites.IsEmpty())
-        return;
 
-    if (!removed_blacks.IsEmpty() || !removed_whites.IsEmpty()) {
-         // removing stones is invalid in this state
-        _current_state = State::Invalid;
-        return;
+UpdateResult Game::updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
+    assert(_while_capturing == false);
+
+    if (added_blacks.IsEmpty() && added_whites.IsEmpty()) {
+        if (removed_blacks.IsEmpty() && removed_whites.IsEmpty()) {
+            return UpdateResult::Legal;
+        }
+        else {
+            // just removing stones from the board is illegal
+            // capturing is not covered here
+            return UpdateResult::Illegal;
+        }
     }
-
-    if (added_blacks.Size() == 1 && added_whites.Size() == 0) {
-        // blacks move
-        point = added_blacks.PointOf();
-        player = SG_BLACK;
+    else if (added_blacks.Size() == 1 && added_whites.Size() == 0) {
+        // black move
+        return playMove(added_blacks.PointOf(), SG_BLACK, removed_blacks, removed_whites);
     }
     else if (added_blacks.Size() == 0 && added_whites.Size() == 1) {
-        // whites move
-        point = added_whites.PointOf();
-        player = SG_WHITE;
+        // white move
+        return playMove(added_whites.PointOf(), SG_WHITE, removed_whites, removed_blacks);
     }
     else {
-        // not a single stone difference
-        _current_state = State::Invalid;
-        return;
+        // more than a single stone added
+        return UpdateResult::Illegal;
     }
+}
 
-    if (getBoard().ToPlay() == player && getBoard().IsLegal(point, player)) {
-        _go_game.AddMove(point, player);
-        // handle capturing moves
-        const GoPointList& captured = getBoard().CapturedStones();
-        if (getBoard().CapturingMove()) {
-            _current_state = State::WhileCapturing;
+UpdateResult Game::updateWhileCapturing(GoSetup new_setup) {
+    auto board_setup = GoSetupUtil::CurrentPosSetup(getBoard());
+
+    // the player of the setup is ignored
+    new_setup.m_player = board_setup.m_player;
+
+    if (new_setup == board_setup) {
+        // all stones that are to capture have been removed from the board
+        _while_capturing = false;
+        return UpdateResult::Legal;
+    }
+    else {
+        // real life board dosn't match internal state
+        return UpdateResult::Illegal;
+    }
+}
+
+UpdateResult Game::playMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent) {
+    if (getBoard().ToPlay() != player || !getBoard().IsLegal(point, player)) {
+        // illegal move by game rules
+        return UpdateResult::Illegal;
+    }
+    
+    SgPointSet captured_stones = possibleCapturedStones(getBoard(), point);
+    if (captured_stones.IsEmpty()) {
+        // no capture
+
+        if (removed_of_player.IsEmpty() && removed_of_opponent.IsEmpty()) {
+            // completely valid move
+            _go_game.AddMove(point, player);
+            return UpdateResult::Legal;
+        }
+        else {
+            // played a valid move, but stones have been removed
+            return UpdateResult::Illegal;
         }
     }
     else {
-        // illegal move or not players turn
-        _current_state = State::Invalid;
+        // captured some stones
+
+        if (!removed_of_player.IsEmpty()) {
+            // only the enemy's stones can be captured
+            return UpdateResult::Illegal;
+        }
+
+        if (removed_of_opponent == captured_stones) {
+            // all stones that are to capture have already been removed
+            _go_game.AddMove(point, player);
+            return UpdateResult::Legal;
+        }
+        else if (removed_of_opponent.IsEmpty() || removed_of_opponent.SubsetOf(captured_stones)) {
+            // legal capturing move
+            _go_game.AddMove(point, player);
+
+            // some stones may have already been removed after playing the move,
+            // but there are still stones left to be removed, tell the user to remove them as well
+            _while_capturing = true;
+            return UpdateResult::Illegal;
+        }
+        else {
+            // stones that are not beeing captured have been removed
+            return UpdateResult::Illegal;
+        }
     }
 }
 
-void Game::onUpdateSettingHandicap(GoSetup new_setup) {
+SgPointSet Game::possibleCapturedStones(const GoBoard& const_board, SgPoint move) {
+    // makes the const_board modifiable, but asserts that the state has been restored when getting deleted
+    GoModBoard mod_board(const_board);
+    GoBoard& board = mod_board.Board();
+
+    assert(board.IsLegal(move));
+    // try playing to see if this move captured any stones
+    board.Play(move);
+    const GoPointList captured_list = mod_board.Board().CapturedStones();
+    board.Undo();
+    
+    // convert to other datatype
+    SgPointSet captured_set;
+    for (auto it = GoPointList::Iterator(captured_list); it; ++it) {
+        captured_set.Include(*it);
+    }
+    return captured_set;
+}
+
+void Game::placeHandicap(GoSetup new_setup) {
     auto previous_blacks = getBoard().All(SG_BLACK);
     auto blacks = new_setup.m_stones[SG_BLACK];
     auto whites = new_setup.m_stones[SG_WHITE];
+    assert(whites.IsEmpty());
 
     if (!blacks.IsEmpty() && blacks.Size() != previous_blacks.Size()) {
         // the GoGame class only allows adding handicap stones all at once
         // when getting a new handicap stone, the GoGame is therefore reset and 
         // and all handicap stones ar added anew
 
-        // the PlaceHandicap() call also increases the handicap inside the rules of the board
+        // the PlaceHandicap() call also increases the handicap inside the rules of the board,
         // these would then be placed automatically by the Init() call, we don't want that
         GoRules rules = getBoard().Rules();
         rules.SetHandicap(0);
@@ -186,7 +260,8 @@ void Game::onUpdateSettingHandicap(GoSetup new_setup) {
         if (blacks.Size() == 1) {
             // only a single black stone played and is therefore not a handicap stone
             // play the black stone just like a regular move
-            onUpdateValid(blacks, SgPointSet(), SgPointSet(), SgPointSet());
+            assert(getBoard().IsLegal(blacks.PointOf(), SG_BLACK));
+            _go_game.AddMove(blacks.PointOf(), SG_BLACK);
         }
         else {
             SgVector<SgPoint> handicap_stones;
@@ -194,29 +269,9 @@ void Game::onUpdateSettingHandicap(GoSetup new_setup) {
             _go_game.PlaceHandicap(handicap_stones);
         }
     }
-
-    // first white stone gets added, no placing of handicap stones anymore from then on
-    if (!whites.IsEmpty()) {
-        _current_state = State::Valid;
-
-        // play the added white stone just like any other move
-        // in case not a single black stone has been played, 
-        // the update() call correctly identifies this as an illegal move
-        update(new_setup);
-    }
 }
 
-void Game::onUpdateInvalid(GoSetup new_setup) {
-    auto board_setup = GoSetupUtil::CurrentPosSetup(getBoard());
 
-    // the player of the setup is ignored
-    new_setup.m_player = board_setup.m_player;
-
-    if (new_setup == board_setup) {
-        // the last valid state has been restored
-        _current_state = State::Valid;
-    }
-}
 
 void Game::playMove(SgPoint position) {
     auto setup = GoSetupUtil::CurrentPosSetup(getBoard());
