@@ -23,11 +23,15 @@ namespace Go_GUI {
 GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
 {
     ui_main.setupUi(this);
+    
+    texture_path = "res/textures/";
+    QApplication::setWindowIcon(QIcon(QPixmap(texture_path + "augmented_logo_transparent_icon.png")));
+    augmented_logo = QImage(texture_path + "augmented_logo.png");
 
     virtual_view = new VirtualView(this);
     augmented_view = new AugmentedView(this);
 
-    QString texture_path = "res/textures/";
+    
     whitebasket_pixmap = QPixmap(texture_path + "white_basket.png");
     blackbasket_pixmap = QPixmap(texture_path + "black_basket.png");
     closedbasket_pixmap = QPixmap(texture_path + "Closed_basket.png");
@@ -48,7 +52,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.info_action,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
     connect(ui_main.automatic_action,   &QAction::triggered,	this, &GUI::slot_BoardDetectionAutomatically);
     connect(ui_main.manually_action,	&QAction::triggered,	this, &GUI::slot_BoardDetectionManually);
-    connect(ui_main.toggle_app_mode_action,	&QAction::triggered, this, &GUI::slot_ToggleAppMode);
+    connect(ui_main.virtual_game_mode_action,	&QAction::triggered, this, &GUI::slot_ToggleVirtualGameMode);
     connect(ui_main.viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
@@ -106,7 +110,6 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
  */
 void GUI::slot_newImage(QImage image) {
         printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
-
         augmented_view->setImage(image);
         augmented_view->rescaleImage(augmented_view->parentWidget()->size());
     }
@@ -330,8 +333,30 @@ void GUI::slot_BoardDetectionAutomatically() {
     emit signal_boardDetectionAutomatically();
 }
 
-void GUI::slot_ToggleAppMode() {
-    emit signal_toggleAppMode();
+void GUI::slot_ToggleVirtualGameMode() {
+    // if in augmented mode -> switch to virtual
+    if (ui_main.virtual_game_mode_action->isChecked()){
+        this->setWindowTitle("Augmented Go - Virtual Mode");
+
+        // change virtual view to big container
+        if (ui_main.big_container->toolTip() != "virtual view")
+            this->slot_ViewSwitch();
+    
+        
+        slot_newImage(augmented_logo);
+    }
+
+    // if in virtual mode -> switch to augmented
+    else{
+        this->setWindowTitle("Augmented Go");
+
+        // change augmented view to big container
+        if (ui_main.big_container->toolTip() != "augmented view")
+            this->slot_ViewSwitch();
+        augmented_view->setStyleSheet("background-color: black");
+    
+    }
+    emit signal_toggleVirtualGameMode();
 }
 
 /**

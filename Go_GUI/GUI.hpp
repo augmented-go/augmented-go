@@ -9,8 +9,7 @@
 #include "ui_GUI.h"
 #include "ui_NewGameDialog.h"
 #include "AugmentedView.hpp"
-
-class VirtualView;
+#include "VirtualView.hpp"
 
 namespace Go_GUI {
 
@@ -40,7 +39,7 @@ private slots:
     void slot_ViewSwitch();
     void slot_BoardDetectionManually();
     void slot_BoardDetectionAutomatically();
-    void slot_ToggleAppMode();
+    void slot_ToggleVirtualGameMode();
     void closeEvent(QCloseEvent *event);
     void slot_passOnVirtualViewPlayMove(const int x, const int y);
 
@@ -51,7 +50,7 @@ signals:
     void signal_resign();
     void signal_boardDetectionManually();
     void signal_boardDetectionAutomatically();
-    void signal_toggleAppMode();
+    void signal_toggleVirtualGameMode();
     void stop_backend_thread();
     void signal_newGame(GoRules rules);
     void signal_playMove(const int x, const int y);
@@ -60,14 +59,21 @@ private:
     Ui::MainWindow ui_main;
     VirtualView* virtual_view;
     AugmentedView* augmented_view;
+
     QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
-    QString game_name;
+    QImage augmented_logo;
+    QString game_name, texture_path;
 
     // Pointer to the game board, will be set & cached in the slot "slot_newGameData".
     // This pointer will be valid until the GUI exits the application or the backend sends a new one.
     const GoBackend::Game* go_game;
 
     void setPlayerLabels(QString blackplayer_name, QString whiteplayer_name);
+
+    void resizeEvent(QResizeEvent* event){
+        QMainWindow::resizeEvent(event);
+        virtual_view->resizeEvent(event);
+    }
 };
 
 } // namespace Go_GUI

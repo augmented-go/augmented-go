@@ -47,10 +47,12 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     if (game_board == nullptr)
         return;
 
-    this->resize(this->parentWidget()->size());
+    this->resize(size);
 
     scene.clear();
-    
+    scene.setSceneRect(0,0, size.width(), size.height());
+    fitInView(this->sceneRect());
+
     // loads the board size and checks if its a valid size
     board_size = game_board->Size();
 
@@ -145,8 +147,11 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     // Stone that could be placed on board when user chooses to
     this->ghost_stone = new QGraphicsEllipseItem(QRectF());
     ghost_stone->setRect(selection_ellipse);
-    QBrush ghost_brush(white_stone_image_scaled);
-    this->ghost_stone->setOpacity(50);
+    QBrush ghost_brush = game_board->ToPlay() == SG_BLACK ? 
+                        QBrush(Qt::GlobalColor::black):
+                        QBrush(Qt::GlobalColor::white);
+            
+    this->ghost_stone->setOpacity(0.5);
     this->ghost_stone->setBrush(ghost_brush);
     this->scene.addItem(this->ghost_stone);
 
@@ -157,7 +162,7 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
 
 void VirtualView::mousePressEvent(QMouseEvent* event){
     if (event->button() == Qt::LeftButton && setting_stone_valid){
-        int ycoord = board_size - mouse_hover_coord.y() - 1;
+        int ycoord = board_size - mouse_hover_coord.y() + 1;
         emit signal_virtualViewplayMove(mouse_hover_coord.x(), ycoord);
         setting_stone_valid = false;
     }
@@ -208,6 +213,4 @@ void VirtualView::mouseMoveEvent(QMouseEvent* event){
         // save new mouse hover coordinates
         mouse_hover_coord = new_mouse_hover_coord;
     }
-
-    
 }

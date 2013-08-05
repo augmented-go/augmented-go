@@ -14,6 +14,11 @@ class VirtualView : public QGraphicsView
 public:
     VirtualView(QWidget *parent = 0);
     ~VirtualView();
+
+    void resizeEvent(QResizeEvent* event){
+        this->resize(this->parentWidget()->size());
+        this->fitInView(scene.sceneRect());
+    }
     void createAndSetScene(QSize size, const GoBoard * game_board = nullptr);
 
 signals:
