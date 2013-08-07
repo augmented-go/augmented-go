@@ -981,10 +981,10 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     std::cerr << "Board size: " << board_size << std::endl;
 
     // get map from intersection points to board coordinates (SgPoint)
-    auto to_board_coords = getBoardCoordMapFor(intersectionPoints, approx_stone_diameter);
+    auto to_board_coords = getBoardCoordMapFor(intersectionPoints);
 
     // detect the stones!
-    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, approx_stone_diameter, paintedWarpedImg);
+    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, paintedWarpedImg);
     detectWhiteStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, approx_stone_diameter, paintedWarpedImg);
 
     cv::imshow("Detected Stones and Intersections", paintedWarpedImg);
