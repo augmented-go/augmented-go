@@ -20,6 +20,8 @@ namespace Go_Scanner {
 
     RNG rng(12345);
 
+    // Tries to automatically detect the corner points of the go board
+    // This function simply returns without modifying p0, .., p3 if the board couldn't be found
     void automatic_warp(const Mat& input, Point2f& p0, Point2f& p1, Point2f& p2, Point2f& p3)
     {
         // CONVERT TO HSV
@@ -30,34 +32,26 @@ namespace Go_Scanner {
         vector<cv::Mat> v_channel;
         split(imgHSV, v_channel);          //split into three channels
 
-        // SELECT CHANNEL FOR FURTHER PROCEEDING
+        // SELECT CHANNEL FOR FURTHER PROCEEDING: SATURATION
         auto& source_channel = v_channel[1];
 
         // SMOOTHING IMAGE
         medianBlur(source_channel, source_channel, 3);
 
-        // CANNY
-        Mat edges;
-        const int threshold = 70;
-        Canny(source_channel, edges, threshold, threshold*2, 3);
-        //imshow( thresh_window, edges );
-
-        // MORPHING FOR BETTER AREAS AND THUS CONTOURS
-        const int morph_size = 4;
-        Mat element = getStructuringElement(MORPH_RECT, Size( 2*morph_size + 1, 2*morph_size+1 ), Point( morph_size, morph_size ));
-
-        // Apply the specified morphology operation
-        Mat morph;
-        morphologyEx(edges, morph, MORPH_GRADIENT, element);
-        //imshow( morph_window, morph );
+        // BINARY THRESH THE IMAGE
+        const auto threshold = cv::threshold(source_channel, source_channel, 0, 255, THRESH_BINARY | THRESH_OTSU);
 
         // FINDING CONTOURS
-        Mat morph_clone = morph.clone();
+        Mat clone = source_channel.clone();
         vector<vector<Point> > contours;
         vector<Vec4i> hierarchy;
-        findContours(morph_clone, contours, hierarchy, RETR_LIST, CHAIN_APPROX_SIMPLE, Point(0, 0));
+        findContours(clone, contours, hierarchy, RETR_LIST, CHAIN_APPROX_SIMPLE, Point(0, 0));
 
-        // APPROX. CONTOURS
+        // STOP IF THERE AREN'T ANY CONTOURS
+        if (contours.size() == 0)
+            return;
+
+        // APPROX. CONTOURS TO RECTANGLES
         for (auto& contour : contours) {
             // approximating each contour to get a rectangle with 4 points!
             approxPolyDP(Mat(contour), contour, arcLength(Mat(contour), true)*0.02, true);
@@ -73,7 +67,7 @@ namespace Go_Scanner {
         int mean_area = bbox_area_sum/contours.size();
 
         // DELETING IMPROPER CONTOURS/BBOXES
-        // that are smaller than the mean
+        // that are smaller than the mean area
         // or almost as big as the whole image
         // or don't have exactly 4 corner points after approximation ( == rectangle)
         assert(bboxes.size() == contours.size());
@@ -82,11 +76,24 @@ namespace Go_Scanner {
         const float max_width   = input.cols * edge_factor;
         const float max_height  = input.rows * edge_factor;
 
+        // DEBUG: DRAWING ALL LEFTOVER CONTOURS
+        Mat drawing = input.clone();
+        for (size_t i = 0; i < contours.size(); ++i) {
+            Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255));
+            drawContours(drawing, contours, (int)i, color, 2, 8, hierarchy, 0, Point());
+        }
+
+        // DEBUG: DRAWING BBOXES FOR ALL CONTOURS
+        for(auto& rect : bboxes) {
+            rectangle(drawing, rect.tl(), rect.br(), Scalar(255, 255, 255), 2, 8);
+        }
+
         auto cont_it = begin(contours);
         auto bbox_it = begin(bboxes);
         while (cont_it != end(contours) && bbox_it != end(bboxes)) {
             auto& contour = *cont_it;
             auto& bbox = *bbox_it;
+            const auto ar = bbox.area();
 
             // delete bboxes and its corresponding contour if the bbox is almost as large as the window
             if (bbox.width >= max_width && bbox.height >= max_height) {
@@ -108,80 +115,60 @@ namespace Go_Scanner {
             }
         }
 
-        //assert(contours.size() > 0);
-        if (contours.size() > 0) {
-            // SELECTING SUITABLE CONTOUR
-
-            // sort contours and bboxes by area
-            // that means we're selecting biggest contour for further processing
-            if (contours.size() > 1) {
-                std::sort(begin(contours), end(contours),
-                    [](const vector<Point>& cont1, const vector<Point>& cont2) { return contourArea(cont1) > contourArea(cont2); }
-                );
-                std::sort(begin(bboxes), end(bboxes),
-                    [](const Rect& r1, const Rect& r2) { return r1.area() > r2.area(); }
-                );
-            }
-
-            auto board_contour = contours.front();
-            auto board_bbox    = bboxes.front();
-
-            // GETTING CORNER POINTS OF CONTOUR
-            assert(board_contour.size() == 4); // the contour should have left only 4 points after approximating
-
-            // Rectangle Order for warping: 
-            // 0--------1
-            // |        |
-            // |        |
-            // 2--------3
-
-            auto center = Point(board_bbox.x + board_bbox.width/2, board_bbox.y + board_bbox.height/2);
-
-            // splitting points in upper and lower half
-            vector<Point> uppers, lowers;
-            for (auto& point : board_contour) {
-                if (point.y < center.y)
-                    uppers.emplace_back(point);
-                else
-                    lowers.emplace_back(point);
-            }
-
-            // deciding which point is left/right
-            assert(uppers.size() == 2);
-            assert(lowers.size() == 2);
-
-            // upper side
-            p0 = uppers[0];
-            p1 = uppers[1];
-            if (p0.x > p1.x)
-                std::swap(p0, p1);
-
-            // lower side
-            p2 = lowers[0];
-            p3 = lowers[1];
-            if (p2.x < p3.x)
-                std::swap(p2, p3);
-
-            // WARPING THE IMAGE
-            //auto warped = warpImage(input, p0, p1, p2, p3);
-            //imshow("Warped", warped);
+        // STOP IF WE DON'T HAVE ANY CONTOURS LEFT -> NO BOARD FOUND
+        if (contours.size() == 0)
             return;
+
+        // SELECTING SUITABLE CONTOUR
+        // sort contours and bboxes by area
+        // that means we're selecting biggest contour for further processing
+        if (contours.size() > 1) {
+            std::sort(begin(contours), end(contours),
+                [](const vector<Point>& cont1, const vector<Point>& cont2) { return contourArea(cont1) > contourArea(cont2); }
+            );
+            std::sort(begin(bboxes), end(bboxes),
+                [](const Rect& r1, const Rect& r2) { return r1.area() > r2.area(); }
+            );
         }
 
-        // DRAWING ALL LEFTOVER CONTOURS
-        Mat drawing = input.clone();
-        for (size_t i = 0; i < contours.size(); ++i) {
-            Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255));
-            drawContours(drawing, contours, (int)i, color, 2, 8, hierarchy, 0, Point());
+        auto board_contour = contours.front();
+        auto board_bbox    = bboxes.front();
+
+        // GETTING CORNER POINTS OF CONTOUR
+        assert(board_contour.size() == 4); // the contour should have left only 4 points after approximating
+
+        // Rectangle Order for warping: 
+        // 0--------1
+        // |        |
+        // |        |
+        // 2--------3
+
+        auto center = Point(board_bbox.x + board_bbox.width/2, board_bbox.y + board_bbox.height/2);
+
+        // splitting points in upper and lower half
+        vector<Point> uppers, lowers;
+        for (auto& point : board_contour) {
+            if (point.y < center.y)
+                uppers.emplace_back(point);
+            else
+                lowers.emplace_back(point);
         }
 
-        // DRAWING BBOXES FOR ALL CONTOURS
-        for(auto& rect : bboxes) {
-            rectangle(drawing, rect.tl(), rect.br(), Scalar(255, 255, 255), 2, 8);
-        }
+        // deciding which point is left/right
+        assert(uppers.size() == 2);
+        assert(lowers.size() == 2);
 
-        //imshow("Contours", drawing);
-        return;
+        // upper side
+        p0 = uppers[0];
+        p1 = uppers[1];
+        if (p0.x > p1.x)
+            std::swap(p0, p1);
+
+        // lower side
+        p2 = lowers[0];
+        p3 = lowers[1];
+        if (p2.x < p3.x)
+            std::swap(p2, p3);
     }
 
 }

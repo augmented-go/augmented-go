@@ -840,7 +840,7 @@ void do_auto_board_detection() {
     }
 
     // HACK: adjust the coordinates a bit to snap them closer to the board grid
-    const auto gap = 5.f;
+    const auto gap = .5f;
     p0 += cv::Point2f(gap, gap);
     p1 += cv::Point2f(-gap, gap);
     p2 += cv::Point2f(-gap, -gap);
@@ -866,8 +866,11 @@ void do_auto_board_detection() {
     asked_for_board_contour = true;
 }
 
-// map pixel coordinates (intersection points) to board coordinates
-// begins at the left of the lowermost line and gradually moves the lines from left to right upwards
+// Map pixel coordinates (intersection points) to board coordinates
+// Begins at the left of the lowermost line and gradually moves the lines from left to right upwards.
+//
+// It is required that the intersection points on a specific line all have equal y-values!
+// Thats the decision criteria for selecting the points on a given line.
 std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv::Point2f> intersectionPoints) {
     std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coordinates;
 
