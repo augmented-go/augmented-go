@@ -673,7 +673,7 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
     return distance;
 }
 
-void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup, float stone_diameter, cv::Mat& paintedWarpedImg)
+void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup, cv::Mat& paintedWarpedImg)
 {
     //TODO: use black/white image. write function for it. 
     
@@ -871,7 +871,7 @@ void do_auto_board_detection() {
 //
 // It is required that the intersection points on a specific line all have almost equal y-values!
 // Thats the decision criteria for selecting the points on a given line.
-std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv::Point2f> intersectionPoints, float stone_diameter) {
+std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv::Point2f> intersectionPoints) {
     std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coordinates;
 
     // sort points by their descending y-values to begin at the lowermost point
