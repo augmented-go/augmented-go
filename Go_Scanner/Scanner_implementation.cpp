@@ -485,7 +485,7 @@ bool intersection(cv::Vec4i horizontalLine, cv::Vec4i verticalLine, cv::Point2f 
     return true;
 }
 
-bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv::Point2f> &intersectionPoints)
+bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv::Point2f> &intersectionPoints, cv::Mat& paintedWarpedImg)
 {
     /*TODO: Find the best results
         Canny + HoughLinesP gives the best results.
@@ -510,10 +510,10 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     //reduce the noise
     cv::blur(warpedImg, warpedImg , cv::Size(3,3));
     cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
-    //cv::imshow("blur", warpedImgGray);
+    cv::imshow("blur", warpedImgGray);
 
     cv::Canny(warpedImgGray, cannyImg, 100, 150, 3);
-    //cv::imshow("Canny", cannyImg);
+    cv::imshow("Canny", cannyImg);
 
     //sobelImg = sobelFiltering(cannyImg);
     cv::threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
@@ -569,21 +569,21 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     //Draw the lines
     for( size_t i = 0; i < newLines.size(); i++ )
     {
-        cv::line(warpedImg, cv::Point(newLines[i][0], newLines[i][1]),
+        cv::line(paintedWarpedImg, cv::Point(newLines[i][0], newLines[i][1]),
             cv::Point(newLines[i][2], newLines[i][3]), cv::Scalar(0,0,255), 1, 8 );
     }
 
     //Draw the intersections
     for(size_t i= 0; i < intersectionPoints.size(); i++)
     {
-        cv::rectangle( warpedImg, 
+        cv::rectangle(paintedWarpedImg, 
         cv::Point(intersectionPoints[i].x-1, intersectionPoints[i].y-1),
         cv::Point(intersectionPoints[i].x+1, intersectionPoints[i].y+1), 
         cv::Scalar(255, 0,  0, 0), 2, 8, 0);
     }
 
 
-    cv::imshow("Intersections", warpedImg);
+    //cv::imshow("Intersections", warpedImg);
     
     return true;
 }
@@ -666,7 +666,7 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
     return distance;
 }
 
-void detectBlackStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup, float stone_diameter)
+void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup, float stone_diameter, cv::Mat& paintedWarpedImg)
 {
     //TODO: use black/white image. write function for it. 
     
@@ -675,7 +675,7 @@ void detectBlackStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPo
 
     cv::threshold(tmp, warpedImgGray, 85, 255, 0);
 
-    cv::imshow("Image for detecting black stones", warpedImgGray);
+    //cv::imshow("Image for detecting black stones", warpedImgGray);
     for(int i=0; i < intersectionPoints.size(); i++)
     {
         auto& intersection_point = intersectionPoints[i];
@@ -712,18 +712,17 @@ void detectBlackStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPo
                 std::cout << "Black Stone ("<< x << ", "<< y << ")" << std::endl;
 
                 setup.AddBlack(to_board_coords[intersection_point]);
+
+                cv::circle( paintedWarpedImg, 
+                cv::Point(midpoint125.x, midpoint125.y),
+                (diameter125/2), 
+                cv::Scalar(0, 255, 0), 0, 8, 0);
             }
-            else
-                std::cout << "+";
-
         }
-        else
-            std::cout << "-";
-
     }
 }
 
-void detectWhiteStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup, float stone_diameter)
+void detectWhiteStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup, float stone_diameter, cv::Mat& paintedWarpedImg)
 {   
     using namespace cv;
     cv::Mat detectWhite;
@@ -736,7 +735,7 @@ void detectWhiteStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPo
     auto element = getStructuringElement(MORPH_RECT, Size( 2*morph_size + 1, 2*morph_size+1 ), Point( morph_size, morph_size ));
     cv::morphologyEx(detectWhite, detectWhite, MORPH_GRADIENT, element); // Apply the specified morphology operation
 
-    cv::imshow("Image for detecting white stones", detectWhite);
+    //cv::imshow("Image for detecting white stones", detectWhite);
 
     for(int i=0; i < intersectionPoints.size(); i++)
     {
@@ -766,14 +765,13 @@ void detectWhiteStones(cv::Mat warpedImg, cv::vector<cv::Point2f> intersectionPo
                 std::cout << "White Stone ("<< x << ", "<< y << ")" << std::endl;
 
                 setup.AddWhite(to_board_coords[intersection_point]);
+
+                cv::circle( paintedWarpedImg, 
+                cv::Point(midpoint125.x, midpoint125.y),
+                (stone_diameter/2.0f), 
+                cv::Scalar(238, 238, 176), 0, 8, 0);
             }
-            else
-                std::cout << "+";
-
         }
-        else
-            std::cout << "-";
-
     }
 }
 
@@ -924,6 +922,7 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
         cv::imshow("Warped Image", warpedImg);
 
     cv::Mat srcWarpedImg = warpedImg.clone();
+    cv::Mat paintedWarpedImg = warpedImg.clone();
     cv::vector<cv::Point2f> intersectionPoints;
 
     if (debug == true)
@@ -941,11 +940,13 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
         cv::createTrackbar( trackbar_value,
                   window_name_thre, &threshold_value,
                   max_value, Threshold_Debug );
+
+        cv::waitKey();
     }
 
     else
     {
-        bool intersectionResult = getBoardIntersections(warpedImg, 255, intersectionPoints);
+        bool intersectionResult = getBoardIntersections(warpedImg, 255, intersectionPoints, paintedWarpedImg);
     }
 
     // @todo: assert that the number of intersection points are a quadratic number
@@ -972,8 +973,10 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     auto to_board_coords = getBoardCoordMapFor(intersectionPoints);
 
     // detect the stones!
-    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, approx_stone_diameter);
-    detectWhiteStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, approx_stone_diameter);
+    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, approx_stone_diameter, paintedWarpedImg);
+    detectWhiteStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, approx_stone_diameter, paintedWarpedImg);
+
+    cv::imshow("Detected Stones and Intersections", paintedWarpedImg);
 
     return true;
 }
