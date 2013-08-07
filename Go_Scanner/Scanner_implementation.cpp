@@ -61,7 +61,7 @@ struct PartitionOperator
         float distance = a - b;
         distance = abs(distance);
 
-        float boardfield = ((1.0f/18.0f) * sidesize)/3.5f;
+        float boardfield = ((1.0f/18.0f) * sidesize)/3.0f;
 
         return distance < boardfield;
     }
@@ -347,7 +347,7 @@ void groupIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>&
         }
 
         //vertical lines
-        else if(angle >= 89.0f && angle <= 91.0f)
+        else if(angle >= 88.0f && angle <= 93.0f)
         {
             cv::Vec4i v = lines[i];
 
@@ -368,7 +368,7 @@ void groupIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>&
             {
                 lines[i][0] = v[0];                 //x_start         
                 lines[i][1] = 0;                    //y_start
-                lines[i][2] = v[0];                 //x_end
+                lines[i][2] = v[3];                 //x_end
                 lines[i][3] = imageheight;          //y_end
             }
             verticalLines.push_back(lines[i]);
@@ -386,29 +386,33 @@ void groupIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>&
 
 cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
 {
-    int valueIndex, imagesizeIndex, zeroIndex, imagesize;
+    int valueIndex1, valueIndex2, imagesizeIndex, zeroIndex, imagesize;
 
     if(type == VERTICAL)
     {
-        valueIndex = 0;
-        imagesizeIndex = 3;
-        zeroIndex = 1;
+        valueIndex1 = 0;            //0 = line[0] = x_start
+        valueIndex2 = 2;            //0 = line[2] = x_end
+        imagesizeIndex = 3;         //3 = line[3] = y_end
+        zeroIndex = 1;              //1 = line[1] = y_start
         imagesize = imageheight;
     }
     else if (type == HORIZONTAL)
     {
-        valueIndex = 1;
+        valueIndex1 = 1;
+        valueIndex2 = 3;        
         imagesizeIndex = 2;
         zeroIndex = 0;
         imagesize = imagewidth;
     }
 
-    //Put the Starting Points of a Line into the lineStarts Vector
+    //Put the Starting Points and Ending Points of a Line into the lineStarts Vector
     cv::vector<int> lineStarts(lines.size());
+    cv::vector<int> lineEnds(lines.size());
 
     for(size_t i=0; i<lines.size(); i++)
     {
-        lineStarts[i] = lines[i][valueIndex];
+        lineStarts[i] = lines[i][valueIndex1];
+        lineEnds[i] = lines[i][valueIndex2];
     }
 
     //clustering of linedata. Creating the Clusters with the PartitionOperator and store them into ClusterNum.
@@ -419,12 +423,14 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
 
     //put the lines in there cluster
     cv::vector<cv::vector<int>> clusteredLineStarts(clusterSize);
+    cv::vector<cv::vector<int>> clusteredLineEnds(clusterSize);
 
     for(size_t i = 0; i < clusterNum.size(); i++)
     {
         int j = clusterNum[i];
 
         clusteredLineStarts[j].push_back(lineStarts[i]);
+        clusteredLineEnds[j].push_back(lineEnds[i]);
     }
 
     // middle the lines
@@ -434,19 +440,22 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
     for(int i=0; i < clusterSize; i++)
     {
         int numLines = clusteredLineStarts[i].size();
-        int sum=0;
+        int sumStarts=0;
+        int sumEnds=0;
 
         for(int j=0; j < numLines; j++)
         {
-            sum += clusteredLineStarts[i][j];
+            sumStarts += clusteredLineStarts[i][j];
+            sumEnds += clusteredLineEnds[i][j];
         }
 
-        int mid = sum/numLines;
+        int midStarts = sumStarts/numLines;
+        int midEnds = sumEnds/numLines;
 
         middle[zeroIndex] = 0;
-        middle[valueIndex] = mid;
+        middle[valueIndex1] = midStarts;
         middle[imagesizeIndex] = imagesize;
-        middle[valueIndex+2] = mid;
+        middle[valueIndex2] = midEnds;
 
         middledLines.push_back(middle);
     }
@@ -521,7 +530,7 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     cv::imshow("Threshed Image for HoughLinesP", threshedImg);
 
     cv::vector<cv::Vec4i> lines, horizontalLines, verticalLines;
-    cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 100, 40, 10 );
+    cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 100, 20, 10 );
 
     cv::Mat houghimage = warpedImg.clone();
 
@@ -560,7 +569,6 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
         }
     }
 
-
     cv::vector<cv::Vec4i> newLines; 
 
     newLines.insert(newLines.begin(), newhorizontalLines.begin(), newhorizontalLines.end());
@@ -590,7 +598,6 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
 
 int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, lineheading heading, cv::Point2f& midpointLine)
 {
-    //TODO: xtmp, ytmp < imageheight & imagewidth
 
     /**
     *    Returns the size of a 45°(left headed) or 135°(right headed) line within a circle, 
@@ -689,7 +696,7 @@ void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionP
         * are similar -> it's a stone. 
         */
 
-        if (warpedImgGray.at<uchar>(y,x) < 50)
+        if (warpedImgGray.at<uchar>(y,x) < 20)
         {
 
             /**    
