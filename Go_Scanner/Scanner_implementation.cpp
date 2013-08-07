@@ -869,22 +869,23 @@ void do_auto_board_detection() {
 // Map pixel coordinates (intersection points) to board coordinates
 // Begins at the left of the lowermost line and gradually moves the lines from left to right upwards.
 //
-// It is required that the intersection points on a specific line all have equal y-values!
+// It is required that the intersection points on a specific line all have almost equal y-values!
 // Thats the decision criteria for selecting the points on a given line.
-std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv::Point2f> intersectionPoints) {
+std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv::Point2f> intersectionPoints, float stone_diameter) {
     std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coordinates;
 
-    // get all unique y-values (lines)
-    auto unique_ys = filter_unique<cv::Point2f, float>(intersectionPoints, [](const cv::Point2f& pt) { return pt.y; });
-    
-    // begin at line closest to the bottom because board coordinates have its origin in the lower left corner!
-    // -> sort descending
-    std::sort(std::begin(unique_ys), std::end(unique_ys), [](const float& left, const float& right) { return left > right; });
+    // sort points by their descending y-values to begin at the lowermost point
+    std::sort(std::begin(intersectionPoints), std::end(intersectionPoints), [](const cv::Point2f& left, const cv::Point2f& right) { return left.y > right.y; });
 
-    // walk through each line (unique y-value of the points) from left to right and map a board coordinate to each point
+    // get the number of lines the board has
+    auto num_lines = static_cast<int>(sqrt(intersectionPoints.size()));
+
+    // walk through each line from left to right and map a board coordinate to each point
     int line_idx = 1;
-    for (const auto& unique_y_value : unique_ys) {
-        auto points_on_this_line = filter_vector<cv::Point2f>(intersectionPoints, [=](const cv::Point2f& pt) { return pt.y == unique_y_value; });
+    for (auto i = 0; i < num_lines; ++i) {
+        // get the next num_lines points (these will be the points on the i-th line)
+        decltype(intersectionPoints) points_on_this_line;
+        std::copy(begin(intersectionPoints)+i*num_lines+0, begin(intersectionPoints)+i*num_lines+num_lines, std::back_inserter(points_on_this_line));
 
         // sort by ascending x values of the points
         std::sort(std::begin(points_on_this_line), std::end(points_on_this_line), [](const cv::Point2f& left, const cv::Point2f& right) { return left.x < right.x; });
@@ -980,7 +981,7 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     std::cerr << "Board size: " << board_size << std::endl;
 
     // get map from intersection points to board coordinates (SgPoint)
-    auto to_board_coords = getBoardCoordMapFor(intersectionPoints);
+    auto to_board_coords = getBoardCoordMapFor(intersectionPoints, approx_stone_diameter);
 
     // detect the stones!
     detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, approx_stone_diameter, paintedWarpedImg);
