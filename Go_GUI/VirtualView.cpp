@@ -145,16 +145,17 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     }
     
     // Stone that could be placed on board when user chooses to
-    this->ghost_stone = new QGraphicsEllipseItem(QRectF());
-    ghost_stone->setRect(selection_ellipse);
-    QBrush ghost_brush = game_board->ToPlay() == SG_BLACK ? 
-                        QBrush(Qt::GlobalColor::black):
-                        QBrush(Qt::GlobalColor::white);
+    if (this->virtual_game_mode){
+        this->ghost_stone = new QGraphicsEllipseItem(QRectF());
+        ghost_stone->setRect(selection_ellipse);
+        QBrush ghost_brush = game_board->ToPlay() == SG_BLACK ? 
+                            QBrush(Qt::GlobalColor::black):
+                            QBrush(Qt::GlobalColor::white);
             
-    this->ghost_stone->setOpacity(0.5);
-    this->ghost_stone->setBrush(ghost_brush);
-    this->scene.addItem(this->ghost_stone);
-
+        this->ghost_stone->setOpacity(0.5);
+        this->ghost_stone->setBrush(ghost_brush);
+        this->scene.addItem(this->ghost_stone);
+    }
     this->setScene(&scene);
 
     setting_stone_valid = true;

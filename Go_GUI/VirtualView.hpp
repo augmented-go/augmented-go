@@ -27,6 +27,9 @@ signals:
     void signal_virtualViewplayMove(const int coord_x, const int coord_y);
 
 public slots:
+    /*
+     * sets
+     */
     void slot_setVirtualGameMode(bool checked);
 
 private:
