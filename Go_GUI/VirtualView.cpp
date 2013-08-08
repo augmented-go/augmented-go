@@ -9,6 +9,7 @@
 
 #include <GoBoard.h>
 
+
 VirtualView::VirtualView(QWidget *parent){
     this->setParent(parent);
 
@@ -38,10 +39,6 @@ VirtualView::VirtualView(QWidget *parent){
 VirtualView::~VirtualView(){
 }
 
-/**
- * @brief	Creates the virtual board of the go game and set the scene
- * @param	QSize	size of the container	
- */
 void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
 {
     if (game_board == nullptr)
@@ -166,7 +163,7 @@ void VirtualView::resizeVirtualView(){
     this->fitInView(scene.sceneRect());
 }
 
-//slots:
+//SLOTS
 void VirtualView::slot_setVirtualGameMode(bool checked){
     this->virtual_game_mode = checked;
     if (!checked && scene.isActive())

@@ -16,10 +16,7 @@
 
 namespace Go_GUI {
     
-/**
- * @brief	Checks for gui elements and fonts and connects signals and slots
- * @param	QWidget/QMainWindow		parent widget that creates this
- */
+
 GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
 {
     ui_main.setupUi(this);
@@ -64,9 +61,6 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     this->init();
 }
 
-/**
- * @brief	Sets initial settings, texts and windows
- */
 void GUI::init(){
     this->setWindowTitle("Augmented Go");
     this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -92,11 +86,6 @@ void GUI::init(){
     emit signal_setVirtualGameMode(ui_main.virtual_game_mode_action->isChecked());
 }
 
-/**
- * @brief	sets labels and variables for player names.
- * @param	QString		name of black player (default: "Black"
- * @param	QString		name of white player (default: "White"
- */
 void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
     ui_main.blackplayer_label->setText(blackplayer_name);
     ui_main.whiteplayer_label->setText(whiteplayer_name);
@@ -104,137 +93,24 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
 
 
 //////////
-//Public Slots
-//////////
-
-/**
- * @brief   SLOT "new image"
- *          If a new image is sent to GUI, refresh and rescale picture.
- * @param   QImage  new image from scanner
- */
-void GUI::slot_newImage(QImage image) {
-        printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
-        augmented_view->setImage(image);
-        augmented_view->rescaleImage(augmented_view->parentWidget()->size());
-    }
-
-/**
- * @brief   SLOT "new game data"
- *          If new game data is sent to GUI, refresh display of current player and captured stones.
- * @param   game     new game representation
- */
-void GUI::slot_newGameData(const GoBackend::Game* game) {
-    // update internal pointer if the board has been changed
-    if (game != game)
-        game = game;
-
-    auto& board = game->getBoard();
-
-    auto current_player = board.ToPlay();
-
-    // Updating basket pictures
-    switch (current_player) {
-    case SG_WHITE:
-        ui_main.white_basket->setPixmap(whitebasket_pixmap);
-        ui_main.black_basket->setPixmap(closedbasket_pixmap);
-        break;
-    case SG_BLACK:
-        ui_main.white_basket->setPixmap(closedbasket_pixmap);
-        ui_main.black_basket->setPixmap(blackbasket_pixmap);
-        break;
-    default:
-        assert(false);
-        break;
-    }
-
-    // Updating Game-Settings
-    ui_main.movenumber_label->setText(QString::number(board.MoveNumber()));
-    ui_main.kominumber_label->setText(QString::number(board.Rules().Komi().ToFloat()));
-    ui_main.handicapnumber_label->setText(QString::number(board.Rules().Handicap()));
-    ui_main.capturedwhite_label->setText(QString::number(board.NumPrisoners(SG_WHITE)));
-    ui_main.capturedblack_label->setText(QString::number(board.NumPrisoners(SG_BLACK)));
-
-    // refresh virtual view
-    if (ui_main.big_container->toolTip() == "virtual view")
-        virtual_view->createAndSetScene(ui_main.big_container->size(), &board);
-    
-    else if (ui_main.big_container->toolTip() == "augmented view")
-        virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
-    
-    printf(">>> New Game data! <<<\n");
-}    
-
-/**
- * @brief   SLOT "Show finished game results"
- *          If a game ended, the BackendThread sends a signal with the results.
- *          Here the results are shown to the user.
- */
-void GUI::slot_showFinishedGameResults(QString result){
-    QMessageBox::information(this, "Game results", result);
-    auto answer = QMessageBox::question(this, "New Game?", "Do you want to start a new game?");
-    if (answer == QMessageBox::Yes)
-        this->slot_ButtonNewGame();
-}
-
-/**
- * @brief   SLOT "setup new game"
- *          When a new game has been started, setup game name and player names on gui.
- * @param   QString    game name
- * @param   QString    black player name
- * @param   QString    white player name
- */
-void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi){
-
-    // emit to backend that gui wants to set up a new game!
-    auto rules = GoRules(0, GoKomi(komi), true, true);
-    emit signal_newGame(rules);
-
-    // Setting up new names for players
-    ui_main.gamename_label->setText(game_name);
-    ui_main.blackplayer_label->setText(blackplayer_name);
-    ui_main.whiteplayer_label->setText(whiteplayer_name);
-    ui_main.kominumber_label->setText(QString::number(komi));
-    ui_main.handicapnumber_label->setText(QString::number(0));
-}
-
-//////////
 //Private Slots
 //////////
 
-/**
- * @brief   SLOT "NewGame/Reset"
- *          Opens a Dialog that asks for game rules and names.
- */
 void GUI::slot_ButtonNewGame(){
     NewGameDialog* newgame = new NewGameDialog(this);
     newgame->exec();
 }
 
-/**
- * @brief   SLOT "Resign"
- *          Opens a Dialog that asks for confirmation.
- *			If answered yes, a signal is sent to backend that the current player surrenders.
- */
 void GUI::slot_ButtonResign(){
     if (QMessageBox::question(this, "Resign", "Do you really want to admit defeat?") == QMessageBox::Yes)
         emit signal_resign();
 }
 
-/**
- * @brief   SLOT "Pass"
- *          Opens a Dialog that asks for confirmation.
- *			If answered yes, a signal is sent to backend that the current player passes.
- */
 void GUI::slot_ButtonPass(){
     if (QMessageBox::question(this, "Pass", "Do you really want to pass?") == QMessageBox::Yes)
         emit signal_pass();
 }
 
-/**
- * @brief	SLOT "ViewSwitch"
- *			Switches big view with small view.
- *			To assign a view to something a QWidget has to be created.
- */
 void GUI::slot_ViewSwitch(){
     if (ui_main.big_container->toolTip() == "virtual view"){
 
@@ -267,11 +143,6 @@ void GUI::slot_ViewSwitch(){
     virtual_view->resizeVirtualView();
 }
 
-/**
- * @brief	SLOT QAction "MenuOpen"
- *			opens a filedialog that lets the user choose an sgf-file.
- * @todo	loading sgf file
- */
 void GUI::slot_MenuOpen(){
     QString selfilter = tr("SGF (*.sgf)");
     QString fileName = QFileDialog::getOpenFileName(
@@ -288,10 +159,6 @@ void GUI::slot_MenuOpen(){
     }
 }
 
-/**
- * @brief	SLOT QAction "MenuSave"
- *			opens a filedialog that lets the user choose an sgf-file.
- */
 void GUI::slot_MenuSave(){
     QString selfilter = tr("SGF (*.sgf)");
     QString fileName = QFileDialog::getSaveFileName(
@@ -307,10 +174,6 @@ void GUI::slot_MenuSave(){
         emit signal_saveGame(fileName, ui_main.blackplayer_label->text(), ui_main.whiteplayer_label->text(), this->game_name);
 }
 
-/**
- * @brief	SLOT QAction "MenuInfo"
- *			opens a window with information about the application.
- */
 void GUI::slot_MenuInfo(){
     // Appliction Info
     std::string output = "Augmented Go - Interactive Game of Go as Augmented Reality Application\n\n\n";
@@ -365,13 +228,87 @@ void GUI::slot_ToggleVirtualGameMode() {
     }
 }
 
-/**
- * @brief	overridden SLOT QCloseEvent "closeEvent"
- *			When trying to close the application a window appears and asks if user is sure.
- *			If answered "yes" the a signal to the backend thread is sent to stop it.
- *			If answered "no" the close event is ignored.
- * @param	QCloseEvent		close event that shall or shall not be executed afterwards.
- */
+void GUI::slot_passOnVirtualViewPlayMove(const int x, const int y){
+    emit this->signal_playMove(x, y);
+}
+
+
+//////////
+//Public Slots
+//////////
+
+void GUI::slot_newImage(QImage image) {
+        printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
+        augmented_view->setImage(image);
+        augmented_view->rescaleImage(augmented_view->parentWidget()->size());
+    }
+
+void GUI::slot_newGameData(const GoBackend::Game* game) {
+    // update internal pointer if the board has been changed
+    if (game != game)
+        game = game;
+
+    auto& board = game->getBoard();
+
+    auto current_player = board.ToPlay();
+
+    // Updating basket pictures
+    switch (current_player) {
+    case SG_WHITE:
+        ui_main.white_basket->setPixmap(whitebasket_pixmap);
+        ui_main.black_basket->setPixmap(closedbasket_pixmap);
+        break;
+    case SG_BLACK:
+        ui_main.white_basket->setPixmap(closedbasket_pixmap);
+        ui_main.black_basket->setPixmap(blackbasket_pixmap);
+        break;
+    default:
+        assert(false);
+        break;
+    }
+
+    // Updating Game-Settings
+    ui_main.movenumber_label->setText(QString::number(board.MoveNumber()));
+    ui_main.kominumber_label->setText(QString::number(board.Rules().Komi().ToFloat()));
+    ui_main.handicapnumber_label->setText(QString::number(board.Rules().Handicap()));
+    ui_main.capturedwhite_label->setText(QString::number(board.NumPrisoners(SG_WHITE)));
+    ui_main.capturedblack_label->setText(QString::number(board.NumPrisoners(SG_BLACK)));
+
+    // refresh virtual view
+    if (ui_main.big_container->toolTip() == "virtual view")
+        virtual_view->createAndSetScene(ui_main.big_container->size(), &board);
+    
+    else if (ui_main.big_container->toolTip() == "augmented view")
+        virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
+    
+    printf(">>> New Game data! <<<\n");
+}    
+
+void GUI::slot_showFinishedGameResults(QString result){
+    QMessageBox::information(this, "Game results", result);
+    auto answer = QMessageBox::question(this, "New Game?", "Do you want to start a new game?");
+    if (answer == QMessageBox::Yes)
+        this->slot_ButtonNewGame();
+}
+
+void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi){
+
+    // emit to backend that gui wants to set up a new game!
+    auto rules = GoRules(0, GoKomi(komi), true, true);
+    emit signal_newGame(rules);
+
+    // Setting up new names for players
+    ui_main.gamename_label->setText(game_name);
+    ui_main.blackplayer_label->setText(blackplayer_name);
+    ui_main.whiteplayer_label->setText(whiteplayer_name);
+    ui_main.kominumber_label->setText(QString::number(komi));
+    ui_main.handicapnumber_label->setText(QString::number(0));
+}
+
+///////////
+//Events
+///////////
+
 void GUI::closeEvent(QCloseEvent *event){
 
     // If at least one move was was done
@@ -391,8 +328,5 @@ void GUI::closeEvent(QCloseEvent *event){
     
 }
 
-void GUI::slot_passOnVirtualViewPlayMove(const int x, const int y){
-    emit this->signal_playMove(x, y);
-}
 
 } // namespace Go_GUI
