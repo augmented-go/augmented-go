@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QDebug>
+#include <QTimer>
 
 #include "Game.hpp"
 
@@ -50,7 +51,7 @@ signals:
     void signal_resign();
     void signal_boardDetectionManually();
     void signal_boardDetectionAutomatically();
-    void signal_toggleVirtualGameMode();
+    void signal_setVirtualGameMode(bool checked);
     void stop_backend_thread();
     void signal_newGame(GoRules rules);
     void signal_playMove(const int x, const int y);

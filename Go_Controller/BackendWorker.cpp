@@ -144,7 +144,7 @@ void BackendWorker::signalGuiGameHasEnded() const {
     emit finishedGameResult(QString(result.c_str()));
 }
 
-void BackendWorker::toggleVirtualGameMode() {
+void BackendWorker::setVirtualGameMode(bool checked) {
     if (virtualModeActive()) {
         // go into augmented mode -> do the scanning!
         _scan_timer.start();

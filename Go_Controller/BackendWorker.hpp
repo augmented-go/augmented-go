@@ -57,7 +57,7 @@ namespace Go_AR {
         /**
          * @brief       Toggles between completely virtual and augmented application mode.
          */
-        void toggleVirtualGameMode();
+        void setVirtualGameMode(bool checked);
 
         /**
          * @brief       Sends a move to game

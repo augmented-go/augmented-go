@@ -83,8 +83,8 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     float scale_x = size.width() / float(board_image.width());
     float scale_y = size.height() / float(board_image.height());
 
-    cell_width = float(board_image.width()) / (board_size+1);
-    cell_height = float(board_image.height()) / (board_size+1);
+    cell_width = static_cast<qreal>(board_image.width()) / (board_size+1);
+    cell_height = static_cast<qreal>(board_image.height()) / (board_size+1);
     
 
     // scale the images to the right size
@@ -160,16 +160,36 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     setting_stone_valid = true;
 }
 
+void VirtualView::resizeVirtualView(){
+    this->resize(this->parentWidget()->size());
+    this->fitInView(scene.sceneRect());
+}
+
+//slots:
+void VirtualView::slot_setVirtualGameMode(bool checked){
+    this->virtual_game_mode = checked;
+    if (!checked && scene.isActive())
+        scene.removeItem(ghost_stone);
+}
+
 void VirtualView::mousePressEvent(QMouseEvent* event){
+    if (!virtual_game_mode)
+        return;
+
     if (event->button() == Qt::LeftButton && setting_stone_valid){
-        int ycoord = board_size - mouse_hover_coord.y() + 1;
+        // the mouse_hover_coord is calculated starting from upper left corner
+        // game board starts at left bottom corner -> mirror vertically
+        int ycoord = board_size - mouse_hover_coord.y() + 1;    
         emit signal_virtualViewplayMove(mouse_hover_coord.x(), ycoord);
         setting_stone_valid = false;
     }
 }
 
 void VirtualView::mouseMoveEvent(QMouseEvent* event){
-    int pic_boarder_x = 60, pic_boarder_y = 55, board_pix;
+    if (!virtual_game_mode)
+        return;
+
+    int pic_boarder_x = 60, pic_boarder_y = 55, board_pix; 
 
     switch(this->board_size){
     case 9: 
@@ -186,16 +206,25 @@ void VirtualView::mouseMoveEvent(QMouseEvent* event){
         break;
     }
 
-    // calculate the board coordinates of mouseposition (example {1,1} or {5,2})
-    float scale_x = this->size().width() * 1.0f/board_pix * 1.0f;
-    float scale_y = this->size().height() * 1.0f/board_pix * 1.0f;
-    float xCoordAccurate = (event->pos().x() - pic_boarder_x * scale_x) / (this->cell_width * scale_x);
-    float yCoordAccurate = (event->pos().y() - pic_boarder_y * scale_y) / (this->cell_height * scale_y);
+    // calculate the scale of picture in viewport
+    qreal scale_x = scene.sceneRect().size().width() * qreal(1.0)/board_pix;
+    qreal scale_y = scene.sceneRect().size().height() * qreal(1.0)/board_pix;
+
+    // getting transformation of scene (fitInView() scales the scene!)
+    qreal transform_x = qreal(1.0) / this->transform().m11();
+    qreal transform_y = qreal(1.0) / this->transform().m22();
+    
+    // mapping mousecoordinates to gameboard coordinates (example: x=0,2515, y=2,7622)
+    qreal xCoordAccurate = (event->pos().x() * transform_x - pic_boarder_x * scale_x) / (this->cell_width * scale_x);
+    qreal yCoordAccurate = (event->pos().y() * transform_y - pic_boarder_y * scale_y) / (this->cell_height * scale_y);
+    
+    // Rounding half up  (example: x=0, y=3)
     int board_x_coord = static_cast<int>(xCoordAccurate);
     int board_y_coord = static_cast<int>(yCoordAccurate);
-    board_x_coord = xCoordAccurate - board_x_coord < 0.5 ? board_x_coord : board_x_coord + 1; 
-    board_y_coord = yCoordAccurate - board_y_coord < 0.5 ? board_y_coord : board_y_coord + 1; 
+    board_x_coord = xCoordAccurate - board_x_coord < 0.5f ? board_x_coord : board_x_coord + 1; 
+    board_y_coord = yCoordAccurate - board_y_coord < 0.5f ? board_y_coord : board_y_coord + 1; 
 
+    // Until now we calculated from 0,0. Game starts counting at 1,1 
     QPoint new_mouse_hover_coord = QPoint(board_x_coord + 1,board_y_coord + 1);
     
     // If mouse hover coordinates differ -> move ellipse to new coordinates
@@ -203,8 +232,8 @@ void VirtualView::mouseMoveEvent(QMouseEvent* event){
         && board_x_coord < board_size && board_y_coord < board_size){
 
         // calculate exact position of where to draw new ellipse
-        qreal ellipse_xPos = (pic_boarder_x * scale_x) + (board_x_coord * this->cell_width * scale_x) - (this->cell_width * scale_x)/2;
-        qreal ellipse_yPos = (pic_boarder_y * scale_y) + (board_y_coord * this->cell_height * scale_y) - (this->cell_height * scale_y)/2;
+        qreal ellipse_xPos = (pic_boarder_x * scale_x) + (board_x_coord * this->cell_width * scale_x) - (this->cell_width * scale_x)/2.0f;
+        qreal ellipse_yPos = (pic_boarder_y * scale_y) + (board_y_coord * this->cell_height * scale_y) - (this->cell_height * scale_y)/2.0f;
 
         QRectF new_selection_ellipse = QRectF(ellipse_xPos, ellipse_yPos, this->cell_width * scale_x, this->cell_height * scale_y);
         ghost_stone->setRect(new_selection_ellipse);

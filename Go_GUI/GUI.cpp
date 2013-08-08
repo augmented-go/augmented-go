@@ -53,12 +53,13 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.automatic_action,   &QAction::triggered,	this, &GUI::slot_BoardDetectionAutomatically);
     connect(ui_main.manually_action,	&QAction::triggered,	this, &GUI::slot_BoardDetectionManually);
     connect(ui_main.virtual_game_mode_action,	&QAction::triggered, this, &GUI::slot_ToggleVirtualGameMode);
+    connect(this,	&GUI::signal_setVirtualGameMode, this->virtual_view, &VirtualView::slot_setVirtualGameMode);
     connect(ui_main.viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
     connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
-
+   
     // setting initial values
     this->init();
 }
@@ -87,6 +88,8 @@ void GUI::init(){
 
     ui_main.capturedwhite_label->setText(QString());
     ui_main.capturedblack_label->setText(QString());
+
+    emit signal_setVirtualGameMode(ui_main.virtual_game_mode_action->isChecked());
 }
 
 /**
@@ -98,6 +101,7 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
     ui_main.blackplayer_label->setText(blackplayer_name);
     ui_main.whiteplayer_label->setText(whiteplayer_name);
 }
+
 
 //////////
 //Public Slots
@@ -259,6 +263,8 @@ void GUI::slot_ViewSwitch(){
         ui_main.big_container->setToolTip("virtual view");
         virtual_view->show(); 
     }
+
+    virtual_view->resizeVirtualView();
 }
 
 /**
@@ -342,7 +348,7 @@ void GUI::slot_ToggleVirtualGameMode() {
         if (ui_main.big_container->toolTip() != "virtual view")
             this->slot_ViewSwitch();
     
-        
+        emit signal_setVirtualGameMode(true);
         slot_newImage(augmented_logo);
     }
 
@@ -355,8 +361,8 @@ void GUI::slot_ToggleVirtualGameMode() {
             this->slot_ViewSwitch();
         augmented_view->setStyleSheet("background-color: black");
     
+        emit signal_setVirtualGameMode(false);
     }
-    emit signal_toggleVirtualGameMode();
 }
 
 /**

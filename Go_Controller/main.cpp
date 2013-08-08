@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
         QObject::connect(&gui, &GUI::signal_newGame,                     worker, &BackendWorker::resetGame);
         QObject::connect(&gui, &GUI::signal_boardDetectionAutomatically, worker, &BackendWorker::selectBoardAutomatically);
         QObject::connect(&gui, &GUI::signal_boardDetectionManually,      worker, &BackendWorker::selectBoardManually);
-        QObject::connect(&gui, &GUI::signal_toggleVirtualGameMode,       worker, &BackendWorker::toggleVirtualGameMode);
+        QObject::connect(&gui, &GUI::signal_setVirtualGameMode,          worker, &BackendWorker::setVirtualGameMode);
         QObject::connect(&gui, &GUI::signal_playMove,                    worker, &BackendWorker::playMove);
 
         worker_thread.start(); // start worker thread
