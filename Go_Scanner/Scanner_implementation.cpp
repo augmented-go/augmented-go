@@ -346,7 +346,7 @@ void groupIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>&
         }
 
         //vertical lines
-        else if(angle >= 88.0f && angle <= 93.0f)
+        else if(angle >= 88.0f && angle <= 92.0f)
         {
             cv::Vec4i v = lines[i];
 
@@ -367,7 +367,7 @@ void groupIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>&
             {
                 lines[i][0] = v[0];                 //x_start         
                 lines[i][1] = 0;                    //y_start
-                lines[i][2] = v[3];                 //x_end
+                lines[i][2] = v[2];                 //x_end
                 lines[i][3] = imageheight;          //y_end
             }
             verticalLines.push_back(lines[i]);
@@ -390,7 +390,7 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
     if(type == VERTICAL)
     {
         valueIndex1 = 0;            //0 = line[0] = x_start
-        valueIndex2 = 2;            //0 = line[2] = x_end
+        valueIndex2 = 2;            //2 = line[2] = x_end
         imagesizeIndex = 3;         //3 = line[3] = y_end
         zeroIndex = 1;              //1 = line[1] = y_start
         imagesize = imageheight;
@@ -404,7 +404,7 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
         imagesize = imagewidth;
     }
 
-    //Put the Starting Points and Ending Points of a Line into the lineStarts Vector
+    //Put the Starting Points and Ending Points of a Line into the lineStarts and lineEnds Vector
     cv::vector<int> lineStarts(lines.size());
     cv::vector<int> lineEnds(lines.size());
 
@@ -526,10 +526,13 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     //sobelImg = sobelFiltering(cannyImg);
     cv::threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
 
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7));
+    cv::morphologyEx(threshedImg, threshedImg, cv::MORPH_CLOSE, element); // Apply the specified morphology operation
+
     cv::imshow("Threshed Image for HoughLinesP", threshedImg);
 
     cv::vector<cv::Vec4i> lines, horizontalLines, verticalLines;
-    cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 100, 20, 10 );
+    cv::HoughLinesP(threshedImg, lines, 1, CV_PI/180, 80, 10, 5);
 
     cv::Mat houghimage = warpedImg.clone();
 
@@ -681,7 +684,7 @@ void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionP
 
     cv::threshold(tmp, warpedImgGray, 85, 255, 0);
 
-    //cv::imshow("Image for detecting black stones", warpedImgGray);
+    cv::imshow("Image for detecting black stones", warpedImgGray);
     for(int i=0; i < intersectionPoints.size(); i++)
     {
         auto& intersection_point = intersectionPoints[i];
@@ -737,11 +740,19 @@ void detectWhiteStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionP
     cv::Canny(detectWhite, detectWhite, 180, 255, 3);
 
     // MORPHING FOR BETTER AREAS AND THUS CONTOURS
-    const int morph_size = 1;
-    auto element = getStructuringElement(MORPH_RECT, Size( 2*morph_size + 1, 2*morph_size+1 ), Point( morph_size, morph_size ));
-    cv::morphologyEx(detectWhite, detectWhite, MORPH_GRADIENT, element); // Apply the specified morphology operation
+    Mat element = getStructuringElement( MORPH_ELLIPSE, Size( 7 , 7 ));
+    cv::morphologyEx(detectWhite, detectWhite, MORPH_CLOSE, element); // Apply the specified morphology operation
 
-    //cv::imshow("Image for detecting white stones", detectWhite);
+
+/*
+    Mat element2 = getStructuringElement( MORPH_ELLIPSE,
+                                       Size( 7 , 7 ));
+    cv::Mat detectWhiteClone = detectWhite.clone();
+    cv::dilate(detectWhite, detectWhite, element2);
+*/
+    cv::imshow("Image for detecting white stones", detectWhite);
+
+
 
     for(int i=0; i < intersectionPoints.size(); i++)
     {
