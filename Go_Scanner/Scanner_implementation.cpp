@@ -174,15 +174,16 @@ void releaseImg(cv::Mat a, int x, int y)
     showImage();
 }
 
-//draw the scene components
+/**
+ * @brief   Shows the selected points (through manual or automatic board detection) on a clone of the img0 in a new window.
+ */
 void showImage()
 {
-    cv::Mat img1 = img0;
+    cv::Mat img1 = img0.clone();
 
     //draw the points
     for(int j=0;j<nop;j++)
     {        
-        img1 = img1.clone();
         cv::rectangle(img1, 
             cv::Point(boardCornerX[j] - 1, boardCornerY[j] - 1), 
             cv::Point(boardCornerX[j] + 1, boardCornerY[j] + 1), 
@@ -192,7 +193,6 @@ void showImage()
         //draw the lines
         for(int k=j+1;k<nop;k++)
         {
-            img1 = img1.clone();
             cv::line(img1,
                 cv::Point(boardCornerX[j] , boardCornerY[j] ), 
                 cv::Point(boardCornerX[k] , boardCornerY[k] ), 
@@ -200,7 +200,6 @@ void showImage()
         }
     }
     cv::imshow(windowName, img1);
-    img1 = cv::Mat();
 }
 
 cv::Mat warpImage(cv::Mat img, cv::Point2f p0, cv::Point2f p1, cv::Point2f p2, cv::Point2f p3)
@@ -817,6 +816,9 @@ void Threshold_Debug( int, void* )
     cv::imshow( window_name_thre, Thresh_res );
 }
 
+/**
+ * @brief   Calls the manual board detection and shows the result in a new window.
+ */
 void ask_for_board_contour() {
     cv::namedWindow(windowName, CV_WINDOW_AUTOSIZE);
     cv::setMouseCallback(windowName, mouseHandler, NULL);
@@ -829,12 +831,17 @@ void ask_for_board_contour() {
     asked_for_board_contour = true;
 }
 
+/**
+ * @brief   Calls the automatic board detection and shows the result in a new window.
+ *          Prints an error to the console if the automatic detection couldn't find anything.
+ */
 void do_auto_board_detection() {
     cv::Point2f p0, p1, p2, p3;
     automatic_warp(img0, p0, p1, p2, p3);
 
     // automatic_warp failed and board wasn't found
-    if ((p0 == p1) || (p2 == p3)) {
+    // if one of the points wasn't set
+    if (p0 == cv::Point2f()) {
         std::cout << "!!ERROR >> Failed to automatically detect the go board!" << std::endl;
         return;
     }
@@ -869,28 +876,33 @@ void do_auto_board_detection() {
 // Map pixel coordinates (intersection points) to board coordinates
 // Begins at the left of the lowermost line and gradually moves the lines from left to right upwards.
 //
-// It is required that the intersection points on a specific line all have almost equal y-values!
-// Thats the decision criteria for selecting the points on a given line.
-std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv::Point2f> intersectionPoints) {
-    std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coordinates;
+// Preconditions:
+// - The number of intersection points must match board_size * board_size!
+// - Each line (or column if you want) must have exactly the same number of intersection points as the board_size value
+// - It is required that the intersection points on a specific line all have almost equal y-values!
+//   Thats the decision criteria for selecting the points on a given line.
+std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv::Point2f> intersectionPoints, int board_size) {
+    const auto& num_lines = board_size;
 
-    // sort points by their descending y-values to begin at the lowermost point
+    // Sort points by their descending y-values to begin at the lowermost point
     std::sort(std::begin(intersectionPoints), std::end(intersectionPoints), [](const cv::Point2f& left, const cv::Point2f& right) { return left.y > right.y; });
 
-    // get the number of lines the board has
-    auto num_lines = static_cast<int>(sqrt(intersectionPoints.size()));
-
-    // walk through each line from left to right and map a board coordinate to each point
+    // Walk through each line from left to right and map a board coordinate to each point,
+    // iteratively looks at the next batch (num_lines points) of intersection points
+    std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coordinates;
     int line_idx = 1;
-    for (auto i = 0; i < num_lines; ++i) {
-        // get the next num_lines points (these will be the points on the i-th line)
+    auto begin_iter = begin(intersectionPoints);
+    for (auto i = 0; i < num_lines; ++i, begin_iter += num_lines) {
+        // Get the next num_lines points (these will be the points on the i-th line from the bottom)
         decltype(intersectionPoints) points_on_this_line;
-        std::copy(begin(intersectionPoints)+i*num_lines+0, begin(intersectionPoints)+i*num_lines+num_lines, std::back_inserter(points_on_this_line));
+        std::copy( begin_iter,
+                   begin_iter+num_lines,
+                   std::back_inserter(points_on_this_line));
 
-        // sort by ascending x values of the points
+        // Sort by ascending x values of the points
         std::sort(std::begin(points_on_this_line), std::end(points_on_this_line), [](const cv::Point2f& left, const cv::Point2f& right) { return left.x < right.x; });
 
-        // add an entry for each point to the map
+        // Add an entry for each point on this line to the map
         int column_idx = 1;
         for (const auto& pt : points_on_this_line) {
             to_board_coordinates[pt] = SgPointUtil::Pt(column_idx++, line_idx);
@@ -963,8 +975,8 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     // @todo: assert that the number of intersection points are a quadratic number
 
 
-    // calc the minimum distance between the first intersection point to all others
-    // the minimum distance is approximately the diameter of a stone
+    // Calc the minimum distance between the first intersection point to all others
+    // The minimum distance is approximately the diameter of a stone
     vector<float> distances;
     const auto& ref_point_min = *begin(intersectionPoints);
     for (const auto& point : intersectionPoints) {
@@ -973,15 +985,20 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     }
     auto approx_stone_diameter = *std::min_element(begin(distances), end(distances));
 
-    // extract the board size
-    // board dimensions are quadratic, meaning width and height are the same
-    // i therefore count the number of points on one line
-    const auto ref_point = intersectionPoints[0];
-    board_size = std::count_if(begin(intersectionPoints), end(intersectionPoints), [=](const cv::Point2f& pt) { return pt.y == ref_point.y; });
+    // Extract the board size
+    // Board dimensions are quadratic, meaning width and height are the same so the sqrt(of the number of intersections) 
+    // is the board size if it is a perfect square
+    board_size = (int) floor( sqrt((double) intersectionPoints.size()) + 0.5 ); // The .5 is needed to round to the nearest integer
+    if (board_size*board_size != intersectionPoints.size()) {
+        // Got a false number of intersectionPoints
+        // Stop the processing here
+        return false;
+    }
+
     std::cerr << "Board size: " << board_size << std::endl;
 
     // get map from intersection points to board coordinates (SgPoint)
-    auto to_board_coords = getBoardCoordMapFor(intersectionPoints);
+    auto to_board_coords = getBoardCoordMapFor(intersectionPoints, board_size);
 
     // detect the stones!
     detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, paintedWarpedImg);
