@@ -46,6 +46,7 @@ int nop=4;                //number of points
 enum lineType{HORIZONTAL, VERTICAL};
 enum stoneColor{BLACK, WHITE};
 enum lineheading{LEFT, RIGHT};
+enum LineCoord{START_X=0, START_Y=1, END_X=2, END_Y=3};
 
 struct PartitionOperator
 {
@@ -122,9 +123,10 @@ cv::Mat holdImg(int x, int y)
 {
     cv::Mat img = img0;
 
+    int radius = 4;
     //find what point is selected
     for(int i=0;i<nop;i++){
-        if((x>=(boardCornerX[i]-2)) && (x<=(boardCornerX[i]+2 ))&& (y<=(boardCornerY[i]+2 ))&& (y<=(boardCornerY[i]+2 ))){
+        if((x>=(boardCornerX[i]-radius)) && (x<=(boardCornerX[i]+radius ))&& (y<=(boardCornerY[i]+radius ))&& (y<=(boardCornerY[i]+radius ))){
             point=i;
             break;
         }
@@ -516,7 +518,7 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     int thresholdType = 4;
 
     //reduce the noise
-    cv::blur(warpedImg, warpedImg , cv::Size(3,3));
+    //cv::blur(warpedImg, warpedImg , cv::Size(3,3));
     cv::cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
     cv::imshow("blur", warpedImgGray);
 
@@ -554,6 +556,7 @@ bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv:
     cv::imshow("HoughLines Image", houghimage);
 
     groupIntersectionLines(lines, horizontalLines, verticalLines);
+    // if horizontalLines.size() == 0; net aufrufen
 
     cv::vector<cv::Vec4i> newhorizontalLines = getBoardLines(horizontalLines, HORIZONTAL);
     cv::vector<cv::Vec4i> newverticalLines = getBoardLines(verticalLines, VERTICAL);
@@ -675,7 +678,7 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
     return distance;
 }
 
-void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup, cv::Mat& paintedWarpedImg)
+void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, SgPointSet& stones, cv::Mat& paintedWarpedImg)
 {
     //TODO: use black/white image. write function for it. 
     
@@ -720,7 +723,7 @@ void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionP
             {
                 std::cout << "Black Stone ("<< x << ", "<< y << ")" << std::endl;
 
-                setup.AddBlack(to_board_coords[intersection_point]);
+                stones.Include(to_board_coords[intersection_point]);
 
                 cv::circle( paintedWarpedImg, 
                 cv::Point(midpoint125.x, midpoint125.y),
@@ -731,63 +734,52 @@ void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionP
     }
 }
 
-void detectWhiteStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, GoSetup& setup, float stone_diameter, cv::Mat& paintedWarpedImg)
+void detectAllStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, SgPointSet& stones, float stone_diameter, cv::Mat& paintedWarpedImg)
 {   
     using namespace cv;
-    cv::Mat detectWhite;
+    cv::Mat img;
 
-    cv::cvtColor(warpedImg, detectWhite, CV_RGB2GRAY);
-    cv::Canny(detectWhite, detectWhite, 180, 255, 3);
+    cv::cvtColor(warpedImg, img, CV_RGB2GRAY);
+    cv::Canny(img, img, 100, 150, 3);
 
-    // MORPHING FOR BETTER AREAS AND THUS CONTOURS
-    Mat element = getStructuringElement( MORPH_ELLIPSE, Size( 7 , 7 ));
-    cv::morphologyEx(detectWhite, detectWhite, MORPH_CLOSE, element); // Apply the specified morphology operation
+    // After canny we get a binary image, where all detected edges are white.
+    // Dilate iterates over ervery pixel, and sets the pixel to the maximum pixel value within a circle around that pixel.
+    // This leaves the areas black where no edges were detected and thus could contain a stone.
+    Mat element_dilate = getStructuringElement(MORPH_ELLIPSE, Size(stone_diameter*0.8+0.5f, stone_diameter*0.8+0.5f));
+    cv::dilate(img, img, element_dilate);
+    cv::imshow("after dilating", img);
 
+    // Only the intersection points (later accessed by img.at<uchar>(y,x)) are relevant.
+    // Erode looks for the minimum pixel value (black) within a circle around every pixel.
+    // Because black pixels represent possible stones, if there is any black pixel within 
+    // a stone radius around an intersection then we have found a stone.
+    Mat element_erode = getStructuringElement(MORPH_ELLIPSE, Size(stone_diameter*0.6+0.5f, stone_diameter*0.6+0.5f));
+    // todo(mihi314) could be optimized by not using erode and instead only doing the erode operation at intersection points
+    cv::erode(img, img, element_erode);
 
-/*
-    Mat element2 = getStructuringElement( MORPH_ELLIPSE,
-                                       Size( 7 , 7 ));
-    cv::Mat detectWhiteClone = detectWhite.clone();
-    cv::dilate(detectWhite, detectWhite, element2);
-*/
-    cv::imshow("Image for detecting white stones", detectWhite);
-
-
+    cv::imshow("Image for detecting white stones", img);
 
     for(int i=0; i < intersectionPoints.size(); i++)
     {
         auto& intersection_point = intersectionPoints[i];
 
-        int x = intersection_point.x;
-        int y = intersection_point.y;
+        int x = intersection_point.x + 0.5f;
+        int y = intersection_point.y + 0.5f;
         int distance, diameter45, diameter125;
 
         /**
-        * Let's check if this is a stone :). We'll read out the diameters at 45° and 125° if they 
-        * are similar -> it's a stone. 
+        * Let's check if this is a stone :). 
         */
-
-        if (detectWhite.at<uchar>(y,x) < 50)
+        if (img.at<uchar>(y,x) < 50)
         {
-            // Get the Diameter for 125 degree
-            cv::Point2f midpoint125;
-            diameter125 = getStoneDistanceAndMidpoint(detectWhite, x, y, RIGHT, midpoint125);
+            std::cout << "White Stone ("<< x << ", "<< y << ")" << std::endl;
+            stones.Include(to_board_coords[intersection_point]);
 
-            // Get the Diameter for 45 degree
-            cv::Point2f midpoint45;
-            diameter45 = getStoneDistanceAndMidpoint(detectWhite, x, y, LEFT, midpoint45);
+            cv::circle( paintedWarpedImg, 
+            cv::Point(intersectionPoints[i].x, intersectionPoints[i].y),
+            (stone_diameter/2.0f), 
+            cv::Scalar(238, 238, 176), 0, 8, 0);
 
-            if(diameter125 >= stone_diameter || diameter45 >= stone_diameter)
-            {
-                std::cout << "White Stone ("<< x << ", "<< y << ")" << std::endl;
-
-                setup.AddWhite(to_board_coords[intersection_point]);
-
-                cv::circle( paintedWarpedImg, 
-                cv::Point(midpoint125.x, midpoint125.y),
-                (stone_diameter/2.0f), 
-                cv::Scalar(238, 238, 176), 0, 8, 0);
-            }
         }
     }
 }
@@ -1012,8 +1004,13 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     auto to_board_coords = getBoardCoordMapFor(intersectionPoints, board_size);
 
     // detect the stones!
-    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, paintedWarpedImg);
-    detectWhiteStones(srcWarpedImg, intersectionPoints, to_board_coords, setup, approx_stone_diameter, paintedWarpedImg);
+    SgPointSet all_stones;
+    detectAllStones(srcWarpedImg, intersectionPoints, to_board_coords, all_stones, approx_stone_diameter, paintedWarpedImg);
+
+    SgPointSet black_stones;
+    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, black_stones, paintedWarpedImg);
+    setup.m_stones[SG_BLACK] = black_stones;
+    setup.m_stones[SG_WHITE] = all_stones - black_stones;
 
     cv::imshow("Detected Stones and Intersections", paintedWarpedImg);
 
