@@ -144,6 +144,10 @@ private:
     UpdateResult updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites);
     UpdateResult updateWhileCapturing(GoSetup new_setup);
 
+    /**
+     * @brief       Checks whether handicap stones are being placed or not.
+     */
+    bool isPlacingHandicap(SgPointSet current_blacks, SgPointSet current_whites, SgPointSet new_whites);
     void placeHandicap(GoSetup new_setup);
 
     /**
@@ -152,14 +156,13 @@ private:
      *              Gets called inside updateNormal.
      * @returns     Whether the move was legal or illegal.
      */
-    UpdateResult playMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent);
+    UpdateResult updateSingleMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent);
 
     /**
      * @brief       Returns the possibly captured stones when current player of cons_board would play at point.
      */
     SgPointSet possibleCapturedStones(const GoBoard& const_board, SgPoint point);
 
-    bool noWhites(SgPointSet current_whites, SgPointSet new_whites);
     bool validSetup(const GoSetup& setup) const;
     bool allValidPoints(const SgPointSet& stones) const;
 
@@ -169,7 +172,6 @@ private:
                          // finished if a player resigns
 
     bool _while_capturing;
-    bool _allow_placing_handicap;
 };
 
 }
