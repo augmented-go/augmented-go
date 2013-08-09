@@ -139,8 +139,6 @@ void GUI::slot_ViewSwitch(){
         ui_main.big_container->setToolTip("virtual view");
         virtual_view->show(); 
     }
-
-    virtual_view->resizeVirtualView();
 }
 
 void GUI::slot_MenuOpen(){
@@ -245,10 +243,10 @@ void GUI::slot_newImage(QImage image) {
 
 void GUI::slot_newGameData(const GoBackend::Game* game) {
     // update internal pointer if the board has been changed
-    if (game != game)
-        game = game;
+    if (go_game != game)
+        go_game = game;
 
-    auto& board = game->getBoard();
+    auto& board = go_game->getBoard();
 
     auto current_player = board.ToPlay();
 
