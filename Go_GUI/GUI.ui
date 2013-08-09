@@ -362,7 +362,6 @@
             </layout>
             <zorder>ViewSwitch_GameName</zorder>
             <zorder>moveinfo_container</zorder>
-            <zorder>whiteplayer_label</zorder>
             <zorder>komiinfo_container</zorder>
            </widget>
           </item>
@@ -2267,6 +2266,7 @@
     <addaction name="threshold_action"/>
     <addaction name="rules_action"/>
     <addaction name="cameraresolution_action"/>
+    <addaction name="virtual_game_mode_action"/>
    </widget>
    <widget class="QMenu" name="board_detection_menu">
     <property name="title">
@@ -2320,13 +2320,27 @@
    </property>
   </action>
   <action name="manually_action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Manually</string>
    </property>
   </action>
   <action name="automatic_action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Automatically</string>
+   </property>
+  </action>
+  <action name="virtual_game_mode_action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Virtual Game Mode</string>
    </property>
   </action>
   <action name="cameraresolution_action">

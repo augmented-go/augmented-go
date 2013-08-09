@@ -12,13 +12,15 @@ class AugmentedView : public QLabel
 public:
     AugmentedView(QWidget *parent = 0) {
         this->setParent(parent);
+        this->setAlignment(Qt::AlignCenter);
 
-        // Setting up warning as standard picture
-        QString warning_image_path = "res/textures/No_camera_picture.png";
-        if(QImage(warning_image_path).isNull())
-            QMessageBox::critical(this, "GUI element not found", "Warning image of AugmentedView not found!\n searched relative to exe in" + warning_image_path);
+        // Setting up augmented logo as standard picture
+        QString augmented_logo_path = "res/textures/augmented_logo.png";
+        if(QImage(augmented_logo_path).isNull())
+            QMessageBox::critical(this, "GUI element not found", "Warning image of AugmentedView not found!\n searched relative to exe in" + augmented_logo_path);
         else{
-            setImage(QImage(warning_image_path));
+            setImage(QImage(augmented_logo_path));
+            rescaleImage(parentWidget()->size());
         }
     }
     ~AugmentedView(){};
