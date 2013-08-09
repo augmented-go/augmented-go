@@ -43,6 +43,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.save_action,		&QAction::triggered,	this, &GUI::slot_MenuSave);
     connect(ui_main.exit_action,		&QAction::triggered,	this, &QWidget::close);	
     connect(ui_main.info_action,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
+    //connect(ui_main.backward_button,    &QAction::triggered,    this, &GUI::slot_HistoryBackward);
+    //connect(ui_main.forward_button,     &QAction::triggered,    this, &GUI::slot_HistoryForward);
     connect(ui_main.viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
@@ -252,6 +254,22 @@ void GUI::slot_ViewSwitch(){
         ui_main.big_container->setToolTip("virtual view");
         virtual_view->show(); 
     }
+}
+
+/**
+ * @brief	SLOT "History Backward"
+ *			Switch the virtual board to the previoud in history
+ */
+void GUI::slot_HistoryBackward(){
+
+}
+
+/**
+ * @brief	SLOT "History Forward"
+ *			Switch the virtual borad to the next in history
+ */
+void GUI::slot_HistoryForward(){
+
 }
 
 /**

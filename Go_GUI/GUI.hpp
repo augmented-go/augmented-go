@@ -38,6 +38,8 @@ private slots:
     void slot_MenuSave();
     void slot_MenuInfo();
     void slot_ViewSwitch();
+    void slot_HistoryBackward();
+    void slot_HistoryForward();
     void closeEvent(QCloseEvent *event);
 
 signals:
