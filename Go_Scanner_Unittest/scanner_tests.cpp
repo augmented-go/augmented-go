@@ -10,7 +10,7 @@ namespace MyTest
     TEST_CLASS(MyTests)
     {
     public:
-        /*TEST_METHOD(CameraReadingWorks)
+        TEST_METHOD(CameraReadingWorks)
         {
             // try plugging your camera in and out
             // exit by pressing any key
@@ -28,6 +28,6 @@ namespace MyTest
                 if(waitKey(30) >= 0)
                     break;
             }
-        }*/
+        }
     };
 }
