@@ -23,6 +23,8 @@ namespace Go_AR {
             
     private:
         void signalGuiGameHasEnded() const;
+        void signalGuiGameDataChanged() const;
+        bool virtualModeActive() const;
         
     // slots
     public slots:
@@ -53,6 +55,16 @@ namespace Go_AR {
          *              the current board as the starting setup.
          */
         void resetGame(GoRules rules);
+
+        /**
+         * @brief       Toggles between completely virtual and augmented application mode.
+         */
+        void setVirtualGameMode(bool checked);
+
+        /**
+         * @brief       Sends a move to game
+         */
+        void playMove(const int x, const int y);
 
         /**
          * @brief       Triggers the manual board selection in the Scanner.
