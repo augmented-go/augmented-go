@@ -1,4 +1,8 @@
 #include "Scanner.hpp"
+#include "detect_board.hpp"
+#include "detect_linies_intersections.hpp"
+#include "detect_stones.hpp"
+
 #include <iostream>
 
 
@@ -76,6 +80,38 @@ void Scanner::selectBoardManually() {
 
 void Scanner::selectBoardAutomatically() {
     do_auto_board_detection();
+}
+
+/**
+ * @returns     true, if the user marked the board, and lines as well as stones could be found
+ *              false, if the board wasn't marked before or if any of the operations fail (detecting stones, finding lines, etc.)
+ */
+bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
+{
+    // TODO: convert the warped image just once to greyscale! 
+    cv::Mat img;
+    img = camera_frame; //cv::imread("go_bilder/01.jpg");
+
+    if(!getWarpedImg(img))
+    {
+        return false;
+    }
+
+    cv::imshow("Warped Image", img);
+
+    cv::Mat srcWarpedImg = img.clone();
+    cv::Mat paintedWarpedImg = img.clone();
+    cv::vector<cv::Point2f> intersectionPoints;
+
+    getBoardIntersections(img, 255, intersectionPoints, paintedWarpedImg);
+
+    // @todo: assert that the number of intersection points are a quadratic number
+
+    bool stoneResult = getStones(srcWarpedImg, intersectionPoints, setup, board_size, paintedWarpedImg);
+
+    cv::imshow("Detected Stones and Intersections", paintedWarpedImg);
+
+    return true;
 }
 
 }
