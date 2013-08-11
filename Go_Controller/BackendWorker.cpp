@@ -69,16 +69,18 @@ void BackendWorker::scan() {
     switch (scan_result) {
     case ScanResult::Success:
         {
+            GoBackend::UpdateResult result;
+
             if (_game_is_initialized) {
                 // update game state
-                _game.update(setup);
+                result = _game.update(setup);
             }
             else {
                 _game.init(board_size, setup, _new_game_rules);
                 _game_is_initialized = true;
             }
             
-            signalGuiGameDataChanged();
+            signalGuiGameDataChanged(result);
 
             // don't break because Success implies getting an image,
             // so let control flow fall through to ScanResult::Image_Only
@@ -180,12 +182,12 @@ bool BackendWorker::virtualModeActive() const {
     return !_scan_timer.isActive();
 }
 
-void BackendWorker::signalGuiGameDataChanged() const {
+void BackendWorker::signalGuiGameDataChanged(GoBackend::UpdateResult update_result) const {
     // send board data to gui
     // the GUI controls the lifetime of this thread,
     // so passing a pointer to the GoBoard is safe and won't be invalidated
     // as long as the GUI says so
-    emit gameDataChanged(&_game);
+    emit gameDataChanged(&_game, update_result);
 }
 
 } // namespace Go_AR
