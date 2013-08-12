@@ -270,10 +270,17 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &i
     imshow("HoughLines Image", houghimage);
 
     groupIntersectionLines(lines, horizontalLines, verticalLines);
-    // if horizontalLines.size() == 0; net aufrufen
 
-    vector<Vec4i> newhorizontalLines = getBoardLines(horizontalLines, HORIZONTAL);
-    vector<Vec4i> newverticalLines = getBoardLines(verticalLines, VERTICAL);
+
+    vector<Vec4i> newhorizontalLines;
+    vector<Vec4i> newverticalLines;
+    if (horizontalLines.size() != 0) {
+        newhorizontalLines = getBoardLines(horizontalLines, HORIZONTAL);
+    }
+    if (verticalLines.size() != 0) {
+        newverticalLines = getBoardLines(verticalLines, VERTICAL);
+    }
+
 
     //get the intersections
     for(size_t i=0; i < newhorizontalLines.size();  i++)

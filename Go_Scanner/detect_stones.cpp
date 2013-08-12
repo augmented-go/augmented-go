@@ -162,7 +162,7 @@ void detectAllStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoi
     // todo(mihi314) could be optimized by not using erode and instead only doing the erode operation at intersection points
     cv::erode(img, img, element_erode);
 
-    cv::imshow("Image for detecting white stones", img);
+    cv::imshow("Image for detecting all stones", img);
 
     for(int i=0; i < intersectionPoints.size(); i++)
     {
@@ -177,7 +177,7 @@ void detectAllStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoi
         */
         if (img.at<uchar>(y,x) < 50)
         {
-            std::cout << "White Stone ("<< x << ", "<< y << ")" << std::endl;
+            std::cout << "Stone ("<< x << ", "<< y << ")" << std::endl;
             stones.Include(to_board_coords[intersection_point]);
 
             cv::circle( paintedWarpedImg, 
