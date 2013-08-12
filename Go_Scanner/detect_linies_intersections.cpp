@@ -30,6 +30,7 @@ struct PartitionOperator
     }
 };
 
+//calculate angle in radians between the 2 vectors to degree
 float calcBetweenAngle(Vec2f v1, Vec2f v2)
 {
     float angle;
@@ -43,6 +44,8 @@ float calcBetweenAngle(Vec2f v1, Vec2f v2)
     return angle;
 }
 
+//Group the Lines into vertical (angle -1.0 to 1.0) and horizontal (angle 88.0 to 92.0).
+//Stretch them depening on what orientation they have to reach the borders of the picture. 
 void groupIntersectionLines(vector<Vec4i>& lines, vector<Vec4i>& horizontalLines, vector<Vec4i>& verticalLines)
 {
     Vec2f baseVector, lineVector;
@@ -77,9 +80,6 @@ void groupIntersectionLines(vector<Vec4i>& lines, vector<Vec4i>& horizontalLines
         {
             Vec4i v = lines[i];
 
-            //Problem: For completely vertical lines, there is no m 
-            // y = m*x+n
-
             if((v[0] - v[2]) != 0)
             {
                 float m = (v[1] - v[3]) / (v[0] - v[2]);
@@ -110,6 +110,9 @@ void groupIntersectionLines(vector<Vec4i>& lines, vector<Vec4i>& horizontalLines
 
 }
 
+//Get all lines that are found by houghline algorithmen and put them into clusters.
+//The result of each cluster is one middled line which is streched vertically or horizontally 
+//from the starting picture border to the facing one. 
 vector<Vec4i> getBoardLines(vector<Vec4i>& lines, lineType type)
 {
     int valueIndex1, valueIndex2, imagesizeIndex, zeroIndex, imagesize;
@@ -159,7 +162,7 @@ vector<Vec4i> getBoardLines(vector<Vec4i>& lines, lineType type)
         clusteredLineEnds[j].push_back(lineEnds[i]);
     }
 
-    // middle the lines
+    // middle the lines and stretch them
     vector<Vec4i> middledLines;
     Vec4i middle;
 
@@ -169,6 +172,7 @@ vector<Vec4i> getBoardLines(vector<Vec4i>& lines, lineType type)
         int sumStarts=0;
         int sumEnds=0;
 
+        //calculate the sum 
         for(int j=0; j < numLines; j++)
         {
             sumStarts += clusteredLineStarts[i][j];
@@ -189,6 +193,7 @@ vector<Vec4i> getBoardLines(vector<Vec4i>& lines, lineType type)
     return middledLines;
 }
 
+// Calculates the intersection between two lines 
 bool intersection(Vec4i horizontalLine, Vec4i verticalLine, Point2f &r)
 {
     Point2f o1;
@@ -242,17 +247,19 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &i
     //sobelImg = sobelFiltering(cannyImg);
     threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
 
+    //morph the image for best results of houghlines algorithmen
     Mat element = getStructuringElement(MORPH_ELLIPSE, Size(7, 7));
     morphologyEx(threshedImg, threshedImg, MORPH_CLOSE, element); // Apply the specified morphology operation
 
     imshow("Threshed Image for HoughLinesP", threshedImg);
 
+    //Hough Lines Algorithmen
     vector<Vec4i> lines, horizontalLines, verticalLines;
     HoughLinesP(threshedImg, lines, 1, CV_PI/180, 80, 10, 5);
 
     Mat houghimage = warpedImg.clone();
 
-    //Draw the lines
+
     /*
         Structure of line Vector:
 
@@ -261,6 +268,8 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &i
         lines[i][2] = x_end
         lines[i][3] = y_end      
     */
+
+    //Draw the Lines
     for( size_t i = 0; i < lines.size(); i++ )
     {
         line(houghimage, Point(lines[i][0], lines[i][1]),
@@ -269,9 +278,10 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &i
 
     imshow("HoughLines Image", houghimage);
 
+    //group the lines from hough algorithmen into vertical and horizontal 
     groupIntersectionLines(lines, horizontalLines, verticalLines);
 
-
+    //get the middle lines for later calculating the intersections 
     vector<Vec4i> newhorizontalLines;
     vector<Vec4i> newverticalLines;
     if (horizontalLines.size() != 0) {
@@ -295,6 +305,8 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &i
         }
     }
 
+
+    //Just for drawing purpose we put the lines back into one vector. 
     vector<Vec4i> newLines; 
 
     newLines.insert(newLines.begin(), newhorizontalLines.begin(), newhorizontalLines.end());

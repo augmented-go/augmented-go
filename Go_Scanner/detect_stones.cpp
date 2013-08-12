@@ -3,15 +3,13 @@
 
 namespace Go_Scanner {
 
+
+//  Returns the size of a 45°(left headed) or 135°(right headed) line within a circle, 
+//  starting from any point within that circle 
+//  mainly used to get the diameters of the stones. 
+//  This functin also provides the Midpoint of that line. 
 int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, lineheading heading, cv::Point2f& midpointLine)
 {
-
-    /**
-    *    Returns the size of a 45°(left headed) or 135°(right headed) line within a circle, 
-    *    starting from any point within that circle 
-    *    mainly used to get the diameters of the stones. 
-    *    This functin also provides the Midpoint of that line. 
-    */
 
     int width = warpedImgGray.cols;
     int height = warpedImgGray.rows;
@@ -85,7 +83,6 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
 
 void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, SgPointSet& stones, cv::Mat& paintedWarpedImg)
 {
-    //TODO: use black/white image. write function for it. 
     
     cv::Mat tmp, warpedImgGray;
     cv::cvtColor(warpedImg, tmp, CV_RGB2GRAY);
