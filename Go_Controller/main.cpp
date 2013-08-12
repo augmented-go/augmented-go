@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
         QObject::connect(&gui, &GUI::signal_boardDetectionManually,      worker, &BackendWorker::selectBoardManually);
         QObject::connect(&gui, &GUI::signal_setVirtualGameMode,          worker, &BackendWorker::setVirtualGameMode);
         QObject::connect(&gui, &GUI::signal_playMove,                    worker, &BackendWorker::playMove);
+        QObject::connect(&gui, &GUI::signal_setScannerDebugImage,        worker, &BackendWorker::setScannerDebugImage);
 
         worker_thread.start(); // start worker thread
 
