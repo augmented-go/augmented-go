@@ -85,10 +85,9 @@ public:
 
     /**
      * @brief       Plays a move at given position for the current player.
-     *              Emulates a new GoSetup with this new move and uses the available functions for updating the game board.
-     * @param[in]   setup   new board setup
+     * @returns     Whether the move was legal or not.
      */
-    void playMove(SgPoint position);
+    UpdateResult playMove(SgPoint position);
 
     /**
      * @brief       Get current board information

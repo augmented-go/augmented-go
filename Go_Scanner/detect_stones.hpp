@@ -1,3 +1,5 @@
+// Copyright (c) 2013 augmented-go team
+// See the file LICENSE for full license and copying terms.
 #pragma once
 
 #include <opencv2/opencv.hpp>
