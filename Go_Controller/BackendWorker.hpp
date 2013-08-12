@@ -78,7 +78,7 @@ namespace Go_AR {
         void selectBoardAutomatically();
 
 
-    private slots:
+    public slots:
         void scan(); // our main worker function that is called by the timer
         
     // signals
