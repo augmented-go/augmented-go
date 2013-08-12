@@ -26,7 +26,7 @@ ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_ima
         //return false;
     }
 
-    auto result = scanner_main(frame, setup, board_size);
+    auto result = scanner_main(frame, setup, board_size, _setDebugImg);
     
     out_image = frame;
 
@@ -82,11 +82,19 @@ void Scanner::selectBoardAutomatically() {
     do_auto_board_detection();
 }
 
+void Scanner::setDebugImage() {
+    _setDebugImg = true;
+}
+
+void Scanner::setNormalImage() {
+    _setDebugImg = false;
+}
+
 /**
  * @returns     true, if the user marked the board, and lines as well as stones could be found
  *              false, if the board wasn't marked before or if any of the operations fail (detecting stones, finding lines, etc.)
  */
-bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
+bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg)
 {
     // TODO: convert the warped image just once to greyscale! 
     cv::Mat img;
@@ -110,6 +118,11 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
     bool stoneResult = getStones(srcWarpedImg, intersectionPoints, setup, board_size, paintedWarpedImg);
 
     cv::imshow("Detected Stones and Intersections", paintedWarpedImg);
+
+    if(setDebugImg)
+    {
+       paintedWarpedImg.copyTo(camera_frame);
+    }
 
     return true;
 }
