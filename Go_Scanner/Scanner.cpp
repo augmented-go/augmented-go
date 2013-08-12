@@ -105,13 +105,13 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size)
 
     getBoardIntersections(img, 255, intersectionPoints, paintedWarpedImg);
 
-    // @todo: assert that the number of intersection points are a quadratic number
-
-    bool stoneResult = getStones(srcWarpedImg, intersectionPoints, setup, board_size, paintedWarpedImg);
-
+    bool stoneResult = false;
+    if (intersectionPoints.size() >= 1) {
+        stoneResult = getStones(srcWarpedImg, intersectionPoints, setup, board_size, paintedWarpedImg);
+    }
     cv::imshow("Detected Stones and Intersections", paintedWarpedImg);
 
-    return true;
+    return stoneResult;
 }
 
 }
