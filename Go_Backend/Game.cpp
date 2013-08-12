@@ -272,23 +272,16 @@ void Game::placeHandicap(GoSetup new_setup) {
 
 
 
-void Game::playMove(SgPoint position) {
-    auto setup = GoSetupUtil::CurrentPosSetup(getBoard());
-
+UpdateResult Game::playMove(SgPoint position) {
     auto current_player = getBoard().ToPlay();
 
-    switch (current_player) {
-    case SG_BLACK:
-        setup.AddBlack(position);
-        break;
-    case SG_WHITE:
-        setup.AddWhite(position);
-        break;
-    default:
-        assert(!"current player is nobody?!");
+    if (getBoard().IsLegal(position, current_player)) {
+        _go_game.AddMove(position, current_player);
+        return UpdateResult::Legal;
     }
-
-    update(setup);
+    else {
+        return UpdateResult::Illegal;
+    }
 }
 
 bool Game::saveGame(string file_path, string name_black, string name_white, string game_name) {
