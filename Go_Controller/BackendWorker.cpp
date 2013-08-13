@@ -188,4 +188,8 @@ void BackendWorker::signalGuiGameDataChanged() const {
     emit gameDataChanged(&_game);
 }
 
+void BackendWorker::changeScanningRate(int milliseconds) {
+    _scan_timer.setInterval(milliseconds);
+}
+
 } // namespace Go_AR

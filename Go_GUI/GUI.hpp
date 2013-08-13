@@ -107,6 +107,9 @@ signals:
     /** @brief signals that backend thread should stop. */
     void stop_backend_thread();
 
+    /** @brief signals that the user wants to change the image scanning rate. */
+    void signal_new_scanning_rate(int milliseconds);
+
     /** 
      * @brief signals that the user wants to start a new game. 
      * @param   GoRules rules   rules of the new game
