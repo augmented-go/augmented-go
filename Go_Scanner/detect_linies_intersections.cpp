@@ -24,7 +24,7 @@ struct PartitionOperator
         float distance = a - b;
         distance = abs(distance);
 
-        float boardfield = ((1.0f/18.0f) * sidesize)/3.0f;
+        float boardfield = ((1.0f/18.0f) * sidesize)/2.0f;
 
         return distance < boardfield;
     }
@@ -225,6 +225,174 @@ bool intersection(Vec4i horizontalLine, Vec4i verticalLine, Point2f &r)
     return true;
 }
 
+//Uses the midpoints of those circles, 
+//averages them and creates a straight line from that data
+vector<Vec4i> createLinefromValue(vector<int> circles, lineType type)
+{
+    int valueIndex1, valueIndex2, imagesizeIndex, zeroIndex, imagesize;
+
+    if(type == VERTICAL)
+    {
+        valueIndex1 = 0;            //0 = line[0] = x_start 
+        valueIndex2 = 2;            //2 = line[2] = x_end
+        imagesizeIndex = 3;         //3 = line[3] = y_end
+        zeroIndex = 1;              //1 = line[1] = y_start
+        imagesize = imgheight;
+    }
+    else if (type == HORIZONTAL)
+    {
+        valueIndex1 = 1;  
+        valueIndex2 = 3;
+        imagesizeIndex = 2;
+        zeroIndex = 0;
+        imagesize = imgwidth;
+    }
+
+    //do clustering clusterNum stores the cluster number in which the circles are grouped 
+    vector<int> clusterNum(circles.size());
+    PartitionOperator Oper(imagesize);
+    int clusterSize = partition<int, PartitionOperator>(circles, clusterNum, Oper);
+
+    //choose only the importend clusters for us. we want cluster with size bigger than 4!
+    vector<int> clusterNum_we_need;
+    int newClusterSize = 0;
+
+    for(int i = 0; i < clusterSize; i++)
+    {
+        int num_of_one_cluster=0;
+
+        for(int k = 0; k < clusterNum.size(); k++)
+        {
+            if(clusterNum[k] == i)
+                num_of_one_cluster++; 
+        }
+
+        if(num_of_one_cluster>6)
+        {    
+            clusterNum_we_need.push_back(i);
+            newClusterSize++;
+        }
+    }
+
+    //put the circles in there cluster. 
+    vector<vector<int>> clusteredCircles(newClusterSize);
+
+    for(int i = 0; i < clusterNum.size(); i++)
+    {        
+        //get the current cluster number
+        int number_of_current_cluster = clusterNum[i];
+
+        for(int k = 0; k < newClusterSize; k++)
+        {
+            //if the current cluster is the cluster we need -> store that line
+            if(number_of_current_cluster == clusterNum_we_need[k])
+            {
+                clusteredCircles[k].push_back(circles[i]);
+            }
+        }
+    }
+
+    //create fake lines middle
+    Vec4i middle;
+    vector<Vec4i> middledLines;
+
+    for(int i=0; i < newClusterSize; i++)
+    {
+        int numLines = clusteredCircles[i].size();
+        int sum=0;
+
+        //calculate the sum 
+        for(int j=0; j < numLines; j++)
+        {
+            sum += clusteredCircles[i][j];
+        }
+
+        int mid = sum/numLines;
+
+        //the horizontal line that will be painted
+        middle[zeroIndex] = 0;
+        middle[valueIndex1] = mid;
+        middle[imagesizeIndex] = imagesize;
+        middle[valueIndex2] = mid;
+
+        middledLines.push_back(middle);
+    }
+
+    return middledLines;
+}
+
+//Using HoughCircle to detect some stones (not all can be found).
+//make those circle completely black to erase the white borders from the stones detected by canny. 
+//Now the image contains mostly straight white lines and houghline detection can find those small 
+//white stoneborders. 
+//createLinefromValue uses the midpoints of those circles, 
+//averages them and creates a straight line from that data. This makes it possible to detect a 
+//line even if the line on the board is completely filled with stones.
+bool getBetterHoughImage(Mat& houghImg)
+{
+    //TODO: is it useful to make the detected circles black? 
+    //make another clustering operator. i think the current one doesn't work that well. 
+
+    Mat houghcircleImg = houghImg.clone();
+
+    Mat element_dilate = getStructuringElement( MORPH_ELLIPSE, Size(7, 7));
+    dilate(houghcircleImg, houghcircleImg, element_dilate);
+
+    imshow("Canny dilate", houghcircleImg);
+    //testing circle detection for deleting the circles in the image for detecting lines.
+    vector<Vec3f> circles;
+    HoughCircles(houghcircleImg, circles, CV_HOUGH_GRADIENT, 1, 30, 20, 10, 20, 30);
+
+
+    for( size_t i = 0; i < circles.size(); i++ )
+    {
+         Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+         int radius = cvRound(circles[i][2]);
+         // draw the circle outline
+         circle( houghImg, center, radius+5, Scalar(0), -1, 8, 0 );
+    }
+
+    imshow("houghCIRCLE", houghcircleImg);
+
+    //splitting of the circles by x and y value
+    vector<int> circles_x;
+    vector<int> circles_y;
+    for(int i=0; i<circles.size(); i++)
+    {
+        circles_x.push_back(circles[i][0]);
+        circles_y.push_back(circles[i][1]);
+    }
+
+    //sort the vectors 
+    sort(circles_x.begin(), circles_x.end());
+    sort(circles_y.begin(), circles_y.end());
+
+    //get some lines middle from the midpoints of the circles
+    vector<Vec4i> horizontallines;
+    vector<Vec4i> verticallines;
+
+    if(circles_x.size() != 0)
+        verticallines= createLinefromValue(circles_x, VERTICAL);
+
+    if(circles_y.size() != 0)
+        horizontallines = createLinefromValue(circles_y, HORIZONTAL);
+
+    //Draw the Lines on the Image
+    vector<Vec4i> newLines; 
+
+    newLines.insert(newLines.begin(), verticallines.begin(), verticallines.end());
+    newLines.insert(newLines.end(), horizontallines.begin(), horizontallines.end());
+
+    for( size_t i = 0; i < newLines.size(); i++ )
+    {
+        line(houghImg, Point(newLines[i][0], newLines[i][1]),
+        Point(newLines[i][2], newLines[i][3]), Scalar(255), 1, 8 );
+    }
+        
+    imshow("HoughTest", houghImg);
+
+    return true;
+}
 
 bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &intersectionPoints, Mat& paintedWarpedImg)
 {
@@ -244,23 +412,26 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &i
     Canny(warpedImgGray, cannyImg, 100, 150, 3);
     imshow("Canny", cannyImg);
 
-    //sobelImg = sobelFiltering(cannyImg);
     threshold(cannyImg, threshedImg, 255, maxValue, thresholdType );
 
     //morph the image for best results of houghlines algorithmen
     Mat element = getStructuringElement(MORPH_ELLIPSE, Size(7, 7));
     morphologyEx(threshedImg, threshedImg, MORPH_CLOSE, element); // Apply the specified morphology operation
 
+
+    //This function is very very useful to detect a boardline even if it's full of stones!
+    //getBetterHoughImage(threshedImg);
+
     imshow("Threshed Image for HoughLinesP", threshedImg);
 
     //Hough Lines Algorithmen
     vector<Vec4i> lines, horizontalLines, verticalLines;
-    HoughLinesP(threshedImg, lines, 1, CV_PI/180, 80, 10, 5);
+    HoughLinesP(threshedImg, lines, 1, CV_PI/180, 100, 30, 3);
 
     Mat houghimage = warpedImg.clone();
 
 
-    /*
+    /* 
         Structure of line Vector:
 
         lines[i][0] = x_start         
