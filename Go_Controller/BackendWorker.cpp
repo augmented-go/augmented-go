@@ -69,7 +69,7 @@ void BackendWorker::scan() {
     switch (scan_result) {
     case ScanResult::Success:
         {
-            GoBackend::UpdateResult result;
+            GoBackend::UpdateResult result = GoBackend::UpdateResult::Illegal;
 
             if (_game_is_initialized) {
                 // update game state

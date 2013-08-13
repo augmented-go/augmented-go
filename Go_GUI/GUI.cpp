@@ -241,7 +241,7 @@ void GUI::slot_newImage(QImage image) {
         augmented_view->rescaleImage(augmented_view->parentWidget()->size());
     }
 
-void GUI::slot_newGameData(const GoBackend::Game* game) {
+void GUI::slot_newGameData(const GoBackend::Game* game, GoBackend::UpdateResult result) {
     // update internal pointer if the board has been changed
     if (go_game != game)
         go_game = game;
@@ -279,6 +279,17 @@ void GUI::slot_newGameData(const GoBackend::Game* game) {
     else if (ui_main.big_container->toolTip() == "augmented view")
         virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
     
+    // show error message
+    
+    if (result == GoBackend::UpdateResult::Illegal){
+        ui_main.error_label->raise();
+        ui_main.error_label->setText("Your board differs from virtual board!");
+    }
+    else{
+        ui_main.error_label->setText("");
+        ui_main.error_label->lower();
+    }
+
     printf(">>> New Game data! <<<\n");
 }    
 

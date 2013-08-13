@@ -211,7 +211,7 @@ public slots:
      *          If new game data is sent to GUI, refresh display of current player and captured stones.
      * @param   game     new game representation
      */
-    void slot_newGameData(const GoBackend::Game* game);
+    void slot_newGameData(const GoBackend::Game* game, GoBackend::UpdateResult result);
 
     /**
      * @brief   SLOT "Show finished game results"
