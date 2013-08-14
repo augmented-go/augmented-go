@@ -1,14 +1,16 @@
 #include "detect_stones.hpp"
-
+#include "overwrittenOpenCV.hpp"
 
 namespace Go_Scanner {
 
+using namespace cv;
+using namespace std;
 
 //  Returns the size of a 45°(left headed) or 135°(right headed) line within a circle, 
 //  starting from any point within that circle 
 //  mainly used to get the diameters of the stones. 
 //  This functin also provides the Midpoint of that line. 
-int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, lineheading heading, cv::Point2f& midpointLine)
+int getStoneDistanceAndMidpoint(const Mat& warpedImgGray, int x, int y, lineheading heading, Point2f& midpointLine)
 {
 
     int width = warpedImgGray.cols;
@@ -81,15 +83,15 @@ int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, line
     return distance;
 }
 
-void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, SgPointSet& stones, cv::Mat& paintedWarpedImg)
+void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Point2f, SgPoint, lesserPoint2f> to_board_coords, SgPointSet& stones, Mat& paintedWarpedImg)
 {
     
-    cv::Mat tmp, warpedImgGray;
-    cv::cvtColor(warpedImg, tmp, CV_RGB2GRAY);
+    Mat tmp, warpedImgGray;
+    cvtColor(warpedImg, tmp, CV_RGB2GRAY);
 
-    cv::threshold(tmp, warpedImgGray, 85, 255, 0);
+    threshold(tmp, warpedImgGray, 85, 255, 0);
 
-    cv::imshow("Image for detecting black stones", warpedImgGray);
+    imshow("Image for detecting black stones", warpedImgGray);
     for(int i=0; i < intersectionPoints.size(); i++)
     {
         auto& intersection_point = intersectionPoints[i];
@@ -110,46 +112,46 @@ void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionP
             *    first we produce a help line to get the diameters at 45° and 125°.
             *    therefore we use the intersectionpoints. 
             */ 
-            cv::Point2f midpointLine;
+            Point2f midpointLine;
             distance = getStoneDistanceAndMidpoint(warpedImgGray, x, y, LEFT, midpointLine);
 
             // Get the Diameter for 125 degree
-            cv::Point2f midpoint125;
+            Point2f midpoint125;
             diameter125 = getStoneDistanceAndMidpoint(warpedImgGray, midpointLine.x, midpointLine.y, RIGHT, midpoint125);
 
             // Get the Diameter for 45 degree
-            cv::Point2f midpoint45;
+            Point2f midpoint45;
             diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, midpoint125.x, midpoint125.y, LEFT, midpoint45);
 
             if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= 10 && diameter125 >= 10  )
             {
-                std::cout << "Black Stone ("<< x << ", "<< y << ")" << std::endl;
+                cout << "Black Stone ("<< x << ", "<< y << ")" << endl;
 
                 stones.Include(to_board_coords[intersection_point]);
 
-                cv::circle( paintedWarpedImg, 
-                cv::Point(midpoint125.x, midpoint125.y),
+                circle( paintedWarpedImg, 
+                Point(midpoint125.x, midpoint125.y),
                 (diameter125/2), 
-                cv::Scalar(0, 255, 0), 0, 8, 0);
+                Scalar(0, 255, 0), 0, 8, 0);
             }
         }
     }
 }
 
-void detectAllStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, SgPointSet& stones, float stone_diameter, cv::Mat& paintedWarpedImg)
+void detectAllStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Point2f, SgPoint, lesserPoint2f> to_board_coords, SgPointSet& stones, float stone_diameter, Mat& paintedWarpedImg)
 {   
     using namespace cv;
-    cv::Mat img;
+    Mat img;
 
-    cv::cvtColor(warpedImg, img, CV_RGB2GRAY);
-    cv::Canny(img, img, 100, 150, 3);
+    cvtColor(warpedImg, img, CV_RGB2GRAY);
+    Canny(img, img, 100, 150, 3);
 
     // After canny we get a binary image, where all detected edges are white.
     // Dilate iterates over ervery pixel, and sets the pixel to the maximum pixel value within a circle around that pixel.
     // This leaves the areas black where no edges were detected and thus could contain a stone.
     Mat element_dilate = getStructuringElement(MORPH_ELLIPSE, Size(stone_diameter*0.8+0.5f, stone_diameter*0.8+0.5f));
-    cv::dilate(img, img, element_dilate);
-    cv::imshow("after dilating", img);
+    dilate(img, img, element_dilate);
+    imshow("after dilating", img);
 
     // Only the intersection points (later accessed by img.at<uchar>(y,x)) are relevant.
     // Erode looks for the minimum pixel value (black) within a circle around every pixel.
@@ -157,9 +159,9 @@ void detectAllStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoi
     // a stone radius around an intersection then we have found a stone.
     Mat element_erode = getStructuringElement(MORPH_ELLIPSE, Size(stone_diameter*0.6+0.5f, stone_diameter*0.6+0.5f));
     // todo(mihi314) could be optimized by not using erode and instead only doing the erode operation at intersection points
-    cv::erode(img, img, element_erode);
+    erode(img, img, element_erode);
 
-    cv::imshow("Image for detecting all stones", img);
+    imshow("Image for detecting all stones", img);
 
     for(int i=0; i < intersectionPoints.size(); i++)
     {
@@ -174,13 +176,13 @@ void detectAllStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoi
         */
         if (img.at<uchar>(y,x) < 50)
         {
-            std::cout << "Stone ("<< x << ", "<< y << ")" << std::endl;
+            cout << "Stone ("<< x << ", "<< y << ")" << endl;
             stones.Include(to_board_coords[intersection_point]);
 
-            cv::circle( paintedWarpedImg, 
-            cv::Point(intersectionPoints[i].x, intersectionPoints[i].y),
+            circle( paintedWarpedImg, 
+            Point(intersectionPoints[i].x, intersectionPoints[i].y),
             (stone_diameter/2.0f), 
-            cv::Scalar(238, 238, 176), 0, 8, 0);
+            Scalar(238, 238, 176), 0, 8, 0);
 
         }
     }
@@ -194,27 +196,27 @@ void detectAllStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoi
 // - Each line (or column if you want) must have exactly the same number of intersection points as the board_size value
 // - It is required that the intersection points on a specific line all have almost equal y-values!
 //   Thats the decision criteria for selecting the points on a given line.
-std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv::Point2f> intersectionPoints, int board_size) 
+map<Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(vector<Point2f> intersectionPoints, int board_size) 
 {   
     const auto& num_lines = board_size;
 
     // Sort points by their descending y-values to begin at the lowermost point
-    std::sort(std::begin(intersectionPoints), std::end(intersectionPoints), [](const cv::Point2f& left, const cv::Point2f& right) { return left.y > right.y; });
+    sort(begin(intersectionPoints), end(intersectionPoints), [](const Point2f& left, const Point2f& right) { return left.y > right.y; });
 
     // Walk through each line from left to right and map a board coordinate to each point,
     // iteratively looks at the next batch (num_lines points) of intersection points
-    std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coordinates;
+    map<Point2f, SgPoint, lesserPoint2f> to_board_coordinates;
     int line_idx = 1;
     auto begin_iter = begin(intersectionPoints);
     for (auto i = 0; i < num_lines; ++i, begin_iter += num_lines) {
         // Get the next num_lines points (these will be the points on the i-th line from the bottom)
         decltype(intersectionPoints) points_on_this_line;
-        std::copy( begin_iter,
+        copy( begin_iter,
                    begin_iter+num_lines,
-                   std::back_inserter(points_on_this_line));
+                   back_inserter(points_on_this_line));
 
         // Sort by ascending x values of the points
-        std::sort(std::begin(points_on_this_line), std::end(points_on_this_line), [](const cv::Point2f& left, const cv::Point2f& right) { return left.x < right.x; });
+        sort(begin(points_on_this_line), end(points_on_this_line), [](const Point2f& left, const Point2f& right) { return left.x < right.x; });
 
         // Add an entry for each point on this line to the map
         int column_idx = 1;
@@ -228,7 +230,7 @@ std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv
     return to_board_coordinates;
 }
 
-bool getStones(cv::Mat srcWarpedImg, cv::vector<cv::Point2f> intersectionPoints, GoSetup& setup, int& board_size,cv::Mat& paintedWarpedImg)
+bool getStones(Mat srcWarpedImg, vector<Point2f> intersectionPoints, GoSetup& setup, int& board_size,Mat& paintedWarpedImg)
 {
     // Calc the minimum distance between the first intersection point to all others
     // The minimum distance is approximately the diameter of a stone
@@ -236,9 +238,9 @@ bool getStones(cv::Mat srcWarpedImg, cv::vector<cv::Point2f> intersectionPoints,
     const auto& ref_point_min = *begin(intersectionPoints);
     for (const auto& point : intersectionPoints) {
         if (point != ref_point_min)
-            distances.push_back(cv::norm(point - ref_point_min));
+            distances.push_back(norm(point - ref_point_min));
     }
-    auto approx_stone_diameter = *std::min_element(begin(distances), end(distances));
+    auto approx_stone_diameter = *min_element(begin(distances), end(distances));
 
     // Extract the board size
     // Board dimensions are quadratic, meaning width and height are the same so the sqrt(of the number of intersections) 
@@ -250,7 +252,7 @@ bool getStones(cv::Mat srcWarpedImg, cv::vector<cv::Point2f> intersectionPoints,
         return false;
     }
 
-    std::cerr << "Board size: " << board_size << std::endl;
+    cerr << "Board size: " << board_size << endl;
 
     // get map from intersection points to board coordinates (SgPoint)
     auto to_board_coords = getBoardCoordMapFor(intersectionPoints, board_size);

@@ -2,6 +2,7 @@
 #include "detect_board.hpp"
 #include "detect_linies_intersections.hpp"
 #include "detect_stones.hpp"
+#include "overwrittenOpenCV.hpp"
 
 #include <iostream>
 
@@ -10,7 +11,7 @@ namespace Go_Scanner {
 using namespace cv;
 using namespace std;
 
-ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
+ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, Mat& out_image) {
     Mat frame;
     if (!readCameraFrame(frame)) {
         // NOTICE: DEBUG STUFF!
@@ -33,7 +34,7 @@ ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_ima
     return result ? ScanResult::Success : ScanResult::Image_Only;
 }
 
-bool Scanner::readCameraFrame(cv::Mat& frame) {
+bool Scanner::readCameraFrame(Mat& frame) {
     if (!_camera.isOpened()) {
         // try opening camera 0
         // when one camera is connected, it will always have id 0
@@ -94,22 +95,22 @@ void Scanner::setNormalImage() {
  * @returns     true, if the user marked the board, and lines as well as stones could be found
  *              false, if the board wasn't marked before or if any of the operations fail (detecting stones, finding lines, etc.)
  */
-bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg)
+bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg)
 {
     // TODO: convert the warped image just once to greyscale! 
-    cv::Mat img;
-    img = camera_frame; //cv::imread("go_bilder/01.jpg");
+    Mat img;
+    img = camera_frame; //imread("go_bilder/01.jpg");
 
     if(!getWarpedImg(img))
     {
         return false;
     }
 
-    cv::imshow("Warped Image", img);
+    imshow("Warped Image", img);
 
-    cv::Mat srcWarpedImg = img.clone();
-    cv::Mat paintedWarpedImg = img.clone();
-    cv::vector<cv::Point2f> intersectionPoints;
+    Mat srcWarpedImg = img.clone();
+    Mat paintedWarpedImg = img.clone();
+    vector<Point2f> intersectionPoints;
 
     getBoardIntersections(img, 255, intersectionPoints, paintedWarpedImg);
 
@@ -117,7 +118,7 @@ bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size, 
     if (intersectionPoints.size() >= 1) {
         stoneResult = getStones(srcWarpedImg, intersectionPoints, setup, board_size, paintedWarpedImg);
     }
-    cv::imshow("Detected Stones and Intersections", paintedWarpedImg);
+    imshow("Detected Stones and Intersections", paintedWarpedImg);
 
     if(setDebugImg)
     {

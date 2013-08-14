@@ -1,4 +1,5 @@
 #include "detect_linies_intersections.hpp"
+#include "overwrittenOpenCV.hpp"
 
 #include <cmath>
 
@@ -499,8 +500,6 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &i
         Scalar(255, 0,  0, 0), 2, 8, 0);
     }
 
-
-    //imshow("Intersections", warpedImg);
     
     return true;
 }

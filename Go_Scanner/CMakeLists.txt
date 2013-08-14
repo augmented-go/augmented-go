@@ -10,6 +10,7 @@ SET(scanner_SOURCE
     detect_board.cpp
 	detect_linies_intersections.cpp
 	detect_stones.cpp
+	overwrittenOpenCV.hpp
 )
 
 SET(scanner_HEADERS
