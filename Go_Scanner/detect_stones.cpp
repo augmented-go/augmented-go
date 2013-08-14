@@ -83,15 +83,27 @@ int getStoneDistanceAndMidpoint(const Mat& warpedImgGray, int x, int y, linehead
     return distance;
 }
 
-void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Point2f, SgPoint, lesserPoint2f> to_board_coords, SgPointSet& stones, Mat& paintedWarpedImg)
-{
-    
-    Mat tmp, warpedImgGray;
+void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Point2f, SgPoint, lesserPoint2f> to_board_coords, float stone_diameter, SgPointSet& stones, Mat& paintedWarpedImg)
+{  
+    Mat tmp, warpedImgGray, canny;
     cvtColor(warpedImg, tmp, CV_RGB2GRAY);
 
     threshold(tmp, warpedImgGray, 85, 255, 0);
 
+
+    //Draw circles arround the intersections for easyer detection of black stones
+    for( size_t i = 0; i < intersectionPoints.size(); i++ )
+    {
+         Point center(cvRound(intersectionPoints[i].x), cvRound(intersectionPoints[i].y));
+         int radius = cvRound(stone_diameter/2);
+         // draw the circle outline
+         circle(warpedImgGray, center, radius, Scalar(255), 2, 8, 0 );
+    }
+
+
     imshow("Image for detecting black stones", warpedImgGray);
+
+
     for(int i=0; i < intersectionPoints.size(); i++)
     {
         auto& intersection_point = intersectionPoints[i];
@@ -123,7 +135,8 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<P
             Point2f midpoint45;
             diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, midpoint125.x, midpoint125.y, LEFT, midpoint45);
 
-            if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= 10 && diameter125 >= 10  )
+            //it's a stone if the diameters are similiar, not to small and not to big.
+            if(diameter125+10 >= diameter45 && diameter125-10 <= diameter45 && diameter45 >= 10 && diameter125 >= 10  && diameter45 <= 60 && diameter125 <= 60)
             {
                 cout << "Black Stone ("<< x << ", "<< y << ")" << endl;
 
@@ -262,7 +275,7 @@ bool getStones(Mat srcWarpedImg, vector<Point2f> intersectionPoints, GoSetup& se
     detectAllStones(srcWarpedImg, intersectionPoints, to_board_coords, all_stones, approx_stone_diameter, paintedWarpedImg);
 
     SgPointSet black_stones;
-    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, black_stones, paintedWarpedImg);
+    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, approx_stone_diameter, black_stones, paintedWarpedImg);
     setup.m_stones[SG_BLACK] = black_stones;
     setup.m_stones[SG_WHITE] = all_stones - black_stones;
 

@@ -329,7 +329,7 @@ vector<Vec4i> createLinefromValue(vector<int> circles, lineType type)
 //createLinefromValue uses the midpoints of those circles, 
 //averages them and creates a straight line from that data. This makes it possible to detect a 
 //line even if the line on the board is completely filled with stones.
-bool getBetterHoughImage(Mat& houghImg)
+void getBetterDetectionImage(Mat& houghImg, bool createFakeLines)
 {
     //TODO: is it useful to make the detected circles black? 
     //make another clustering operator. i think the current one doesn't work that well. 
@@ -342,7 +342,7 @@ bool getBetterHoughImage(Mat& houghImg)
     imshow("Canny dilate", houghcircleImg);
     //testing circle detection for deleting the circles in the image for detecting lines.
     vector<Vec3f> circles;
-    HoughCircles(houghcircleImg, circles, CV_HOUGH_GRADIENT, 1, 30, 20, 10, 20, 30);
+    HoughCircles(houghcircleImg, circles, CV_HOUGH_GRADIENT, 1, 20, 30, 10, 20, 30);
 
 
     for( size_t i = 0; i < circles.size(); i++ )
@@ -351,48 +351,50 @@ bool getBetterHoughImage(Mat& houghImg)
          int radius = cvRound(circles[i][2]);
          // draw the circle outline
          circle( houghImg, center, radius+5, Scalar(0), -1, 8, 0 );
+         circle( houghcircleImg, center, radius+5, Scalar(255), -1, 8, 0 );
     }
 
     imshow("houghCIRCLE", houghcircleImg);
 
-    //splitting of the circles by x and y value
-    vector<int> circles_x;
-    vector<int> circles_y;
-    for(int i=0; i<circles.size(); i++)
+    if(createFakeLines)
     {
-        circles_x.push_back(circles[i][0]);
-        circles_y.push_back(circles[i][1]);
-    }
+        //splitting of the circles by x and y value
+        vector<int> circles_x;
+        vector<int> circles_y;
+        for(int i=0; i<circles.size(); i++)
+        {
+            circles_x.push_back(circles[i][0]);
+            circles_y.push_back(circles[i][1]);
+        }
 
-    //sort the vectors 
-    sort(circles_x.begin(), circles_x.end());
-    sort(circles_y.begin(), circles_y.end());
+        //sort the vectors 
+        sort(circles_x.begin(), circles_x.end());
+        sort(circles_y.begin(), circles_y.end());
 
-    //get some lines middle from the midpoints of the circles
-    vector<Vec4i> horizontallines;
-    vector<Vec4i> verticallines;
+        //get some lines middle from the midpoints of the circles
+        vector<Vec4i> horizontallines;
+        vector<Vec4i> verticallines;
 
-    if(circles_x.size() != 0)
-        verticallines= createLinefromValue(circles_x, VERTICAL);
+        if(circles_x.size() != 0)
+            verticallines= createLinefromValue(circles_x, VERTICAL);
 
-    if(circles_y.size() != 0)
-        horizontallines = createLinefromValue(circles_y, HORIZONTAL);
+        if(circles_y.size() != 0)
+            horizontallines = createLinefromValue(circles_y, HORIZONTAL);
 
-    //Draw the Lines on the Image
-    vector<Vec4i> newLines; 
+        //Draw the Lines on the Image
+        vector<Vec4i> newLines; 
 
-    newLines.insert(newLines.begin(), verticallines.begin(), verticallines.end());
-    newLines.insert(newLines.end(), horizontallines.begin(), horizontallines.end());
+        newLines.insert(newLines.begin(), verticallines.begin(), verticallines.end());
+        newLines.insert(newLines.end(), horizontallines.begin(), horizontallines.end());
 
-    for( size_t i = 0; i < newLines.size(); i++ )
-    {
-        line(houghImg, Point(newLines[i][0], newLines[i][1]),
-        Point(newLines[i][2], newLines[i][3]), Scalar(255), 1, 8 );
-    }
+        for( size_t i = 0; i < newLines.size(); i++ )
+        {
+            line(houghImg, Point(newLines[i][0], newLines[i][1]),
+            Point(newLines[i][2], newLines[i][3]), Scalar(255), 1, 8 );
+        }
         
-    imshow("HoughTest", houghImg);
-
-    return true;
+        imshow("HoughTest", houghImg);
+    }
 }
 
 bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &intersectionPoints, Mat& paintedWarpedImg)
@@ -408,7 +410,6 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &i
     //reduce the noise
     //blur(warpedImg, warpedImg , Size(3,3));
     cvtColor(warpedImg, warpedImgGray, CV_RGB2GRAY);
-    imshow("blur", warpedImgGray);
 
     Canny(warpedImgGray, cannyImg, 100, 150, 3);
     imshow("Canny", cannyImg);
@@ -421,7 +422,7 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &i
 
 
     //This function is very very useful to detect a boardline even if it's full of stones!
-    //getBetterHoughImage(threshedImg);
+    getBetterDetectionImage(threshedImg, true);
 
     imshow("Threshed Image for HoughLinesP", threshedImg);
 

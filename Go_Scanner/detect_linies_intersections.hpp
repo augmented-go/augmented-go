@@ -13,5 +13,5 @@ cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type)
 bool intersection(cv::Vec4i horizontalLine, cv::Vec4i verticalLine, cv::Point2f &r);
 bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, cv::vector<cv::Point2f> &intersectionPoints, cv::Mat& paintedWarpedImg);
 cv::vector<cv::Vec4i> createLinefromValue(cv::vector<int> circles, lineType type);
-bool getBetterHoughImage(cv::Mat& houghImg);
+void getBetterDetectionImage(cv::Mat& houghImg, bool createFakeLines);
 }
