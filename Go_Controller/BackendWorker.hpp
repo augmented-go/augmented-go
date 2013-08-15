@@ -77,6 +77,12 @@ namespace Go_AR {
          */
         void selectBoardAutomatically();
 
+        /**
+         * @brief       Sets the option for showing debug image of camera.
+         * @param   bool debug      if true show debug image, false show normal camera image
+         */
+        void setScannerDebugImage(bool debug);
+
 
     private slots:
         void scan(); // our main worker function that is called by the timer
