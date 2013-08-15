@@ -90,8 +90,11 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<P
 
     threshold(tmp, warpedImgGray, 85, 255, 0);
 
+    //we morph the thresholded image to get rid of light spots from reflacting light on the black stones. 
+    Mat element = getStructuringElement(MORPH_ELLIPSE, Size(stone_diameter*0.38, stone_diameter* 0.38));
+    morphologyEx(warpedImgGray, warpedImgGray, MORPH_OPEN, element); // Apply the specified morphology operation
 
-    //Draw circles arround the intersections for easyer detection of black stones
+    //Draw circles around the intersections for easy detection of black stones
     for( size_t i = 0; i < intersectionPoints.size(); i++ )
     {
          Point center(cvRound(intersectionPoints[i].x), cvRound(intersectionPoints[i].y));
@@ -136,7 +139,7 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<P
             diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, midpoint125.x, midpoint125.y, LEFT, midpoint45);
 
             //it's a stone if the diameters are similiar, not to small and not to big.
-            if(diameter125+10 >= diameter45 && diameter125-10 <= diameter45 && diameter45 >= 10 && diameter125 >= 10  && diameter45 <= 60 && diameter125 <= 60)
+            if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= 20 && diameter125 >= 20  && diameter45 <= 60 && diameter125 <= 60)
             {
                 cout << "Black Stone ("<< x << ", "<< y << ")" << endl;
 

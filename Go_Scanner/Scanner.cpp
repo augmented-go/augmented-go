@@ -99,7 +99,8 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
 {
     // TODO: convert the warped image just once to greyscale! 
     Mat img;
-    img = camera_frame; //imread("go_bilder/01.jpg");
+    img = camera_frame; 
+
 
     if(!getWarpedImg(img))
     {
