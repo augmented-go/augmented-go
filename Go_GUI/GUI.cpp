@@ -329,19 +329,26 @@ void GUI::closeEvent(QCloseEvent *event){
 
     // If at least one move was was done
     // TODO If game loaded -> move number greater than start number!
-    if (ui_main.movenumber_label->text().toInt() > 0){
-        if (QMessageBox::question(this, "Save?", "Save current game?") == QMessageBox::Yes)
-            this->slot_MenuSave();
-    }
+    int answer = 0;
+    bool saveable = ui_main.movenumber_label->text().toInt() > 0;
 
-    // Ask if the user wants to quit
-    if (QMessageBox::question(this, "Quit?", "Do you really want to quit?") == QMessageBox::Yes){
+    if (saveable)
+        answer = QMessageBox::question(this, "Save?", "Do you want to save before quit?", "Save", "Don't Save", "Cancel");
+    else
+        answer = QMessageBox::question(this, "Quit?", "Do you really want to quit?", "Quit", "Cancel");
+    
+    if(answer == 0 && saveable){
+        this->slot_MenuSave();
+        emit stop_backend_thread();
+        event->accept();
+    }
+    else if((answer == 1 && saveable)
+        || (answer == 0 && !saveable)){
         emit stop_backend_thread();
         event->accept();
     }
     else
         event->ignore();
-    
 }
 
 } // namespace Go_GUI
