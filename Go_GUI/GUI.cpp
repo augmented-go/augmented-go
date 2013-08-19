@@ -327,7 +327,7 @@ void GUI::closeEvent(QCloseEvent *event){
     bool saveable = ui_main.movenumber_label->text().toInt() > 0;
 
     if (saveable)
-        answer = QMessageBox::question(this, "Save?", "Do you want to save before quit?", "Save", "Don't Save", "Cancel");
+        answer = QMessageBox::question(this, "Save?", "Do you want to save before quitting?", "Save", "Don't Save", "Cancel");
     else
         answer = QMessageBox::question(this, "Quit?", "Do you really want to quit?", "Quit", "Cancel");
     
