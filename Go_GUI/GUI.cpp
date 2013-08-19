@@ -322,6 +322,8 @@ void GUI::closeEvent(QCloseEvent *event){
     // If at least one move was was done
     // TODO If game loaded -> move number greater than start number!
     int answer = 0;
+
+    // if at least one move was made -> ask if user wants to save
     bool saveable = ui_main.movenumber_label->text().toInt() > 0;
 
     if (saveable)
