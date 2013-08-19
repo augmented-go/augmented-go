@@ -27,6 +27,7 @@ private:
 
     QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
     QImage augmented_logo;
+    QIcon switchbutton_icon, switchbuttonpressed_icon;
     QString game_name, texture_path;
 
     // Pointer to the game board, will be set & cached in the slot "slot_newGameData".
@@ -169,6 +170,8 @@ private slots:
      *			To assign a view to something a QWidget has to be created.
      */
     void slot_ViewSwitch();
+
+    void slot_ViewSwitch_released();
 
     /**
      * @brief   SLOT BoardDetectionManually
