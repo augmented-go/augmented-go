@@ -168,9 +168,14 @@ private slots:
      * @brief	SLOT "ViewSwitch"
      *			Switches big view with small view.
      *			To assign a view to something a QWidget has to be created.
+     *          Changes the appereance of button to "pressed"
      */
     void slot_ViewSwitch();
 
+    /**
+     * @brief	SLOT "ViewSwitch_released"
+     *          changes the appereance of button back to normal/"unpressed"
+     */
     void slot_ViewSwitch_released();
 
     /**
