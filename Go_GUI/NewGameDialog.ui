@@ -56,6 +56,12 @@
     </item>
     <item>
      <widget class="QPushButton" name="okButton">
+      <property name="font">
+       <font>
+        <family>Blue Highway</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>OK</string>
       </property>
@@ -63,6 +69,12 @@
     </item>
     <item>
      <widget class="QPushButton" name="cancelButton">
+      <property name="font">
+       <font>
+        <family>Blue Highway</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Cancel</string>
       </property>
@@ -75,9 +87,15 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>61</width>
+     <width>71</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Blue Highway</family>
+     <pointsize>9</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Game name:</string>
@@ -95,6 +113,12 @@
      <height>81</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Blue Highway</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
    <property name="title">
     <string>Player names</string>
    </property>
@@ -106,6 +130,12 @@
       <width>41</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Blue Highway</family>
+      <pointsize>11</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Black:</string>
@@ -122,6 +152,12 @@
       <width>41</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Blue Highway</family>
+      <pointsize>11</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>White:</string>
@@ -166,6 +202,12 @@
      <height>101</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Blue Highway</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
    <property name="title">
     <string>Game rules</string>
    </property>
@@ -177,6 +219,11 @@
       <width>51</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Komi:</string>
@@ -204,11 +251,16 @@
    <widget class="QCheckBox" name="japanese_scoring">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>30</x>
       <y>50</y>
-      <width>111</width>
+      <width>121</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
     </property>
     <property name="layoutDirection">
      <enum>Qt::RightToLeft</enum>
@@ -246,11 +298,17 @@
   <widget class="QLineEdit" name="gamename_lineEdit">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>82</x>
      <y>10</y>
-     <width>113</width>
+     <width>121</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Blue Highway</family>
+     <pointsize>9</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Augmented-Go-Game</string>

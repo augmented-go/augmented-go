@@ -226,8 +226,8 @@
                   </property>
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
-                    <pointsize>12</pointsize>
+                    <family>Blue Highway</family>
+                    <pointsize>14</pointsize>
                    </font>
                   </property>
                   <property name="text">
@@ -258,8 +258,8 @@
                  <widget class="QLabel" name="komi_label">
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
-                    <pointsize>8</pointsize>
+                    <family>Blue Highway</family>
+                    <pointsize>10</pointsize>
                     <stylestrategy>PreferAntialias</stylestrategy>
                     <kerning>true</kerning>
                    </font>
@@ -276,7 +276,7 @@
                  <widget class="QLabel" name="kominumber_label">
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
+                    <family>Blue Highway</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -289,8 +289,8 @@
                  <widget class="QLabel" name="handicap_label">
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
-                    <pointsize>8</pointsize>
+                    <family>Blue Highway</family>
+                    <pointsize>10</pointsize>
                     <stylestrategy>PreferAntialias</stylestrategy>
                    </font>
                   </property>
@@ -306,7 +306,7 @@
                  <widget class="QLabel" name="handicapnumber_label">
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
+                    <family>Blue Highway</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -331,8 +331,8 @@
                  <widget class="QLabel" name="move_label">
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
-                    <pointsize>11</pointsize>
+                    <family>Blue Highway</family>
+                    <pointsize>14</pointsize>
                    </font>
                   </property>
                   <property name="text">
@@ -347,7 +347,7 @@
                  <widget class="QLabel" name="movenumber_label">
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
+                    <family>Blue Highway</family>
                     <pointsize>15</pointsize>
                    </font>
                   </property>
@@ -362,7 +362,6 @@
             </layout>
             <zorder>ViewSwitch_GameName</zorder>
             <zorder>moveinfo_container</zorder>
-            <zorder>whiteplayer_label</zorder>
             <zorder>komiinfo_container</zorder>
            </widget>
           </item>
@@ -793,7 +792,7 @@
               </property>
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>Blue Highway</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -1227,7 +1226,7 @@
               </property>
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>Blue Highway</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -1746,8 +1745,8 @@
              </property>
              <property name="font">
               <font>
-               <family>Shojumaru</family>
-               <pointsize>10</pointsize>
+               <family>Blue Highway</family>
+               <pointsize>12</pointsize>
               </font>
              </property>
              <property name="text">
@@ -1995,7 +1994,7 @@
              </property>
              <property name="font">
               <font>
-               <family>Shojumaru</family>
+               <family>Blue Highway</family>
                <pointsize>22</pointsize>
                <weight>50</weight>
                <bold>false</bold>
@@ -2141,7 +2140,7 @@
              </property>
              <property name="font">
               <font>
-               <family>Shojumaru</family>
+               <family>Blue Highway</family>
                <pointsize>22</pointsize>
                <stylestrategy>PreferAntialias</stylestrategy>
               </font>
@@ -2182,7 +2181,8 @@
               </property>
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>Blue Highway</family>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="text">
@@ -2200,7 +2200,8 @@
               </property>
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>Blue Highway</family>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="text">
@@ -2218,7 +2219,8 @@
               </property>
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>Blue Highway</family>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="text">
