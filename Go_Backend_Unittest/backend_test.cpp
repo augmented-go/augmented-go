@@ -16,7 +16,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace GoBackendGameTest
 {
     using GoBackend::Game;
-    using GoBackend::State;
+    using GoBackend::UpdateResult;
     using SgPointUtil::Pt;
     using std::string;
 
@@ -111,21 +111,6 @@ namespace GoBackendGameTest
             auto blacks = board.TotalNumStones(SG_BLACK);
             Assert::AreEqual(2, whites);
             Assert::AreEqual(1, blacks);
-        }
-
-        TEST_METHOD(overriding_board_resets_state) {
-            Game go_game;
-            go_game.init(6);
-
-            GoSetup setup;
-            setup.AddWhite(Pt(1, 1));
-            setup.m_player = SG_BLACK;
-
-            go_game.update(setup);
-            Assert::IsTrue(go_game.getState() == State::Invalid);
-
-            go_game.init(6, setup);
-            Assert::IsTrue(go_game.getState() == State::Valid);
         }
 
         TEST_METHOD(can_initialize_with_uncaptured_stone) {
@@ -228,10 +213,9 @@ namespace GoBackendGameTest
                 "O...\n"
                 ".O..";
             auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
+            auto result = go_game.update(new_setup);
 
-            Assert::IsTrue(go_game.getState() == State::Invalid);
-
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             // black moved while whites turn
             go_game.init(size, setup);
@@ -241,9 +225,9 @@ namespace GoBackendGameTest
                 "OX..\n"
                 ".O..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
+            result = go_game.update(new_setup);
 
-            Assert::IsTrue(go_game.getState() == State::Valid);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
             // ...then the illegal black move
             s = "....\n"
@@ -251,9 +235,9 @@ namespace GoBackendGameTest
                 "OX..\n"
                 ".O..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
+            result = go_game.update(new_setup);
 
-            Assert::IsTrue(go_game.getState() == State::Invalid);
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
         TEST_METHOD(cannot_update_board_with_faulty_setup) {
@@ -275,7 +259,8 @@ namespace GoBackendGameTest
             auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             new_setup.AddBlack(SgPointUtil::Pt(10, 10)); // this points is outside the 4x4 grid
 
-            go_game.update(new_setup); // silently skips this setup!
+            auto result = go_game.update(new_setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             // initial setup should be present
             auto board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
@@ -300,17 +285,17 @@ namespace GoBackendGameTest
                 "O...\n"
                 "XO..";
             auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
-            Assert::IsTrue(go_game.getState() == State::Invalid);
+            auto result = go_game.update(new_setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
-            // valid state again after removing illegal move
+            // valid again after removing illegal move
             s = "....\n"
                 "....\n"
                 "O...\n"
                 ".O..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
-            Assert::IsTrue(go_game.getState() == State::Valid);
+            result = go_game.update(new_setup);
+            Assert::IsTrue(result == UpdateResult::Legal);
         }
 
         TEST_METHOD(detect_invalid_updates) {
@@ -330,8 +315,8 @@ namespace GoBackendGameTest
                 "....\n"
                 ".O..";
             auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
-            Assert::IsTrue(go_game.getState() == State::Invalid);
+            auto result = go_game.update(new_setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             go_game.init(size, setup);
             // added two stones
@@ -340,8 +325,8 @@ namespace GoBackendGameTest
                 "O...\n"
                 ".O..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
-            Assert::IsTrue(go_game.getState() == State::Invalid);
+            result = go_game.update(new_setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             go_game.init(size, setup);
             // added stones of both colors
@@ -350,8 +335,8 @@ namespace GoBackendGameTest
                 "OO..\n"
                 ".O..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
-            Assert::IsTrue(go_game.getState() == State::Invalid);
+            result = go_game.update(new_setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
             go_game.init(size, setup);
             // played black stone and removed white stone
@@ -360,9 +345,9 @@ namespace GoBackendGameTest
                 "....\n"
                 ".O..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
+            result = go_game.update(new_setup);
 
-            Assert::IsTrue(go_game.getState() == State::Invalid);
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
         TEST_METHOD(recognize_captures) {
@@ -384,10 +369,11 @@ namespace GoBackendGameTest
             size;
             auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
 
-            go_game.update(new_setup);
-            Assert::IsTrue(go_game.getState() == GoBackend::State::WhileCapturing);
+            auto result = go_game.update(new_setup);
+            // internal board and real life board do not match
+            Assert::IsTrue(result == UpdateResult::Illegal);
 
-            // internal board state should automatically remove stones
+            // internal board state should automatically removes stones
             s = "..OX\n"
                 "X...\n"
                 ".X..\n"
@@ -397,9 +383,9 @@ namespace GoBackendGameTest
             auto current_board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
             Assert::IsTrue(new_setup == current_board_setup);
 
-            // back to valid state after the stones have been removed by the user
-            go_game.update(new_setup);
-            Assert::IsTrue(go_game.getState() == GoBackend::State::Valid);
+            // back to legal result after the stones have been removed by the user
+            result = go_game.update(new_setup);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
             // whites capture
             s = "..OX\n"
@@ -407,8 +393,132 @@ namespace GoBackendGameTest
                 ".X..\n"
                 ".X..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
-            Assert::IsTrue(go_game.getState() == GoBackend::State::WhileCapturing);
+            result = go_game.update(new_setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+        }
+
+        TEST_METHOD(after_capturing_allow_playing_where_caputred_stones_were) {
+            std::string s(  "....\n"
+                            "X...\n"
+                            "OX..\n"
+                            "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // updating with black move that captures and removes white stones
+            s = "....\n"
+                "X...\n"
+                ".X..\n"
+                ".X..";
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            auto result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Legal);
+
+            // white move into captured area
+            // this case makes the white_capturing state necessary
+            s = "....\n"
+                "X...\n"
+                ".X..\n"
+                "OX..";
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Legal);
+        }
+
+        TEST_METHOD(very_fist_move_is_capturing_move_and_captures_every_white_stone) {
+            // when the very first move is a capturing move and also removes every white stone, 
+            // don't allow setting handicap stones
+            std::string s(  "....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            Game go_game;
+            go_game.init(size, setup);
+
+            
+            // play the capturing move
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            ".X..");
+
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            auto result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Legal);
+
+            // try placing a handicap stone
+            setup.AddBlack(Pt(1,1));
+            result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+        }
+
+        TEST_METHOD(removing_too_many_own_stones_when_capturing) {
+            std::string s("....\n"
+                          ".OX.\n"
+                          "X...\n"
+                          "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            Game go_game;
+            go_game.init(size, setup);
+
+            // play the capturing move and remove additional own stone
+            s = std::string("....\n"
+                            ".O..\n"
+                            "X...\n"
+                            ".X..");
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            auto result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+        }
+
+        TEST_METHOD(removing_too_many_enemy_stones_when_capturing) {
+            std::string s("....\n"
+                          ".OX.\n"
+                          "X...\n"
+                          "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            Game go_game;
+            go_game.init(size, setup);
+
+            // play the capturing move and remove additional own stone
+            s = std::string("....\n"
+                            "..X.\n"
+                            "X...\n"
+                            ".X..");
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            auto result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+        }
+
+        TEST_METHOD(detect_invalid_setup_while_capturing) {
+            std::string s("....\n"
+                          "....\n"
+                          "X...\n"
+                          "O...");
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+            Game go_game;
+            go_game.init(size, setup);
+
+            // play the capturing move
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            "OX..");
+            setup = GoSetupUtil::CreateSetupFromString(s, size);
+            auto result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+
+            // another update with still illegal setup
+            result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
         TEST_METHOD(can_get_board_information) {
@@ -667,7 +777,6 @@ namespace GoBackendGameTest
             GoSetup setup;
 
             go_game.init(4, setup);
-            Assert::IsTrue(go_game.getState() == State::SettingHandicap);
 
             //
             // more than one handicap stone placed
@@ -677,9 +786,9 @@ namespace GoBackendGameTest
                             "....");
             int size;
             GoSetup handicap_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(handicap_setup);
+            auto result = go_game.update(handicap_setup);
             // still able to place handicap
-            Assert::IsTrue(go_game.getState() == State::SettingHandicap);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
             //
             // white move
@@ -688,8 +797,8 @@ namespace GoBackendGameTest
                 ".XO.\n"
                 "....";
             setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(setup);
-            Assert::IsTrue(go_game.getState() == State::Valid);
+            result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
             auto& board = go_game.getBoard();
             // all stones present on the board
@@ -711,7 +820,11 @@ namespace GoBackendGameTest
             GoSetup setup = GoSetupUtil::CreateSetupFromString(s, size);
             go_game.init(size, setup);
 
-            Assert::IsTrue(go_game.getState() == State::Valid);
+            setup.AddBlack(Pt(1,1));
+            setup.AddBlack(Pt(1,2));
+            auto result = go_game.update(setup);
+
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
         TEST_METHOD(allow_playing_handicap_stones_when_setup_contains_only_black_stones) {
@@ -720,7 +833,12 @@ namespace GoBackendGameTest
 
             Game go_game;
             go_game.init(19, setup);
-            Assert::IsTrue(go_game.getState() == State::SettingHandicap);
+
+            setup.AddBlack(Pt(1,2));
+            setup.AddBlack(Pt(1,3));
+            auto result = go_game.update(setup);
+
+            Assert::IsTrue(result == UpdateResult::Legal);
         }
 
         TEST_METHOD(dont_consider_single_black_stone_as_handicap) {
@@ -768,13 +886,14 @@ namespace GoBackendGameTest
 
             GoSetup setup;
             setup.AddWhite(Pt(1, 2));
-            go_game.update(setup);
+            auto result = go_game.update(setup);
 
-            Assert::IsTrue(go_game.getState() == State::Invalid);
+            Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
     };
-
+    
+    
     TEST_CLASS(GoRulesTest)
     {
     public:
@@ -865,7 +984,9 @@ namespace GoBackendGameTest
             Assert::AreEqual("W+7.5", res.c_str());
         }
     };
+    
 
+    
     TEST_CLASS(SgfTest)
     {
     public:
@@ -1032,7 +1153,7 @@ namespace GoBackendGameTest
 
             go_game.init(size, init_setup);
 
-            // BLACK tries to play a move on a white stone
+            // BLACK tries to play a move on a white stone -> INVALID MOVE
             go_game.playMove(SgPointUtil::Pt(1, 1));
 
             s = std::string("....\n"
@@ -1046,7 +1167,7 @@ namespace GoBackendGameTest
             board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
             Assert::IsTrue(expected_setup == board_setup);
 
-            // BLACK tries to play a suicide move
+            // BLACK tries to play a suicide move -> INVALID MOVE
             go_game.playMove(SgPointUtil::Pt(2, 1));
 
             s = std::string("....\n"
@@ -1061,7 +1182,7 @@ namespace GoBackendGameTest
             Assert::IsTrue(expected_setup == board_setup);
         }
 
-        TEST_METHOD(cannot_play_a_valid_move_after_a_invalid_move) {
+        TEST_METHOD(can_play_a_valid_move_after_a_invalid_move) {
             std::string s;
             int size;
             GoSetup expected_setup, board_setup;
@@ -1076,7 +1197,7 @@ namespace GoBackendGameTest
 
             go_game.init(size, init_setup);
 
-            // BLACK tries to play a move on a white stone
+            // BLACK tries to play a move on a white stone -> INVALID MOVE
             go_game.playMove(SgPointUtil::Pt(3, 1));
 
             s = std::string("....\n"
@@ -1097,6 +1218,50 @@ namespace GoBackendGameTest
                             "....\n"
                             "X...\n"
                             "..O.");
+
+            expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_WHITE;
+
+            board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(expected_setup == board_setup);
+        }
+
+        TEST_METHOD(can_play_a_valid_move_after_a_capturing_move) {
+            std::string s;
+            int size;
+            GoSetup expected_setup, board_setup;
+
+            Game go_game;
+
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            "O...");
+            auto init_setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            go_game.init(size, init_setup);
+
+            // BLACK captures the WHITE stone -> VALID
+            go_game.playMove(SgPointUtil::Pt(2, 1));
+
+            s = std::string("....\n"
+                            "....\n"
+                            "X...\n"
+                            ".X..");
+
+            expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_WHITE;
+
+            board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+            Assert::IsTrue(expected_setup == board_setup);
+
+            // WHITE plays a valid move
+            go_game.playMove(SgPointUtil::Pt(4, 2));
+
+            s = std::string("....\n"
+                            "....\n"
+                            "X..O\n"
+                            ".X..");
 
             expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
             expected_setup.m_player = SG_BLACK;

@@ -15,8 +15,16 @@ int main(int argc, char** argv) {
     Mat image;
 
     // read camera, else debug picture and call scanner_main
+    // scanner.cpp caches the image, not actions performed as the board has to be selected manually
     bool success = scanner.scanCamera(setup, size, image);
 
-    cvWaitKey(0);
+    scanner.selectBoardAutomatically();
+
+    // actually do the work!
+    success = scanner.scanCamera(setup, size, image);
+
+    imshow("Image after scanning", image);
+
+    cvWaitKey();
     return 0;
 }

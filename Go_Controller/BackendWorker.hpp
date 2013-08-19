@@ -1,3 +1,5 @@
+// Copyright (c) 2013 augmented-go team
+// See the file LICENSE for full license and copying terms.
 #pragma once
 
 #include <utility>
@@ -12,29 +14,24 @@
 #include "Scanner.hpp"
 
 namespace Go_AR {
-    class BackendThread : public QThread {
+    class BackendWorker : public QObject {
         Q_OBJECT
 
     public:
-        BackendThread();
-        ~BackendThread();
+        BackendWorker();
+        ~BackendWorker();
             
     private:
-        // thread function
-        void run() override;
         void signalGuiGameHasEnded() const;
+        void signalGuiGameDataChanged() const;
+        bool virtualModeActive() const;
         
     // slots
     public slots:
         /**
-         * @brief       Stops this thread.
-         */
-        void stop();
-
-        /**
          * @brief       Saves the current game as sgf at the specified path.
          */
-        void saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name) const;
+        void saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name);
 
         /**
          * @brief       Plays a pass for the current player.
@@ -60,6 +57,16 @@ namespace Go_AR {
         void resetGame(GoRules rules);
 
         /**
+         * @brief       Toggles between completely virtual and augmented application mode.
+         */
+        void setVirtualGameMode(bool checked);
+
+        /**
+         * @brief       Sends a move to game
+         */
+        void playMove(const int x, const int y);
+
+        /**
          * @brief       Triggers the manual board selection in the Scanner.
          *              Blocks this thread until the selection was made.
          */
@@ -69,6 +76,12 @@ namespace Go_AR {
          * @brief       Triggers the autmatic board detection in the Scanner.
          */
         void selectBoardAutomatically();
+
+        /**
+         * @brief       Sets the option for showing debug image of camera.
+         * @param   bool debug      if true show debug image, false show normal camera image
+         */
+        void setScannerDebugImage(bool debug);
 
 
     private slots:
@@ -88,9 +101,10 @@ namespace Go_AR {
 
     // Member vars    
     private:
-        std::unique_ptr<GoBackend::Game>     _game;
-        std::unique_ptr<Go_Scanner::Scanner> _scanner;
-        bool _game_is_initialized;
+        GoBackend::Game     _game;
+        Go_Scanner::Scanner _scanner;
+        QTimer              _scan_timer;
         GoRules _new_game_rules;
+        bool    _game_is_initialized;
     };
 }

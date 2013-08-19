@@ -1,3 +1,5 @@
+// Copyright (c) 2013 augmented-go team
+// See the file LICENSE for full license and copying terms.
 #pragma once
 
 #include <opencv2/opencv.hpp>
@@ -8,24 +10,34 @@
 
 namespace Go_Scanner {
 
-int scanner_main(cv::Mat& camera_frame);
+bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg);
 void ask_for_board_contour();
 void do_auto_board_detection();
 
+enum ScanResult {
+    Failed,
+    Image_Only,
+    Success
+};
+
 class Scanner {
 public:
-    Scanner() {}
+    Scanner() {
+        _setDebugImg = false;
+    }
 
 private:
     Scanner(const Scanner&);
     Scanner& operator=(const Scanner&);
+    bool _setDebugImg;
         
 public:
     /**
     * @brief        currently only sets out_image to the read camera image
-    * @returns      true if a new image could be retrieved, false otherwise, may be changed to an enum or so
+    * @returns      true if a new image could be retrieved and lines as well as stones could be detected
+    *               false otherwise, may be changed to an enum or so
     */
-    bool scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image);
+    ScanResult scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image);
 
     /**
     * @brief        Displays a window to let the user select the go board manually.
@@ -38,6 +50,16 @@ public:
     *               This call blocks until the user pressed a key to close the result window.
     */
     void selectBoardAutomatically();
+
+    /**
+    * @brief        Sets the image of the camera as image for the GUI
+    */
+    void Scanner::setNormalImage();
+
+    /**
+    * @brief        Sets the debug image of the Scanner as image for the GUI
+    */
+    void Scanner::setDebugImage();
 
 private:
     /**

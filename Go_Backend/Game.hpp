@@ -9,21 +9,22 @@
 namespace GoBackend {
 using std::string;
 
-// possible states of the game
-enum class State {
-    Valid,
+enum class UpdateResult {
+    /**
+     * The internal board state after the update() call does not match the real life board.
+     * This may happen due to an invalid move according to the rules or captured stone have not yet been removed completely.
+     * This means, the user has to make the real life board match the internal board again.
+     */
+    Illegal,
+    // could be split into:
+    // Illegal due to rules (ko, turn)
+    // Illegal due to stones not removed after capture
+    // Illegal due to removing or adding multiple stones.
 
-    // in this state, the user has to restore the last valid state of the board
-    // getBoard() will contain the last valid state
-    Invalid,
-
-    // basically the same as Invalid, but can only be reached through a capturing move
-    WhileCapturing,
-
-    // in this state, the black player can set handicap stones until a white move is played
-    // playing only one move is not considered as a handicap
-    // if a game is initialized with only black stones, this is the state the game starts with
-    SettingHandicap
+    /**
+     * Internal board matches real life board.
+     */
+    Legal
 };
 
 /**
@@ -67,7 +68,8 @@ public:
      *
      * @param[in]   size    board size (size x size)
      * @param[in]   setup   initial board setup
-     * @param[in]   rules   game rules for this setup/game
+     * @param[in]   rules   game rules for this setup/game, 
+                            only allows a handicap of 0, the placement of handicap stones is handled in a differnt way
      * @returns     false - the setup contains invalid stones\n
      *              true  - init successful
      */
@@ -75,31 +77,23 @@ public:
 
     /**
      * @brief       Updates the game with the given setup. Tries to extract a valid move from the setup.
-     *              Modifies the internal game state if no valid move was found.
-     *              Note: Ignores current player information in setup. Also ignores setups with invalid stones!
-     *              These will be silently skipped.
+     *              Note: Ignores current player information in setup. 
      * @param[in]   setup   new board setup
+     * @returns     See UpdateResult class. Also returns Illegal when the setup includes invalid stones.
      */
-    void update(GoSetup setup);
+    UpdateResult update(GoSetup setup);
 
     /**
      * @brief       Plays a move at given position for the current player.
-     *              Emulates a new GoSetup with this new move and uses the available functions for updating the game board.
-     * @param[in]   setup   new board setup
+     * @returns     Whether the move was legal or not.
      */
-    void playMove(SgPoint position);
+    UpdateResult playMove(SgPoint position);
 
     /**
      * @brief       Get current board information
      * @returns     reference to current board instance
      */
     const GoBoard& getBoard() const;
-
-    /**
-     * @brief       Get current game state
-     * @returns     current game state
-     */
-    State getState() const;
 
     /**
      * @brief        Writes the current game state to a sgf file.
@@ -147,21 +141,37 @@ private:
     Game& operator=(const Game&);
 
 private:
-    // these functions are called on update with the current state matching
-    // they may change the state
-    void onUpdateValid(SgPointSet added_blacks, SgPointSet added_whites, 
-                     SgPointSet removed_blacks, SgPointSet removed_whites);
-    void onUpdateInvalid(GoSetup new_setup);
-    void onUpdateSettingHandicap(GoSetup new_setup);
+    UpdateResult updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites);
+    UpdateResult updateWhileCapturing(GoSetup new_setup);
+
+    /**
+     * @brief       Checks whether handicap stones are being placed or not.
+     */
+    bool isPlacingHandicap(SgPointSet current_blacks, SgPointSet current_whites, SgPointSet new_whites);
+    void placeHandicap(GoSetup new_setup);
+
+    /**
+     * @brief       Tries to play a move at point for player. 
+     *              Also checks if removed_of_player and removed_of_opponent are captured stones.
+     *              Gets called inside updateNormal.
+     * @returns     Whether the move was legal or illegal.
+     */
+    UpdateResult updateSingleMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent);
+
+    /**
+     * @brief       Returns the possibly captured stones when current player of cons_board would play at point.
+     */
+    SgPointSet possibleCapturedStones(const GoBoard& const_board, SgPoint point);
 
     bool validSetup(const GoSetup& setup) const;
     bool allValidPoints(const SgPointSet& stones) const;
 
 private:
     GoGame _go_game;
-    State  _current_state;
-    bool   _game_finished; // we need this variable because fuego doesn't tag a game
-                           // finished if a player resigns
+    bool _game_finished; // we need this variable because fuego doesn't tag a game
+                         // finished if a player resigns
+
+    bool _while_capturing;
 };
 
 }
