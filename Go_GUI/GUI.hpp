@@ -236,6 +236,12 @@ public slots:
      * @param   QString    white player name
      */
     void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi);
+
+    /**
+     * @brief   SLOT "display error message"
+     *          Displays the error message on the gui. Message gets overwritten by subsequent calls.
+     */
+    void slot_displayErrorMessage(QString message);
 };
 
 } // namespace Go_GUI

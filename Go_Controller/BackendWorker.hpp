@@ -98,6 +98,9 @@ namespace Go_AR {
         // signals that the game has ended with the given result
         void finishedGameResult(QString result) const;
 
+        // signals to display the message on the gui
+        void displayErrorMessage(QString message) const;
+
 
     // Member vars    
     private:

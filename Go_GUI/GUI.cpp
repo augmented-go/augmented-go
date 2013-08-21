@@ -313,6 +313,11 @@ void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString
     ui_main.handicapnumber_label->setText(QString::number(0));
 }
 
+void GUI::slot_displayErrorMessage(QString message) {
+    // todo(mihi314): just for testing, should use the functionality in ticket #80
+    QMessageBox::information(this, "test error", message);
+}
+
 ///////////
 //Events
 ///////////

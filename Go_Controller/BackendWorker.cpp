@@ -72,14 +72,20 @@ void BackendWorker::scan() {
             if (_game_is_initialized) {
                 // update game state
                 _game.update(setup);
+                signalGuiGameDataChanged();
             }
             else {
-                _game.init(board_size, setup, _new_game_rules);
-                _game_is_initialized = true;
+                // the gui doesn't support other sizes
+                if (board_size == 9 || board_size == 13 || board_size == 19) {
+                    _game.init(board_size, setup, _new_game_rules);
+                    _game_is_initialized = true;
+                    signalGuiGameDataChanged();
+                }
+                else {
+                    emit displayErrorMessage(QString("Not supported board size of %1x%1 detected!").arg(board_size));
+                }
             }
             
-            signalGuiGameDataChanged();
-
             // don't break because Success implies getting an image,
             // so let control flow fall through to ScanResult::Image_Only
         }
@@ -92,6 +98,7 @@ void BackendWorker::scan() {
             emit newImage(scanner_image);
         }
     case ScanResult::Failed:
+        // emit displayErrorMessage("scanning failed, no camera image, board not selected etc");
         break;
     default:
         assert(!"Unknown ScanResult?!");
