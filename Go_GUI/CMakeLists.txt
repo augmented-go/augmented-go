@@ -3,7 +3,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
-set (QT_PLUGIN_PATH $ENV{QT_PLUGIN_PATH} CACHE STRING "Qt5 plugin path" FORCE)
+set(QT_PLUGIN_PATH ${QT_PLUGIN_PATH} CACHE STRING "Qt5 plugin path" FORCE)
 
 # check if qt5 root is set
 IF (NOT QT_PLUGIN_PATH)
