@@ -8,6 +8,9 @@ endif(MSVC)
 
 add_definitions(-DUNICODE -D_UNICODE)
 
+# disable autolinking to qtmain as we have our own main() function
+cmake_policy(SET CMP0020 OLD)
+
 # set output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin) # executables
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin) # shared libs
