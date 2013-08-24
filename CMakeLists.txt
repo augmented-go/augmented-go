@@ -6,6 +6,8 @@ if (MSVC)
 	add_definitions(/MP)
 endif(MSVC)
 
+add_definitions(-DUNICODE -D_UNICODE)
+
 # set output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin) # executables
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin) # shared libs
