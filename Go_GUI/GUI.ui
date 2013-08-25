@@ -169,7 +169,7 @@
           </property>
           <item>
            <widget class="QWidget" name="widget" native="true">
-            <layout class="QVBoxLayout" name="verticalLayout_3">
+            <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,1">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -195,17 +195,21 @@
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>20</width>
-                    <height>20</height>
+                    <width>32</width>
+                    <height>32</height>
                    </size>
                   </property>
                   <property name="text">
-                   <string>&lt;&gt;</string>
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../res/textures/Arrow_SwitchButton.png</normaloff>../res/textures/Arrow_SwitchButton.png</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>32</width>
+                    <height>32</height>
                    </size>
                   </property>
                  </widget>
