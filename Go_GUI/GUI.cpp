@@ -10,6 +10,7 @@
 #include "Game.hpp"
 
 #include "NewGameDialog.hpp"
+#include "ChangeScanRateDialog.hpp"
 #include "VirtualView.hpp"
 #include "AugmentedView.hpp"
 
@@ -17,7 +18,10 @@
 namespace Go_GUI {
     
 
-GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
+GUI::GUI(QWidget *parent)
+    : QMainWindow(parent),
+    go_game(nullptr),
+    current_scanning_rate(2000)
 {
     ui_main.setupUi(this);
     
@@ -57,6 +61,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
     connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
    
+    connect(ui_main.scanning_rate_action, &QAction::triggered,	this, &GUI::slot_MenuChangeScanRate);
     // setting initial values
     this->init();
 }
@@ -192,6 +197,11 @@ void GUI::slot_MenuInfo(){
     QMessageBox::about(this, "Info", output.c_str());
 }
 
+void GUI::slot_MenuChangeScanRate() {
+    auto scan_rate_dialog = new ChangeScanRateDialog(this, current_scanning_rate);
+    scan_rate_dialog->exec();
+}
+
 void GUI::slot_BoardDetectionManually() {
     emit signal_boardDetectionManually();
 }
@@ -230,6 +240,11 @@ void GUI::slot_passOnVirtualViewPlayMove(const int x, const int y){
     emit this->signal_playMove(x, y);
 }
 
+
+void GUI::slot_changeScanRate(int milliseconds) {
+    current_scanning_rate = milliseconds;
+    emit signal_new_scanning_rate(milliseconds);
+}
 
 //////////
 //Public Slots

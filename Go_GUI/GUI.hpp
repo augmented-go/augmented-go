@@ -10,15 +10,17 @@
 #include "Game.hpp"
 
 #include "ui_GUI.h"
-#include "ui_NewGameDialog.h"
 #include "AugmentedView.hpp"
 #include "VirtualView.hpp"
 
 namespace Go_GUI {
+class ChangeScanRateDialog;
 
 class GUI : public QMainWindow
 {
     Q_OBJECT
+
+    friend class Go_GUI::ChangeScanRateDialog;
 
 private:
     Ui::MainWindow ui_main;
@@ -164,6 +166,13 @@ private slots:
      *			opens a window with information about the application.
      */
     void slot_MenuInfo();
+
+    /**
+     * @brief	SLOT QAction "MenuInfo"
+     *			opens a window to change the scanning rate.
+     */
+    void slot_MenuChangeScanRate();
+
     /**
      * @brief	SLOT "ViewSwitch"
      *			Switches big view with small view.
@@ -199,6 +208,12 @@ private slots:
      */
     void slot_passOnVirtualViewPlayMove(const int x, const int y);   
 
+    /**
+     * @brief   SLOT "change scan rate"
+     *          Sends a signal that changes the camera scanning rate in the backend
+     * @param   int     New scanning rate in milliseconds
+     */
+    void slot_changeScanRate(int milliseconds);
 
 public slots:
     
@@ -231,6 +246,9 @@ public slots:
      * @param   QString    white player name
      */
     void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi);
+
+private:
+    int current_scanning_rate;
 };
 
 } // namespace Go_GUI

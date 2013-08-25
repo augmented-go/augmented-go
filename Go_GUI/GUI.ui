@@ -2267,6 +2267,7 @@
     <addaction name="rules_action"/>
     <addaction name="cameraresolution_action"/>
     <addaction name="virtual_game_mode_action"/>
+    <addaction name="scanning_rate_action"/>
    </widget>
    <widget class="QMenu" name="board_detection_menu">
     <property name="title">
@@ -2351,6 +2352,11 @@
   <action name="info_action">
    <property name="text">
     <string>Info</string>
+   </property>
+  </action>
+  <action name="scanning_rate_action">
+   <property name="text">
+    <string>Scanning Rate</string>
    </property>
   </action>
  </widget>
