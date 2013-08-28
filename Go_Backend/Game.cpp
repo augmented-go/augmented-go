@@ -16,7 +16,8 @@ namespace GoBackend {
 Game::Game()
     : _go_game(),
       _game_finished(false),
-      _while_capturing(false)
+      _while_capturing(false),
+      _differences()
 {}
 
 bool Game::validSetup(const GoSetup& setup) const {
@@ -95,6 +96,10 @@ UpdateResult Game::update(GoSetup setup) {
     auto removed_blacks = current_blacks - new_blacks;
     auto removed_whites = current_whites - new_whites;
 
+    // calc differences between updated setup and current board setup
+    _differences.Clear();
+    _differences |= current_blacks ^ new_blacks;
+    _differences |= current_whites ^ new_whites;
 
     // handicap
     if (isPlacingHandicap(current_blacks, current_whites, new_whites)) {
@@ -102,7 +107,6 @@ UpdateResult Game::update(GoSetup setup) {
         placeHandicap(setup);
         return UpdateResult::Legal;
     }
-
 
     if (_while_capturing) {
         assert(getBoard().CapturingMove());
@@ -113,7 +117,9 @@ UpdateResult Game::update(GoSetup setup) {
     }
 }
 
-
+SgPointSet Game::getDifferences() const {
+    return _differences;
+}
 
 UpdateResult Game::updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
     assert(_while_capturing == false);

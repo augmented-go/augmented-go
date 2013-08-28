@@ -84,6 +84,14 @@ public:
     UpdateResult update(GoSetup setup);
 
     /**
+     * @brief       Gets the differences of the last updated setup to the current internal board.
+     *              Should be used for error displaying if there was an illegal move.
+     * @returns     An SgPointSet of the stones that are illegal.
+     */
+    SgPointSet getDifferences() const;
+
+
+    /**
      * @brief       Plays a move at given position for the current player.
      * @returns     Whether the move was legal or not.
      */
@@ -171,6 +179,7 @@ private:
     bool _game_finished; // we need this variable because fuego doesn't tag a game
                          // finished if a player resigns
 
+    SgPointSet _differences; // differences of the last setup that was updated to the current board
     bool _while_capturing;
 };
 

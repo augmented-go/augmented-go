@@ -891,8 +891,100 @@ namespace GoBackendGameTest
             Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
+        TEST_METHOD(can_get_differences_of_faulty_moves) {
+            std::string s(  "....\n"
+                            ".X..\n"
+                            "O...\n"
+                            ".O..");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // illegal move: white moved while blacks turn
+            s = "....\n"
+                ".XO.\n"
+                "O...\n"
+                ".O..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            auto diff = go_game.getDifferences();
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                auto point = *iter;
+
+                Assert::IsTrue(point == Pt(3, 3));
+            }
+
+            // illegal move: black removes a white stone
+            s = "....\n"
+                ".X..\n"
+                "....\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                auto point = *iter;
+
+                Assert::IsTrue(point == Pt(1, 2));
+            }
+
+            // illegal move: black removes a black stone
+            s = "....\n"
+                ".X..\n"
+                "O...\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                auto point = *iter;
+
+                Assert::IsTrue(point == Pt(2, 3));
+            }
+
+            // illegal move: black plays suicide
+            s = "....\n"
+                ".X..\n"
+                "O...\n"
+                "XO..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                auto point = *iter;
+
+                Assert::IsTrue(point == Pt(1, 1));
+            }
+
+            // illegal move: black plays two stones
+            s = "....\n"
+                ".X..\n"
+                "O...\n"
+                ".OXX";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            std::vector<SgPoint> real_faulty_stones;
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                real_faulty_stones.push_back(*iter);
+            }
+
+            std::vector<SgPoint> expected_faulty_stones;
+            expected_faulty_stones.push_back(Pt(3,1));
+            expected_faulty_stones.push_back(Pt(4,1));
+         
+            Assert::IsTrue(expected_faulty_stones == real_faulty_stones);
+        }
+
     };
-    
     
     TEST_CLASS(GoRulesTest)
     {
@@ -984,8 +1076,6 @@ namespace GoBackendGameTest
             Assert::AreEqual("W+7.5", res.c_str());
         }
     };
-    
-
     
     TEST_CLASS(SgfTest)
     {
