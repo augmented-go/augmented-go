@@ -102,8 +102,8 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
 //////////
 
 void GUI::slot_ButtonNewGame(){
-    NewGameDialog* newgame = new NewGameDialog(this);
-    newgame->exec();
+    NewGameDialog newgame(this);
+    newgame.exec();
 }
 
 void GUI::slot_ButtonResign(){
@@ -198,8 +198,8 @@ void GUI::slot_MenuInfo(){
 }
 
 void GUI::slot_MenuChangeScanRate() {
-    auto scan_rate_dialog = new ChangeScanRateDialog(this, current_scanning_rate);
-    scan_rate_dialog->exec();
+    ChangeScanRateDialog scan_rate_dialog(this, current_scanning_rate);
+    scan_rate_dialog.exec();
 }
 
 void GUI::slot_BoardDetectionManually() {
