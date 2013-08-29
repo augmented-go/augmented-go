@@ -27,6 +27,7 @@ VirtualView::VirtualView(QWidget *parent){
     QString board_directory_size19 = QString(texture_path + "go_board_" + QString::number(19)+".png");
     QString black_stone_directory = QString(texture_path + "black_stone.png");
     QString white_stone_directory = QString(texture_path + "white_stone.png");
+    QString illegal_stone_directory = QString(texture_path + "illegal_stone.png");
 
     // loads the images and checks if the image could loaded
     board_image_size9 = QImage(board_directory_size9);
@@ -34,12 +35,12 @@ VirtualView::VirtualView(QWidget *parent){
     board_image_size19 = QImage(board_directory_size19);
     black_stone_image = QImage(black_stone_directory);
     white_stone_image = QImage(white_stone_directory);
-
+    illegal_stone_image = QImage(illegal_stone_directory);
 }
 VirtualView::~VirtualView(){
 }
 
-void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
+void VirtualView::createAndSetScene(QSize size, SgPointSet difference_points, const GoBoard* game_board)
 {
     if (game_board == nullptr)
         return;
@@ -94,6 +95,9 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     QPixmap white_stone_image_scaled = QPixmap::fromImage(white_stone_image);
     white_stone_image_scaled = white_stone_image_scaled.scaled(white_stone_image.width()*scale_x, white_stone_image.height()*scale_y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
+    QPixmap illegal_stone_image_scaled = QPixmap::fromImage(illegal_stone_image);
+    illegal_stone_image_scaled = illegal_stone_image_scaled.scaled(illegal_stone_image.width()*scale_x, illegal_stone_image.height()*scale_y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
     if (board_image_scaled.isNull())
         QMessageBox::warning(this, "image scale error", "could not scale board!");
     if (black_stone_image_scaled.isNull())
@@ -135,12 +139,30 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
         //Vertically mirroring stones 
         row = board_size - row - 1;
 
-        QGraphicsPixmapItem* black_stone_item = new QGraphicsPixmapItem(white_stone_image_scaled);
-        black_stone_item->setPos(cell_width * scale_x * col, cell_height * scale_y * row);
-        black_stone_item->setOffset(cell_width * scale_x - white_stone_image_scaled.width()/2, cell_height * scale_y - black_stone_image_scaled.height()/2);
-        scene.addItem(black_stone_item);
+        QGraphicsPixmapItem* white_stone_item = new QGraphicsPixmapItem(white_stone_image_scaled);
+        white_stone_item->setPos(cell_width * scale_x * col, cell_height * scale_y * row);
+        white_stone_item->setOffset(cell_width * scale_x - white_stone_image_scaled.width()/2, cell_height * scale_y - white_stone_image_scaled.height()/2);
+        scene.addItem(white_stone_item);
     }
     
+    for (auto iter = SgSetIterator(difference_points); iter; ++iter) {
+        auto point = *iter;
+
+        // Reducing by -1 because board starts at 1,1
+        auto col = SgPointUtil::Col(point) - 1;
+        auto row = SgPointUtil::Row(point) - 1;
+
+        //Vertically mirroring stones 
+        row = board_size - row - 1;
+
+        QGraphicsPixmapItem* illegal_stone_item = new QGraphicsPixmapItem(illegal_stone_image_scaled);
+        illegal_stone_item->setPos(cell_width * scale_x * col, cell_height * scale_y * row);
+        illegal_stone_item->setOffset(cell_width * scale_x - illegal_stone_image_scaled.width()/2, cell_height * scale_y - illegal_stone_image_scaled.height()/2);
+        scene.addItem(illegal_stone_item);
+    }
+
+
+
     // Stone that could be placed on board when user chooses to
     if (this->virtual_game_mode){
         this->ghost_stone = new QGraphicsEllipseItem(QRectF());
