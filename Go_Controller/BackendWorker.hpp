@@ -84,7 +84,7 @@ namespace Go_AR {
         void setScannerDebugImage(bool debug);
 
 
-    private slots:
+    public slots:
         void scan(); // our main worker function that is called by the timer
         
     // signals
