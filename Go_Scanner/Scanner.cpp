@@ -1,9 +1,4 @@
 #include "Scanner.hpp"
-#include "detect_board.hpp"
-#include "detect_linies_intersections.hpp"
-#include "detect_stones.hpp"
-#include "overwrittenOpenCV.hpp"
-
 #include <iostream>
 
 
@@ -11,7 +6,7 @@ namespace Go_Scanner {
 using namespace cv;
 using namespace std;
 
-ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, Mat& out_image) {
+ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
     Mat frame;
     if (!readCameraFrame(frame)) {
         // NOTICE: DEBUG STUFF!
@@ -27,14 +22,14 @@ ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, Mat& out_image) 
         //return false;
     }
 
-    auto result = scanner_main(frame, setup, board_size, _setDebugImg);
+    auto result = scanner_main(frame, setup, board_size);
     
     out_image = frame;
 
     return result ? ScanResult::Success : ScanResult::Image_Only;
 }
 
-bool Scanner::readCameraFrame(Mat& frame) {
+bool Scanner::readCameraFrame(cv::Mat& frame) {
     if (!_camera.isOpened()) {
         // try opening camera 0
         // when one camera is connected, it will always have id 0
@@ -81,54 +76,6 @@ void Scanner::selectBoardManually() {
 
 void Scanner::selectBoardAutomatically() {
     do_auto_board_detection();
-}
-
-void Scanner::setDebugImage() {
-    _setDebugImg = true;
-}
-
-void Scanner::setNormalImage() {
-    _setDebugImg = false;
-}
-
-/**
- * @returns     true, if the user marked the board, and lines as well as stones could be found
- *              false, if the board wasn't marked before or if any of the operations fail (detecting stones, finding lines, etc.)
- */
-bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg)
-{
-    // TODO: convert the warped image just once to greyscale! 
-    Mat img;
-    img = camera_frame; 
-
-
-    if(!getWarpedImg(img))
-    {
-        return false;
-    }
-
-    imshow("Warped Image", img);
-
-    Mat srcWarpedImg = img.clone();
-    Mat paintedWarpedImg = img.clone();
-    vector<Point2f> intersectionPoints;
-
-    getBoardIntersections(img, 255, intersectionPoints, paintedWarpedImg);
-
-    bool stoneResult = false;
-    if (intersectionPoints.size() >= 1) {
-        stoneResult = getStones(srcWarpedImg, intersectionPoints, setup, board_size, paintedWarpedImg);
-    }
-    imshow("Detected Stones and Intersections", paintedWarpedImg);
-
-    if(setDebugImg)
-    {
-       paintedWarpedImg.copyTo(camera_frame);
-    }
-
-
-    return stoneResult;
-
 }
 
 }

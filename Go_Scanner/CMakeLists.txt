@@ -7,17 +7,13 @@ ENDIF()
 
 SET(scanner_SOURCE
     Scanner.cpp
-    detect_board.cpp
-	detect_linies_intersections.cpp
-	detect_stones.cpp
-	overwrittenOpenCV.hpp
+    Scanner_implementation.cpp
+    auto_warp.cpp
 )
 
 SET(scanner_HEADERS
-	detect_board.hpp
     Scanner.hpp
-	detect_linies_intersections.hpp
-	detect_stones.hpp
+    Scanner_implementation.hpp
 )
 
 add_library(Go_Scanner ${scanner_SOURCE} ${scanner_HEADERS})

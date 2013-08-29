@@ -2269,7 +2269,7 @@
     </property>
     <addaction name="threshold_action"/>
     <addaction name="rules_action"/>
-    <addaction name="scannerdebugimage_action"/>
+    <addaction name="cameraresolution_action"/>
     <addaction name="virtual_game_mode_action"/>
    </widget>
    <widget class="QMenu" name="board_detection_menu">
@@ -2347,12 +2347,9 @@
     <string>Virtual Game Mode</string>
    </property>
   </action>
-  <action name="scannerdebugimage_action">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="cameraresolution_action">
    <property name="text">
-    <string>Scanner debug image</string>
+    <string>Camera Resolution</string>
    </property>
   </action>
   <action name="info_action">

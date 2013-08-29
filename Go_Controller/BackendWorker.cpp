@@ -176,13 +176,6 @@ void BackendWorker::selectBoardAutomatically() {
     _scanner.selectBoardAutomatically();
 }
 
-void BackendWorker::setScannerDebugImage(bool debug) {
-    if (debug)
-        _scanner.setDebugImage();
-    else
-        _scanner.setNormalImage();
-}
-
 bool BackendWorker::virtualModeActive() const {
     return !_scan_timer.isActive();
 }
