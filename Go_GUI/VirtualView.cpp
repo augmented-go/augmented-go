@@ -84,7 +84,6 @@ void VirtualView::createAndSetScene(QSize size, SgPointSet difference_points, co
     cell_width = static_cast<qreal>(board_image.width()) / (board_size+1);
     cell_height = static_cast<qreal>(board_image.height()) / (board_size+1);
     
-
     // scale the images to the right size
     QPixmap board_image_scaled = QPixmap::fromImage(board_image);
     board_image_scaled = board_image_scaled.scaled(size.width(),size.height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
