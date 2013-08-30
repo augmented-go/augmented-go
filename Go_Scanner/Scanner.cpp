@@ -6,6 +6,7 @@
 
 #include <iostream>
 
+#define ENABLE_DEBUG_IMAGE
 
 namespace Go_Scanner {
 using namespace cv;
@@ -14,24 +15,22 @@ using namespace std;
 ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, Mat& out_image) {
     Mat frame;
     if (!readCameraFrame(frame)) {
-        // NOTICE: DEBUG STUFF!
+#ifdef ENABLE_DEBUG_IMAGE
         frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
-
         if (frame.empty()) {
-            std::cout << "Failed to load sample image from filesystem!" << std::endl;
+            std::cout << "Failed to load debug image from filesystem!" << std::endl;
             std::cout << "In " << __FUNCTION__ << std::endl;
-            return ScanResult::Failed;
+            return ScanResult::NoCamera;
         }
-
-        //out_image = frame;
-        //return false;
+#else
+        return ScanResult::NoCamera;
+#endif
     }
 
-    auto result = scanner_main(frame, setup, board_size, _setDebugImg);
-    
+    auto success = scanner_main(frame, setup, board_size, _setDebugImg);
     out_image = frame;
 
-    return result ? ScanResult::Success : ScanResult::Image_Only;
+    return success ? ScanResult::Success : ScanResult::Failed;
 }
 
 bool Scanner::readCameraFrame(Mat& frame) {

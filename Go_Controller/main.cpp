@@ -36,6 +36,8 @@ int main(int argc, char** argv) {
         QObject::connect(worker, &BackendWorker::gameDataChanged,    &gui, &GUI::slot_newGameData);
         QObject::connect(worker, &BackendWorker::finishedGameResult, &gui, &GUI::slot_showFinishedGameResults);
         QObject::connect(worker, &BackendWorker::displayErrorMessage, &gui, &GUI::slot_displayErrorMessage);
+        QObject::connect(worker, &BackendWorker::noCameraImage,      &gui, &GUI::slot_noCameraImage);
+
 
         // connect signal from gui to worker
         QObject::connect(&gui, &GUI::signal_saveGame,                    worker, &BackendWorker::saveSgf);

@@ -94,18 +94,24 @@ void BackendWorker::scan() {
             signalGuiGameDataChanged();
 
             // don't break because Success implies getting an image,
-            // so let control flow fall through to ScanResult::Image_Only
-        }
-    case ScanResult::Image_Only:
-        {
-            // converting image (OpenCV data type) to QImage (Qt data type)
-            const auto scanner_image = mat_to_QImage(image);
-
-            // send signal with new image to gui
-            emit newImage(scanner_image);
+            // so let control flow fall through
         }
     case ScanResult::Failed:
-        // emit displayErrorMessage("scanning failed, no camera image, board not selected etc");
+        {
+            // we still have a camera image to display, even when the scanning failed
+            // converting image (OpenCV data type) to QImage (Qt data type)
+            const auto scanner_image = mat_to_QImage(image);
+            // send signal with new image to gui
+            emit newImage(scanner_image);
+
+            emit displayErrorMessage("Board could not be detected correctly!\nBoard selection still accurate?");
+            break;
+        }
+    case ScanResult::NoCamera:
+        // disables board detection menu items
+        // the menu items will be reactivated when the next newImage signal gets handled
+        emit noCameraImage();
+        emit displayErrorMessage("No camera image could be retrieved!");
         break;
     default:
         assert(!"Unknown ScanResult?!");
