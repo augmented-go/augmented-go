@@ -227,7 +227,7 @@ public slots:
      *          If new game data is sent to GUI, refresh display of current player and captured stones.
      * @param   game     new game representation
      */
-    void slot_newGameData(const GoBackend::Game* game, GoBackend::UpdateResult result);
+    void slot_newGameData(const GoBackend::Game* game);
 
     /**
      * @brief   SLOT "Show finished game results"
@@ -248,6 +248,7 @@ public slots:
     /**
      * @brief   SLOT "display error message"
      *          Displays the error message on the gui. Message gets overwritten by subsequent calls.
+     *          A Empty string can be used to hide any error message.
      */
     void slot_displayErrorMessage(QString message);
 };

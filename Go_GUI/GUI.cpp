@@ -262,7 +262,7 @@ void GUI::slot_newImage(QImage image) {
         augmented_view->rescaleImage(augmented_view->parentWidget()->size());
     }
 
-void GUI::slot_newGameData(const GoBackend::Game* game, GoBackend::UpdateResult result) {
+void GUI::slot_newGameData(const GoBackend::Game* game) {
     // update internal pointer if the board has been changed
     if (go_game != game)
         go_game = game;
@@ -300,17 +300,6 @@ void GUI::slot_newGameData(const GoBackend::Game* game, GoBackend::UpdateResult 
     else if (ui_main.big_container->toolTip() == "augmented view")
         virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
     
-    // show error message
-    
-    if (result == GoBackend::UpdateResult::Illegal){
-        ui_main.error_label->raise();
-        ui_main.error_label->setText("Your board differs from virtual board!");
-    }
-    else{
-        ui_main.error_label->setText("");
-        ui_main.error_label->lower();
-    }
-
     printf(">>> New Game data! <<<\n");
 }    
 
@@ -336,8 +325,14 @@ void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString
 }
 
 void GUI::slot_displayErrorMessage(QString message) {
-    // todo(mihi314): just for testing, should use the functionality in ticket #80
-    QMessageBox::information(this, "test error", message);
+    if (message == "") {
+        ui_main.error_label->setText(message);
+        ui_main.error_label->lower();
+    }
+    else {
+        ui_main.error_label->raise();
+        ui_main.error_label->setText(message);
+    }
 }
 
 ///////////
