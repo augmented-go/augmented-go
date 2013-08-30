@@ -20,7 +20,7 @@ VirtualView::VirtualView(QWidget *parent){
     this->setMouseTracking(true);
     this->setting_stone_valid = false;
 
-    // directories of the images
+    // Directories of the images
     QString texture_path = "res/textures/";
     QString board_directory_size9 = QString(texture_path + "go_board_" + QString::number(9)+".png");
     QString board_directory_size13 = QString(texture_path + "go_board_" + QString::number(13)+".png");
@@ -29,7 +29,7 @@ VirtualView::VirtualView(QWidget *parent){
     QString white_stone_directory = QString(texture_path + "white_stone.png");
     QString illegal_stone_directory = QString(texture_path + "illegal_stone.png");
 
-    // loads the images and checks if the image could loaded
+    // Loads the images to QImages
     board_image_size9 = QImage(board_directory_size9);
     board_image_size13 = QImage(board_directory_size13);
     board_image_size19 = QImage(board_directory_size19);
@@ -51,7 +51,7 @@ void VirtualView::createAndSetScene(QSize size, SgPointSet difference_points, co
     scene.setSceneRect(0,0, size.width(), size.height());
     fitInView(this->sceneRect());
 
-    // loads the board size and checks if its a valid size
+    // Loads the board size and checks if its a valid size
     board_size = game_board->Size();
 
     QImage board_image;
@@ -70,13 +70,6 @@ void VirtualView::createAndSetScene(QSize size, SgPointSet difference_points, co
         QMessageBox::warning(this, "board size error", "invalid size of the board!");
     }
 
-    if (board_image.isNull())
-        QMessageBox::warning(this, "file loading error", "could not load board image!");
-    if (black_stone_image.isNull())
-        QMessageBox::warning(this, "file loading error", "could not load black stone image!");
-    if (white_stone_image.isNull())
-        QMessageBox::warning(this, "file loading error", "could not laod white stone image!");
-
     // scale_x and scale_y are the scaling factors of the virtual board
     float scale_x = size.width() / float(board_image.width());
     float scale_y = size.height() / float(board_image.height());
@@ -84,7 +77,7 @@ void VirtualView::createAndSetScene(QSize size, SgPointSet difference_points, co
     cell_width = static_cast<qreal>(board_image.width()) / (board_size+1);
     cell_height = static_cast<qreal>(board_image.height()) / (board_size+1);
     
-    // scale the images to the right size
+    // Scale the images to the right size
     QPixmap board_image_scaled = QPixmap::fromImage(board_image);
     board_image_scaled = board_image_scaled.scaled(size.width(),size.height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
@@ -97,19 +90,10 @@ void VirtualView::createAndSetScene(QSize size, SgPointSet difference_points, co
     QPixmap illegal_stone_image_scaled = QPixmap::fromImage(illegal_stone_image);
     illegal_stone_image_scaled = illegal_stone_image_scaled.scaled(illegal_stone_image.width()*scale_x, illegal_stone_image.height()*scale_y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-    if (board_image_scaled.isNull())
-        QMessageBox::warning(this, "image scale error", "could not scale board!");
-    if (black_stone_image_scaled.isNull())
-        QMessageBox::warning(this, "image scale error", "could not scale black stone!");
-    if (white_stone_image_scaled.isNull())
-        QMessageBox::warning(this, "image scale error", "could not scale white stone!");
-
-    // add the board image to the scene
+    // Add the board image to the scene
     scene.addItem(new QGraphicsPixmapItem(board_image_scaled));
 
-    
-
-    // get all stone positions for each color and add them on the right position to the scene
+    // Get all stone positions for each color and add them on the right position to the scene
     auto black_stones = game_board->All(SG_BLACK);
     for (auto iter = SgSetIterator(black_stones); iter; ++iter) {
         auto point = *iter;
@@ -118,7 +102,7 @@ void VirtualView::createAndSetScene(QSize size, SgPointSet difference_points, co
         auto col = SgPointUtil::Col(point) - 1;
         auto row = SgPointUtil::Row(point) - 1;
 
-        //Vertically mirroring stones 
+        // Vertically mirroring stones 
         row = board_size - row - 1;        
 
         QGraphicsPixmapItem* black_stone_item = new QGraphicsPixmapItem(black_stone_image_scaled);
@@ -144,6 +128,7 @@ void VirtualView::createAndSetScene(QSize size, SgPointSet difference_points, co
         scene.addItem(white_stone_item);
     }
     
+    // Get all differences between real board and virtual board and display them
     for (auto iter = SgSetIterator(difference_points); iter; ++iter) {
         auto point = *iter;
 

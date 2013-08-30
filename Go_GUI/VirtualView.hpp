@@ -34,8 +34,10 @@ public:
     }
 
     /**
-     * @brief	Creates the virtual board of the go game and set the scene
-     * @param	QSize	size of the container	
+     * @brief   Creates the virtual board of the go game and set the scene
+     * @param   QSize   size of the container
+                SgPointSet  set of all differences between real board and virtual board
+                GoBoard current go game board
      */
     void createAndSetScene(QSize size, SgPointSet difference_points, const GoBoard * game_board = nullptr);
 
