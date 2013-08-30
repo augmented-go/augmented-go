@@ -6,6 +6,11 @@ if (MSVC)
 	add_definitions(/MP)
 endif(MSVC)
 
+add_definitions(-DUNICODE -D_UNICODE)
+
+# disable autolinking to qtmain as we have our own main() function
+cmake_policy(SET CMP0020 OLD)
+
 # set output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin) # executables
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin) # shared libs
@@ -34,7 +39,17 @@ mark_as_advanced(Boost_LIB_DIAGNOSTIC_DEFINITIONS)
 
 include_directories(${Boost_INCLUDE_DIRS})
 
-# cmake automatically looks in the OPENCV_DIR envrionment variable for the OpenCVConfig.cmake file
+# Cmake automatically looks in the OPENCV_DIR environment variable for the OpenCVConfig.cmake file.
+# But let the user know if the OPENCV_DIR environment variable isn't set (this is more helpful than the
+# error message that cmake can't find the file "OpenCVConfig.cmake"
+find_path(OpenCV_DIR "OpenCVConfig.cmake"
+          HINTS ${OPENCV_DIR} ${OpenCV_DIR} ENV OPENCV_DIR
+          DOC "Root directory of OpenCV")
+          
+IF(NOT OpenCV_DIR)
+  message(FATAL_ERROR "OPENCV_DIR environment variable has to be set to proceed.")
+ENDIF()
+
 find_package(OpenCV REQUIRED)
 
 # our custom cmake functions/macros
