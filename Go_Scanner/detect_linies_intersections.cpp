@@ -25,7 +25,7 @@ struct PartitionOperator
         float distance = a - b;
         distance = abs(distance);
 
-        float boardfield = ((1.0f/18.0f) * sidesize)/3.0f;
+        float boardfield = ((1.0f/18.0f) * sidesize)/2.0f;
 
         return distance < boardfield;
     }
