@@ -251,6 +251,12 @@ public slots:
      *          A Empty string can be used to hide any error message.
      */
     void slot_displayErrorMessage(QString message);
+
+    /**
+     * @brief   SLOT noCameraImage
+     *          Disables the board selection buttons.
+     */
+    void slot_noCameraImage();
 };
 
 } // namespace Go_GUI
