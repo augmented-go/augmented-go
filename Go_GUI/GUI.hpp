@@ -27,6 +27,7 @@ private:
 
     QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
     QImage augmented_logo;
+    QIcon switchbutton_icon, switchbuttonpressed_icon;
     QString game_name, texture_path;
 
     // Pointer to the game board, will be set & cached in the slot "slot_newGameData".
@@ -167,8 +168,15 @@ private slots:
      * @brief	SLOT "ViewSwitch"
      *			Switches big view with small view.
      *			To assign a view to something a QWidget has to be created.
+     *          Changes the appereance of button to "pressed"
      */
     void slot_ViewSwitch();
+
+    /**
+     * @brief	SLOT "ViewSwitch_released"
+     *          changes the appereance of button back to normal/"unpressed"
+     */
+    void slot_ViewSwitch_released();
 
     /**
      * @brief   SLOT BoardDetectionManually
@@ -219,7 +227,7 @@ public slots:
      *          If new game data is sent to GUI, refresh display of current player and captured stones.
      * @param   game     new game representation
      */
-    void slot_newGameData(const GoBackend::Game* game);
+    void slot_newGameData(const GoBackend::Game* game, GoBackend::UpdateResult result);
 
     /**
      * @brief   SLOT "Show finished game results"

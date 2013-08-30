@@ -23,7 +23,7 @@ namespace Go_AR {
             
     private:
         void signalGuiGameHasEnded() const;
-        void signalGuiGameDataChanged() const;
+        void signalGuiGameDataChanged(GoBackend::UpdateResult update_result = GoBackend::UpdateResult::Legal) const;
         bool virtualModeActive() const;
         
     // slots
@@ -84,7 +84,7 @@ namespace Go_AR {
         void setScannerDebugImage(bool debug);
 
 
-    private slots:
+    public slots:
         void scan(); // our main worker function that is called by the timer
         
     // signals
@@ -93,7 +93,7 @@ namespace Go_AR {
         void newImage(QImage camera_image) const;
 
         // signals that the game state has changed
-        void gameDataChanged(const GoBackend::Game * game) const;
+        void gameDataChanged(const GoBackend::Game * game, GoBackend::UpdateResult update_result) const;
 
         // signals that the game has ended with the given result
         void finishedGameResult(QString result) const;

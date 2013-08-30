@@ -34,4 +34,5 @@ add_backend_to_target(${TARGETNAME})
 add_opencv_to_target(${TARGETNAME})
 add_gui_to_target(${TARGETNAME})
 
+set_target_properties(${TARGETNAME} PROPERTIES OUTPUT_NAME "augmented_go")
 configure_target(${TARGETNAME})

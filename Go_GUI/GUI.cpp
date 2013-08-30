@@ -28,6 +28,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     virtual_view = new VirtualView(this);
     augmented_view = new AugmentedView(this);
 
+    switchbutton_icon = QIcon(texture_path + "Arrow_SwitchButton.png");
+    switchbuttonpressed_icon = QIcon(texture_path + "Arrow_SwitchButton_pressed.png");
     
     whitebasket_pixmap = QPixmap(texture_path + "white_basket.png");
     blackbasket_pixmap = QPixmap(texture_path + "black_basket.png");
@@ -51,7 +53,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.manually_action,	&QAction::triggered,	this, &GUI::slot_BoardDetectionManually);
     connect(ui_main.virtual_game_mode_action,	&QAction::triggered, this, &GUI::slot_ToggleVirtualGameMode);
     connect(this,	&GUI::signal_setVirtualGameMode, this->virtual_view, &VirtualView::slot_setVirtualGameMode);
-    connect(ui_main.viewswitch_button,	&QPushButton::clicked,	this, &GUI::slot_ViewSwitch);
+    connect(ui_main.viewswitch_button,	&QPushButton::pressed,	this, &GUI::slot_ViewSwitch);
+    connect(ui_main.viewswitch_button,	&QPushButton::released,	this, &GUI::slot_ViewSwitch_released);
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
@@ -81,6 +84,8 @@ void GUI::init(){
     ui_main.white_basket->setPixmap(closedbasket_pixmap);
     ui_main.black_basket->setPixmap(closedbasket_pixmap);
     ui_main.go_table_label->setPixmap(gotable_pixmap);
+
+    ui_main.viewswitch_button->setIcon(switchbutton_icon);
 
     ui_main.capturedwhite_label->setText(QString());
     ui_main.capturedblack_label->setText(QString());
@@ -114,6 +119,8 @@ void GUI::slot_ButtonPass(){
 }
 
 void GUI::slot_ViewSwitch(){
+    ui_main.viewswitch_button->setIcon(this->switchbuttonpressed_icon);
+
     if (ui_main.big_container->toolTip() == "virtual view"){
 
         // switching augmented view to big container
@@ -141,6 +148,10 @@ void GUI::slot_ViewSwitch(){
         ui_main.big_container->setToolTip("virtual view");
         virtual_view->show(); 
     }
+}
+
+void GUI::slot_ViewSwitch_released(){
+    ui_main.viewswitch_button->setIcon(this->switchbutton_icon);
 }
 
 void GUI::slot_MenuOpen(){
@@ -251,7 +262,7 @@ void GUI::slot_newImage(QImage image) {
         augmented_view->rescaleImage(augmented_view->parentWidget()->size());
     }
 
-void GUI::slot_newGameData(const GoBackend::Game* game) {
+void GUI::slot_newGameData(const GoBackend::Game* game, GoBackend::UpdateResult result) {
     // update internal pointer if the board has been changed
     if (go_game != game)
         go_game = game;
@@ -289,6 +300,17 @@ void GUI::slot_newGameData(const GoBackend::Game* game) {
     else if (ui_main.big_container->toolTip() == "augmented view")
         virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
     
+    // show error message
+    
+    if (result == GoBackend::UpdateResult::Illegal){
+        ui_main.error_label->raise();
+        ui_main.error_label->setText("Your board differs from virtual board!");
+    }
+    else{
+        ui_main.error_label->setText("");
+        ui_main.error_label->lower();
+    }
+
     printf(">>> New Game data! <<<\n");
 }    
 
@@ -326,19 +348,28 @@ void GUI::closeEvent(QCloseEvent *event){
 
     // If at least one move was was done
     // TODO If game loaded -> move number greater than start number!
-    if (ui_main.movenumber_label->text().toInt() > 0){
-        if (QMessageBox::question(this, "Save?", "Save current game?") == QMessageBox::Yes)
-            this->slot_MenuSave();
-    }
+    int answer = 0;
 
-    // Ask if the user wants to quit
-    if (QMessageBox::question(this, "Quit?", "Do you really want to quit?") == QMessageBox::Yes){
+    // if at least one move was made -> ask if user wants to save
+    bool saveable = ui_main.movenumber_label->text().toInt() > 0;
+
+    if (saveable)
+        answer = QMessageBox::question(this, "Save?", "Do you want to save before quitting?", "Save", "Don't Save", "Cancel");
+    else
+        answer = QMessageBox::question(this, "Quit?", "Do you really want to quit?", "Quit", "Cancel");
+    
+    if(answer == 0 && saveable){
+        this->slot_MenuSave();
+        emit stop_backend_thread();
+        event->accept();
+    }
+    else if((answer == 1 && saveable)
+        || (answer == 0 && !saveable)){
         emit stop_backend_thread();
         event->accept();
     }
     else
         event->ignore();
-    
 }
 
 
