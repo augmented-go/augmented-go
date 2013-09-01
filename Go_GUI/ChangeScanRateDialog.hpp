@@ -14,13 +14,13 @@ class ChangeScanRateDialog : public QDialog
     Q_OBJECT
 
 public:
-    ChangeScanRateDialog(Go_GUI::GUI *parent, int current_scan_rate){
+    ChangeScanRateDialog(Go_GUI::GUI *parent, int current_scan_rate_fps){
        ui_changescanrate.setupUi(this);
        
        connect(this, &ChangeScanRateDialog::signal_change_scan_rate, parent, &Go_GUI::GUI::slot_changeScanRate);
        connect(ui_changescanrate.scan_rate_slider, &QAbstractSlider::valueChanged, this, &ChangeScanRateDialog::valueChanged);
 
-       valueChanged(current_scan_rate);
+       valueChanged(current_scan_rate_fps);
     };
     ~ChangeScanRateDialog(){};
 
@@ -34,16 +34,12 @@ public:
     }
 
     void valueChanged(int new_value) {
-        ui_changescanrate.scan_rate_label->setText(QString("Scan every %1 ms").arg(new_value));
+        ui_changescanrate.scan_rate_label->setText(QString("Scanning rate: %1 fps").arg(new_value));
         ui_changescanrate.scan_rate_slider->setValue(new_value);
     }
 
 signals:
-    /**
-     * @brief   emits a signal to the backend to change the scanning rate
-     * @param   int     New scan rate in milliseconds [ms]
-     */
-    void signal_change_scan_rate(int gamename);
+    void signal_change_scan_rate(int fps);
 
 private:
     Ui::changeScanRate ui_changescanrate;

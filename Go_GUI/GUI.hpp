@@ -248,7 +248,7 @@ public slots:
     void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi);
 
 private:
-    int current_scanning_rate;
+    int current_scanning_fps;
 };
 
 } // namespace Go_GUI

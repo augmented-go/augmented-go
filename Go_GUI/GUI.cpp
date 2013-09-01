@@ -21,7 +21,7 @@ namespace Go_GUI {
 GUI::GUI(QWidget *parent)
     : QMainWindow(parent),
     go_game(nullptr),
-    current_scanning_rate(2000)
+    current_scanning_fps(1)
 {
     ui_main.setupUi(this);
     
@@ -198,7 +198,7 @@ void GUI::slot_MenuInfo(){
 }
 
 void GUI::slot_MenuChangeScanRate() {
-    ChangeScanRateDialog scan_rate_dialog(this, current_scanning_rate);
+    ChangeScanRateDialog scan_rate_dialog(this, current_scanning_fps);
     scan_rate_dialog.exec();
 }
 
@@ -241,8 +241,12 @@ void GUI::slot_passOnVirtualViewPlayMove(const int x, const int y){
 }
 
 
-void GUI::slot_changeScanRate(int milliseconds) {
-    current_scanning_rate = milliseconds;
+void GUI::slot_changeScanRate(int fps) {
+    current_scanning_fps = fps;
+
+    // convert fps to ms
+    auto milliseconds = fps == 0 ? 0 : 1000.f / current_scanning_fps;
+
     emit signal_new_scanning_rate(milliseconds);
 }
 
