@@ -15,9 +15,9 @@ void ask_for_board_contour();
 void do_auto_board_detection();
 
 enum ScanResult {
+    Success,
     Failed,
-    Image_Only,
-    Success
+    NoCamera
 };
 
 class Scanner {
@@ -29,7 +29,6 @@ public:
 private:
     Scanner(const Scanner&);
     Scanner& operator=(const Scanner&);
-    bool _setDebugImg;
         
 public:
     /**
@@ -70,6 +69,7 @@ private:
 private:
     cv::VideoCapture _camera;
     cv::Mat _last_frame;
+    bool _setDebugImg;
 };
 
 }

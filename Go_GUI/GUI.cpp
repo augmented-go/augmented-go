@@ -91,6 +91,9 @@ void GUI::init(){
     ui_main.capturedblack_label->setText(QString());
 
     emit signal_setVirtualGameMode(ui_main.virtual_game_mode_action->isChecked());
+
+    // initially disable board selection buttons, they get enabled again when the first camera picture arrives
+    slot_noCameraImage();
 }
 
 void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
@@ -260,9 +263,13 @@ void GUI::slot_newImage(QImage image) {
         printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
         augmented_view->setImage(image);
         augmented_view->rescaleImage(augmented_view->parentWidget()->size());
+
+        // we got an image, so board contours can be selected now
+        ui_main.automatic_action->setEnabled(true);
+        ui_main.manually_action->setEnabled(true);
     }
 
-void GUI::slot_newGameData(const GoBackend::Game* game, GoBackend::UpdateResult result) {
+void GUI::slot_newGameData(const GoBackend::Game* game) {
     // update internal pointer if the board has been changed
     if (go_game != game)
         go_game = game;
@@ -300,17 +307,6 @@ void GUI::slot_newGameData(const GoBackend::Game* game, GoBackend::UpdateResult 
     else if (ui_main.big_container->toolTip() == "augmented view")
         virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
     
-    // show error message
-    
-    if (result == GoBackend::UpdateResult::Illegal){
-        ui_main.error_label->raise();
-        ui_main.error_label->setText("Your board differs from virtual board!");
-    }
-    else{
-        ui_main.error_label->setText("");
-        ui_main.error_label->lower();
-    }
-
     printf(">>> New Game data! <<<\n");
 }    
 
@@ -333,6 +329,25 @@ void GUI::slot_setupNewGame(QString game_name, QString blackplayer_name, QString
     ui_main.whiteplayer_label->setText(whiteplayer_name);
     ui_main.kominumber_label->setText(QString::number(komi));
     ui_main.handicapnumber_label->setText(QString::number(0));
+}
+
+void GUI::slot_displayErrorMessage(QString message) {
+    if (message == "") {
+        ui_main.error_label->setText(message);
+        ui_main.error_label->lower();
+    }
+    else {
+        ui_main.error_label->raise();
+        ui_main.error_label->setText(message);
+    }
+}
+
+void GUI::slot_noCameraImage() {
+    ui_main.automatic_action->setEnabled(false);
+    ui_main.manually_action->setEnabled(false);
+
+    // we could also display a placeholder image here
+    // currently the last image stays displayed
 }
 
 ///////////
