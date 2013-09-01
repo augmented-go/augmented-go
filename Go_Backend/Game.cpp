@@ -160,6 +160,15 @@ UpdateResult Game::updateWhileCapturing(GoSetup new_setup) {
 }
 
 UpdateResult Game::updateSingleMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent) {
+    if (getBoard().MoveNumber() == 0 && getBoard().Rules().Handicap() == 0 && !getBoard().Setup().IsEmpty()) {
+        // if no move has been played yet and the setup the board got is not empty, we allow moves from any player
+        // the board should also not have a handicap, this is handled elsewhere
+
+        // even when this move turns out to be illegal (removed stones etc), changing the current player won't hurt, 
+        // as we still stay in the "any player can play" state
+        _go_game.SetToPlay(player);
+    }
+
     if (getBoard().ToPlay() != player || !getBoard().IsLegal(point, player)) {
         // illegal move by game rules
         return UpdateResult::Illegal;
