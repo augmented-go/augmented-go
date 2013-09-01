@@ -268,7 +268,7 @@ vector<Vec4i> createLinefromValue(vector<int> circles, lineType type)
                 num_of_one_cluster++; 
         }
 
-        if(num_of_one_cluster>6)
+        if(num_of_one_cluster>3)
         {    
             clusterNum_we_need.push_back(i);
             newClusterSize++;
