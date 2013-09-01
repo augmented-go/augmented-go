@@ -65,35 +65,53 @@ void BackendWorker::scan() {
     auto scan_result = _scanner.scanCamera(setup, board_size, image);
 
     using Go_Scanner::ScanResult;
+    using GoBackend::UpdateResult;
 
     switch (scan_result) {
     case ScanResult::Success:
         {
-            GoBackend::UpdateResult result = GoBackend::UpdateResult::Illegal;
-
             if (_game_is_initialized) {
                 // update game state
-                result = _game.update(setup);
+                UpdateResult result = _game.update(setup);
+                if (result == UpdateResult::Illegal)
+                    emit displayErrorMessage("Your board differs from virtual board!");
+                else {
+                    emit displayErrorMessage(""); // no error
+                }
             }
             else {
-                _game.init(board_size, setup, _new_game_rules);
-                _game_is_initialized = true;
+                // the gui doesn't support other sizes
+                if (board_size == 9 || board_size == 13 || board_size == 19) {
+                    _game.init(board_size, setup, _new_game_rules);
+                    _game_is_initialized = true;
+                    emit displayErrorMessage("");
+                }
+                else {
+                    emit displayErrorMessage(QString("Not supported board size of %1x%1 detected!").arg(board_size));
+                }
             }
-            
-            signalGuiGameDataChanged(result);
+
+            signalGuiGameDataChanged();
 
             // don't break because Success implies getting an image,
-            // so let control flow fall through to ScanResult::Image_Only
-        }
-    case ScanResult::Image_Only:
-        {
-            // converting image (OpenCV data type) to QImage (Qt data type)
-            const auto scanner_image = mat_to_QImage(image);
-
-            // send signal with new image to gui
-            emit newImage(scanner_image);
+            // so let control flow fall through
         }
     case ScanResult::Failed:
+        {
+            // we still have a camera image to display, even when the scanning failed
+            // converting image (OpenCV data type) to QImage (Qt data type)
+            const auto scanner_image = mat_to_QImage(image);
+            // send signal with new image to gui
+            emit newImage(scanner_image);
+
+            emit displayErrorMessage("Board could not be detected correctly!\nBoard selection still accurate?");
+            break;
+        }
+    case ScanResult::NoCamera:
+        // disables board detection menu items
+        // the menu items will be reactivated when the next newImage signal gets handled
+        emit noCameraImage();
+        emit displayErrorMessage("No camera image could be retrieved!");
         break;
     default:
         assert(!"Unknown ScanResult?!");
@@ -154,6 +172,8 @@ void BackendWorker::setVirtualGameMode(bool checked) {
     else {
         // go into virtual mode -> no scanning!
         _scan_timer.stop();
+        // also hide any scanning related error messages
+        emit displayErrorMessage("");
 
         // initialize a game
         if (!_game_is_initialized)
@@ -189,12 +209,12 @@ bool BackendWorker::virtualModeActive() const {
     return !_scan_timer.isActive();
 }
 
-void BackendWorker::signalGuiGameDataChanged(GoBackend::UpdateResult update_result) const {
+void BackendWorker::signalGuiGameDataChanged() const {
     // send board data to gui
     // the GUI controls the lifetime of this thread,
     // so passing a pointer to the GoBoard is safe and won't be invalidated
     // as long as the GUI says so
-    emit gameDataChanged(&_game, update_result);
+    emit gameDataChanged(&_game);
 }
 
 } // namespace Go_AR

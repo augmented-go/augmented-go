@@ -23,7 +23,7 @@ namespace Go_AR {
             
     private:
         void signalGuiGameHasEnded() const;
-        void signalGuiGameDataChanged(GoBackend::UpdateResult update_result = GoBackend::UpdateResult::Legal) const;
+        void signalGuiGameDataChanged() const;
         bool virtualModeActive() const;
         
     // slots
@@ -93,10 +93,16 @@ namespace Go_AR {
         void newImage(QImage camera_image) const;
 
         // signals that the game state has changed
-        void gameDataChanged(const GoBackend::Game * game, GoBackend::UpdateResult update_result) const;
+        void gameDataChanged(const GoBackend::Game * game) const;
 
         // signals that the game has ended with the given result
         void finishedGameResult(QString result) const;
+
+        // signals to display the message on the gui
+        void displayErrorMessage(QString message) const;
+
+        // signals that no camera image could be retrieved
+        void noCameraImage() const;
 
 
     // Member vars    
