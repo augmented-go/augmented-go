@@ -3,14 +3,28 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
-set (QT_PLUGIN_PATH $ENV{QT_PLUGIN_PATH} CACHE STRING "Qt5 plugin path" FORCE)
+# The plugin path can either be passed directly to cmake via the -D switch
+# or set as an environment variable
+set(QT_PLUGIN_PATH ${QT_PLUGIN_PATH} $ENV{QT_PLUGIN_PATH})
 
-# check if qt5 root is set
-IF (NOT QT_PLUGIN_PATH)
+# get list length (to check if we have at least one plugin path)
+LIST(LENGTH QT_PLUGIN_PATH LEN)
+
+# check if we have at keast one path
+IF (LEN LESS 1)
+  # let the user know that the plugin path couldn't be found
+  set(QT_PLUGIN_PATH CACHE STRING "Qt5 plugin path" FORCE)
+
   message(FATAL_ERROR
     "QT_PLUGIN_PATH environment variable has to be set to proceed."
   )
-ENDIF (NOT QT_PLUGIN_PATH)
+ENDIF (LEN LESS 1)
+
+# get the first entry of the plugin paths list
+LIST(GET QT_PLUGIN_PATH 0 QT_PLUGIN_PATH)
+
+# update cached plugin path
+set(QT_PLUGIN_PATH ${QT_PLUGIN_PATH} CACHE STRING "Qt5 plugin path" FORCE)
 
 # necessary for finding qt5 modules
 LIST(APPEND CMAKE_PREFIX_PATH ${QT_PLUGIN_PATH}/..)

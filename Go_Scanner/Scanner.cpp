@@ -1,35 +1,39 @@
 #include "Scanner.hpp"
+#include "detect_board.hpp"
+#include "detect_linies_intersections.hpp"
+#include "detect_stones.hpp"
+#include "overwrittenOpenCV.hpp"
+
 #include <iostream>
 
+#define ENABLE_DEBUG_IMAGE
 
 namespace Go_Scanner {
 using namespace cv;
 using namespace std;
 
-ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image) {
+ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, Mat& out_image) {
     Mat frame;
     if (!readCameraFrame(frame)) {
-        // NOTICE: DEBUG STUFF!
+#ifdef ENABLE_DEBUG_IMAGE
         frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
-
         if (frame.empty()) {
-            std::cout << "Failed to load sample image from filesystem!" << std::endl;
+            std::cout << "Failed to load debug image from filesystem!" << std::endl;
             std::cout << "In " << __FUNCTION__ << std::endl;
-            return ScanResult::Failed;
+            return ScanResult::NoCamera;
         }
-
-        //out_image = frame;
-        //return false;
+#else
+        return ScanResult::NoCamera;
+#endif
     }
 
-    auto result = scanner_main(frame, setup, board_size);
-    
+    auto success = scanner_main(frame, setup, board_size, _setDebugImg);
     out_image = frame;
 
-    return result ? ScanResult::Success : ScanResult::Image_Only;
+    return success ? ScanResult::Success : ScanResult::Failed;
 }
 
-bool Scanner::readCameraFrame(cv::Mat& frame) {
+bool Scanner::readCameraFrame(Mat& frame) {
     if (!_camera.isOpened()) {
         // try opening camera 0
         // when one camera is connected, it will always have id 0
@@ -76,6 +80,54 @@ void Scanner::selectBoardManually() {
 
 void Scanner::selectBoardAutomatically() {
     do_auto_board_detection();
+}
+
+void Scanner::setDebugImage() {
+    _setDebugImg = true;
+}
+
+void Scanner::setNormalImage() {
+    _setDebugImg = false;
+}
+
+/**
+ * @returns     true, if the user marked the board, and lines as well as stones could be found
+ *              false, if the board wasn't marked before or if any of the operations fail (detecting stones, finding lines, etc.)
+ */
+bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg)
+{
+    // TODO: convert the warped image just once to greyscale! 
+    Mat img;
+    img = camera_frame; 
+
+
+    if(!getWarpedImg(img))
+    {
+        return false;
+    }
+
+    imshow("Warped Image", img);
+
+    Mat srcWarpedImg = img.clone();
+    Mat paintedWarpedImg = img.clone();
+    vector<Point2f> intersectionPoints;
+
+    getBoardIntersections(img, 255, intersectionPoints, paintedWarpedImg);
+
+    bool stoneResult = false;
+    if (intersectionPoints.size() >= 1) {
+        stoneResult = getStones(srcWarpedImg, intersectionPoints, setup, board_size, paintedWarpedImg);
+    }
+    imshow("Detected Stones and Intersections", paintedWarpedImg);
+
+    if(setDebugImg)
+    {
+       paintedWarpedImg.copyTo(camera_frame);
+    }
+
+
+    return stoneResult;
+
 }
 
 }

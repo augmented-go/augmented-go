@@ -78,13 +78,19 @@ namespace Go_AR {
         void selectBoardAutomatically();
 
         /**
+         * @brief       Sets the option for showing debug image of camera.
+         * @param   bool debug      if true show debug image, false show normal camera image
+         */
+        void setScannerDebugImage(bool debug);
+        /**
          * @brief       Changes the scanning interval. Passing 0 will scan as fast as it is possible, depending on the running pc.
          * @param[in]   milliseconds    Minimum time span between two consecutive image scans. The time span may be 
          *                              longer if the cpu isn't the fastest. The scan will then run as soon as possible.
          */
         void changeScanningRate(int milliseconds);
 
-    private slots:
+
+    public slots:
         void scan(); // our main worker function that is called by the timer
         
     // signals
@@ -97,6 +103,12 @@ namespace Go_AR {
 
         // signals that the game has ended with the given result
         void finishedGameResult(QString result) const;
+
+        // signals to display the message on the gui
+        void displayErrorMessage(QString message) const;
+
+        // signals that no camera image could be retrieved
+        void noCameraImage() const;
 
 
     // Member vars    
