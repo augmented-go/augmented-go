@@ -1,52 +1,99 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Augmented-go by augmented-go</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="augmented-go : Augmented Go" />
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>augmented-go</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Augmented-go</h1>
-        <p class="header">Augmented Go - </p>
 
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/augmented-go/augmented-go/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/augmented-go/augmented-go/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/augmented-go/augmented-go">View On GitHub</a></li>
-        </ul>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/augmented-go/augmented-go">View on GitHub</a>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/augmented-go">augmented-go</a></p>
+          <h1 id="project_title">augmented-go</h1>
+          <h2 id="project_tagline">Augmented Go</h2>
 
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/augmented-go/augmented-go/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/augmented-go/augmented-go/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
 
-      </header>
-      <section>
-        <h1>Augmented Go</h1>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>
+<a name="what-is-augmentedgo" class="anchor" href="#what-is-augmentedgo"><span class="octicon octicon-link"></span></a>What is AugmentedGo?</h2>
 
-<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. </p>
+<p>Think of it as a kind of recording/capturing software for a real-world game of go.<br>
+It recognizes every move you do on a go board with a stationary webcam (or whatever you choose) and keeps track of these moves on a virtual board.
+The software internally models the rules of the game, therefore illegal moves will be reported on the virtual board. 
+You can also save your game as the standard Smart Game Format (SGF) to archive your game records.</p>
 
-<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </p>
+<h3>
+<a name="limitations" class="anchor" href="#limitations"><span class="octicon octicon-link"></span></a>Limitations</h3>
 
-<p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. </p>
+<p>There are some constraints for the setup if you want to run it flawlessly.</p>
 
-<p>Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. </p>
+<h4>
+<a name="working-and-tested-components" class="anchor" href="#working-and-tested-components"><span class="octicon octicon-link"></span></a>Working and tested components</h4>
 
-<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. </p>
+<ul>
+<li>Light brown game of go board with black lines
+
+<ul>
+<li>Supported sizes: 19x19, 13x13, 9x9</li>
+<li>Place it on a white table if you want a working automatic board detection</li>
+</ul>
+</li>
+<li>Black and white go stones</li>
+<li>Logitech webcam, but it should work with any kind of webcam</li>
+</ul><h4>
+<a name="recommendations-for-the-setup" class="anchor" href="#recommendations-for-the-setup"><span class="octicon octicon-link"></span></a>Recommendations for the setup</h4>
+
+<ul>
+<li>The webcam has to be located right on top of the go board (example follows)
+
+<ul>
+<li>and must have the complete board in its viewport</li>
+</ul>
+</li>
+<li>Provide good lighting</li>
+</ul><p>It is possible to get the program to run on a different setup but these aren't officially supported. Just try it!</p>
+
+<h3>
+<a name="virtual-game" class="anchor" href="#virtual-game"><span class="octicon octicon-link"></span></a>Virtual Game</h3>
+
+<p>You can also play a completely virtual game without a webcam.
+Either start a new game with a 19x19 board or continue a game that you captured with the webcam.<br>
+Just hover over the virtual board and klick where you want to play your move!</p>
+
+<h3>
+<a name="supported-platforms" class="anchor" href="#supported-platforms"><span class="octicon octicon-link"></span></a>Supported Platforms</h3>
+
+<p>Developement targets primarily the Windows OS, specifically Windows 7.<br>
+We use platform independent libraries and the cmake build system, so other platforms should be okay too. But there currently isn't any motivation to build the program on other platforms though.</p>
       </section>
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">augmented-go maintained by <a href="https://github.com/augmented-go">augmented-go</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
+
+    
+
   </body>
 </html>
