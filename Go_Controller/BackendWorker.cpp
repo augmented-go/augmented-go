@@ -93,8 +93,12 @@ void BackendWorker::scan() {
 
             signalGuiGameDataChanged();
 
-            // don't break because Success implies getting an image,
-            // so let control flow fall through
+            // converting image (OpenCV data type) to QImage (Qt data type)
+            const auto scanner_image = mat_to_QImage(image);
+            // and send signal with new image to gui
+            emit newImage(scanner_image);
+
+            break;
         }
     case ScanResult::Failed:
         {
