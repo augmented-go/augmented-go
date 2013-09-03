@@ -6,7 +6,7 @@ namespace Go_Scanner {
 
     inline void imshow(const cv::string& winname, cv::Mat mat)
     {
-        bool debug = true;
+        bool debug = false;
 
         if(debug)
             cv::imshow(winname, mat);
