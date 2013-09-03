@@ -73,8 +73,12 @@ void BackendWorker::scan() {
             if (_game_is_initialized) {
                 // update game state
                 UpdateResult result = _game.update(setup);
-                if (result == UpdateResult::Illegal)
+                if (result == UpdateResult::Illegal) {
                     emit displayErrorMessage("Your board differs from virtual board!");
+                }
+                else if (result == UpdateResult::ToCapture) {
+                    emit displayErrorMessage("There are stones left to capture.\nMake sure your board matches the virtual one.");
+                }
                 else {
                     emit displayErrorMessage(""); // no error
                 }

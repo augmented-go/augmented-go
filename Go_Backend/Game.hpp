@@ -22,6 +22,11 @@ enum class UpdateResult {
     // Illegal due to removing or adding multiple stones.
 
     /**
+     * There are still stones left to capture.
+     */
+    ToCapture,
+
+    /**
      * Internal board matches real life board.
      */
     Legal
