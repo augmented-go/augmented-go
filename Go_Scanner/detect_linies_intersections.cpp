@@ -63,7 +63,7 @@ struct PartitionOperator
 
     bool operator()(const int &a, const int &b) const 
     {
-        float distance = a - b;
+        float distance = static_cast<float>(a - b);
         distance = abs(distance);
 
         float boardfield = ((1.0f/18.0f) * sidesize)/calc_value;
@@ -93,13 +93,13 @@ void groupIntersectionLines(vector<Vec4i>& lines, vector<Vec4i>& horizontalLines
     Vec2f baseVector, lineVector;
 
     //baseVector
-    baseVector[0] = imgwidth;
+    baseVector[0] = static_cast<float> (imgwidth);
     baseVector[1] = 0;
 
-    for (int i = 0; i < lines.size(); i++)
+    for (size_t i = 0; i < lines.size(); i++)
     {
-        lineVector[0] = lines[i][2] - lines[i][0];
-        lineVector[1] = lines[i][3] - lines[i][1];
+        lineVector[0] = static_cast<float> (lines[i][2] - lines[i][0]);
+        lineVector[1] = static_cast<float> (lines[i][3] - lines[i][1]);
 
         float angle = calcBetweenAngle(baseVector, lineVector);
         if(angle != 0.0f && angle != 90.0f)
@@ -108,11 +108,15 @@ void groupIntersectionLines(vector<Vec4i>& lines, vector<Vec4i>& horizontalLines
         //horizontal lines
         if(angle <= 1.0f && angle >= -1.0f)
         {
+
             Vec4i v = lines[i];
-            lines[i][0] = 0;
-            lines[i][1] = ((float)v[1] - v[3]) / (v[0] - v[2]) * -v[0] + v[1]; 
-            lines[i][2] = imgwidth; 
-            lines[i][3] = ((float)v[1] - v[3]) / (v[0] - v[2]) * (imgwidth - v[2]) + v[3];
+            float m = static_cast<float>((v[1] - v[3]) / (v[0] - v[2]));
+
+            lines[i][START_X]   = 0;
+            //y = m*x+t
+            lines[i][START_Y]   = cvRound(m * -v[0] + v[1]); 
+            lines[i][END_X]     = imgwidth; 
+            lines[i][END_Y]     = cvRound(m * (imgwidth - v[2]) + v[3]);
             
             horizontalLines.push_back(lines[i]);
         }
@@ -124,20 +128,20 @@ void groupIntersectionLines(vector<Vec4i>& lines, vector<Vec4i>& horizontalLines
 
             if((v[0] - v[2]) != 0)
             {
-                float m = (v[1] - v[3]) / (v[0] - v[2]);
-                float n = v[1] - m * v[0];
+                float m = static_cast<float>((v[1] - v[3]) / (v[0] - v[2]));
+                float n = static_cast<float>(v[1] - m * v[0]);
 
-                lines[i][0] = (-n)/m;               //x_start         
-                lines[i][1] = 0;                    //y_start
-                lines[i][2] = (imgheight-n)/m;    //x_end
-                lines[i][3] = imgheight;          //y_end
+                lines[i][START_X]   = cvRound((-n)/m);
+                lines[i][START_Y]   = 0;
+                lines[i][END_X]     = cvRound((imgheight-n)/m);
+                lines[i][END_Y]     = imgheight;
             }
             else
             {
-                lines[i][0] = v[0];                 //x_start         
-                lines[i][1] = 0;                    //y_start
-                lines[i][2] = v[2];                 //x_end
-                lines[i][3] = imgheight;          //y_end
+                lines[i][START_X]   = v[0];         
+                lines[i][START_Y]   = 0;
+                lines[i][END_X]     = v[2];
+                lines[i][END_Y]     = imgheight;
             }
             verticalLines.push_back(lines[i]);
         }
@@ -239,17 +243,17 @@ vector<Vec4i> getBoardLines(vector<Vec4i>& lines, lineType type, int board_size)
 bool intersection(Vec4i horizontalLine, Vec4i verticalLine, Point2f &r)
 {
     Point2f o1;
-    o1.x = horizontalLine[0];
-    o1.y = horizontalLine[1];
+    o1.x = static_cast<float>(horizontalLine[0]);
+    o1.y = static_cast<float>(horizontalLine[1]);
     Point2f p1;
-    p1.x = horizontalLine[2];
-    p1.y = horizontalLine[3];
+    p1.x = static_cast<float>(horizontalLine[2]);
+    p1.y = static_cast<float>(horizontalLine[3]);
     Point2f o2;
-    o2.x = verticalLine[0];
-    o2.y = verticalLine[1];
+    o2.x = static_cast<float>(verticalLine[0]);
+    o2.y = static_cast<float>(verticalLine[1]);
     Point2f p2;
-    p2.x = verticalLine[2];
-    p2.y = verticalLine[3];
+    p2.x = static_cast<float>(verticalLine[2]);
+    p2.y = static_cast<float>(verticalLine[3]);
 
     Point2f x = o2 - o1;
     Point2f d1 = p1 - o1;
@@ -303,7 +307,7 @@ vector<Vec4i> createLinefromValue(vector<int> circles, lineType type)
     {
         int num_of_one_cluster=0;
 
-        for(int k = 0; k < clusterNum.size(); k++)
+        for(size_t k = 0; k < clusterNum.size(); k++)
         {
             if(clusterNum[k] == i)
                 num_of_one_cluster++; 
@@ -319,7 +323,7 @@ vector<Vec4i> createLinefromValue(vector<int> circles, lineType type)
     //put the circles in there cluster. 
     vector<vector<int>> clusteredCircles(newClusterSize);
 
-    for(int i = 0; i < clusterNum.size(); i++)
+    for(size_t i = 0; i < clusterNum.size(); i++)
     {        
         //get the current cluster number
         int number_of_current_cluster = clusterNum[i];
@@ -402,10 +406,10 @@ void getBetterDetectionImage(Mat& houghImg, bool createFakeLines)
         //splitting of the circles by x and y value
         vector<int> circles_x;
         vector<int> circles_y;
-        for(int i=0; i<circles.size(); i++)
+        for(size_t i=0; i<circles.size(); i++)
         {
-            circles_x.push_back(circles[i][0]);
-            circles_y.push_back(circles[i][1]);
+            circles_x.push_back(cvRound(circles[i][0]));
+            circles_y.push_back(cvRound(circles[i][1]));
         }
 
         //sort the vectors 
@@ -537,8 +541,8 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, int board_size, ve
     for(size_t i= 0; i < intersectionPoints.size(); i++)
     {
         rectangle(paintedWarpedImg, 
-        Point(intersectionPoints[i].x-1, intersectionPoints[i].y-1),
-        Point(intersectionPoints[i].x+1, intersectionPoints[i].y+1), 
+        Point(cvRound(intersectionPoints[i].x-1), cvRound(intersectionPoints[i].y-1)),
+        Point(cvRound(intersectionPoints[i].x+1), cvRound(intersectionPoints[i].y+1)), 
         Scalar(255, 0,  0, 0), 2, 8, 0);
     }
 
