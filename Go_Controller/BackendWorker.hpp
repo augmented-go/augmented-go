@@ -107,5 +107,6 @@ namespace Go_AR {
         GoRules _new_game_rules;
         bool    _game_is_initialized;
         int     _cached_board_size;
+
     };
 }

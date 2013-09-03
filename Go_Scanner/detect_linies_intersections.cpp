@@ -14,10 +14,51 @@ int imgheight;
 struct PartitionOperator
 {
     int sidesize;
+    float calc_value;
 
     PartitionOperator(int size)
     {
         sidesize = size;
+        calc_value = 2.0f;
+    }
+
+    PartitionOperator(int size, int board_size)
+    {
+        sidesize = size;
+        //the calculation value differs from boardsize to boardsize. on bigger boards e.g. 19x19 we need a 
+        //smaller value, because of the smaller pixelsize of the stones.
+
+        //7x7
+        if(board_size == 9)
+        {
+            calc_value = 1.25f;
+        }
+        //13x13
+        else if (board_size == 13)
+        {
+            calc_value = 2.0f;
+        }
+        //19x19 
+        else if (board_size == 19)
+        {
+            calc_value = 3.25f;
+        }
+
+        //if we don't know our board_size yet, we are testing it with random numbers.
+        //we dont use a iterativ way. because of the danger, that a false line could be detected and we will
+        //stuck on the false value for the rest off our scanning. 
+        else
+        {
+            int n  = (rand() % 3) + 1;
+
+            if (n == 1)
+                calc_value = 1.25f;
+            else if (n == 2)
+                calc_value = 3.25f;
+            else
+                calc_value = 2.0f;
+
+        }
     }
 
     bool operator()(const int &a, const int &b) const 
@@ -25,7 +66,7 @@ struct PartitionOperator
         float distance = a - b;
         distance = abs(distance);
 
-        float boardfield = ((1.0f/18.0f) * sidesize)/2.0f;
+        float boardfield = ((1.0f/18.0f) * sidesize)/calc_value;
 
         return distance < boardfield;
     }
@@ -114,7 +155,7 @@ void groupIntersectionLines(vector<Vec4i>& lines, vector<Vec4i>& horizontalLines
 //Get all lines that are found by houghline algorithmen and put them into clusters.
 //The result of each cluster is one middled line which is streched vertically or horizontally 
 //from the starting picture border to the facing one. 
-vector<Vec4i> getBoardLines(vector<Vec4i>& lines, lineType type)
+vector<Vec4i> getBoardLines(vector<Vec4i>& lines, lineType type, int board_size)
 {
     int valueIndex1, valueIndex2, imagesizeIndex, zeroIndex, imagesize;
 
@@ -147,7 +188,7 @@ vector<Vec4i> getBoardLines(vector<Vec4i>& lines, lineType type)
 
     //clustering of linedata. Creating the Clusters with the PartitionOperator and store them into ClusterNum.
     vector<int> clusterNum(lines.size());
-    PartitionOperator Oper(imagesize);
+    PartitionOperator Oper(imagesize, board_size);
     int clusterSize = partition<int, PartitionOperator>(lineStarts, clusterNum, Oper);
 
 
@@ -397,7 +438,7 @@ void getBetterDetectionImage(Mat& houghImg, bool createFakeLines)
     }
 }
 
-bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &intersectionPoints, Mat& paintedWarpedImg)
+bool getBoardIntersections(Mat warpedImg, int thresholdValue, int board_size, vector<Point2f> &intersectionPoints, Mat& paintedWarpedImg)
 {
     imgheight = warpedImg.rows;
     imgwidth = warpedImg.cols;
@@ -458,10 +499,10 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, vector<Point2f> &i
     vector<Vec4i> newhorizontalLines;
     vector<Vec4i> newverticalLines;
     if (horizontalLines.size() != 0) {
-        newhorizontalLines = getBoardLines(horizontalLines, HORIZONTAL);
+        newhorizontalLines = getBoardLines(horizontalLines, HORIZONTAL, board_size);
     }
     if (verticalLines.size() != 0) {
-        newverticalLines = getBoardLines(verticalLines, VERTICAL);
+        newverticalLines = getBoardLines(verticalLines, VERTICAL, board_size);
     }
 
 

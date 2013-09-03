@@ -113,7 +113,7 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
     Mat paintedWarpedImg = img.clone();
     vector<Point2f> intersectionPoints;
 
-    getBoardIntersections(img, 255, intersectionPoints, paintedWarpedImg);
+    getBoardIntersections(img, 255, board_size, intersectionPoints, paintedWarpedImg);
 
     bool stoneResult = false;
     if (intersectionPoints.size() >= 1) {

@@ -83,7 +83,7 @@ int getStoneDistanceAndMidpoint(const Mat& warpedImgGray, int x, int y, linehead
     return distance;
 }
 
-void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Point2f, SgPoint, lesserPoint2f> to_board_coords, float stone_diameter, SgPointSet& stones, Mat& paintedWarpedImg)
+void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, int board_size, map<Point2f, SgPoint, lesserPoint2f> to_board_coords, float stone_diameter, SgPointSet& stones, Mat& paintedWarpedImg)
 {  
     Mat tmp, warpedImgGray, canny;
     cvtColor(warpedImg, tmp, CV_RGB2GRAY);
@@ -138,8 +138,33 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<P
             Point2f midpoint45;
             diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, midpoint125.x, midpoint125.y, LEFT, midpoint45);
 
+
             //it's a stone if the diameters are similiar, not to small and not to big.
-            if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= 20 && diameter125 >= 20  && diameter45 <= 60 && diameter125 <= 60)
+
+            int min_stone_size;
+            int max_stone_size;
+
+            //7x7
+            if(board_size <= 7)
+            {
+                min_stone_size = 20;
+                max_stone_size = 80;
+            }
+            //13x13
+            else if (board_size <= 13)
+            {
+                min_stone_size = 20;
+                max_stone_size = 60;
+            }
+            //19x19 ++
+            else
+            {
+                min_stone_size = 15;
+                max_stone_size = 50;
+            }
+
+
+            if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= min_stone_size && diameter125 >= min_stone_size  && diameter45 <= max_stone_size && diameter125 <= max_stone_size)
             {
                 cout << "Black Stone ("<< x << ", "<< y << ")" << endl;
 
@@ -268,7 +293,7 @@ bool getStones(Mat srcWarpedImg, vector<Point2f> intersectionPoints, GoSetup& se
     detectAllStones(srcWarpedImg, intersectionPoints, to_board_coords, all_stones, approx_stone_diameter, paintedWarpedImg);
 
     SgPointSet black_stones;
-    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, approx_stone_diameter, black_stones, paintedWarpedImg);
+    detectBlackStones(srcWarpedImg, intersectionPoints, board_size, to_board_coords, approx_stone_diameter, black_stones, paintedWarpedImg);
     setup.m_stones[SG_BLACK] = black_stones;
     setup.m_stones[SG_WHITE] = all_stones - black_stones;
 
