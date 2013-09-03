@@ -84,7 +84,7 @@ namespace Go_AR {
         void setScannerDebugImage(bool debug);
 
 
-    private slots:
+    public slots:
         void scan(); // our main worker function that is called by the timer
         
     // signals
@@ -97,6 +97,12 @@ namespace Go_AR {
 
         // signals that the game has ended with the given result
         void finishedGameResult(QString result) const;
+
+        // signals to display the message on the gui
+        void displayErrorMessage(QString message) const;
+
+        // signals that no camera image could be retrieved
+        void noCameraImage() const;
 
 
     // Member vars    

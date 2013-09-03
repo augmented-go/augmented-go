@@ -27,6 +27,7 @@ private:
 
     QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
     QImage augmented_logo;
+    QIcon switchbutton_icon, switchbuttonpressed_icon;
     QString game_name, texture_path;
 
     // Pointer to the game board, will be set & cached in the slot "slot_newGameData".
@@ -167,8 +168,15 @@ private slots:
      * @brief	SLOT "ViewSwitch"
      *			Switches big view with small view.
      *			To assign a view to something a QWidget has to be created.
+     *          Changes the appereance of button to "pressed"
      */
     void slot_ViewSwitch();
+
+    /**
+     * @brief	SLOT "ViewSwitch_released"
+     *          changes the appereance of button back to normal/"unpressed"
+     */
+    void slot_ViewSwitch_released();
 
     /**
      * @brief   SLOT BoardDetectionManually
@@ -236,6 +244,19 @@ public slots:
      * @param   QString    white player name
      */
     void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi);
+
+    /**
+     * @brief   SLOT "display error message"
+     *          Displays the error message on the gui. Message gets overwritten by subsequent calls.
+     *          A Empty string can be used to hide any error message.
+     */
+    void slot_displayErrorMessage(QString message);
+
+    /**
+     * @brief   SLOT noCameraImage
+     *          Disables the board selection buttons.
+     */
+    void slot_noCameraImage();
 };
 
 } // namespace Go_GUI
