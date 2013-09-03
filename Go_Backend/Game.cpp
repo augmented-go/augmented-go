@@ -105,15 +105,33 @@ UpdateResult Game::update(GoSetup setup) {
     if (isPlacingHandicap(current_blacks, current_whites, new_whites)) {
         assert(_while_capturing == false);
         placeHandicap(setup);
+
+        // this is a valid move -> clear differences as the internal board now matches the real board
+        _differences.Clear();
         return UpdateResult::Legal;
     }
 
     if (_while_capturing) {
         assert(getBoard().CapturingMove());
-        return updateWhileCapturing(setup);
+        
+        auto move_result = updateWhileCapturing(setup);
+
+        if (move_result == UpdateResult::Legal) {
+            // this is a valid move -> clear differences as the internal board now matches the real board
+            _differences.Clear();
+        }
+
+        return move_result;
     }
     else {
-        return updateNormal(added_blacks, added_whites, removed_blacks, removed_whites);
+        auto move_result = updateNormal(added_blacks, added_whites, removed_blacks, removed_whites);
+
+        if (move_result == UpdateResult::Legal) {
+            // this is a valid move -> clear differences as the internal board now matches the real board
+            _differences.Clear();
+        }
+
+        return move_result;
     }
 }
 

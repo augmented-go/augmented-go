@@ -984,6 +984,41 @@ namespace GoBackendGameTest
             Assert::IsTrue(expected_faulty_stones == real_faulty_stones);
         }
 
+        TEST_METHOD(no_differences_after_valid_moves) {
+            std::string s(  "....\n"
+                            ".X..\n"
+                            "O...\n"
+                            ".O..");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // black moves
+            s = "....\n"
+                "XX..\n"
+                "O...\n"
+                ".O..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            auto diff = go_game.getDifferences();
+            Assert::IsTrue(diff.IsEmpty());
+
+            // white moves
+            s = "....\n"
+                "XX..\n"
+                "O.O.\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            Assert::IsTrue(diff.IsEmpty());
+        }
+
     };
     
     TEST_CLASS(GoRulesTest)
