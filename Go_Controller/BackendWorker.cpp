@@ -37,6 +37,7 @@ BackendWorker::BackendWorker()
     : _game(),
     _scanner(),
     _game_is_initialized(false),
+    _cached_board_size(0),
     _scan_timer(this) // this makes sure that the timer has the same thread affinity as its parent (this)
 {
     /* define default game rules
@@ -59,10 +60,9 @@ BackendWorker::~BackendWorker()
 void BackendWorker::scan() {
     cv::Mat image;
     GoSetup setup;
-    int board_size = 19;
 
     // fetch new camera image
-    auto scan_result = _scanner.scanCamera(setup, board_size, image);
+    auto scan_result = _scanner.scanCamera(setup, _cached_board_size, image);
 
     using Go_Scanner::ScanResult;
 
@@ -74,7 +74,7 @@ void BackendWorker::scan() {
                 _game.update(setup);
             }
             else {
-                _game.init(board_size, setup, _new_game_rules);
+                _game.init(_cached_board_size, setup, _new_game_rules);
                 _game_is_initialized = true;
             }
             
