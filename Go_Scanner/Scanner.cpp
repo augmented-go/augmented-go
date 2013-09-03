@@ -14,17 +14,28 @@ using namespace std;
 
 ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, Mat& out_image) {
     Mat frame;
-    if (!readCameraFrame(frame)) {
-#ifdef ENABLE_DEBUG_IMAGE
-        frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
+
+    if (!_input_image_path.empty()) {
+        frame = imread(_input_image_path, CV_LOAD_IMAGE_COLOR);
         if (frame.empty()) {
             std::cout << "Failed to load debug image from filesystem!" << std::endl;
             std::cout << "In " << __FUNCTION__ << std::endl;
             return ScanResult::NoCamera;
         }
+    }
+    else {
+        if (!readCameraFrame(frame)) {
+#ifdef ENABLE_DEBUG_IMAGE
+            frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
+            if (frame.empty()) {
+                std::cout << "Failed to load debug image from filesystem!" << std::endl;
+                std::cout << "In " << __FUNCTION__ << std::endl;
+                return ScanResult::NoCamera;
+            }
 #else
-        return ScanResult::NoCamera;
+            return ScanResult::NoCamera;
 #endif
+        }
     }
 
     auto success = scanner_main(frame, setup, board_size, _setDebugImg);
@@ -128,6 +139,10 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
 
     return stoneResult;
 
+}
+
+void Scanner::setScannerInputImage(std::string image_path) {
+    _input_image_path = image_path;
 }
 
 }

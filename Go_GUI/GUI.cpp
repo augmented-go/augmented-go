@@ -60,6 +60,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
     connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
     connect(ui_main.scannerdebugimage_action,	&QAction::triggered,	this, &GUI::slot_toggleScannerDebugImage);
+    connect(ui_main.actionLoad_Debug_Image,		&QAction::triggered,	this, &GUI::slot_load_debug_image);
     
    
     // setting initial values
@@ -254,6 +255,21 @@ void GUI::slot_toggleScannerDebugImage()
         emit signal_setScannerDebugImage(false);
 }
 
+void GUI::slot_load_debug_image() {
+    QString selfilter = tr("SGF (*.sgf)Images (*.png *.xpm *.jpg)");
+    QString fileName = QFileDialog::getOpenFileName(
+        this,
+        "open debug image",
+        nullptr,
+        selfilter,
+        &selfilter 
+    );
+
+    if (!fileName.isNull()) {
+        // send backend a signal with image path
+        emit signal_use_debug_image(fileName);
+    }
+}
 
 //////////
 //Public Slots

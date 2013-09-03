@@ -221,4 +221,8 @@ void BackendWorker::signalGuiGameDataChanged() const {
     emit gameDataChanged(&_game);
 }
 
+void BackendWorker::setScannerInputImage(QString image_path) {
+    _scanner.setScannerInputImage(image_path.toStdString());
+}
+
 } // namespace Go_AR

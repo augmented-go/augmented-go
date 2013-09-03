@@ -83,6 +83,12 @@ namespace Go_AR {
          */
         void setScannerDebugImage(bool debug);
 
+        /**
+         * @brief       Defines a image used for scanner input
+         * @param       image_path  path to an existing image
+         */
+        void setScannerInputImage(QString image_path);
+
 
     public slots:
         void scan(); // our main worker function that is called by the timer

@@ -6,6 +6,7 @@
 #include <GoSetup.h>
 
 #include <tuple>
+#include <string>
 
 
 namespace Go_Scanner {
@@ -22,9 +23,10 @@ enum ScanResult {
 
 class Scanner {
 public:
-    Scanner() {
-        _setDebugImg = false;
-    }
+    Scanner()
+    : _input_image_path(""),
+    _setDebugImg(false)
+    {}
 
 private:
     Scanner(const Scanner&);
@@ -53,12 +55,18 @@ public:
     /**
     * @brief        Sets the image of the camera as image for the GUI
     */
-    void Scanner::setNormalImage();
+    void setNormalImage();
 
     /**
     * @brief        Sets the debug image of the Scanner as image for the GUI
     */
-    void Scanner::setDebugImage();
+    void setDebugImage();
+
+    /**
+     * @brief       Specifies the image used for scanning.
+     */
+    void setScannerInputImage(std::string image_path);
+
 
 private:
     /**
@@ -69,7 +77,8 @@ private:
 private:
     cv::VideoCapture _camera;
     cv::Mat _last_frame;
-    bool _setDebugImg;
+    bool    _setDebugImg;
+    std::string _input_image_path;
 };
 
 }

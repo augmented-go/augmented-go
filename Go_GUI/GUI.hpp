@@ -108,6 +108,10 @@ signals:
     /** @brief signals that backend thread should stop. */
     void stop_backend_thread();
 
+    /** @brief signals that backend should use the image specified in image_path as scanner input */
+    void signal_use_debug_image(QString image_path);
+
+
     /** 
      * @brief signals that the user wants to start a new game. 
      * @param   GoRules rules   rules of the new game
@@ -211,6 +215,8 @@ private slots:
      *          Sends a signal which determines the scanner image mode the user chose
      */
     void slot_toggleScannerDebugImage();
+
+    void slot_load_debug_image();
 
 
 public slots:
