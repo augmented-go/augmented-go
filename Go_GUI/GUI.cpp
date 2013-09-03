@@ -117,6 +117,10 @@ void GUI::slot_ButtonPass(){
 }
 
 void GUI::slot_ViewSwitch(){
+
+    if (go_game == nullptr)
+        return;
+
     ui_main.viewswitch_button->setIcon(this->switchbuttonpressed_icon);
     auto differences = go_game->getDifferences();
 
@@ -130,7 +134,7 @@ void GUI::slot_ViewSwitch(){
 
         // new style
         virtual_view->setParent(ui_main.small_container);
-        virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &(go_game->getBoard()));
+            virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &(go_game->getBoard()));
         ui_main.small_container->setToolTip("virtual view");
         virtual_view->show();
         
@@ -254,9 +258,13 @@ void GUI::slot_newImage(QImage image) {
     }
 
 void GUI::slot_newGameData(const GoBackend::Game* game) {
+
     // update internal pointer if the board has been changed
     if (go_game != game)
         go_game = game;
+
+    if (go_game == nullptr)
+        return;
 
     auto& board = go_game->getBoard();
     auto differences = go_game->getDifferences();
@@ -288,10 +296,10 @@ void GUI::slot_newGameData(const GoBackend::Game* game) {
     // refresh virtual view
     if (ui_main.big_container->toolTip() == "virtual view")
         virtual_view->createAndSetScene(ui_main.big_container->size(), differences, &board);
-    
+
     else if (ui_main.big_container->toolTip() == "augmented view")
         virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &board);
-    
+
     printf(">>> New Game data! <<<\n");
 }    
 
