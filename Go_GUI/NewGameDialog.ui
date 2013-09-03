@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>214</width>
-    <height>290</height>
+    <height>308</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,7 +29,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>250</y>
+     <y>270</y>
      <width>191</width>
      <height>33</height>
     </rect>
@@ -87,13 +87,13 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>71</width>
+     <width>91</width>
      <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>Blue Highway</family>
+     <family>From Where You Are</family>
      <pointsize>9</pointsize>
     </font>
    </property>
@@ -108,15 +108,15 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>50</y>
+     <y>60</y>
      <width>191</width>
-     <height>81</height>
+     <height>91</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>Blue Highway</family>
-     <pointsize>10</pointsize>
+     <family>From Where You Are</family>
+     <pointsize>9</pointsize>
     </font>
    </property>
    <property name="title">
@@ -126,15 +126,15 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
-      <width>41</width>
+      <y>30</y>
+      <width>51</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Blue Highway</family>
-      <pointsize>11</pointsize>
+      <family>From Where You Are</family>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="text">
@@ -148,15 +148,15 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
-      <width>41</width>
+      <y>60</y>
+      <width>51</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Blue Highway</family>
-      <pointsize>11</pointsize>
+      <family>From Where You Are</family>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="text">
@@ -170,10 +170,15 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>20</y>
+      <y>30</y>
       <width>113</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MS Shell Dlg 2</family>
+     </font>
     </property>
     <property name="text">
      <string>Black</string>
@@ -183,10 +188,15 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>50</y>
+      <y>60</y>
       <width>113</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MS Shell Dlg 2</family>
+     </font>
     </property>
     <property name="text">
      <string>White</string>
@@ -197,14 +207,14 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>140</y>
+     <y>160</y>
      <width>191</width>
      <height>101</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>Blue Highway</family>
+     <family>From Where You Are</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -215,14 +225,14 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>20</y>
+      <y>30</y>
       <width>51</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>11</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="text">
@@ -235,11 +245,16 @@
    <widget class="QDoubleSpinBox" name="komi_spinbox">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>20</y>
+      <x>90</x>
+      <y>30</y>
       <width>51</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MS Shell Dlg 2</family>
+     </font>
     </property>
     <property name="decimals">
      <number>1</number>
@@ -251,9 +266,9 @@
    <widget class="QCheckBox" name="japanese_scoring">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>50</y>
-      <width>121</width>
+      <x>10</x>
+      <y>60</y>
+      <width>171</width>
       <height>20</height>
      </rect>
     </property>
@@ -278,9 +293,9 @@
    <widget class="QCheckBox" name="two_passes_end_game">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>70</y>
-      <width>121</width>
+      <x>0</x>
+      <y>80</y>
+      <width>181</width>
       <height>21</height>
      </rect>
     </property>
@@ -298,15 +313,15 @@
   <widget class="QLineEdit" name="gamename_lineEdit">
    <property name="geometry">
     <rect>
-     <x>82</x>
-     <y>10</y>
-     <width>121</width>
+     <x>30</x>
+     <y>30</y>
+     <width>161</width>
      <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>Blue Highway</family>
+     <family>MS Shell Dlg 2</family>
      <pointsize>9</pointsize>
     </font>
    </property>

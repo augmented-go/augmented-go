@@ -34,9 +34,9 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     
     // loading font
     QFontDatabase fontDatabase;
-    QString font_path = "res/fonts/blue_highway_rg.ttf";
+    QString font_path = "res/fonts/FromWhereYouAre.ttf";
     if (fontDatabase.addApplicationFont(font_path) == -1)
-        QMessageBox::critical(this, "Font not found", QString("Blue-Highway font was not found!\n searched relative to exe in: " + font_path));
+        QMessageBox::critical(this, "Font not found", QString("FromWhereYouAre font was not found!\n searched relative to exe in: " + font_path));
 
     // connections
     connect(ui_main.open_action,		&QAction::triggered,	this, &GUI::slot_MenuOpen);
