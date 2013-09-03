@@ -258,16 +258,6 @@ bool getStones(Mat srcWarpedImg, vector<Point2f> intersectionPoints, GoSetup& se
     }
     auto approx_stone_diameter = *min_element(begin(distances), end(distances));
 
-    // Extract the board size
-    // Board dimensions are quadratic, meaning width and height are the same so the sqrt(of the number of intersections) 
-    // is the board size if it is a perfect square
-    board_size = (int) floor( sqrt((double) intersectionPoints.size()) + 0.5 ); // The .5 is needed to round to the nearest integer
-    if (board_size*board_size != intersectionPoints.size()) {
-        // Got a false number of intersectionPoints
-        // Stop the processing here
-        return false;
-    }
-
     cerr << "Board size: " << board_size << endl;
 
     // get map from intersection points to board coordinates (SgPoint)
