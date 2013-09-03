@@ -81,13 +81,13 @@ void BackendWorker::scan() {
             }
             else {
                 // the gui doesn't support other sizes
-                if (cached_board_size == 9 || cached_board_size == 13 || cached_board_size == 19 ||  cached_board_size == 0) {
-                    _game.init(cached_board_size, setup, _new_game_rules);
+                if (_cached_board_size == 9 || _cached_board_size == 13 || _cached_board_size == 19 ) {
+                    _game.init(_cached_board_size, setup, _new_game_rules);
                     _game_is_initialized = true;
                     emit displayErrorMessage("");
                 }
                 else {
-                    emit displayErrorMessage(QString("Not supported board size of %1x%1 detected!").arg(board_size));
+                    emit displayErrorMessage(QString("Not supported board size of %1x%1 detected!").arg(_cached_board_size));
                 }
             }
 
