@@ -233,7 +233,10 @@ namespace Go_Scanner {
         auto board_bbox    = bboxes.front();
 
         // GETTING CORNER POINTS OF CONTOUR
-        assert(board_contour.size() == 4); // the contour should have left only 4 points after approximating
+
+        // stop if the contour has left only 4 points after approximating
+        if (board_contour.size() != 4)
+            return;
 
         // Rectangle Order for warping: 
         // 0--------1
@@ -252,10 +255,11 @@ namespace Go_Scanner {
                 lowers.emplace_back(point);
         }
 
-        // deciding which point is left/right
-        assert(uppers.size() == 2);
-        assert(lowers.size() == 2);
+        // stop if we couldn't classify two uppers and lowers
+        if (uppers.size() != 2 || lowers.size() == 2)
+            return;
 
+        // deciding which point is left/right
         // upper side
         p0 = uppers[0];
         p1 = uppers[1];
