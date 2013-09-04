@@ -16,7 +16,8 @@ namespace GoBackend {
 Game::Game()
     : _go_game(),
       _game_finished(false),
-      _while_capturing(false)
+      _while_capturing(false),
+      _differences()
 {}
 
 bool Game::validSetup(const GoSetup& setup) const {
@@ -95,25 +96,48 @@ UpdateResult Game::update(GoSetup setup) {
     auto removed_blacks = current_blacks - new_blacks;
     auto removed_whites = current_whites - new_whites;
 
+    // calc differences between updated setup and current board setup
+    _differences.Clear();
+    _differences |= current_blacks ^ new_blacks;
+    _differences |= current_whites ^ new_whites;
 
     // handicap
     if (isPlacingHandicap(current_blacks, current_whites, new_whites)) {
         assert(_while_capturing == false);
         placeHandicap(setup);
+
+        // this is a valid move -> clear differences as the internal board now matches the real board
+        _differences.Clear();
         return UpdateResult::Legal;
     }
 
-
     if (_while_capturing) {
         assert(getBoard().CapturingMove());
-        return updateWhileCapturing(setup);
+        
+        auto move_result = updateWhileCapturing(setup);
+
+        if (move_result == UpdateResult::Legal) {
+            // this is a valid move -> clear differences as the internal board now matches the real board
+            _differences.Clear();
+        }
+
+        return move_result;
     }
     else {
-        return updateNormal(added_blacks, added_whites, removed_blacks, removed_whites);
+        auto move_result = updateNormal(added_blacks, added_whites, removed_blacks, removed_whites);
+
+        if (move_result == UpdateResult::Legal) {
+            // this is a valid move -> clear differences as the internal board now matches the real board
+            _differences.Clear();
+        }
+
+        return move_result;
     }
 }
 
-
+SgPointSet Game::getDifferences() const {
+    return _differences;
+}
 
 UpdateResult Game::updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
     assert(_while_capturing == false);
