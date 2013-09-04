@@ -200,23 +200,25 @@ namespace GoBackendGameTest
                             "....\n"
                             "O...\n"
                             ".O..");
-
             int size;
             auto setup = GoSetupUtil::CreateSetupFromString(s, size);
 
             Game go_game;
             go_game.init(size, setup);
 
-            // white moved while blacks turn
-            s = "....\n"
-                "..O.\n"
-                "O...\n"
-                ".O..";
-            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            auto result = go_game.update(new_setup);
+            // first a white move so black gets the turn
+            GoSetup setup2 = setup;
+            setup2.AddWhite(Pt(1, 1));
+            auto result = go_game.update(setup2);
+            Assert::IsTrue(result == UpdateResult::Legal);
 
+            // white moved while blacks turn
+            setup2.AddWhite(Pt(19, 19));
+            result = go_game.update(setup2);
             Assert::IsTrue(result == UpdateResult::Illegal);
 
+
+            //
             // black moved while whites turn
             go_game.init(size, setup);
             // first a black move so white gets the turn
@@ -224,7 +226,7 @@ namespace GoBackendGameTest
                 "....\n"
                 "OX..\n"
                 ".O..";
-            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
 
             Assert::IsTrue(result == UpdateResult::Legal);
@@ -891,6 +893,39 @@ namespace GoBackendGameTest
             Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
+        TEST_METHOD(allow_move_from_black_after_init_with_setup) {
+            GoSetup setup;
+            setup.AddWhite(Pt(1, 2));
+
+            Game go_game;
+            go_game.init(19, setup);
+
+            setup.AddBlack(Pt(2, 2));
+            auto result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Legal);
+
+            // another black move should then be illegal
+            setup.AddBlack(Pt(2, 3));
+            result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+        }
+
+        TEST_METHOD(allow_move_from_white_after_init_with_setup) {
+            GoSetup setup;
+            setup.AddWhite(Pt(1, 2));
+
+            Game go_game;
+            go_game.init(19, setup);
+
+            setup.AddWhite(Pt(2, 2));
+            auto result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Legal);
+
+            // another white move should then be illegal
+            setup.AddWhite(Pt(2, 3));
+            result = go_game.update(setup);
+            Assert::IsTrue(result == UpdateResult::Illegal);
+        }
     };
     
     
