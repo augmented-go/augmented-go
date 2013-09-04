@@ -37,6 +37,7 @@ BackendWorker::BackendWorker()
     : _game(),
     _scanner(),
     _game_is_initialized(false),
+    _cached_board_size(0),
     _scan_timer(this) // this makes sure that the timer has the same thread affinity as its parent (this)
 {
     /* define default game rules
@@ -59,10 +60,9 @@ BackendWorker::~BackendWorker()
 void BackendWorker::scan() {
     cv::Mat image;
     GoSetup setup;
-    int board_size = 19;
 
     // fetch new camera image
-    auto scan_result = _scanner.scanCamera(setup, board_size, image);
+    auto scan_result = _scanner.scanCamera(setup, _cached_board_size, image);
 
     using Go_Scanner::ScanResult;
     using GoBackend::UpdateResult;
@@ -81,13 +81,13 @@ void BackendWorker::scan() {
             }
             else {
                 // the gui doesn't support other sizes
-                if (board_size == 9 || board_size == 13 || board_size == 19) {
-                    _game.init(board_size, setup, _new_game_rules);
+                if (_cached_board_size == 9 || _cached_board_size == 13 || _cached_board_size == 19 ) {
+                    _game.init(_cached_board_size, setup, _new_game_rules);
                     _game_is_initialized = true;
                     emit displayErrorMessage("");
                 }
                 else {
-                    emit displayErrorMessage(QString("Not supported board size of %1x%1 detected!").arg(board_size));
+                    emit displayErrorMessage(QString("Not supported board size of %1x%1 detected!").arg(_cached_board_size));
                 }
             }
 
@@ -195,11 +195,15 @@ void BackendWorker::playMove(const int x, const int y){
 }
 
 void BackendWorker::selectBoardManually() {
+    _scan_timer.stop();
     _scanner.selectBoardManually();
+    _scan_timer.start();
 }
 
 void BackendWorker::selectBoardAutomatically() {
+    _scan_timer.stop();
     _scanner.selectBoardAutomatically();
+    _scan_timer.start();
 }
 
 void BackendWorker::setScannerDebugImage(bool debug) {
