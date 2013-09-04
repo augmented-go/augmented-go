@@ -278,15 +278,13 @@ bool getStones(Mat srcWarpedImg, vector<Point2f> intersectionPoints, GoSetup& se
 {
     // Calc the minimum distance between the first intersection point to all others
     // The minimum distance is approximately the diameter of a stone
-    vector<float> distances;
+    vector<double> distances;
     const auto& ref_point_min = *begin(intersectionPoints);
     for (const auto& point : intersectionPoints) {
         if (point != ref_point_min)
             distances.push_back(norm(point - ref_point_min));
     }
-    auto approx_stone_diameter = *min_element(begin(distances), end(distances));
-
-    cerr << "Board size: " << board_size << endl;
+    auto approx_stone_diameter = static_cast<float>(*min_element(begin(distances), end(distances)));
 
     // get map from intersection points to board coordinates (SgPoint)
     auto to_board_coords = getBoardCoordMapFor(intersectionPoints, board_size);
