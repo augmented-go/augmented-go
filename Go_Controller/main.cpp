@@ -53,9 +53,6 @@ int main(int argc, char** argv) {
 
         worker_thread.start(); // start worker thread
 
-        // immediately scan the camera once to have the scanner and backend initialized before the GUI can trigger anything
-        worker->scan();
-
         gui.show();
         qt_app.exec();   // start gui thread (and it's event loop)
 

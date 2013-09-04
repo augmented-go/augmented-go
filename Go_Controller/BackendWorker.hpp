@@ -90,7 +90,7 @@ namespace Go_AR {
         void changeScanningRate(int milliseconds);
 
 
-    public slots:
+    private slots:
         void scan(); // our main worker function that is called by the timer
         
     // signals
