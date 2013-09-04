@@ -4,6 +4,7 @@
 
 #include <QDialog>
 
+#include "ui_NewGameDialog.h"
 #include "GUI.hpp"
 
 class NewGameDialog : public QDialog

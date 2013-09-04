@@ -2645,6 +2645,7 @@
     <addaction name="rules_action"/>
     <addaction name="scannerdebugimage_action"/>
     <addaction name="virtual_game_mode_action"/>
+    <addaction name="scanning_rate_action"/>
    </widget>
    <widget class="QMenu" name="board_detection_menu">
     <property name="title">
@@ -2699,7 +2700,7 @@
   </action>
   <action name="manually_action">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Manually</string>
@@ -2707,7 +2708,7 @@
   </action>
   <action name="automatic_action">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Automatically</string>
@@ -2732,6 +2733,11 @@
   <action name="info_action">
    <property name="text">
     <string>Info</string>
+   </property>
+  </action>
+  <action name="scanning_rate_action">
+   <property name="text">
+    <string>Scanning Rate</string>
    </property>
   </action>
  </widget>

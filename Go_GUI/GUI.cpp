@@ -10,6 +10,7 @@
 #include "Game.hpp"
 
 #include "NewGameDialog.hpp"
+#include "ChangeScanRateDialog.hpp"
 #include "VirtualView.hpp"
 #include "AugmentedView.hpp"
 
@@ -17,7 +18,10 @@
 namespace Go_GUI {
     
 
-GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
+GUI::GUI(QWidget *parent)
+    : QMainWindow(parent),
+    go_game(nullptr),
+    current_scanning_fps(1)
 {
     ui_main.setupUi(this);
     
@@ -64,6 +68,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.scannerdebugimage_action,	&QAction::triggered,	this, &GUI::slot_toggleScannerDebugImage);
     
    
+    connect(ui_main.scanning_rate_action, &QAction::triggered,	this, &GUI::slot_MenuChangeScanRate);
     // setting initial values
     this->init();
 }
@@ -109,8 +114,8 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
 //////////
 
 void GUI::slot_ButtonNewGame(){
-    NewGameDialog* newgame = new NewGameDialog(this);
-    newgame->exec();
+    NewGameDialog newgame(this);
+    newgame.exec();
 }
 
 void GUI::slot_ButtonResign(){
@@ -223,6 +228,11 @@ void GUI::slot_MenuInfo(){
     QMessageBox::about(this, "Info", output.c_str());
 }
 
+void GUI::slot_MenuChangeScanRate() {
+    ChangeScanRateDialog scan_rate_dialog(this, current_scanning_fps);
+    scan_rate_dialog.exec();
+}
+
 void GUI::slot_BoardDetectionManually() {
     emit signal_boardDetectionManually();
 }
@@ -269,6 +279,15 @@ void GUI::slot_toggleScannerDebugImage()
         emit signal_setScannerDebugImage(false);
 }
 
+
+void GUI::slot_changeScanRate(int fps) {
+    current_scanning_fps = fps;
+
+    // convert fps to ms
+    auto milliseconds = fps == 0 ? 0 : 1000.f / current_scanning_fps;
+
+    emit signal_new_scanning_rate(milliseconds);
+}
 
 //////////
 //Public Slots

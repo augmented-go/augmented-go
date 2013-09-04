@@ -49,12 +49,10 @@ int main(int argc, char** argv) {
         QObject::connect(&gui, &GUI::signal_setVirtualGameMode,          worker, &BackendWorker::setVirtualGameMode);
         QObject::connect(&gui, &GUI::signal_playMove,                    worker, &BackendWorker::playMove);
         QObject::connect(&gui, &GUI::signal_setScannerDebugImage,        worker, &BackendWorker::setScannerDebugImage);
+        QObject::connect(&gui, &GUI::signal_new_scanning_rate,           worker, &BackendWorker::changeScanningRate);
         QObject::connect(&gui, &GUI::signal_navigateHistory,             worker, &BackendWorker::navigateHistory);
 
         worker_thread.start(); // start worker thread
-
-        // immediately scan the camera once to have the scanner and backend initialized before the GUI can trigger anything
-        worker->scan();
 
         gui.show();
         qt_app.exec();   // start gui thread (and it's event loop)

@@ -10,15 +10,17 @@
 #include "Game.hpp"
 
 #include "ui_GUI.h"
-#include "ui_NewGameDialog.h"
 #include "AugmentedView.hpp"
 #include "VirtualView.hpp"
 
 namespace Go_GUI {
+class ChangeScanRateDialog;
 
 class GUI : public QMainWindow
 {
     Q_OBJECT
+
+    friend class Go_GUI::ChangeScanRateDialog;
 
 private:
     Ui::MainWindow ui_main;
@@ -111,7 +113,8 @@ signals:
     /** @brief signals that backend thread should stop. */
     void stop_backend_thread();
 
-
+    /** @brief signals that the user wants to change the image scanning rate. */
+    void signal_new_scanning_rate(int milliseconds);
 
     /** 
      * @brief signals that the user wants to start a new game. 
@@ -169,6 +172,13 @@ private slots:
      *			opens a window with information about the application.
      */
     void slot_MenuInfo();
+
+    /**
+     * @brief	SLOT QAction "MenuInfo"
+     *			opens a window to change the scanning rate.
+     */
+    void slot_MenuChangeScanRate();
+
     /**
      * @brief	SLOT "ViewSwitch"
      *			Switches big view with small view.
@@ -218,6 +228,12 @@ private slots:
      *          Sends a signal which determines the scanner image mode the user chose
      */
     void slot_toggleScannerDebugImage();
+    /**
+     * @brief   SLOT "change scan rate"
+     *          Sends a signal that changes the camera scanning rate in the backend
+     * @param   int     New scanning rate in milliseconds
+     */
+    void slot_changeScanRate(int milliseconds);
 
 
 public slots:
@@ -264,6 +280,9 @@ public slots:
      *          Disables the board selection buttons.
      */
     void slot_noCameraImage();
+
+private:
+    int current_scanning_fps;
 };
 
 } // namespace Go_GUI
