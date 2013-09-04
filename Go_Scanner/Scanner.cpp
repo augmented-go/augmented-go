@@ -135,6 +135,7 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
        paintedWarpedImg.copyTo(camera_frame);
     }
 
+    std::cout << ">>> Scanning finished <<<" << std::endl;
 
     return stoneResult;
 
