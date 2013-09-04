@@ -225,4 +225,10 @@ void BackendWorker::signalGuiGameDataChanged() const {
     emit gameDataChanged(&_game);
 }
 
+void BackendWorker::navigateHistory(SgNode::Direction dir) {
+    if (_game.canNavigateHistory(dir))
+        _game.navigateHistory(dir);
+    signalGuiGameDataChanged();
+}
+
 } // namespace Go_AR
