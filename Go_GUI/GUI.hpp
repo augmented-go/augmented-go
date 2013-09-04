@@ -105,8 +105,13 @@ signals:
     /** @brief signals that the user wants to use virtual game mode. */
     void signal_setVirtualGameMode(bool checked);
 
+    /** @brief signals that the user wants to navigate trough history*/
+    void signal_navigateHistory(SgNode::Direction);
+
     /** @brief signals that backend thread should stop. */
     void stop_backend_thread();
+
+
 
     /** 
      * @brief signals that the user wants to start a new game. 

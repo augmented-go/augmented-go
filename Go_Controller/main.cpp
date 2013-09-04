@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
         QObject::connect(&gui, &GUI::signal_setVirtualGameMode,          worker, &BackendWorker::setVirtualGameMode);
         QObject::connect(&gui, &GUI::signal_playMove,                    worker, &BackendWorker::playMove);
         QObject::connect(&gui, &GUI::signal_setScannerDebugImage,        worker, &BackendWorker::setScannerDebugImage);
-        //QObject::connect(&gui, &GUI::signal_navigateHistory,             worker, &BackendWorker::navigateHistory);
+        QObject::connect(&gui, &GUI::signal_navigateHistory,             worker, &BackendWorker::navigateHistory);
 
         worker_thread.start(); // start worker thread
 

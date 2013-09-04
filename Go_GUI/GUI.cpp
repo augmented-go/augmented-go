@@ -160,11 +160,11 @@ void GUI::slot_ViewSwitch_released(){
 }
 
 void GUI::slot_HistoryBackward(){
-    //emit signal_navigateHistory(SgNode::Direction::PREVIOUS);
+    emit signal_navigateHistory(SgNode::Direction::PREVIOUS);
 }
 
 void GUI::slot_HistoryForward(){
-    //emit signal_navigateHistory(SgNode::Direction::NEXT);
+    emit signal_navigateHistory(SgNode::Direction::NEXT);
 }
 
 /**
