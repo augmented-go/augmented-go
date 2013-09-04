@@ -16,7 +16,7 @@ ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, Mat& out_image) 
     Mat frame;
     if (!readCameraFrame(frame)) {
 #ifdef ENABLE_DEBUG_IMAGE
-        frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
+        frame = imread("res/textures/example.jpg", CV_LOAD_IMAGE_COLOR);
         if (frame.empty()) {
             std::cout << "Failed to load debug image from filesystem!" << std::endl;
             std::cout << "In " << __FUNCTION__ << std::endl;
@@ -100,6 +100,7 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
     Mat img;
     img = camera_frame; 
 
+    imwrite("example.jpg", img);
 
     if(!getWarpedImg(img))
     {
