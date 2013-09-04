@@ -367,8 +367,24 @@ void getBetterDetectionImage(Mat& houghImg, bool createFakeLines, int board_size
 
     imshow("Canny dilate", houghcircleImg);
     //testing circle detection for deleting the circles in the image for detecting lines.
+
+
+    float min_radius;
+    float max_radius;
+
+    if(board_size == 0)
+    {
+        min_radius = 20;
+        max_radius = 30;
+    }
+    else
+    {
+        min_radius = ((1.0f/board_size) * 280.0f) - 4.0f; 
+        max_radius = ((1.0f/board_size) * 320.0f) + 4.0f;
+    }
+
     vector<Vec3f> circles;
-    HoughCircles(houghcircleImg, circles, CV_HOUGH_GRADIENT, 1, 20, 30, 10, 20, 30);
+    HoughCircles(houghcircleImg, circles, CV_HOUGH_GRADIENT, 1, 20, 30, 10, cvRound(min_radius), cvRound(max_radius));
 
 
     for( size_t i = 0; i < circles.size(); i++ )
