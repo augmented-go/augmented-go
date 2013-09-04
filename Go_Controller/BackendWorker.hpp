@@ -10,6 +10,8 @@
 #include <QTimer>
 #include <QImage>
 
+#include "SgNode.h"
+
 #include "Game.hpp"
 #include "Scanner.hpp"
 
@@ -82,9 +84,20 @@ namespace Go_AR {
          * @param   bool debug      if true show debug image, false show normal camera image
          */
         void setScannerDebugImage(bool debug);
+        /**
+         * @brief       Changes the scanning interval. Passing 0 will scan as fast as it is possible, depending on the running pc.
+         * @param[in]   milliseconds    Minimum time span between two consecutive image scans. The time span may be 
+         *                              longer if the cpu isn't the fastest. The scan will then run as soon as possible.
+         */
+        void changeScanningRate(int milliseconds);
 
+        /**
+         * @brief       Navigates the history of the current game in the direction you specifiy
+         * @param       dir    Direction of the navigation (NEXT = forward, PREVIOUS = backward)
+         */
+        void navigateHistory(SgNode::Direction dir);
 
-    public slots:
+    private slots:
         void scan(); // our main worker function that is called by the timer
         
     // signals

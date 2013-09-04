@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
         worker->moveToThread(&worker_thread);
 
         qRegisterMetaType<GoRules>("GoRules");
+        qRegisterMetaType<SgNode::Direction>("SgNode::Direction");
 
         // connect signal from worker to gui
         QObject::connect(worker, &BackendWorker::newImage,           &gui, &GUI::slot_newImage);
@@ -37,7 +38,6 @@ int main(int argc, char** argv) {
         QObject::connect(worker, &BackendWorker::finishedGameResult, &gui, &GUI::slot_showFinishedGameResults);
         QObject::connect(worker, &BackendWorker::displayErrorMessage, &gui, &GUI::slot_displayErrorMessage);
         QObject::connect(worker, &BackendWorker::noCameraImage,      &gui, &GUI::slot_noCameraImage);
-
 
         // connect signal from gui to worker
         QObject::connect(&gui, &GUI::signal_saveGame,                    worker, &BackendWorker::saveSgf);
@@ -49,11 +49,10 @@ int main(int argc, char** argv) {
         QObject::connect(&gui, &GUI::signal_setVirtualGameMode,          worker, &BackendWorker::setVirtualGameMode);
         QObject::connect(&gui, &GUI::signal_playMove,                    worker, &BackendWorker::playMove);
         QObject::connect(&gui, &GUI::signal_setScannerDebugImage,        worker, &BackendWorker::setScannerDebugImage);
+        QObject::connect(&gui, &GUI::signal_new_scanning_rate,           worker, &BackendWorker::changeScanningRate);
+        QObject::connect(&gui, &GUI::signal_navigateHistory,             worker, &BackendWorker::navigateHistory);
 
         worker_thread.start(); // start worker thread
-
-        // immediately scan the camera once to have the scanner and backend initialized before the GUI can trigger anything
-        worker->scan();
 
         gui.show();
         qt_app.exec();   // start gui thread (and it's event loop)

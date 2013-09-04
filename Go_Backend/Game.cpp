@@ -413,4 +413,12 @@ bool Game::hasEnded() const {
     return _game_finished;
 }
 
+void Game::navigateHistory(SgNode::Direction dir) {
+    _go_game.GoInDirection(dir);
+}
+
+bool Game::canNavigateHistory(SgNode::Direction dir) const {
+    return _go_game.CanGoInDirection(dir);
+}
+
 } // 

@@ -10,6 +10,7 @@
 #include "Game.hpp"
 
 #include "NewGameDialog.hpp"
+#include "ChangeScanRateDialog.hpp"
 #include "VirtualView.hpp"
 #include "AugmentedView.hpp"
 
@@ -17,7 +18,10 @@
 namespace Go_GUI {
     
 
-GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
+GUI::GUI(QWidget *parent)
+    : QMainWindow(parent),
+    go_game(nullptr),
+    current_scanning_fps(1)
 {
     ui_main.setupUi(this);
     
@@ -58,10 +62,13 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
+    connect(ui_main.backward_button,    &QPushButton::clicked,    this, &GUI::slot_HistoryBackward);
+    connect(ui_main.forward_button,     &QPushButton::clicked,    this, &GUI::slot_HistoryForward);
     connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
     connect(ui_main.scannerdebugimage_action,	&QAction::triggered,	this, &GUI::slot_toggleScannerDebugImage);
     
    
+    connect(ui_main.scanning_rate_action, &QAction::triggered,	this, &GUI::slot_MenuChangeScanRate);
     // setting initial values
     this->init();
 }
@@ -107,8 +114,8 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
 //////////
 
 void GUI::slot_ButtonNewGame(){
-    NewGameDialog* newgame = new NewGameDialog(this);
-    newgame->exec();
+    NewGameDialog newgame(this);
+    newgame.exec();
 }
 
 void GUI::slot_ButtonResign(){
@@ -162,6 +169,19 @@ void GUI::slot_ViewSwitch_released(){
     ui_main.viewswitch_button->setIcon(this->switchbutton_icon);
 }
 
+void GUI::slot_HistoryBackward(){
+    emit signal_navigateHistory(SgNode::Direction::PREVIOUS);
+}
+
+void GUI::slot_HistoryForward(){
+    emit signal_navigateHistory(SgNode::Direction::NEXT);
+}
+
+/**
+ * @brief	SLOT QAction "MenuOpen"
+ *			opens a filedialog that lets the user choose an sgf-file.
+ * @todo	loading sgf file
+ */
 void GUI::slot_MenuOpen(){
     QString selfilter = tr("SGF (*.sgf)");
     QString fileName = QFileDialog::getOpenFileName(
@@ -213,6 +233,11 @@ void GUI::slot_MenuInfo(){
     QMessageBox::about(this, "Info", output.c_str());
 }
 
+void GUI::slot_MenuChangeScanRate() {
+    ChangeScanRateDialog scan_rate_dialog(this, current_scanning_fps);
+    scan_rate_dialog.exec();
+}
+
 void GUI::slot_BoardDetectionManually() {
     emit signal_boardDetectionManually();
 }
@@ -259,6 +284,15 @@ void GUI::slot_toggleScannerDebugImage()
         emit signal_setScannerDebugImage(false);
 }
 
+
+void GUI::slot_changeScanRate(int fps) {
+    current_scanning_fps = fps;
+
+    // convert fps to ms
+    auto milliseconds = fps == 0 ? 0 : 1000.f / current_scanning_fps;
+
+    emit signal_new_scanning_rate(milliseconds);
+}
 
 //////////
 //Public Slots
@@ -316,6 +350,10 @@ void GUI::slot_newGameData(const GoBackend::Game* game) {
 
     else if (ui_main.big_container->toolTip() == "augmented view")
         virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &board);
+
+    // disable navigation button if there is no history in that direction
+    ui_main.forward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::NEXT));
+    ui_main.backward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::PREVIOUS));
 
     printf(">>> New Game data! <<<\n");
 }    

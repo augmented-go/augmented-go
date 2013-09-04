@@ -49,7 +49,7 @@ BackendWorker::BackendWorker()
     _new_game_rules = GoRules(0, GoKomi(6.5), true, true);
 
     connect(&_scan_timer, SIGNAL(timeout()), this, SLOT(scan()));
-    _scan_timer.setInterval(2000);// call the connected slot every 1000 msec
+    _scan_timer.setInterval(1000);// call the connected slot every 1000 msec (1 fps)
     _scan_timer.start();  // put one event in this threads event queue
 }
 
@@ -223,6 +223,16 @@ void BackendWorker::signalGuiGameDataChanged() const {
     // so passing a pointer to the GoBoard is safe and won't be invalidated
     // as long as the GUI says so
     emit gameDataChanged(&_game);
+}
+
+void BackendWorker::navigateHistory(SgNode::Direction dir) {
+    if (_game.canNavigateHistory(dir))
+        _game.navigateHistory(dir);
+    signalGuiGameDataChanged();
+}
+
+void BackendWorker::changeScanningRate(int milliseconds) {
+    _scan_timer.setInterval(milliseconds);
 }
 
 } // namespace Go_AR
