@@ -195,11 +195,15 @@ void BackendWorker::playMove(const int x, const int y){
 }
 
 void BackendWorker::selectBoardManually() {
+    _scan_timer.stop();
     _scanner.selectBoardManually();
+    _scan_timer.start();
 }
 
 void BackendWorker::selectBoardAutomatically() {
+    _scan_timer.stop();
     _scanner.selectBoardAutomatically();
+    _scan_timer.start();
 }
 
 void BackendWorker::setScannerDebugImage(bool debug) {

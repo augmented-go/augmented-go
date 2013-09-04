@@ -400,7 +400,7 @@
                   </property>
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
+                    <family>From Where You Are</family>
                     <pointsize>12</pointsize>
                    </font>
                   </property>
@@ -430,10 +430,22 @@
                 </property>
                 <item>
                  <widget class="QLabel" name="komi_label">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>20</height>
+                   </size>
+                  </property>
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
-                    <pointsize>8</pointsize>
+                    <family>From Where You Are</family>
+                    <pointsize>10</pointsize>
                     <stylestrategy>PreferAntialias</stylestrategy>
                     <kerning>true</kerning>
                    </font>
@@ -448,9 +460,21 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="kominumber_label">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>20</height>
+                   </size>
+                  </property>
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
+                    <family>From Where You Are</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -461,10 +485,22 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="handicap_label">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>20</height>
+                   </size>
+                  </property>
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
-                    <pointsize>8</pointsize>
+                    <family>From Where You Are</family>
+                    <pointsize>10</pointsize>
                     <stylestrategy>PreferAntialias</stylestrategy>
                    </font>
                   </property>
@@ -478,9 +514,21 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="handicapnumber_label">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>20</height>
+                   </size>
+                  </property>
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
+                    <family>From Where You Are</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -503,10 +551,22 @@
                 </property>
                 <item>
                  <widget class="QLabel" name="move_label">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>25</width>
+                    <height>25</height>
+                   </size>
+                  </property>
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
-                    <pointsize>11</pointsize>
+                    <family>From Where You Are</family>
+                    <pointsize>14</pointsize>
                    </font>
                   </property>
                   <property name="text">
@@ -519,9 +579,21 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="movenumber_label">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>25</width>
+                    <height>25</height>
+                   </size>
+                  </property>
                   <property name="font">
                    <font>
-                    <family>Shojumaru</family>
+                    <family>From Where You Are</family>
                     <pointsize>15</pointsize>
                    </font>
                   </property>
@@ -549,6 +621,18 @@
             </property>
             <item>
              <widget class="QLabel" name="whiteplayer_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>25</width>
+                <height>25</height>
+               </size>
+              </property>
               <property name="palette">
                <palette>
                 <active>
@@ -966,7 +1050,7 @@
               </property>
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>From Where You Are</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -983,6 +1067,18 @@
             </item>
             <item>
              <widget class="QLabel" name="blackplayer_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>25</width>
+                <height>25</height>
+               </size>
+              </property>
               <property name="palette">
                <palette>
                 <active>
@@ -1400,7 +1496,7 @@
               </property>
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>From Where You Are</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -1912,14 +2008,14 @@
              <property name="geometry">
               <rect>
                <x>80</x>
-               <y>10</y>
+               <y>20</y>
                <width>131</width>
-               <height>61</height>
+               <height>51</height>
               </rect>
              </property>
              <property name="font">
               <font>
-               <family>Shojumaru</family>
+               <family>From Where You Are</family>
                <pointsize>10</pointsize>
               </font>
              </property>
@@ -1967,6 +2063,12 @@
                <height>31</height>
               </rect>
              </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="palette">
               <palette>
                <active>
@@ -2168,7 +2270,7 @@
              </property>
              <property name="font">
               <font>
-               <family>Shojumaru</family>
+               <family>From Where You Are</family>
                <pointsize>22</pointsize>
                <weight>50</weight>
                <bold>false</bold>
@@ -2188,11 +2290,17 @@
             <widget class="QLabel" name="capturedblack_label">
              <property name="geometry">
               <rect>
-               <x>66</x>
-               <y>39</y>
-               <width>21</width>
-               <height>21</height>
+               <x>60</x>
+               <y>32</y>
+               <width>31</width>
+               <height>31</height>
               </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
              <property name="palette">
               <palette>
@@ -2314,7 +2422,7 @@
              </property>
              <property name="font">
               <font>
-               <family>Shojumaru</family>
+               <family>From Where You Are</family>
                <pointsize>22</pointsize>
                <stylestrategy>PreferAntialias</stylestrategy>
               </font>
@@ -2355,7 +2463,8 @@
               </property>
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>From Where You Are</family>
+                <pointsize>8</pointsize>
                </font>
               </property>
               <property name="text">
@@ -2373,7 +2482,8 @@
               </property>
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>From Where You Are</family>
+                <pointsize>8</pointsize>
                </font>
               </property>
               <property name="text">
@@ -2391,7 +2501,8 @@
               </property>
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>From Where You Are</family>
+                <pointsize>8</pointsize>
                </font>
               </property>
               <property name="text">
