@@ -420,7 +420,7 @@ namespace Go_Scanner {
 
     bool getWarpedImg(Mat& warpedImg)
     {
-        img0 = warpedImg;
+        img0 = warpedImg.clone();
 
         // only process the image if the user  selected the board with "ask_for_board_contour" or "do_auto_board_detection" once.
         // this is triggered through the GUI (and the Scanners selectBoardManually() and selectBoardAutomatically() methods)
