@@ -60,15 +60,15 @@ namespace Go_Scanner {
         p2 += Point2f(-gap, -gap);
         p3 += Point2f(gap, -gap);
 
-        boardCornerX[0] = p0.x;
-        boardCornerX[1] = p1.x;
-        boardCornerX[2] = p2.x;
-        boardCornerX[3] = p3.x;
+        boardCornerX[0] = cvRound(p0.x);
+        boardCornerX[1] = cvRound(p1.x);
+        boardCornerX[2] = cvRound(p2.x);
+        boardCornerX[3] = cvRound(p3.x);
 
-        boardCornerY[0] = p0.y;
-        boardCornerY[1] = p1.y;
-        boardCornerY[2] = p2.y;
-        boardCornerY[3] = p3.y;
+        boardCornerY[0] = cvRound(p0.y);
+        boardCornerY[1] = cvRound(p1.y);
+        boardCornerY[2] = cvRound(p2.y);
+        boardCornerY[3] = cvRound(p3.y);
 
         namedWindow(windowName, CV_WINDOW_AUTOSIZE);
         putText(img0, "Result of automatically detecting the Go board.", 
@@ -429,10 +429,10 @@ namespace Go_Scanner {
         }
     
             warpedImg = warpImage(img0,
-            Point2f(boardCornerX[0], boardCornerY[0]),
-            Point2f(boardCornerX[1], boardCornerY[1]),
-            Point2f(boardCornerX[3], boardCornerY[3]),
-            Point2f(boardCornerX[2], boardCornerY[2]));       
+            Point2i(boardCornerX[0], boardCornerY[0]),
+            Point2i(boardCornerX[1], boardCornerY[1]),
+            Point2i(boardCornerX[3], boardCornerY[3]),
+            Point2i(boardCornerX[2], boardCornerY[2]));       
 
         return true;
 

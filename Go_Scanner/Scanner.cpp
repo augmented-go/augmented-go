@@ -112,10 +112,20 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
     Mat paintedWarpedImg = img.clone();
     vector<Point2f> intersectionPoints;
 
-    getBoardIntersections(img, 255, intersectionPoints, paintedWarpedImg);
+    getBoardIntersections(img, 255, board_size, intersectionPoints, paintedWarpedImg);
 
     bool stoneResult = false;
     if (intersectionPoints.size() >= 1) {
+        // Extract the board size
+        // Board dimensions are quadratic, meaning width and height are the same so the sqrt(of the number of intersections) 
+        // is the board size if it is a perfect square
+        board_size = (int) floor( sqrt((double) intersectionPoints.size()) + 0.5 ); // The .5 is needed to round to the nearest integer
+        if (board_size*board_size != intersectionPoints.size()) {
+            // Got a false number of intersectionPoints
+            // Stop the processing here
+            return false;
+        }
+
         stoneResult = getStones(srcWarpedImg, intersectionPoints, setup, board_size, paintedWarpedImg);
     }
     imshow("Detected Stones and Intersections", paintedWarpedImg);

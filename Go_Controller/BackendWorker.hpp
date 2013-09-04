@@ -112,5 +112,7 @@ namespace Go_AR {
         QTimer              _scan_timer;
         GoRules _new_game_rules;
         bool    _game_is_initialized;
+        int     _cached_board_size;
+
     };
 }

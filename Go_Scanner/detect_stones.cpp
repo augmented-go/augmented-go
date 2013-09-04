@@ -10,7 +10,7 @@ using namespace std;
 //  starting from any point within that circle 
 //  mainly used to get the diameters of the stones. 
 //  This functin also provides the Midpoint of that line. 
-int getStoneDistanceAndMidpoint(const Mat& warpedImgGray, int x, int y, lineheading heading, Point2f& midpointLine)
+int getStoneDistanceAndMidpoint(const Mat& warpedImgGray, int x, int y, lineheading heading, Point2i& midpointLine)
 {
 
     int width = warpedImgGray.cols;
@@ -77,13 +77,13 @@ int getStoneDistanceAndMidpoint(const Mat& warpedImgGray, int x, int y, linehead
     distance = d1 + d2;
 
     // midpoint of our first help line
-    midpointLine.x = (xTmp1 + xTmp2) / 2.0f;
-    midpointLine.y = (yTmp1 + yTmp2) / 2.0f;
+    midpointLine.x = (xTmp1 + xTmp2) / 2;
+    midpointLine.y = (yTmp1 + yTmp2) / 2;
 
     return distance;
 }
 
-void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Point2f, SgPoint, lesserPoint2f> to_board_coords, float stone_diameter, SgPointSet& stones, Mat& paintedWarpedImg)
+void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, int board_size, map<Point2f, SgPoint, lesserPoint2f> to_board_coords, float stone_diameter, SgPointSet& stones, Mat& paintedWarpedImg)
 {  
     Mat tmp, warpedImgGray, canny;
     cvtColor(warpedImg, tmp, CV_RGB2GRAY);
@@ -91,7 +91,8 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<P
     threshold(tmp, warpedImgGray, 85, 255, 0);
 
     //we morph the thresholded image to get rid of light spots from reflacting light on the black stones. 
-    Mat element = getStructuringElement(MORPH_ELLIPSE, Size(stone_diameter*0.38, stone_diameter* 0.38));
+    int element_value = static_cast<int>(stone_diameter*0.38);
+    Mat element = getStructuringElement(MORPH_ELLIPSE, Size(element_value, element_value));
     morphologyEx(warpedImgGray, warpedImgGray, MORPH_OPEN, element); // Apply the specified morphology operation
 
     //Draw circles around the intersections for easy detection of black stones
@@ -107,12 +108,12 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<P
     imshow("Image for detecting black stones", warpedImgGray);
 
 
-    for(int i=0; i < intersectionPoints.size(); i++)
+    for(size_t i=0; i < intersectionPoints.size(); i++)
     {
         auto& intersection_point = intersectionPoints[i];
 
-        int x = intersectionPoints[i].x;
-        int y = intersectionPoints[i].y;
+        int x = cvRound(intersectionPoints[i].x);
+        int y = cvRound(intersectionPoints[i].y);
         int distance, diameter45, diameter125;
 
         /**
@@ -127,19 +128,44 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<P
             *    first we produce a help line to get the diameters at 45° and 125°.
             *    therefore we use the intersectionpoints. 
             */ 
-            Point2f midpointLine;
+            Point2i midpointLine;
             distance = getStoneDistanceAndMidpoint(warpedImgGray, x, y, LEFT, midpointLine);
 
             // Get the Diameter for 125 degree
-            Point2f midpoint125;
+            Point2i midpoint125;
             diameter125 = getStoneDistanceAndMidpoint(warpedImgGray, midpointLine.x, midpointLine.y, RIGHT, midpoint125);
 
             // Get the Diameter for 45 degree
-            Point2f midpoint45;
+            Point2i midpoint45;
             diameter45 = getStoneDistanceAndMidpoint(warpedImgGray, midpoint125.x, midpoint125.y, LEFT, midpoint45);
 
+
             //it's a stone if the diameters are similiar, not to small and not to big.
-            if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= 20 && diameter125 >= 20  && diameter45 <= 60 && diameter125 <= 60)
+
+            int min_stone_size;
+            int max_stone_size;
+
+            //9x9
+            if(board_size <= 9)
+            {
+                min_stone_size = 30;
+                max_stone_size = 80;
+            }
+            //13x13
+            else if (board_size <= 13)
+            {
+                min_stone_size = 20;
+                max_stone_size = 60;
+            }
+            //19x19 ++
+            else
+            {
+                min_stone_size = 15;
+                max_stone_size = 50;
+            }
+
+
+            if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= min_stone_size && diameter125 >= min_stone_size  && diameter45 <= max_stone_size && diameter125 <= max_stone_size)
             {
                 cout << "Black Stone ("<< x << ", "<< y << ")" << endl;
 
@@ -165,7 +191,8 @@ void detectAllStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Poi
     // After canny we get a binary image, where all detected edges are white.
     // Dilate iterates over ervery pixel, and sets the pixel to the maximum pixel value within a circle around that pixel.
     // This leaves the areas black where no edges were detected and thus could contain a stone.
-    Mat element_dilate = getStructuringElement(MORPH_ELLIPSE, Size(stone_diameter*0.8+0.5f, stone_diameter*0.8+0.5f));
+    int dilate_value = static_cast<int>(stone_diameter*0.8+0.5f);
+    Mat element_dilate = getStructuringElement(MORPH_ELLIPSE, Size(dilate_value, dilate_value));
     dilate(img, img, element_dilate);
     imshow("after dilating", img);
 
@@ -173,19 +200,19 @@ void detectAllStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Poi
     // Erode looks for the minimum pixel value (black) within a circle around every pixel.
     // Because black pixels represent possible stones, if there is any black pixel within 
     // a stone radius around an intersection then we have found a stone.
-    Mat element_erode = getStructuringElement(MORPH_ELLIPSE, Size(stone_diameter*0.6+0.5f, stone_diameter*0.6+0.5f));
+    int erode_value = static_cast<int>(stone_diameter*0.6+0.5f);
+    Mat element_erode = getStructuringElement(MORPH_ELLIPSE, Size(erode_value, erode_value));
     // todo(mihi314) could be optimized by not using erode and instead only doing the erode operation at intersection points
     erode(img, img, element_erode);
 
     imshow("Image for detecting all stones", img);
 
-    for(int i=0; i < intersectionPoints.size(); i++)
+    for(size_t i=0; i < intersectionPoints.size(); i++)
     {
         auto& intersection_point = intersectionPoints[i];
 
-        int x = intersection_point.x + 0.5f;
-        int y = intersection_point.y + 0.5f;
-        int distance, diameter45, diameter125;
+        int x = cvRound(intersection_point.x);
+        int y = cvRound(intersection_point.y);
 
         /**
         * Let's check if this is a stone :). 
@@ -196,8 +223,8 @@ void detectAllStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Poi
             stones.Include(to_board_coords[intersection_point]);
 
             circle( paintedWarpedImg, 
-            Point(intersectionPoints[i].x, intersectionPoints[i].y),
-            (stone_diameter/2.0f), 
+            Point(cvRound(intersectionPoints[i].x), cvRound(intersectionPoints[i].y)),
+            cvRound(stone_diameter/2.0f), 
             Scalar(238, 238, 176), 0, 8, 0);
 
         }
@@ -258,16 +285,6 @@ bool getStones(Mat srcWarpedImg, vector<Point2f> intersectionPoints, GoSetup& se
     }
     auto approx_stone_diameter = *min_element(begin(distances), end(distances));
 
-    // Extract the board size
-    // Board dimensions are quadratic, meaning width and height are the same so the sqrt(of the number of intersections) 
-    // is the board size if it is a perfect square
-    board_size = (int) floor( sqrt((double) intersectionPoints.size()) + 0.5 ); // The .5 is needed to round to the nearest integer
-    if (board_size*board_size != intersectionPoints.size()) {
-        // Got a false number of intersectionPoints
-        // Stop the processing here
-        return false;
-    }
-
     cerr << "Board size: " << board_size << endl;
 
     // get map from intersection points to board coordinates (SgPoint)
@@ -278,7 +295,7 @@ bool getStones(Mat srcWarpedImg, vector<Point2f> intersectionPoints, GoSetup& se
     detectAllStones(srcWarpedImg, intersectionPoints, to_board_coords, all_stones, approx_stone_diameter, paintedWarpedImg);
 
     SgPointSet black_stones;
-    detectBlackStones(srcWarpedImg, intersectionPoints, to_board_coords, approx_stone_diameter, black_stones, paintedWarpedImg);
+    detectBlackStones(srcWarpedImg, intersectionPoints, board_size, to_board_coords, approx_stone_diameter, black_stones, paintedWarpedImg);
     setup.m_stones[SG_BLACK] = black_stones;
     setup.m_stones[SG_WHITE] = all_stones - black_stones;
 
