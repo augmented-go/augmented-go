@@ -12,6 +12,6 @@ void groupIntersectionLines(cv::vector<cv::Vec4i>& lines, cv::vector<cv::Vec4i>&
 cv::vector<cv::Vec4i> getBoardLines(cv::vector<cv::Vec4i>& lines, lineType type, int board_size);
 bool intersection(cv::Vec4i horizontalLine, cv::Vec4i verticalLine, cv::Point2f &r);
 bool getBoardIntersections(cv::Mat warpedImg, int thresholdValue, int board_size, cv::vector<cv::Point2f> &intersectionPoints, cv::Mat& paintedWarpedImg);
-cv::vector<cv::Vec4i> createLinefromValue(cv::vector<int> circles, lineType type);
-void getBetterDetectionImage(cv::Mat& houghImg, bool createFakeLines);
+cv::vector<cv::Vec4i> createLinefromValue(cv::vector<int> circles, lineType type, int board_size);
+void getBetterDetectionImage(cv::Mat& houghImg, bool createFakeLines, int board_size);
 }

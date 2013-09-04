@@ -13,52 +13,35 @@ int imgheight;
 
 struct PartitionOperator
 {
-    int sidesize;
-    float calc_value;
+    int _sidesize;
+    int _board_size;
 
     PartitionOperator(int size)
     {
-        sidesize = size;
-        calc_value = 2.0f;
+        _sidesize = size;
+        _board_size = 19;
     }
 
     PartitionOperator(int size, int board_size)
     {
-        sidesize = size;
-        //the calculation value differs from boardsize to boardsize. on bigger boards e.g. 19x19 we need a 
-        //smaller value, because of the smaller pixelsize of the stones.
+        _sidesize = size;
 
-        //7x7
-        if(board_size == 9)
-        {
-            calc_value = 1.25f;
-        }
-        //13x13
-        else if (board_size == 13)
-        {
-            calc_value = 2.0f;
-        }
-        //19x19 
-        else if (board_size == 19)
-        {
-            calc_value = 3.25f;
-        }
-
-        //if we don't know our board_size yet, we are testing it with random numbers.
-        //we dont use a iterativ way. because of the danger, that a false line could be detected and we will
-        //stuck on the false value for the rest off our scanning. 
-        else
+        //the right boardsize is necessary for the calculation of our clusters. if we don't know it yet,
+        //we randomly choose it :D
+        if(board_size == 0)
         {
             int n  = (rand() % 3) + 1;
 
             if (n == 1)
-                calc_value = 1.25f;
+                _board_size = 9;
             else if (n == 2)
-                calc_value = 3.25f;
+                _board_size = 19;
             else
-                calc_value = 2.0f;
-
+                _board_size = 13;
         }
+        else
+            _board_size = board_size;
+
     }
 
     bool operator()(const int &a, const int &b) const 
@@ -66,7 +49,7 @@ struct PartitionOperator
         float distance = static_cast<float>(a - b);
         distance = abs(distance);
 
-        float boardfield = ((1.0f/18.0f) * sidesize)/calc_value;
+        float boardfield = ((1.0f/_board_size) * _sidesize)/3.0f;
 
         return distance < boardfield;
     }
@@ -273,7 +256,7 @@ bool intersection(Vec4i horizontalLine, Vec4i verticalLine, Point2f &r)
 
 //Uses the midpoints of those circles, 
 //averages them and creates a straight line from that data
-vector<Vec4i> createLinefromValue(vector<int> circles, lineType type)
+vector<Vec4i> createLinefromValue(vector<int> circles, lineType type, int board_size)
 {
     int valueIndex1, valueIndex2, imagesizeIndex, zeroIndex, imagesize;
 
@@ -296,10 +279,10 @@ vector<Vec4i> createLinefromValue(vector<int> circles, lineType type)
 
     //do clustering clusterNum stores the cluster number in which the circles are grouped 
     vector<int> clusterNum(circles.size());
-    PartitionOperator Oper(imagesize);
+    PartitionOperator Oper(imagesize, board_size);
     int clusterSize = partition<int, PartitionOperator>(circles, clusterNum, Oper);
 
-    //choose only the importend clusters for us. we want cluster with size bigger than 4!
+    //choose only the importend clusters for us. we want cluster with size bigger than 2!
     vector<int> clusterNum_we_need;
     int newClusterSize = 0;
 
@@ -369,15 +352,13 @@ vector<Vec4i> createLinefromValue(vector<int> circles, lineType type)
 
 //Using HoughCircle to detect some stones (not all can be found).
 //make those circle completely black to erase the white borders from the stones detected by canny. 
-//Now the image contains mostly straight white lines and houghline detection can find those small 
+//Now the image contains mostly straight white lines and houghline detection cannot find those small 
 //white stoneborders. 
 //createLinefromValue uses the midpoints of those circles, 
-//averages them and creates a straight line from that data. This makes it possible to detect a 
+//averages them and draws a straight line from that data. This makes it possible to detect a 
 //line even if the line on the board is completely filled with stones.
-void getBetterDetectionImage(Mat& houghImg, bool createFakeLines)
+void getBetterDetectionImage(Mat& houghImg, bool createFakeLines, int board_size)
 {
-    //TODO: is it useful to make the detected circles black? 
-    //make another clustering operator. i think the current one doesn't work that well. 
 
     Mat houghcircleImg = houghImg.clone();
 
@@ -421,10 +402,10 @@ void getBetterDetectionImage(Mat& houghImg, bool createFakeLines)
         vector<Vec4i> verticallines;
 
         if(circles_x.size() != 0)
-            verticallines= createLinefromValue(circles_x, VERTICAL);
+            verticallines= createLinefromValue(circles_x, VERTICAL, board_size);
 
         if(circles_y.size() != 0)
-            horizontallines = createLinefromValue(circles_y, HORIZONTAL);
+            horizontallines = createLinefromValue(circles_y, HORIZONTAL, board_size);
 
         //Draw the Lines on the Image
         vector<Vec4i> newLines; 
@@ -467,7 +448,7 @@ bool getBoardIntersections(Mat warpedImg, int thresholdValue, int board_size, ve
 
 
     //This function is very very useful to detect a boardline even if it's full of stones!
-    getBetterDetectionImage(threshedImg, true);
+    getBetterDetectionImage(threshedImg, true, board_size);
 
     imshow("Threshed Image for HoughLinesP", threshedImg);
 
