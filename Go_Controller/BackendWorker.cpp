@@ -225,6 +225,12 @@ void BackendWorker::signalGuiGameDataChanged() const {
     emit gameDataChanged(&_game);
 }
 
+void BackendWorker::navigateHistory(SgNode::Direction dir) {
+    if (_game.canNavigateHistory(dir))
+        _game.navigateHistory(dir);
+    signalGuiGameDataChanged();
+}
+
 void BackendWorker::changeScanningRate(int milliseconds) {
     _scan_timer.setInterval(milliseconds);
 }

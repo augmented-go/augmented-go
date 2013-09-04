@@ -1305,4 +1305,68 @@ namespace GoBackendGameTest
             Assert::IsTrue(expected_setup == board_setup);
         }
     };
+
+    TEST_CLASS(HistoryNavigationTest) {
+        TEST_METHOD(board_updates_after_history_movement) {
+            Game go_game;
+            go_game.init(19);
+
+            // two moves
+            GoSetup setup;
+            setup.AddBlack(Pt(1, 2));
+            setup.m_player = SG_WHITE;
+            go_game.update(setup);
+
+            GoSetup setup2 = setup;
+            setup2.AddWhite(Pt(1, 3));
+            setup2.m_player = SG_BLACK;
+            go_game.update(setup2);
+
+            // can't navigate into "future"
+            Assert::IsFalse(go_game.canNavigateHistory(SgNode::Direction::NEXT));
+
+            // back one step
+            go_game.navigateHistory(SgNode::Direction::PREVIOUS);
+            Assert::IsTrue(GoSetupUtil::CurrentPosSetup(go_game.getBoard()) == setup);
+            
+            // back to the last move
+            go_game.navigateHistory(SgNode::Direction::NEXT);
+            Assert::IsTrue(GoSetupUtil::CurrentPosSetup(go_game.getBoard()) == setup2);
+        }
+
+        TEST_METHOD(history_allows_variations) {
+            // to make the variations properly work with handicap, some backend refactoring is probably needed, if we even want that
+            // (navigating while still being in the SettingHandicap sate doesn't preserve the history)
+            Game go_game;
+            go_game.init(19);
+
+            GoSetup first_move;
+            first_move.AddBlack(Pt(1, 1));
+            first_move.m_player = SG_WHITE;
+            go_game.update(first_move);
+
+            // first white move
+            GoSetup first_variation = first_move;
+            first_variation.AddWhite(Pt(1, 2));
+            first_variation.m_player = SG_BLACK;
+            go_game.update(first_variation);
+
+            go_game.navigateHistory(SgNode::Direction::PREVIOUS);
+            // one black stone
+            Assert::IsTrue(GoSetupUtil::CurrentPosSetup(go_game.getBoard()) == first_move);
+
+            // white variation
+            GoSetup second_variation = first_move;
+            second_variation.AddWhite(Pt(1, 3));
+            go_game.update(second_variation);
+
+            // back to original variation
+            bool left = go_game.canNavigateHistory(SgNode::Direction::LEFT_BROTHER);
+            bool right = go_game.canNavigateHistory(SgNode::Direction::RIGHT_BROTHER);
+            bool branch = go_game.canNavigateHistory(SgNode::Direction::PREV_BRANCH);
+
+            go_game.navigateHistory(SgNode::Direction::LEFT_BROTHER);
+            Assert::IsTrue(GoSetupUtil::CurrentPosSetup(go_game.getBoard()) == first_variation);
+        }
+    };
 }
