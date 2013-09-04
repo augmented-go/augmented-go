@@ -62,6 +62,8 @@ GUI::GUI(QWidget *parent)
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
+    connect(ui_main.backward_button,    &QPushButton::clicked,    this, &GUI::slot_HistoryBackward);
+    connect(ui_main.forward_button,     &QPushButton::clicked,    this, &GUI::slot_HistoryForward);
     connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
     connect(ui_main.scannerdebugimage_action,	&QAction::triggered,	this, &GUI::slot_toggleScannerDebugImage);
     
@@ -162,6 +164,19 @@ void GUI::slot_ViewSwitch_released(){
     ui_main.viewswitch_button->setIcon(this->switchbutton_icon);
 }
 
+void GUI::slot_HistoryBackward(){
+    emit signal_navigateHistory(SgNode::Direction::PREVIOUS);
+}
+
+void GUI::slot_HistoryForward(){
+    emit signal_navigateHistory(SgNode::Direction::NEXT);
+}
+
+/**
+ * @brief	SLOT QAction "MenuOpen"
+ *			opens a filedialog that lets the user choose an sgf-file.
+ * @todo	loading sgf file
+ */
 void GUI::slot_MenuOpen(){
     QString selfilter = tr("SGF (*.sgf)");
     QString fileName = QFileDialog::getOpenFileName(
@@ -326,6 +341,10 @@ void GUI::slot_newGameData(const GoBackend::Game* game) {
     else if (ui_main.big_container->toolTip() == "augmented view")
         virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
     
+    // disable navigation button if there is no history in that direction
+    ui_main.forward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::NEXT));
+    ui_main.backward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::PREVIOUS));
+
     printf(">>> New Game data! <<<\n");
 }    
 

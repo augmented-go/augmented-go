@@ -10,6 +10,8 @@
 #include <QTimer>
 #include <QImage>
 
+#include "SgNode.h"
+
 #include "Game.hpp"
 #include "Scanner.hpp"
 
@@ -89,6 +91,11 @@ namespace Go_AR {
          */
         void changeScanningRate(int milliseconds);
 
+        /**
+         * @brief       Navigates the history of the current game in the direction you specifiy
+         * @param       dir    Direction of the navigation (NEXT = forward, PREVIOUS = backward)
+         */
+        void navigateHistory(SgNode::Direction dir);
 
     private slots:
         void scan(); // our main worker function that is called by the timer
