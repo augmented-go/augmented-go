@@ -22,6 +22,7 @@ namespace Go_Scanner {
     Mat img0, selectedImg, temp;
     string windowName = "Manual Selection Window";
 
+    int board_selection_cancel_key = 27;
 
      /**
      * @brief   Calls the manual board detection and shows the result in a new window.
@@ -32,10 +33,12 @@ namespace Go_Scanner {
         putText(img0, "Mark the Go board with the blue rectangle. Press any Key when finished.", 
                     cvPoint(20,20), 1, 0.8, Scalar(64, 64, 255), 1, CV_AA);
         showImage();
-        waitKey(0);
+        auto key = waitKey(0);
         destroyWindow(windowName);
 
-        asked_for_board_contour = true;
+        // only accept board selection if the ESCAPE key was NOT pressed!
+        if (key != board_selection_cancel_key)
+            asked_for_board_contour = true;
     }
 
     /**
@@ -74,10 +77,12 @@ namespace Go_Scanner {
         putText(img0, "Result of automatically detecting the Go board.", 
                     cvPoint(20,20), 1, 0.8, Scalar(64, 64, 255), 1, CV_AA);
         showImage();
-        waitKey(0);
+        auto key = waitKey(0);
         destroyWindow(windowName);
 
-        asked_for_board_contour = true;
+        // only accept board selection if the ESCAPE key was NOT pressed!
+        if (key != board_selection_cancel_key)
+            asked_for_board_contour = true;
     }
 
     Mat warpImage(Mat img, Point2f p0, Point2f p1, Point2f p2, Point2f p3)
@@ -228,7 +233,10 @@ namespace Go_Scanner {
         auto board_bbox    = bboxes.front();
 
         // GETTING CORNER POINTS OF CONTOUR
-        assert(board_contour.size() == 4); // the contour should have left only 4 points after approximating
+
+        // stop if the contour has left only 4 points after approximating
+        if (board_contour.size() != 4)
+            return;
 
         // Rectangle Order for warping: 
         // 0--------1
@@ -247,10 +255,11 @@ namespace Go_Scanner {
                 lowers.emplace_back(point);
         }
 
-        // deciding which point is left/right
-        assert(uppers.size() == 2);
-        assert(lowers.size() == 2);
+        // stop if we couldn't classify two uppers and lowers
+        if (uppers.size() != 2 || lowers.size() == 2)
+            return;
 
+        // deciding which point is left/right
         // upper side
         p0 = uppers[0];
         p1 = uppers[1];

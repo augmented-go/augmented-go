@@ -2607,7 +2607,7 @@
   </action>
   <action name="manually_action">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Manually</string>
@@ -2615,7 +2615,7 @@
   </action>
   <action name="automatic_action">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Automatically</string>
