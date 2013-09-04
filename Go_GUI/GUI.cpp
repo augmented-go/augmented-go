@@ -129,7 +129,12 @@ void GUI::slot_ButtonPass(){
 }
 
 void GUI::slot_ViewSwitch(){
+
+    if (go_game == nullptr)
+        return;
+
     ui_main.viewswitch_button->setIcon(this->switchbuttonpressed_icon);
+    auto differences = go_game->getDifferences();
 
     if (ui_main.big_container->toolTip() == "virtual view"){
 
@@ -141,7 +146,7 @@ void GUI::slot_ViewSwitch(){
 
         // new style
         virtual_view->setParent(ui_main.small_container);
-        virtual_view->createAndSetScene(ui_main.small_container->size(), &(go_game->getBoard()));
+            virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &(go_game->getBoard()));
         ui_main.small_container->setToolTip("virtual view");
         virtual_view->show();
         
@@ -154,7 +159,7 @@ void GUI::slot_ViewSwitch(){
         augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
         virtual_view->setParent(ui_main.big_container);
-        virtual_view->createAndSetScene(ui_main.big_container->size(), &(go_game->getBoard()));
+        virtual_view->createAndSetScene(ui_main.big_container->size(), differences, &(go_game->getBoard()));
         ui_main.big_container->setToolTip("virtual view");
         virtual_view->show(); 
     }
@@ -304,11 +309,16 @@ void GUI::slot_newImage(QImage image) {
     }
 
 void GUI::slot_newGameData(const GoBackend::Game* game) {
+
     // update internal pointer if the board has been changed
     if (go_game != game)
         go_game = game;
 
+    if (go_game == nullptr)
+        return;
+
     auto& board = go_game->getBoard();
+    auto differences = go_game->getDifferences();
 
     auto current_player = board.ToPlay();
 
@@ -336,11 +346,11 @@ void GUI::slot_newGameData(const GoBackend::Game* game) {
 
     // refresh virtual view
     if (ui_main.big_container->toolTip() == "virtual view")
-        virtual_view->createAndSetScene(ui_main.big_container->size(), &board);
-    
+        virtual_view->createAndSetScene(ui_main.big_container->size(), differences, &board);
+
     else if (ui_main.big_container->toolTip() == "augmented view")
-        virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
-    
+        virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &board);
+
     // disable navigation button if there is no history in that direction
     ui_main.forward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::NEXT));
     ui_main.backward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::PREVIOUS));

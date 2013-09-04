@@ -4,7 +4,7 @@
 #include <QApplication>
 #include <QWidget>
 #include <QGraphicsView>
-
+#include <GoBoard.h>
 
 class GoBoard;
 
@@ -34,10 +34,12 @@ public:
     }
 
     /**
-     * @brief	Creates the virtual board of the go game and set the scene
-     * @param	QSize	size of the container	
+     * @brief   Creates the virtual board of the go game and set the scene
+     * @param   QSize   size of the container
+                SgPointSet  set of all differences between real board and virtual board
+                GoBoard current go game board
      */
-    void createAndSetScene(QSize size, const GoBoard * game_board = nullptr);
+    void createAndSetScene(QSize size, SgPointSet difference_points, const GoBoard * game_board = nullptr);
 
     /**
      * @brief   resizes the scene of virtual view to the container it is embedded to.
@@ -61,7 +63,7 @@ private:
     int board_size;
     QGraphicsScene scene;
     QImage board_image_size9, board_image_size13, board_image_size19,
-        black_stone_image, white_stone_image;
+        black_stone_image, white_stone_image, illegal_stone_image;
 
     /**
      * @brief   override
