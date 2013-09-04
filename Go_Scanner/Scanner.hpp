@@ -10,7 +10,7 @@
 
 namespace Go_Scanner {
 
-bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size);
+bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg);
 void ask_for_board_contour();
 void do_auto_board_detection();
 
@@ -22,11 +22,14 @@ enum ScanResult {
 
 class Scanner {
 public:
-    Scanner() {}
+    Scanner() {
+        _setDebugImg = false;
+    }
 
 private:
     Scanner(const Scanner&);
     Scanner& operator=(const Scanner&);
+    bool _setDebugImg;
         
 public:
     /**
@@ -47,6 +50,16 @@ public:
     *               This call blocks until the user pressed a key to close the result window.
     */
     void selectBoardAutomatically();
+
+    /**
+    * @brief        Sets the image of the camera as image for the GUI
+    */
+    void Scanner::setNormalImage();
+
+    /**
+    * @brief        Sets the debug image of the Scanner as image for the GUI
+    */
+    void Scanner::setDebugImage();
 
 private:
     /**

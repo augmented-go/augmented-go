@@ -122,6 +122,8 @@ signals:
      */
     void signal_playMove(const int x, const int y);
 
+    void signal_setScannerDebugImage(bool debug);
+
 private slots:
     /**
      * @brief   SLOT "NewGame/Reset"
@@ -202,7 +204,13 @@ private slots:
      *          The signal has the position of the board the player wants to
      *          place a stone to.
      */
-    void slot_passOnVirtualViewPlayMove(const int x, const int y);   
+    void slot_passOnVirtualViewPlayMove(const int x, const int y);
+
+    /**
+     * @brief   SLOT toggleScannerDebugImage
+     *          Sends a signal which determines the scanner image mode the user chose
+     */
+    void slot_toggleScannerDebugImage();
 
 
 public slots:

@@ -59,6 +59,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
     connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
+    connect(ui_main.scannerdebugimage_action,	&QAction::triggered,	this, &GUI::slot_toggleScannerDebugImage);
+    
    
     // setting initial values
     this->init();
@@ -244,6 +246,14 @@ void GUI::slot_ToggleVirtualGameMode() {
 
 void GUI::slot_passOnVirtualViewPlayMove(const int x, const int y){
     emit this->signal_playMove(x, y);
+}
+
+void GUI::slot_toggleScannerDebugImage()
+{
+    if (ui_main.scannerdebugimage_action->isChecked())
+        emit signal_setScannerDebugImage(true);
+    else
+        emit signal_setScannerDebugImage(false);
 }
 
 

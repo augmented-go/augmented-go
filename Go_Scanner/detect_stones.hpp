@@ -5,18 +5,17 @@
 #include <opencv2/opencv.hpp>
 
 #include <GoSetup.h>
+#include <SgSystem.h>
+#include <SgPoint.h>
 
 #include <vector>
 #include <map>
 #include <set>
 
 namespace Go_Scanner {
-// functions from other translation units
-void automatic_warp(const cv::Mat& input, cv::Point2f& p0, cv::Point2f& p1, cv::Point2f& p2, cv::Point2f& p3);
 
-    bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size);
-    void ask_for_board_contour();
-    void do_auto_board_detection();
+    enum lineheading{LEFT, RIGHT};
+    enum stoneColor{BLACK, WHITE};
 
     // Vector helper
     template <typename T, typename R>
@@ -53,5 +52,13 @@ void automatic_warp(const cv::Mat& input, cv::Point2f& p0, cv::Point2f& p1, cv::
     struct lesserPoint2fx {
         bool operator()(const cv::Point2f& left, const cv::Point2f& right) { return left.x < right.x; }
     };
+
+
+    int getStoneDistanceAndMidpoint(const cv::Mat& warpedImgGray, int x, int y, lineheading heading, cv::Point2f& midpointLine);
+    void detectBlackStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, float stone_diameter, SgPointSet& stones, cv::Mat& paintedWarpedImg);
+    void detectAllStones(cv::Mat& warpedImg, cv::vector<cv::Point2f> intersectionPoints, std::map<cv::Point2f, SgPoint, lesserPoint2f> to_board_coords, SgPointSet& stones, float stone_diameter, cv::Mat& paintedWarpedImg);
+    std::map<cv::Point2f, SgPoint, lesserPoint2f> getBoardCoordMapFor(std::vector<cv::Point2f> intersectionPoints, int board_size);
+    bool getStones(cv::Mat srcWarpedImg, cv::vector<cv::Point2f> intersectionPoints, GoSetup& setup, int& board_size, cv::Mat& paintedWarpedImg);
+
 
 }
