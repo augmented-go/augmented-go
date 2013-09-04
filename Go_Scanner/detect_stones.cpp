@@ -161,7 +161,7 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, int b
             //19x19 ++
             else
             {
-                min_stone_size = 12;
+                min_stone_size = 15;
                 max_stone_size = 50;
             }
 
