@@ -35,6 +35,8 @@ VirtualView::VirtualView(QWidget *parent){
     black_stone_image = QImage(black_stone_directory);
     white_stone_image = QImage(white_stone_directory);
 
+    // initialize with nullptr to be able to test against that
+    ghost_stone = nullptr;
 }
 VirtualView::~VirtualView(){
 }
@@ -143,7 +145,9 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     
     // Stone that could be placed on board when user chooses to
     if (this->virtual_game_mode){
-        this->ghost_stone = new QGraphicsEllipseItem(QRectF());
+        if (ghost_stone == nullptr)
+            this->ghost_stone = new QGraphicsEllipseItem(QRectF());
+        
         ghost_stone->setRect(selection_ellipse);
         QBrush ghost_brush = game_board->ToPlay() == SG_BLACK ? 
                             QBrush(Qt::GlobalColor::black):
@@ -234,6 +238,8 @@ void VirtualView::mouseMoveEvent(QMouseEvent* event){
         qreal ellipse_yPos = (pic_boarder_y * scale_y) + (board_y_coord * this->cell_height * scale_y) - (this->cell_height * scale_y)/2.0f;
 
         QRectF new_selection_ellipse = QRectF(ellipse_xPos, ellipse_yPos, this->cell_width * scale_x, this->cell_height * scale_y);
+        if (ghost_stone == nullptr)
+            this->ghost_stone = new QGraphicsEllipseItem(QRectF());
         ghost_stone->setRect(new_selection_ellipse);
         selection_ellipse = new_selection_ellipse;
 
