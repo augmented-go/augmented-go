@@ -1132,6 +1132,38 @@ namespace GoBackendGameTest
             contents = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
             Assert::IsTrue(contents.find("RE[B+1.5]") != string::npos);
         }
+        
+        TEST_METHOD(load_game_state_from_sgf_file) {
+            string filename = "load_game_state_from_sgf_file.sgf";
+            std::ofstream file(filename);
+            file << "(;SZ[4]KM[6.5]\n"
+                    "DT[2013-Sep-04];\n"
+                    "AB[ac]\n"
+                    "AW[ad];B[bd])\n"
+                    "";
+            file.close();
+
+            Game go_game;
+            go_game.init(4);
+
+            Assert::IsTrue(go_game.loadGame(filename));
+
+            // m_player 1
+            auto setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+
+            int size;
+            auto s = std::string("...."
+                                 "...."
+                                 "X..."
+                                 "OX..");
+
+            // m_player 0
+            auto expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_WHITE;
+
+            Assert::IsTrue(expected_setup == setup);
+        }
+
     };
 
     TEST_CLASS(PlayMoveTest) {

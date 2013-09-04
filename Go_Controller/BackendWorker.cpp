@@ -129,6 +129,15 @@ void BackendWorker::saveSgf(QString path, QString blackplayer_name, QString whit
         std::cerr << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
 }
 
+void BackendWorker::loadSgf(QString path) {
+    auto filepath = path.toStdString();
+
+    if (!_game.loadGame(filepath))
+        std::cerr << "Error loading game data from file \"" << filepath << "\"!" << std::endl;
+
+    signalGuiGameDataChanged();
+}
+
 void BackendWorker::pass() {
     _game.pass();
     

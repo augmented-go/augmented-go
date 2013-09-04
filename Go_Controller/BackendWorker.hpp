@@ -34,6 +34,12 @@ namespace Go_AR {
         void saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name);
 
         /**
+         * @brief       Loads the specified game from a sgf file, discards the current one.
+         */
+        void loadSgf(QString fileName);
+
+
+        /**
          * @brief       Plays a pass for the current player.
          *              Also emits finished_game_result if the game has ended because of playing a pass.
          */

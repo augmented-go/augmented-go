@@ -41,6 +41,7 @@ int main(int argc, char** argv) {
 
         // connect signal from gui to worker
         QObject::connect(&gui, &GUI::signal_saveGame,                    worker, &BackendWorker::saveSgf);
+        QObject::connect(&gui, &GUI::signal_openGame,                    worker, &BackendWorker::loadSgf);
         QObject::connect(&gui, &GUI::signal_pass,                        worker, &BackendWorker::pass);
         QObject::connect(&gui, &GUI::signal_resign,                      worker, &BackendWorker::resign);
         QObject::connect(&gui, &GUI::signal_newGame,                     worker, &BackendWorker::resetGame);

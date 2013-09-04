@@ -9,6 +9,7 @@
 
 #include "GoSetupUtil.h"
 #include "SgGameWriter.h"
+#include "SgGameReader.h"
 #include "SgProp.h"
 #include "GoModBoard.h"
 
@@ -320,6 +321,24 @@ bool Game::saveGame(string file_path, string name_black, string name_white, stri
     int game_number = SG_PROPPOINTFMT_GO; // the game of go
     int default_size = 19; // default boardsize, never actually relevant as _go_game.Init gets always called
     writer.WriteGame(_go_game.Root(), all_props, file_format, game_number, default_size);
+
+    return true;
+}
+
+bool Game::loadGame(string file_path) {
+    std::ifstream file(file_path.c_str());
+    if (!file.is_open()) {
+        return false;
+    }
+
+    SgGameReader reader(file);
+    auto root_node = reader.ReadGame();
+
+    _go_game.Init(root_node);
+
+    // fast forward to latest move
+    while (canNavigateHistory(SgNode::Direction::NEXT))
+        navigateHistory(SgNode::Direction::NEXT);
 
     return true;
 }

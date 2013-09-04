@@ -104,6 +104,13 @@ public:
     bool saveGame(string file_path, string name_black = "", string name_white = "", string game_name = "");
 
     /**
+     * @brief        Overwrites the current game state with the game in a sgf file.
+     * @returns      false if the file could not be opened
+     */
+    bool loadGame(string file_path);
+
+
+    /**
      * @brief        Convenience function to quickly finish a game. Plays a pass for each player and
      *               returns the result (see Game::getResult)
      */
