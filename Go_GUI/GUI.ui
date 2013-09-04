@@ -370,7 +370,8 @@
              <widget class="QPushButton" name="backward_button">
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>From Where You Are</family>
+                <pointsize>8</pointsize>
                </font>
               </property>
               <property name="text">
@@ -382,7 +383,7 @@
              <widget class="QPushButton" name="forward_button">
               <property name="font">
                <font>
-                <family>Shojumaru</family>
+                <family>From Where You Are</family>
                 <pointsize>8</pointsize>
                </font>
               </property>

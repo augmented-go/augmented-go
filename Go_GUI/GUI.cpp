@@ -52,14 +52,14 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.automatic_action,   &QAction::triggered,	this, &GUI::slot_BoardDetectionAutomatically);
     connect(ui_main.manually_action,	&QAction::triggered,	this, &GUI::slot_BoardDetectionManually);
     connect(ui_main.virtual_game_mode_action,	&QAction::triggered, this, &GUI::slot_ToggleVirtualGameMode);
-    //connect(ui_main.backward_button,    &QAction::triggered,    this, &GUI::slot_HistoryBackward);
-    //connect(ui_main.forward_button,     &QAction::triggered,    this, &GUI::slot_HistoryForward);
     connect(this,	&GUI::signal_setVirtualGameMode, this->virtual_view, &VirtualView::slot_setVirtualGameMode);
     connect(ui_main.viewswitch_button,	&QPushButton::pressed,	this, &GUI::slot_ViewSwitch);
     connect(ui_main.viewswitch_button,	&QPushButton::released,	this, &GUI::slot_ViewSwitch_released);
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
+    connect(ui_main.backward_button,    &QPushButton::clicked,    this, &GUI::slot_HistoryBackward);
+    connect(ui_main.forward_button,     &QPushButton::clicked,    this, &GUI::slot_HistoryForward);
     connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
     connect(ui_main.scannerdebugimage_action,	&QAction::triggered,	this, &GUI::slot_toggleScannerDebugImage);
     
@@ -159,20 +159,12 @@ void GUI::slot_ViewSwitch_released(){
     ui_main.viewswitch_button->setIcon(this->switchbutton_icon);
 }
 
-/**
- * @brief	SLOT "History Backward"
- *			Switch the virtual board to the previoud in history
- */
 void GUI::slot_HistoryBackward(){
-
+    //emit signal_navigateHistory(SgNode::Direction::PREVIOUS);
 }
 
-/**
- * @brief	SLOT "History Forward"
- *			Switch the virtual borad to the next in history
- */
 void GUI::slot_HistoryForward(){
-
+    //emit signal_navigateHistory(SgNode::Direction::NEXT);
 }
 
 /**
