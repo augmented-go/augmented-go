@@ -87,6 +87,7 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, int b
 {  
     Mat tmp, warpedImgGray, canny;
     cvtColor(warpedImg, tmp, CV_RGB2GRAY);
+    imshow("warped black stones", tmp);
 
     threshold(tmp, warpedImgGray, 85, 255, 0);
 
@@ -167,7 +168,7 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, int b
 
             if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= min_stone_size && diameter125 >= min_stone_size  && diameter45 <= max_stone_size && diameter125 <= max_stone_size)
             {
-                cout << "Black Stone ("<< x << ", "<< y << ")" << endl;
+                //cout << "Black Stone ("<< x << ", "<< y << ")" << endl;
 
                 stones.Include(to_board_coords[intersection_point]);
 
@@ -219,7 +220,7 @@ void detectAllStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Poi
         */
         if (img.at<uchar>(y,x) < 50)
         {
-            cout << "Stone ("<< x << ", "<< y << ")" << endl;
+            //cout << "Stone ("<< x << ", "<< y << ")" << endl;
             stones.Include(to_board_coords[intersection_point]);
 
             circle( paintedWarpedImg, 

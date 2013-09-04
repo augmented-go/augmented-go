@@ -85,8 +85,8 @@ void groupIntersectionLines(vector<Vec4i>& lines, vector<Vec4i>& horizontalLines
         lineVector[1] = static_cast<float> (lines[i][3] - lines[i][1]);
 
         float angle = calcBetweenAngle(baseVector, lineVector);
-        if(angle != 0.0f && angle != 90.0f)
-            cout << angle << endl;
+        //if(angle != 0.0f && angle != 90.0f)
+            //cout << angle << endl;
 
         //horizontal lines
         if(angle <= 1.0f && angle >= -1.0f)
@@ -132,7 +132,7 @@ void groupIntersectionLines(vector<Vec4i>& lines, vector<Vec4i>& horizontalLines
         else
         {
             lines.erase(lines.begin()+i);
-            cout << "This Line is deleted. Muahaha" << endl;
+            //cout << "This Line is deleted. Muahaha" << endl;
             //Delete that Line. Its a false line :)
         }
     }
