@@ -373,7 +373,7 @@ namespace GoBackendGameTest
 
             auto result = go_game.update(new_setup);
             // internal board and real life board do not match
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
 
             // internal board state should automatically removes stones
             s = "..OX\n"
@@ -396,7 +396,7 @@ namespace GoBackendGameTest
                 ".X..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
         }
 
         TEST_METHOD(after_capturing_allow_playing_where_caputred_stones_were) {
@@ -516,11 +516,11 @@ namespace GoBackendGameTest
                             "OX..");
             setup = GoSetupUtil::CreateSetupFromString(s, size);
             auto result = go_game.update(setup);
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
 
-            // another update with still illegal setup
+            // another update with still illegal/not captured stones setup
             result = go_game.update(setup);
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
         }
 
         TEST_METHOD(can_get_board_information) {
