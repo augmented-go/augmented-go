@@ -24,13 +24,82 @@ namespace Go_Scanner {
 
     int board_selection_cancel_key = 27;
 
-    void putText(Mat img, const char * text, CvPoint position) {
+    // split a string at each char that is contained in delimiters and return the tokens
+    vector<string> split(const string& str, const string& delimiters)
+    {
+        // Skip delimiters at beginning.
+        string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+        // Find first "non-delimiter".
+        string::size_type pos     = str.find_first_of(delimiters, lastPos);
+
+        vector<string> tokens;
+        while (string::npos != pos || string::npos != lastPos)
+        {
+            // Found a token, add it to the vector.
+            tokens.push_back(str.substr(lastPos, pos - lastPos));
+            // Skip delimiters.  Note the "not_of"
+            lastPos = str.find_first_not_of(delimiters, pos);
+            // Find next "non-delimiter"
+            pos = str.find_first_of(delimiters, lastPos);
+        }
+
+        return tokens;
+    }
+
+    // renders a text in img with text at position
+    // automatically handels newlines
+    void putText(Mat img, string text, Point position) {
+        // text appearence
+        int fontFace     = 1;
+        double fontScale = 1.2;
+        int thickness    = 1;
+        int baseline     = 0;
+        int offset_x = 1, offset_y = 3;
+
+        // text size of one line
+        Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+        baseline += thickness;
+
+        auto total_height = textSize.height + baseline + 1;
+
+        auto lines = split(text, "\n");
+
+        // recurse if we got more than one line
+        // and put each line directly under the preceding
+        if (lines.size() > 1) {
+            int i = 0;
+            for (const auto& line : lines) {
+                putText(img, line, position + Point(0, i*total_height));
+                ++i;
+            }
+            return;
+        }
+
+        // buffer for the transparent box under the text (achieved through blending the images)
+        Mat box_buf = img.clone();
+
+        // draw the solid box
+        rectangle(box_buf, position + Point(0, baseline),
+            position + Point(textSize.width, -textSize.height),
+            Scalar(0, 0, 0),
+            CV_FILLED);
+
+        // blend the box to make it transparent
+        auto alpha = .3f;
+        addWeighted(box_buf, alpha, img, 1.0 - alpha, 0.0, img);
+
+        // draw the baseline
+        line(img, position + Point(0, thickness + offset_y),
+            position + Point(textSize.width, thickness + offset_y),
+            Scalar(0, 0, 255));
+
+        // draw the actual text
         putText(img, text, 
-                    position,            // position
-                    1,                   // font face
-                    1.3,                 // font scale
+                    position + Point(offset_x, offset_y),            // position
+                    fontFace,            // font face
+                    fontScale,           // font scale
                     Scalar(64, 64, 255), // color
-                    1,                   // thickness
+                    thickness,           // thickness
                     CV_AA);              // line type
     }
 
@@ -40,16 +109,11 @@ namespace Go_Scanner {
     void ask_for_board_contour() {
         namedWindow(windowName, CV_WINDOW_AUTOSIZE);
         setMouseCallback(windowName, mouseHandler, NULL);
-        putText(img0, "Mark the Go board with the blue rectangle", cvPoint(20, 20));
-        putText(img0, "Press ESC to cancel or any other key to accept.", cvPoint(20, 40));
+        putText(img0,
+            "Mark the Go board with the blue rectangle\n"
+            "Press ESC to cancel or any other key to accept.",
+            cvPoint(10, 20));
 
-        //putText(img0, "Mark the Go board with the blue rectangle. Press any Key when finished.", 
-        //            cvPoint(20,20),      // position
-        //            1,                   // font face
-        //            1.3,                 // font scale
-        //            Scalar(64, 64, 255), // color
-        //            2,                   // thickness
-        //            CV_AA);              // line type
         showImage();
         auto key = waitKey(0);
         destroyWindow(windowName);
@@ -87,7 +151,11 @@ namespace Go_Scanner {
         int board_corners_Y[] = { (int)p0.y, (int)p1.y, (int)p2.y, (int)p3.y };
 
         namedWindow(windowName, CV_WINDOW_AUTOSIZE);
-        putText(img0, "Result of automatically detecting the Go board.", cvPoint(20, 20));
+        putText(img0,
+            "Result of automatically detecting the Go board.\n"
+            "Press ESC to cancel or any other key to accept.",
+            cvPoint(10, 20));
+
         showImage(board_corners_X, board_corners_Y);
         auto key = waitKey(0);
         destroyWindow(windowName);
