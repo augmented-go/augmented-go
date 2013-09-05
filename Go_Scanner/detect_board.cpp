@@ -24,14 +24,32 @@ namespace Go_Scanner {
 
     int board_selection_cancel_key = 27;
 
+    void putText(Mat img, const char * text, CvPoint position) {
+        putText(img, text, 
+                    position,            // position
+                    1,                   // font face
+                    1.3,                 // font scale
+                    Scalar(64, 64, 255), // color
+                    1,                   // thickness
+                    CV_AA);              // line type
+    }
+
      /**
      * @brief   Calls the manual board detection and shows the result in a new window.
      */
     void ask_for_board_contour() {
         namedWindow(windowName, CV_WINDOW_AUTOSIZE);
         setMouseCallback(windowName, mouseHandler, NULL);
-        putText(img0, "Mark the Go board with the blue rectangle. Press any Key when finished.", 
-                    cvPoint(20,20), 1, 0.8, Scalar(64, 64, 255), 1, CV_AA);
+        putText(img0, "Mark the Go board with the blue rectangle", cvPoint(20, 20));
+        putText(img0, "Press ESC to cancel or any other key to accept.", cvPoint(20, 40));
+
+        //putText(img0, "Mark the Go board with the blue rectangle. Press any Key when finished.", 
+        //            cvPoint(20,20),      // position
+        //            1,                   // font face
+        //            1.3,                 // font scale
+        //            Scalar(64, 64, 255), // color
+        //            2,                   // thickness
+        //            CV_AA);              // line type
         showImage();
         auto key = waitKey(0);
         destroyWindow(windowName);
@@ -53,6 +71,7 @@ namespace Go_Scanner {
         // if one of the points wasn't set
         if (p0 == Point2f()) {
             cout << "!!ERROR >> Failed to automatically detect the go board!" << endl;
+            ask_for_board_contour();
             return;
         }
 
@@ -63,26 +82,31 @@ namespace Go_Scanner {
         p2 += Point2f(-gap, -gap);
         p3 += Point2f(gap, -gap);
 
-        boardCornerX[0] = cvRound(p0.x);
-        boardCornerX[1] = cvRound(p1.x);
-        boardCornerX[2] = cvRound(p2.x);
-        boardCornerX[3] = cvRound(p3.x);
-
-        boardCornerY[0] = cvRound(p0.y);
-        boardCornerY[1] = cvRound(p1.y);
-        boardCornerY[2] = cvRound(p2.y);
-        boardCornerY[3] = cvRound(p3.y);
+        // create data suitable for showImage()
+        int board_corners_X[] = { (int)p0.x, (int)p1.x, (int)p2.x, (int)p3.x };
+        int board_corners_Y[] = { (int)p0.y, (int)p1.y, (int)p2.y, (int)p3.y };
 
         namedWindow(windowName, CV_WINDOW_AUTOSIZE);
-        putText(img0, "Result of automatically detecting the Go board.", 
-                    cvPoint(20,20), 1, 0.8, Scalar(64, 64, 255), 1, CV_AA);
-        showImage();
+        putText(img0, "Result of automatically detecting the Go board.", cvPoint(20, 20));
+        showImage(board_corners_X, board_corners_Y);
         auto key = waitKey(0);
         destroyWindow(windowName);
 
         // only accept board selection if the ESCAPE key was NOT pressed!
-        if (key != board_selection_cancel_key)
+        if (key != board_selection_cancel_key) {
             asked_for_board_contour = true;
+
+            // actually commmit the selection to the internal used variables
+            boardCornerX[0] = cvRound(p0.x);
+            boardCornerX[1] = cvRound(p1.x);
+            boardCornerX[2] = cvRound(p2.x);
+            boardCornerX[3] = cvRound(p3.x);
+
+            boardCornerY[0] = cvRound(p0.y);
+            boardCornerY[1] = cvRound(p1.y);
+            boardCornerY[2] = cvRound(p2.y);
+            boardCornerY[3] = cvRound(p3.y);
+        }
     }
 
     Mat warpImage(Mat img, Point2f p0, Point2f p1, Point2f p2, Point2f p3)
@@ -399,9 +423,10 @@ namespace Go_Scanner {
     }
 
     /**
-     * @brief   Shows the selected points (through manual or automatic board detection) on a clone of the img0 in a new window.
+     * @brief   Shows the points given through the two passed parameters on a clone of the img0 in a new window.
+     *          Both pointers have to point to memory containing 4 variables
      */
-    void showImage()
+    void showImage(int* board_corner_X, int* board_corner_Y)
     {
         Mat img1 = img0.clone();
 
@@ -409,8 +434,8 @@ namespace Go_Scanner {
         for(int j=0;j<nop;j++)
         {        
             rectangle(img1, 
-                Point(boardCornerX[j] - 1, boardCornerY[j] - 1), 
-                Point(boardCornerX[j] + 1, boardCornerY[j] + 1), 
+                Point(board_corner_X[j] - 1, board_corner_Y[j] - 1), 
+                Point(board_corner_X[j] + 1, board_corner_Y[j] + 1), 
                 Scalar(255, 0,  0, 0), 2, 8, 0);
 
 
@@ -418,14 +443,21 @@ namespace Go_Scanner {
             for(int k=j+1;k<nop;k++)
             {
                 line(img1,
-                    Point(boardCornerX[j] , boardCornerY[j] ), 
-                    Point(boardCornerX[k] , boardCornerY[k] ), 
+                    Point(board_corner_X[j] , board_corner_Y[j] ), 
+                    Point(board_corner_X[k] , board_corner_Y[k] ), 
                     Scalar(255, 0,  0, 0), 1,8,0);
             }
         }
         imshow(windowName, img1);
     }
 
+    /**
+     * @brief   Shows the selected points (through manual or automatic board detection) on a clone of the img0 in a new window.
+     */
+    void showImage()
+    {
+        showImage(boardCornerX, boardCornerY);
+    }
 
     bool getWarpedImg(Mat& warpedImg)
     {
