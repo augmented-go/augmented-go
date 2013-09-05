@@ -179,7 +179,7 @@ UpdateResult Game::updateWhileCapturing(GoSetup new_setup) {
     }
     else {
         // real life board dosn't match internal state
-        return UpdateResult::Illegal;
+        return UpdateResult::ToCapture;
     }
 }
 
@@ -232,7 +232,7 @@ UpdateResult Game::updateSingleMove(SgPoint point, SgBlackWhite player, SgPointS
             // some stones may have already been removed after playing the move,
             // but there are still stones left to be removed, tell the user to remove them as well
             _while_capturing = true;
-            return UpdateResult::Illegal;
+            return UpdateResult::ToCapture;
         }
         else {
             // stones that are not beeing captured have been removed
