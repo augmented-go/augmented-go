@@ -22,6 +22,11 @@ enum class UpdateResult {
     // Illegal due to removing or adding multiple stones.
 
     /**
+     * There are still stones left to capture.
+     */
+    ToCapture,
+
+    /**
      * Internal board matches real life board.
      */
     Legal
@@ -82,6 +87,14 @@ public:
      * @returns     See UpdateResult class. Also returns Illegal when the setup includes invalid stones.
      */
     UpdateResult update(GoSetup setup);
+
+    /**
+     * @brief       Gets the differences of the last updated setup to the current internal board.
+     *              Should be used for error displaying if there was an illegal move.
+     * @returns     An SgPointSet of the stones that are illegal.
+     */
+    SgPointSet getDifferences() const;
+
 
     /**
      * @brief       Plays a move at given position for the current player.
@@ -183,6 +196,7 @@ private:
     bool _game_finished; // we need this variable because fuego doesn't tag a game
                          // finished if a player resigns
 
+    SgPointSet _differences; // differences of the last setup that was updated to the current board
     bool _while_capturing;
 };
 

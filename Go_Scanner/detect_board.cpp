@@ -256,7 +256,7 @@ namespace Go_Scanner {
         }
 
         // stop if we couldn't classify two uppers and lowers
-        if (uppers.size() != 2 || lowers.size() == 2)
+        if (uppers.size() != 2 || lowers.size() != 2)
             return;
 
         // deciding which point is left/right
