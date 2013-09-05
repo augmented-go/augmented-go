@@ -114,7 +114,7 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
     getBoardIntersections(img, 255, board_size, intersectionPoints, paintedWarpedImg);
 
     bool stoneResult = false;
-    if (intersectionPoints.size() >= 1) {
+    if (intersectionPoints.size() >= 4) {
         // Extract the board size
         // Board dimensions are quadratic, meaning width and height are the same so the sqrt(of the number of intersections) 
         // is the board size if it is a perfect square
