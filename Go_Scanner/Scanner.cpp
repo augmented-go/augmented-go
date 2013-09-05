@@ -100,8 +100,6 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
     Mat img;
     img = camera_frame; 
 
-    imwrite("example.jpg", img);
-
     if(!getWarpedImg(img))
     {
         return false;
