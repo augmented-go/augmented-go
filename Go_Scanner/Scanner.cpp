@@ -16,7 +16,7 @@ ScanResult Scanner::scanCamera(GoSetup& setup, int& board_size, Mat& out_image) 
     Mat frame;
     if (!readCameraFrame(frame)) {
 #ifdef ENABLE_DEBUG_IMAGE
-        frame = imread("res/textures/example_pic.jpg", CV_LOAD_IMAGE_COLOR);
+        frame = imread("res/textures/example.jpg", CV_LOAD_IMAGE_COLOR);
         if (frame.empty()) {
             std::cout << "Failed to load debug image from filesystem!" << std::endl;
             std::cout << "In " << __FUNCTION__ << std::endl;
@@ -100,7 +100,6 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
     Mat img;
     img = camera_frame; 
 
-
     if(!getWarpedImg(img))
     {
         return false;
@@ -115,7 +114,7 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
     getBoardIntersections(img, 255, board_size, intersectionPoints, paintedWarpedImg);
 
     bool stoneResult = false;
-    if (intersectionPoints.size() >= 1) {
+    if (intersectionPoints.size() >= 4) {
         // Extract the board size
         // Board dimensions are quadratic, meaning width and height are the same so the sqrt(of the number of intersections) 
         // is the board size if it is a perfect square
@@ -135,6 +134,7 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
        paintedWarpedImg.copyTo(camera_frame);
     }
 
+    std::cout << ">>> Scanning finished <<<" << std::endl;
 
     return stoneResult;
 
