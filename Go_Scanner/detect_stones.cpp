@@ -87,6 +87,7 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, int b
 {  
     Mat tmp, warpedImgGray, canny;
     cvtColor(warpedImg, tmp, CV_RGB2GRAY);
+    imshow("warped black stones", tmp);
 
     threshold(tmp, warpedImgGray, 85, 255, 0);
 
@@ -167,7 +168,7 @@ void detectBlackStones(Mat& warpedImg, vector<Point2f> intersectionPoints, int b
 
             if(diameter125+5 >= diameter45 && diameter125-5 <= diameter45 && diameter45 >= min_stone_size && diameter125 >= min_stone_size  && diameter45 <= max_stone_size && diameter125 <= max_stone_size)
             {
-                cout << "Black Stone ("<< x << ", "<< y << ")" << endl;
+                //cout << "Black Stone ("<< x << ", "<< y << ")" << endl;
 
                 stones.Include(to_board_coords[intersection_point]);
 
@@ -219,7 +220,7 @@ void detectAllStones(Mat& warpedImg, vector<Point2f> intersectionPoints, map<Poi
         */
         if (img.at<uchar>(y,x) < 50)
         {
-            cout << "Stone ("<< x << ", "<< y << ")" << endl;
+            //cout << "Stone ("<< x << ", "<< y << ")" << endl;
             stones.Include(to_board_coords[intersection_point]);
 
             circle( paintedWarpedImg, 
@@ -277,15 +278,13 @@ bool getStones(Mat srcWarpedImg, vector<Point2f> intersectionPoints, GoSetup& se
 {
     // Calc the minimum distance between the first intersection point to all others
     // The minimum distance is approximately the diameter of a stone
-    vector<float> distances;
+    vector<double> distances;
     const auto& ref_point_min = *begin(intersectionPoints);
     for (const auto& point : intersectionPoints) {
         if (point != ref_point_min)
             distances.push_back(norm(point - ref_point_min));
     }
-    auto approx_stone_diameter = *min_element(begin(distances), end(distances));
-
-    cerr << "Board size: " << board_size << endl;
+    auto approx_stone_diameter = static_cast<float>(*min_element(begin(distances), end(distances)));
 
     // get map from intersection points to board coordinates (SgPoint)
     auto to_board_coords = getBoardCoordMapFor(intersectionPoints, board_size);
