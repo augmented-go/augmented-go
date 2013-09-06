@@ -177,11 +177,7 @@ void GUI::slot_HistoryForward(){
     emit signal_navigateHistory(SgNode::Direction::NEXT);
 }
 
-/**
- * @brief	SLOT QAction "MenuOpen"
- *			opens a filedialog that lets the user choose an sgf-file.
- * @todo	loading sgf file
- */
+
 void GUI::slot_MenuOpen(){
     QString selfilter = tr("SGF (*.sgf)");
     QString fileName = QFileDialog::getOpenFileName(

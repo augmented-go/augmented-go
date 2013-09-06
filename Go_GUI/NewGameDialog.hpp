@@ -7,6 +7,15 @@
 #include "ui_NewGameDialog.h"
 #include "GUI.hpp"
 
+/**
+ * @class   NewGameDialog
+ * @brief   The NewGameDialog is part of Augmented-Go Gui.  Uses the NewGameDialog.ui
+ *          The Dialog lets the user choose several settings for a go-game listed below:
+ *           - Name of the game
+ *           - Name of black and white player
+ *           - Rules: Komi, Japanese scoring and if two consecutive passes end the game
+ *          When the user presses "OK" the information gets signaled and the dialog closes.
+ */
 class NewGameDialog : public QDialog
 {
     Q_OBJECT
@@ -21,7 +30,8 @@ public:
 
     /**
      * @brief      overides the "OK"-Button of the dialog.
-     *             If OK is pressed, a new game starts.
+     *             If OK is pressed, a signal is emitted to the backend
+     *             to start a new game.
      */
     void accept(){
         // empty names are not allowed!
@@ -45,6 +55,7 @@ signals:
      * @param   QString     Name of the game
      * @param   QString     Name of black player
      * @param   QString     Name of white player
+     * @param   float       komi
      */
     void signal_newgame(QString gamename, QString blackplayername, QString whiteplayername, float komi);
 

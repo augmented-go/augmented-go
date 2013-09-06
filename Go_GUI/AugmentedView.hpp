@@ -10,6 +10,13 @@ class AugmentedView : public QLabel
 {
     Q_OBJECT
 public:
+
+    /**
+     * @brief	Constructor
+     *          Sets its parent widget,
+     *          Sets the alignment of its content to center
+     *          Sets up the Augmented Logo as its standard picture it shows and resizes it
+     */
     AugmentedView(QWidget *parent = 0) {
         this->setParent(parent);
         this->setAlignment(Qt::AlignCenter);
