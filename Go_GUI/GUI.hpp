@@ -13,6 +13,9 @@
 #include "AugmentedView.hpp"
 #include "VirtualView.hpp"
 
+/**
+ * Everything related to Qt Gui
+ */
 namespace Go_GUI {
 class ChangeScanRateDialog;
 
@@ -46,7 +49,7 @@ private:
 
     // Pointer to the game board, will be set & cached in the slot "slot_newGameData".
     // This pointer will be valid until the GUI exits the application or the backend sends a new one.
-    const GoBackend::Game* go_game;
+    const Go_Backend::Game* go_game;
 
     /**
      * @brief	Sets initial settings like the content of views, texts and windows
@@ -105,7 +108,7 @@ public slots:
      *          If new game data is sent to GUI, refresh display of current player and captured stones.
      * @param   game     new game representation
      */
-    void slot_newGameData(const GoBackend::Game* game);
+    void slot_newGameData(const Go_Backend::Game* game);
 
     /**
      * @brief   SLOT "Show finished game results"

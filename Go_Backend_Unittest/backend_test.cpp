@@ -13,10 +13,10 @@
 #include <fstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-namespace GoBackendGameTest
+namespace Go_BackendGameTest
 {
-    using GoBackend::Game;
-    using GoBackend::UpdateResult;
+    using Go_Backend::Game;
+    using Go_Backend::UpdateResult;
     using SgPointUtil::Pt;
     using std::string;
 

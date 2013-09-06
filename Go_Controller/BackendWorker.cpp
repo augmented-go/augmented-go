@@ -7,7 +7,7 @@
 #include "SgPoint.h"
 #include "SgSystem.h"
 
-namespace Go_AR {
+namespace Go_Controller {
 
 // converts a cv::Mat to a QImage
 // inspired from http://www.qtforum.de/forum/viewtopic.php?t=9721
@@ -65,7 +65,7 @@ void BackendWorker::scan() {
     auto scan_result = _scanner.scanCamera(setup, _cached_board_size, image);
 
     using Go_Scanner::ScanResult;
-    using GoBackend::UpdateResult;
+    using Go_Backend::UpdateResult;
 
     switch (scan_result) {
     case ScanResult::Success:
@@ -239,4 +239,4 @@ void BackendWorker::changeScanningRate(int milliseconds) {
     _scan_timer.setInterval(milliseconds);
 }
 
-} // namespace Go_AR
+} // namespace Go_Controller

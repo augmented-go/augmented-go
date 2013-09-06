@@ -12,7 +12,7 @@
 #include "SgProp.h"
 #include "GoModBoard.h"
 
-namespace GoBackend {
+namespace Go_Backend {
 Game::Game()
     : _go_game(),
       _game_finished(false),
