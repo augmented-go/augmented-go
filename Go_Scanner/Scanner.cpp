@@ -6,8 +6,6 @@
 
 #include <iostream>
 
-#define ENABLE_DEBUG_IMAGE
-
 namespace Go_Scanner {
 using namespace cv;
 using namespace std;

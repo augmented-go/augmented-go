@@ -1,4 +1,7 @@
 
+# enable loading a debugging image if no webcam is installed
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DENABLE_DEBUG_IMAGE")
+
 SET(scanner_SOURCE
     Scanner.cpp
     detect_board.cpp
