@@ -70,6 +70,14 @@ bool Game::init(int size, GoSetup setup, GoRules rules) {
     return true;
 }
 
+void Game::init(SgNode* game_tree) {
+    _go_game.Init(game_tree);
+
+    // fast forward to latest move
+    while (canNavigateHistory(SgNode::Direction::NEXT))
+        navigateHistory(SgNode::Direction::NEXT);
+}
+
 const GoBoard& Game::getBoard() const {
     return _go_game.Board();
 }
@@ -325,9 +333,10 @@ bool Game::saveGame(string file_path, string name_black, string name_white, stri
     return true;
 }
 
-bool Game::loadGame(string file_path) {
+SgNode* Game::loadGame(string file_path) {
     std::ifstream file(file_path.c_str());
     if (!file.is_open()) {
+        // @todo(jschmer): support better diagnostics such as throwing an exception like FAILED_TO_OPEN_FILE
         return false;
     }
 
@@ -335,28 +344,11 @@ bool Game::loadGame(string file_path) {
     auto root_node = reader.ReadGame();
 
     if (!root_node->HasProp(SG_PROP_SIZE)) {
-        // @todo(jschmer): support better diagnostics such as ERROR_NOT_SUPPORTED_BOARD_SIZE
+        // @todo(jschmer): support better diagnostics such as throwing an exception like MISSING_BOARD_SIZE
         return false;
     }
 
-    auto size = 0;
-    if (!root_node->GetIntProp(SG_PROP_SIZE, &size)) {
-        // @todo(jschmer): support better diagnostics such as ERROR_NOT_SUPPORTED_BOARD_SIZE
-        return false;
-    }
-
-    if (size != 9 && size != 13 && size != 19) {
-        // @todo(jschmer): support better diagnostics such as ERROR_NOT_SUPPORTED_BOARD_SIZE
-        return false;
-    }
-
-    _go_game.Init(root_node);
-
-    // fast forward to latest move
-    while (canNavigateHistory(SgNode::Direction::NEXT))
-        navigateHistory(SgNode::Direction::NEXT);
-
-    return true;
+    return root_node;
 }
 
 std::string Game::finishGame() {

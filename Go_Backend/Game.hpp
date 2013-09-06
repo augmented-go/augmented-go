@@ -74,6 +74,7 @@ public:
      *              true  - init successful
      */
     bool init(int size, GoSetup setup = GoSetup(), GoRules rules = GoRules(0, GoKomi(6.5), true, true));
+    void init(SgNode* game_tree);
 
     /**
      * @brief       Updates the game with the given setup. Tries to extract a valid move from the setup.
@@ -104,10 +105,12 @@ public:
     bool saveGame(string file_path, string name_black = "", string name_white = "", string game_name = "");
 
     /**
-     * @brief        Overwrites the current game state with the game in a sgf file.
-     * @returns      false if the file could not be opened
+     * @brief        Overwrites the current game state with the game in a sgf file. The board size has to be defined
+     *               in the sgf.
+     * @returns      A pointer to the loaded game tree or nullptr if there was an error. Use this pointer to initialize the game.
+     *               Errors can be: Failed to open file or missing board size information in the sgf file.
      */
-    bool loadGame(string file_path);
+    SgNode* loadGame(string file_path);
 
 
     /**
