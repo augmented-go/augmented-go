@@ -334,6 +334,22 @@ bool Game::loadGame(string file_path) {
     SgGameReader reader(file);
     auto root_node = reader.ReadGame();
 
+    if (!root_node->HasProp(SG_PROP_SIZE)) {
+        // @todo(jschmer): support better diagnostics such as ERROR_NOT_SUPPORTED_BOARD_SIZE
+        return false;
+    }
+
+    auto size = 0;
+    if (!root_node->GetIntProp(SG_PROP_SIZE, &size)) {
+        // @todo(jschmer): support better diagnostics such as ERROR_NOT_SUPPORTED_BOARD_SIZE
+        return false;
+    }
+
+    if (size != 9 && size != 13 && size != 19) {
+        // @todo(jschmer): support better diagnostics such as ERROR_NOT_SUPPORTED_BOARD_SIZE
+        return false;
+    }
+
     _go_game.Init(root_node);
 
     // fast forward to latest move
