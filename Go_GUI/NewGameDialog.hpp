@@ -7,6 +7,8 @@
 #include "ui_NewGameDialog.h"
 #include "GUI.hpp"
 
+namespace Go_GUI {
+
 /**
  * @class   NewGameDialog
  * @brief   The NewGameDialog is part of Augmented-Go Gui.  Uses the NewGameDialog.ui
@@ -62,3 +64,5 @@ signals:
 private:
     Ui::Dialog ui_newgame;
 };
+
+}

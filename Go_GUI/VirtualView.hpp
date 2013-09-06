@@ -9,6 +9,8 @@
 class GoBoard;
 class QGLSceneNode;
 
+namespace Go_GUI {
+
 /**
  * @class   VirtualView
  * @brief   The VirtualView is part of Augmented-Go Gui.
@@ -109,3 +111,5 @@ private:
      */
     void mouseMoveEvent(QMouseEvent* event);
 };
+
+}

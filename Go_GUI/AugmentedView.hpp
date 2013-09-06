@@ -6,6 +6,8 @@
 #include <QPixmap>
 #include <QMessageBox>
 
+namespace Go_GUI {
+
 class AugmentedView : public QLabel
 {
     Q_OBJECT
@@ -59,3 +61,5 @@ public:
 private:
     QPixmap picture;
 };
+
+}
