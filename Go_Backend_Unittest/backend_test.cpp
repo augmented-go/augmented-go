@@ -905,30 +905,15 @@ namespace Go_BackendGameTest
             Game go_game;
             go_game.init(size, setup);
 
-            // illegal move: white moved while blacks turn
-            s = "....\n"
-                ".XO.\n"
-                "O...\n"
-                ".O..";
-            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
-            go_game.update(new_setup);
-
-            auto diff = go_game.getDifferences();
-            for (auto iter = SgSetIterator(diff); iter; ++iter) {
-                auto point = *iter;
-
-                Assert::IsTrue(point == Pt(3, 3));
-            }
-
             // illegal move: black removes a white stone
             s = "....\n"
                 ".X..\n"
                 "....\n"
                 ".O..";
-            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             go_game.update(new_setup);
 
-            diff = go_game.getDifferences();
+            auto diff = go_game.getDifferences();
             for (auto iter = SgSetIterator(diff); iter; ++iter) {
                 auto point = *iter;
 
