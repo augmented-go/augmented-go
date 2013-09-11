@@ -2641,8 +2641,6 @@
     <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="threshold_action"/>
-    <addaction name="rules_action"/>
     <addaction name="scannerdebugimage_action"/>
     <addaction name="virtual_game_mode_action"/>
     <addaction name="scanning_rate_action"/>
