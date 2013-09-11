@@ -8,6 +8,13 @@
 
 namespace Go_GUI {
 
+/**
+ * @class   AugmentedView
+ * @brief   The AugmentedView is part of Augmented-Go Gui.
+ *          The view shows the camera picture (if a camera is connected) or the augmented logo.
+ *			If an error occurs an error message is shown on top of the camera picture.
+ *          If the game is in virtual mode, the user can place stones by clicking on the board.
+ */
 class AugmentedView : public QLabel
 {
     Q_OBJECT
