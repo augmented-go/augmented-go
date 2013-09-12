@@ -59,8 +59,17 @@
    <property name="autoFillBackground">
     <bool>true</bool>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1">
-    <property name="margin">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
@@ -275,11 +284,20 @@
       <property name="autoFillBackground">
        <bool>true</bool>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0">
        <property name="spacing">
         <number>6</number>
        </property>
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -330,20 +348,68 @@
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="2,1,8,2">
+         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,2,1,8,2">
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="margin">
+          <property name="leftMargin">
            <number>0</number>
           </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="history_buttons">
+            <item>
+             <widget class="QPushButton" name="backward_button">
+              <property name="font">
+               <font>
+                <family>From Where You Are</family>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Backward</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="forward_button">
+              <property name="font">
+               <font>
+                <family>From Where You Are</family>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Forward</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
           <item>
            <widget class="QWidget" name="widget" native="true">
             <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,1">
              <property name="spacing">
               <number>0</number>
              </property>
-             <property name="margin">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
               <number>0</number>
              </property>
              <item>
@@ -352,7 +418,16 @@
                 <property name="spacing">
                  <number>0</number>
                 </property>
-                <property name="margin">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
                  <number>0</number>
                 </property>
                 <item>
@@ -425,7 +500,16 @@
                 </font>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
-                <property name="margin">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
                  <number>0</number>
                 </property>
                 <item>
@@ -546,7 +630,16 @@
                 <property name="spacing">
                  <number>6</number>
                 </property>
-                <property name="margin">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
                  <number>0</number>
                 </property>
                 <item>
@@ -2552,6 +2645,7 @@
     <addaction name="rules_action"/>
     <addaction name="scannerdebugimage_action"/>
     <addaction name="virtual_game_mode_action"/>
+    <addaction name="scanning_rate_action"/>
    </widget>
    <widget class="QMenu" name="board_detection_menu">
     <property name="title">
@@ -2606,7 +2700,7 @@
   </action>
   <action name="manually_action">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Manually</string>
@@ -2614,7 +2708,7 @@
   </action>
   <action name="automatic_action">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Automatically</string>
@@ -2639,6 +2733,11 @@
   <action name="info_action">
    <property name="text">
     <string>Info</string>
+   </property>
+  </action>
+  <action name="scanning_rate_action">
+   <property name="text">
+    <string>Scanning Rate</string>
    </property>
   </action>
  </widget>

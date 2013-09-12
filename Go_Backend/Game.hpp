@@ -5,10 +5,15 @@
 #include "GoGame.h"
 #include <string>
 
-
-namespace GoBackend {
+/**
+ * Classes for representing a go game
+ */
+namespace Go_Backend {
 using std::string;
 
+/**
+ * @brief   Result types of a game update operation
+ */
 enum class UpdateResult {
     /**
      * The internal board state after the update() call does not match the real life board.
@@ -22,35 +27,38 @@ enum class UpdateResult {
     // Illegal due to removing or adding multiple stones.
 
     /**
+     * There are still stones left to capture.
+     */
+    ToCapture,
+
+    /**
      * Internal board matches real life board.
      */
     Legal
 };
 
 /**
- * Basic game class to play and keep track of a game of go. One instance handles one
- * game of go. 
- * The board locations begin at (1,1) and go up to max. (19,19), depending on the
- * board size. These points are represented by the fuego type 'SgPoint'.
- * The fuego type 'GoSetup' is used for updating the board. GoSetup uses
- * 'SgPoints' to add stones to such a setup. The game then automatically tries to read
- * a move out of the current and updated board.
- *
- * The rules are:
- *   Handicap: 0
- *   Scoring: Japanese
- *   Komi: 6.5
- *   2 Passes end a game
- *   
+ * @brief   Basic game class to play and keep track of a game of go. One instance handles one
+ *          game of go.\n
+ *          The board locations begin at (1,1) and go up to max. (19,19), depending on the
+ *          board size. These points are represented by the fuego type 'SgPoint'.
+ *          The fuego type 'GoSetup' is used for updating the board. GoSetup uses
+ *          'SgPoints' to add stones to such a setup. The game then automatically tries to read
+ *          a move out of the current and updated board.
+ *          
  * Usage Example:
- *   Game game;
- *   GoSetup setup;
- *   setup.AddWhite(SgPointUtil::Pt(1, 1));
+   \code{.cpp}  
+     Game game;
+     GoSetup setup;
+     setup.AddWhite(SgPointUtil::Pt(1, 1));
+   
+     game.init(9, setup);
+   
+     setup.AddBlack(SgPointUtil::Pt(2, 2));
+     game.update(setup);
+   \endcode
  *
- *   game.init(9, setup);
  *
- *   setup.AddBlack(SgPointUtil::Pt(2, 2));
- *   game.update(setup);
  */
 class Game {
 
@@ -69,7 +77,7 @@ public:
      * @param[in]   size    board size (size x size)
      * @param[in]   setup   initial board setup
      * @param[in]   rules   game rules for this setup/game, 
-                            only allows a handicap of 0, the placement of handicap stones is handled in a differnt way
+                            ignores handicap setting, the placement of handicap stones is handled in a differnt way
      * @returns     false - the setup contains invalid stones\n
      *              true  - init successful
      */
@@ -78,20 +86,29 @@ public:
 
     /**
      * @brief       Updates the game with the given setup. Tries to extract a valid move from the setup.
-     *              Note: Ignores current player information in setup. 
+     *              Note: Ignores current player information in setup.
      * @param[in]   setup   new board setup
      * @returns     See UpdateResult class. Also returns Illegal when the setup includes invalid stones.
      */
     UpdateResult update(GoSetup setup);
 
     /**
+     * @brief       Gets the differences of the last updated setup to the current internal board.
+     *              Should be used for error displaying if there was an illegal move.
+     * @returns     An SgPointSet of the stones that are illegal.
+     */
+    SgPointSet getDifferences() const;
+
+
+    /**
      * @brief       Plays a move at given position for the current player.
+     * @param[in]   position    position on the board to play to
      * @returns     Whether the move was legal or not.
      */
     UpdateResult playMove(SgPoint position);
 
     /**
-     * @brief       Get current board information
+     * @brief       Get current board information.
      * @returns     reference to current board instance
      */
     const GoBoard& getBoard() const;
@@ -100,7 +117,7 @@ public:
      * @brief        Writes the current game state to a sgf file.
      *               Names for players and game are only added to the file if not empty.
      *               Also includes the current date.
-     * @returns      false if the file could not be opened
+     * @returns      false if the file could not be opened, true otherwise
      */
     bool saveGame(string file_path, string name_black = "", string name_white = "", string game_name = "");
 
@@ -133,7 +150,7 @@ public:
      * @brief        Returns the result of the game in a standard way,
      *               for example W+1.5 (White wins by 1.5 moku)
      *               or B+R (Black wins by resign)
-     *               or 0 for a drawn game
+     *               or 0 for a drawn game.\n
      *               If the game was not ended properly, this returns an empty string.
      *               Also doesn't consider any dead stones!
      */
@@ -142,20 +159,23 @@ public:
     /**
      * @brief       Checks if the game has ended. A game ends if a player resigns or if both player
      *              have played a pass.
+     * @returns     true if the game has ended, false otherwise
      */
     bool hasEnded() const;
 
-
     /** 
-     * @brief        Navigates the history in the given direction and updates the board accordingly.
-                     Make sure that going in that direction is even possible, by calling canNavigateHistory.
-     */
-    void navigateHistory(SgNode::Direction dir);
-
-    /** 
-     * @brief        Returns whether there is actually any history in the given direction.
+     * @brief       Returns whether there is actually any history in the given direction.
+     * @param[in]   dir     Direction to navigate
+     * @returns     true if there is a game state in the given direction, false otherwise
      */
     bool canNavigateHistory(SgNode::Direction dir) const;
+
+    /** 
+     * @brief       Navigates the history in the given direction and updates the board accordingly.
+     *              Make sure that going in that direction is even possible, by calling canNavigateHistory.
+     * @param[in]   dir     Direction to navigate
+     */
+    void navigateHistory(SgNode::Direction dir);
 
 private:
     // Not implemented
@@ -193,6 +213,7 @@ private:
     bool _game_finished; // we need this variable because fuego doesn't tag a game
                          // finished if a player resigns
 
+    SgPointSet _differences; // differences of the last setup that was updated to the current board
     bool _while_capturing;
 };
 

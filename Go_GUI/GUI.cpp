@@ -10,6 +10,7 @@
 #include "Game.hpp"
 
 #include "NewGameDialog.hpp"
+#include "ChangeScanRateDialog.hpp"
 #include "VirtualView.hpp"
 #include "AugmentedView.hpp"
 
@@ -17,7 +18,10 @@
 namespace Go_GUI {
     
 
-GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
+GUI::GUI(QWidget *parent)
+    : QMainWindow(parent),
+    go_game(nullptr),
+    current_scanning_fps(1)
 {
     ui_main.setupUi(this);
     
@@ -58,10 +62,13 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
+    connect(ui_main.backward_button,    &QPushButton::clicked,    this, &GUI::slot_HistoryBackward);
+    connect(ui_main.forward_button,     &QPushButton::clicked,    this, &GUI::slot_HistoryForward);
     connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
     connect(ui_main.scannerdebugimage_action,	&QAction::triggered,	this, &GUI::slot_toggleScannerDebugImage);
     
    
+    connect(ui_main.scanning_rate_action, &QAction::triggered,	this, &GUI::slot_MenuChangeScanRate);
     // setting initial values
     this->init();
 }
@@ -107,8 +114,8 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
 //////////
 
 void GUI::slot_ButtonNewGame(){
-    NewGameDialog* newgame = new NewGameDialog(this);
-    newgame->exec();
+    NewGameDialog newgame(this);
+    newgame.exec();
 }
 
 void GUI::slot_ButtonResign(){
@@ -122,7 +129,12 @@ void GUI::slot_ButtonPass(){
 }
 
 void GUI::slot_ViewSwitch(){
+
+    if (go_game == nullptr)
+        return;
+
     ui_main.viewswitch_button->setIcon(this->switchbuttonpressed_icon);
+    auto differences = go_game->getDifferences();
 
     if (ui_main.big_container->toolTip() == "virtual view"){
 
@@ -134,7 +146,7 @@ void GUI::slot_ViewSwitch(){
 
         // new style
         virtual_view->setParent(ui_main.small_container);
-        virtual_view->createAndSetScene(ui_main.small_container->size(), &(go_game->getBoard()));
+            virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &(go_game->getBoard()));
         ui_main.small_container->setToolTip("virtual view");
         virtual_view->show();
         
@@ -147,7 +159,7 @@ void GUI::slot_ViewSwitch(){
         augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
         virtual_view->setParent(ui_main.big_container);
-        virtual_view->createAndSetScene(ui_main.big_container->size(), &(go_game->getBoard()));
+        virtual_view->createAndSetScene(ui_main.big_container->size(), differences, &(go_game->getBoard()));
         ui_main.big_container->setToolTip("virtual view");
         virtual_view->show(); 
     }
@@ -156,6 +168,15 @@ void GUI::slot_ViewSwitch(){
 void GUI::slot_ViewSwitch_released(){
     ui_main.viewswitch_button->setIcon(this->switchbutton_icon);
 }
+
+void GUI::slot_HistoryBackward(){
+    emit signal_navigateHistory(SgNode::Direction::PREVIOUS);
+}
+
+void GUI::slot_HistoryForward(){
+    emit signal_navigateHistory(SgNode::Direction::NEXT);
+}
+
 
 void GUI::slot_MenuOpen(){
     // if at least one move was made -> ask if user wants to save
@@ -226,6 +247,11 @@ void GUI::slot_MenuInfo(){
     QMessageBox::about(this, "Info", output.c_str());
 }
 
+void GUI::slot_MenuChangeScanRate() {
+    ChangeScanRateDialog scan_rate_dialog(this, current_scanning_fps);
+    scan_rate_dialog.exec();
+}
+
 void GUI::slot_BoardDetectionManually() {
     emit signal_boardDetectionManually();
 }
@@ -273,6 +299,15 @@ void GUI::slot_toggleScannerDebugImage()
 }
 
 
+void GUI::slot_changeScanRate(int fps) {
+    current_scanning_fps = fps;
+
+    // convert fps to ms
+    auto milliseconds = fps == 0 ? 0 : 1000.f / current_scanning_fps;
+
+    emit signal_new_scanning_rate(milliseconds);
+}
+
 //////////
 //Public Slots
 //////////
@@ -287,12 +322,17 @@ void GUI::slot_newImage(QImage image) {
         ui_main.manually_action->setEnabled(true);
     }
 
-void GUI::slot_newGameData(const GoBackend::Game* game) {
+void GUI::slot_newGameData(const Go_Backend::Game* game) {
+
     // update internal pointer if the board has been changed
     if (go_game != game)
         go_game = game;
 
+    if (go_game == nullptr)
+        return;
+
     auto& board = go_game->getBoard();
+    auto differences = go_game->getDifferences();
 
     auto current_player = board.ToPlay();
 
@@ -320,11 +360,15 @@ void GUI::slot_newGameData(const GoBackend::Game* game) {
 
     // refresh virtual view
     if (ui_main.big_container->toolTip() == "virtual view")
-        virtual_view->createAndSetScene(ui_main.big_container->size(), &board);
-    
+        virtual_view->createAndSetScene(ui_main.big_container->size(), differences, &board);
+
     else if (ui_main.big_container->toolTip() == "augmented view")
-        virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
-    
+        virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &board);
+
+    // disable navigation button if there is no history in that direction
+    ui_main.forward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::NEXT));
+    ui_main.backward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::PREVIOUS));
+
     printf(">>> New Game data! <<<\n");
 }    
 

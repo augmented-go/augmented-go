@@ -13,10 +13,10 @@
 #include <fstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-namespace GoBackendGameTest
+namespace Go_BackendGameTest
 {
-    using GoBackend::Game;
-    using GoBackend::UpdateResult;
+    using Go_Backend::Game;
+    using Go_Backend::UpdateResult;
     using SgPointUtil::Pt;
     using std::string;
 
@@ -373,7 +373,7 @@ namespace GoBackendGameTest
 
             auto result = go_game.update(new_setup);
             // internal board and real life board do not match
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
 
             // internal board state should automatically removes stones
             s = "..OX\n"
@@ -396,7 +396,7 @@ namespace GoBackendGameTest
                 ".X..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
         }
 
         TEST_METHOD(after_capturing_allow_playing_where_caputred_stones_were) {
@@ -516,11 +516,11 @@ namespace GoBackendGameTest
                             "OX..");
             setup = GoSetupUtil::CreateSetupFromString(s, size);
             auto result = go_game.update(setup);
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
 
-            // another update with still illegal setup
+            // another update with still illegal/not captured stones setup
             result = go_game.update(setup);
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
         }
 
         TEST_METHOD(can_get_board_information) {
@@ -893,6 +893,119 @@ namespace GoBackendGameTest
             Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
+        TEST_METHOD(can_get_differences_of_faulty_moves) {
+            std::string s(  "....\n"
+                            ".X..\n"
+                            "O...\n"
+                            ".O..");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // illegal move: black removes a white stone
+            s = "....\n"
+                ".X..\n"
+                "....\n"
+                ".O..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            auto diff = go_game.getDifferences();
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                auto point = *iter;
+
+                Assert::IsTrue(point == Pt(1, 2));
+            }
+
+            // illegal move: black removes a black stone
+            s = "....\n"
+                ".X..\n"
+                "O...\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                auto point = *iter;
+
+                Assert::IsTrue(point == Pt(2, 3));
+            }
+
+            // illegal move: black plays suicide
+            s = "....\n"
+                ".X..\n"
+                "O...\n"
+                "XO..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                auto point = *iter;
+
+                Assert::IsTrue(point == Pt(1, 1));
+            }
+
+            // illegal move: black plays two stones
+            s = "....\n"
+                ".X..\n"
+                "O...\n"
+                ".OXX";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            std::vector<SgPoint> real_faulty_stones;
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                real_faulty_stones.push_back(*iter);
+            }
+
+            std::vector<SgPoint> expected_faulty_stones;
+            expected_faulty_stones.push_back(Pt(3,1));
+            expected_faulty_stones.push_back(Pt(4,1));
+         
+            Assert::IsTrue(expected_faulty_stones == real_faulty_stones);
+        }
+
+        TEST_METHOD(no_differences_after_valid_moves) {
+            std::string s(  "....\n"
+                            ".X..\n"
+                            "O...\n"
+                            ".O..");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // black moves
+            s = "....\n"
+                "XX..\n"
+                "O...\n"
+                ".O..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            auto diff = go_game.getDifferences();
+            Assert::IsTrue(diff.IsEmpty());
+
+            // white moves
+            s = "....\n"
+                "XX..\n"
+                "O.O.\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            Assert::IsTrue(diff.IsEmpty());
+        }
+
         TEST_METHOD(allow_move_from_black_after_init_with_setup) {
             GoSetup setup;
             setup.AddWhite(Pt(1, 2));
@@ -927,7 +1040,6 @@ namespace GoBackendGameTest
             Assert::IsTrue(result == UpdateResult::Illegal);
         }
     };
-    
     
     TEST_CLASS(GoRulesTest)
     {
@@ -1019,8 +1131,6 @@ namespace GoBackendGameTest
             Assert::AreEqual("W+7.5", res.c_str());
         }
     };
-    
-
     
     TEST_CLASS(SgfTest)
     {

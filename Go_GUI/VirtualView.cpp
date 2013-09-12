@@ -9,6 +9,7 @@
 
 #include <GoBoard.h>
 
+namespace Go_GUI {
 
 VirtualView::VirtualView(QWidget *parent){
     this->setParent(parent);
@@ -20,26 +21,29 @@ VirtualView::VirtualView(QWidget *parent){
     this->setMouseTracking(true);
     this->setting_stone_valid = false;
 
-    // directories of the images
+    // Directories of the images
     QString texture_path = "res/textures/";
     QString board_directory_size9 = QString(texture_path + "go_board_" + QString::number(9)+".png");
     QString board_directory_size13 = QString(texture_path + "go_board_" + QString::number(13)+".png");
     QString board_directory_size19 = QString(texture_path + "go_board_" + QString::number(19)+".png");
     QString black_stone_directory = QString(texture_path + "black_stone.png");
     QString white_stone_directory = QString(texture_path + "white_stone.png");
+    QString illegal_stone_directory = QString(texture_path + "illegal_stone.png");
 
-    // loads the images and checks if the image could loaded
+    // Loads the images to QImages
     board_image_size9 = QImage(board_directory_size9);
     board_image_size13 = QImage(board_directory_size13);
     board_image_size19 = QImage(board_directory_size19);
     black_stone_image = QImage(black_stone_directory);
     white_stone_image = QImage(white_stone_directory);
-
+    illegal_stone_image = QImage(illegal_stone_directory);
+    // initialize ghost_stone
+    this->ghost_stone = new QGraphicsEllipseItem(QRectF());
 }
 VirtualView::~VirtualView(){
 }
 
-void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
+void VirtualView::createAndSetScene(QSize size, SgPointSet difference_points, const GoBoard* game_board)
 {
     if (game_board == nullptr)
         return;
@@ -50,7 +54,7 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     scene.setSceneRect(0,0, size.width(), size.height());
     fitInView(this->sceneRect());
 
-    // loads the board size and checks if its a valid size
+    // Loads the board size and checks if its a valid size
     board_size = game_board->Size();
 
     QImage board_image;
@@ -69,13 +73,6 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
         QMessageBox::warning(this, "board size error", "invalid size of the board!");
     }
 
-    if (board_image.isNull())
-        QMessageBox::warning(this, "file loading error", "could not load board image!");
-    if (black_stone_image.isNull())
-        QMessageBox::warning(this, "file loading error", "could not load black stone image!");
-    if (white_stone_image.isNull())
-        QMessageBox::warning(this, "file loading error", "could not laod white stone image!");
-
     // scale_x and scale_y are the scaling factors of the virtual board
     float scale_x = size.width() / float(board_image.width());
     float scale_y = size.height() / float(board_image.height());
@@ -83,8 +80,7 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     cell_width = static_cast<qreal>(board_image.width()) / (board_size+1);
     cell_height = static_cast<qreal>(board_image.height()) / (board_size+1);
     
-
-    // scale the images to the right size
+    // Scale the images to the right size
     QPixmap board_image_scaled = QPixmap::fromImage(board_image);
     board_image_scaled = board_image_scaled.scaled(size.width(),size.height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
@@ -94,19 +90,13 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
     QPixmap white_stone_image_scaled = QPixmap::fromImage(white_stone_image);
     white_stone_image_scaled = white_stone_image_scaled.scaled(white_stone_image.width()*scale_x, white_stone_image.height()*scale_y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-    if (board_image_scaled.isNull())
-        QMessageBox::warning(this, "image scale error", "could not scale board!");
-    if (black_stone_image_scaled.isNull())
-        QMessageBox::warning(this, "image scale error", "could not scale black stone!");
-    if (white_stone_image_scaled.isNull())
-        QMessageBox::warning(this, "image scale error", "could not scale white stone!");
+    QPixmap illegal_stone_image_scaled = QPixmap::fromImage(illegal_stone_image);
+    illegal_stone_image_scaled = illegal_stone_image_scaled.scaled(illegal_stone_image.width()*scale_x, illegal_stone_image.height()*scale_y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-    // add the board image to the scene
+    // Add the board image to the scene
     scene.addItem(new QGraphicsPixmapItem(board_image_scaled));
 
-    
-
-    // get all stone positions for each color and add them on the right position to the scene
+    // Get all stone positions for each color and add them on the right position to the scene
     auto black_stones = game_board->All(SG_BLACK);
     for (auto iter = SgSetIterator(black_stones); iter; ++iter) {
         auto point = *iter;
@@ -115,7 +105,7 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
         auto col = SgPointUtil::Col(point) - 1;
         auto row = SgPointUtil::Row(point) - 1;
 
-        //Vertically mirroring stones 
+        // Vertically mirroring stones 
         row = board_size - row - 1;        
 
         QGraphicsPixmapItem* black_stone_item = new QGraphicsPixmapItem(black_stone_image_scaled);
@@ -135,15 +125,37 @@ void VirtualView::createAndSetScene(QSize size, const GoBoard * game_board)
         //Vertically mirroring stones 
         row = board_size - row - 1;
 
-        QGraphicsPixmapItem* black_stone_item = new QGraphicsPixmapItem(white_stone_image_scaled);
-        black_stone_item->setPos(cell_width * scale_x * col, cell_height * scale_y * row);
-        black_stone_item->setOffset(cell_width * scale_x - white_stone_image_scaled.width()/2, cell_height * scale_y - black_stone_image_scaled.height()/2);
-        scene.addItem(black_stone_item);
+        QGraphicsPixmapItem* white_stone_item = new QGraphicsPixmapItem(white_stone_image_scaled);
+        white_stone_item->setPos(cell_width * scale_x * col, cell_height * scale_y * row);
+        white_stone_item->setOffset(cell_width * scale_x - white_stone_image_scaled.width()/2, cell_height * scale_y - white_stone_image_scaled.height()/2);
+        scene.addItem(white_stone_item);
     }
     
+    // Get all differences between real board and virtual board and display them
+    for (auto iter = SgSetIterator(difference_points); iter; ++iter) {
+        auto point = *iter;
+
+        // Reducing by -1 because board starts at 1,1
+        auto col = SgPointUtil::Col(point) - 1;
+        auto row = SgPointUtil::Row(point) - 1;
+
+        //Vertically mirroring stones 
+        row = board_size - row - 1;
+
+        QGraphicsPixmapItem* illegal_stone_item = new QGraphicsPixmapItem(illegal_stone_image_scaled);
+        illegal_stone_item->setPos(cell_width * scale_x * col, cell_height * scale_y * row);
+        illegal_stone_item->setOffset(cell_width * scale_x - illegal_stone_image_scaled.width()/2, cell_height * scale_y - illegal_stone_image_scaled.height()/2);
+        scene.addItem(illegal_stone_item);
+    }
+
+
+
     // Stone that could be placed on board when user chooses to
     if (this->virtual_game_mode){
-        this->ghost_stone = new QGraphicsEllipseItem(QRectF());
+
+        // scene is cleared and deleted ghost_stone. Here we have to create a new one!
+        ghost_stone = new QGraphicsEllipseItem(QRectF());
+        ghost_stone->setVisible(true);
         ghost_stone->setRect(selection_ellipse);
         QBrush ghost_brush = game_board->ToPlay() == SG_BLACK ? 
                             QBrush(Qt::GlobalColor::black):
@@ -168,6 +180,8 @@ void VirtualView::slot_setVirtualGameMode(bool checked){
     this->virtual_game_mode = checked;
     if (!checked && scene.isActive())
         scene.removeItem(ghost_stone);
+    if (checked && scene.isActive())
+        scene.addItem(ghost_stone);
 }
 
 void VirtualView::mousePressEvent(QMouseEvent* event){
@@ -234,10 +248,14 @@ void VirtualView::mouseMoveEvent(QMouseEvent* event){
         qreal ellipse_yPos = (pic_boarder_y * scale_y) + (board_y_coord * this->cell_height * scale_y) - (this->cell_height * scale_y)/2.0f;
 
         QRectF new_selection_ellipse = QRectF(ellipse_xPos, ellipse_yPos, this->cell_width * scale_x, this->cell_height * scale_y);
+        
+        ghost_stone->setVisible(true);
         ghost_stone->setRect(new_selection_ellipse);
         selection_ellipse = new_selection_ellipse;
 
         // save new mouse hover coordinates
         mouse_hover_coord = new_mouse_hover_coord;
     }
+}
+
 }
