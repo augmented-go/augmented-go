@@ -76,3 +76,8 @@ endif(MSVC11)
 # copies res folder to output directory
 file(COPY res DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
+# writes the sha1 of the current git head into the VERSION file and copies it to the output directory
+# automatically reruns on build when the head has changed
+include(cmake/GetGitRevisionDescription.cmake)
+get_git_head_revision(GIT_REFSPEC GIT_SHA1)
+configure_file("VERSION.in" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/VERSION")

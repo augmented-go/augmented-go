@@ -216,6 +216,18 @@ void GUI::slot_MenuInfo(){
     // Build date and time
     output += "This build of Augmented Go was compiled at " __DATE__ ", " __TIME__ ".\n";
 
+    std::string version;
+
+    // sha1 of the git commit this build is based on
+    QFile versionfile("VERSION");
+    if (versionfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        version = versionfile.readAll();
+    }
+    else {
+        version = "Could not find VERSION file.";
+    }
+    output += version + "\n";
+
     // Copyright
     std::string year = __DATE__;
     year = year.substr(year.find_last_of(" "));	// deleting day and month
