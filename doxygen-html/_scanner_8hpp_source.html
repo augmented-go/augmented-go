@@ -68,7 +68,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -99,8 +99,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>Go_Scanner {</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keywordtype">bool</span> scanner_main(<span class="keyword">const</span> cv::Mat&amp; camera_frame, GoSetup&amp; setup, <span class="keywordtype">int</span>&amp; board_size, <span class="keywordtype">bool</span>&amp; setDebugImg);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> ask_for_board_contour();</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">void</span> do_auto_board_detection();</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#a8eb43bcee000659e3cc174dbe11148f8">ask_for_board_contour</a>();</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#a1bf56c77b12799753771ca8dca4b2a5b">do_auto_board_detection</a>();</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
 <div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="namespace_go___scanner.html#a8ec5441a7b0a0212c839c4eba444d178">   22</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="namespace_go___scanner.html#a8ec5441a7b0a0212c839c4eba444d178">ScanResult</a> {</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    Success,</div>
@@ -130,7 +130,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___scanner_1_1_scanner.html#a8a590e012e6424bc300b14dbfdda3dce">Scanner::setDebugImage</a>();</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">bool</span> readCameraFrame(cv::Mat&amp; frame);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_go___scanner_1_1_scanner.html#abaaa083bfdc2ba8524599e305793c902">readCameraFrame</a>(cv::Mat&amp; frame);</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    cv::VideoCapture _camera;</div>
@@ -140,6 +140,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
 <div class="ttc" id="class_go___scanner_1_1_scanner_html_a8a590e012e6424bc300b14dbfdda3dce"><div class="ttname"><a href="class_go___scanner_1_1_scanner.html#a8a590e012e6424bc300b14dbfdda3dce">Go_Scanner::Scanner::setDebugImage</a></div><div class="ttdeci">void Scanner::setDebugImage()</div><div class="ttdoc">Sets the debug image of the Scanner as image for the GUI. </div></div>
+<div class="ttc" id="class_go___scanner_1_1_scanner_html_abaaa083bfdc2ba8524599e305793c902"><div class="ttname"><a href="class_go___scanner_1_1_scanner.html#abaaa083bfdc2ba8524599e305793c902">Go_Scanner::Scanner::readCameraFrame</a></div><div class="ttdeci">bool readCameraFrame(cv::Mat &amp;frame)</div></div>
+<div class="ttc" id="namespace_go___scanner_html_a1bf56c77b12799753771ca8dca4b2a5b"><div class="ttname"><a href="namespace_go___scanner.html#a1bf56c77b12799753771ca8dca4b2a5b">Go_Scanner::do_auto_board_detection</a></div><div class="ttdeci">void do_auto_board_detection()</div><div class="ttdoc">Calls the automatic board detection and shows the result in a new window. Prints an error to the cons...</div></div>
+<div class="ttc" id="namespace_go___scanner_html_a8eb43bcee000659e3cc174dbe11148f8"><div class="ttname"><a href="namespace_go___scanner.html#a8eb43bcee000659e3cc174dbe11148f8">Go_Scanner::ask_for_board_contour</a></div><div class="ttdeci">void ask_for_board_contour()</div><div class="ttdoc">Calls the manual board detection and shows the result in a new window. </div></div>
 <div class="ttc" id="namespace_go___scanner_html_a8ec5441a7b0a0212c839c4eba444d178"><div class="ttname"><a href="namespace_go___scanner.html#a8ec5441a7b0a0212c839c4eba444d178">Go_Scanner::ScanResult</a></div><div class="ttdeci">ScanResult</div><div class="ttdoc">Result types of a scan operation. </div><div class="ttdef"><b>Definition:</b> Scanner.hpp:22</div></div>
 <div class="ttc" id="class_go___scanner_1_1_scanner_html_a0af770a7d3c2d081dc76f390ea93a780"><div class="ttname"><a href="class_go___scanner_1_1_scanner.html#a0af770a7d3c2d081dc76f390ea93a780">Go_Scanner::Scanner::selectBoardManually</a></div><div class="ttdeci">void selectBoardManually()</div><div class="ttdoc">Displays a window to let the user select the go board manually. This call blocks until the user is fi...</div></div>
 <div class="ttc" id="class_go___scanner_1_1_scanner_html_af1ec79f13301fc166e37766a47566b2b"><div class="ttname"><a href="class_go___scanner_1_1_scanner.html#af1ec79f13301fc166e37766a47566b2b">Go_Scanner::Scanner::setNormalImage</a></div><div class="ttdeci">void Scanner::setNormalImage()</div><div class="ttdoc">Sets the image of the camera as image for the GUI. </div></div>
@@ -149,7 +152,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

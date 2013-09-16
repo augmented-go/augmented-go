@@ -62,7 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -88,6 +88,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_go___scanner_1_1_scanner-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Go_Scanner::Scanner Class Reference</div>  </div>
@@ -120,10 +122,58 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___scanner_1_1_scanner.html#a8a590e012e6424bc300b14dbfdda3dce">Scanner::setDebugImage</a> ()</td></tr>
 <tr class="memdesc:a8a590e012e6424bc300b14dbfdda3dce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the debug image of the <a class="el" href="class_go___scanner_1_1_scanner.html" title="TODO. ">Scanner</a> as image for the GUI. <br/></td></tr>
 <tr class="separator:a8a590e012e6424bc300b14dbfdda3dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a82bf4ef42010e9e6397f7bce0256b983"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a82bf4ef42010e9e6397f7bce0256b983"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Scanner</b> (const <a class="el" href="class_go___scanner_1_1_scanner.html">Scanner</a> &amp;)</td></tr>
+<tr class="separator:a82bf4ef42010e9e6397f7bce0256b983"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a047ea1c439229152cdfda75893205af3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a047ea1c439229152cdfda75893205af3"></a>
+<a class="el" href="class_go___scanner_1_1_scanner.html">Scanner</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="class_go___scanner_1_1_scanner.html">Scanner</a> &amp;)</td></tr>
+<tr class="separator:a047ea1c439229152cdfda75893205af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaaa083bfdc2ba8524599e305793c902"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___scanner_1_1_scanner.html#abaaa083bfdc2ba8524599e305793c902">readCameraFrame</a> (cv::Mat &amp;frame)</td></tr>
+<tr class="separator:abaaa083bfdc2ba8524599e305793c902"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:aa07c37131e204c221ecb20afbe5e809f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa07c37131e204c221ecb20afbe5e809f"></a>
+cv::VideoCapture&#160;</td><td class="memItemRight" valign="bottom"><b>_camera</b></td></tr>
+<tr class="separator:aa07c37131e204c221ecb20afbe5e809f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40bb64b7aeb9f6218a1b7807eafd06db"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a40bb64b7aeb9f6218a1b7807eafd06db"></a>
+cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>_last_frame</b></td></tr>
+<tr class="separator:a40bb64b7aeb9f6218a1b7807eafd06db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cdf831ac92edd318af1ddf436dc9d80"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1cdf831ac92edd318af1ddf436dc9d80"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_setDebugImg</b></td></tr>
+<tr class="separator:a1cdf831ac92edd318af1ddf436dc9d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TODO. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="abaaa083bfdc2ba8524599e305793c902"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Go_Scanner::Scanner::readCameraFrame </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>frame</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>true if a new image could be retrieved, false otherwise (camera disconnected) </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a9106e6764d11eb88f9534940dc73408d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -173,7 +223,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:03 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

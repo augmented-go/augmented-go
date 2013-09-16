@@ -62,7 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,6 +89,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-slots">Public Slots</a> &#124;
 <a href="#signals">Signals</a> &#124;
+<a href="#pri-slots">Private Slots</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_go___controller_1_1_backend_worker-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Go_Controller::BackendWorker Class Reference</div>  </div>
@@ -102,13 +105,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p><code>#include &lt;<a class="el" href="_backend_worker_8hpp_source.html">BackendWorker.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for Go_Controller::BackendWorker:</div>
+Collaboration diagram for Go_Controller::BackendWorker:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="class_go___controller_1_1_backend_worker.png" usemap="#Go_Controller::BackendWorker_map" alt=""/>
-  <map id="Go_Controller::BackendWorker_map" name="Go_Controller::BackendWorker_map">
-</map>
- </div></div>
+<div class="center"><img src="class_go___controller_1_1_backend_worker__coll__graph.png" border="0" usemap="#_go___controller_1_1_backend_worker_coll__map" alt="Collaboration graph"/></div>
+<map name="_go___controller_1_1_backend_worker_coll__map" id="_go___controller_1_1_backend_worker_coll__map">
+<area shape="rect" id="node3" href="class_go___scanner_1_1_scanner.html" title="TODO. " alt="" coords="99,5,249,32"/><area shape="rect" id="node4" href="class_go___backend_1_1_game.html" title="Basic game class to play and keep track of a game of go. One instance handles one game of go..." alt="" coords="274,5,413,32"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
@@ -172,6 +174,45 @@ Signals</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___controller_1_1_backend_worker.html#ab4f2d915696149ed51ce6259e0ba38c4">noCameraImage</a> () const </td></tr>
 <tr class="memdesc:ab4f2d915696149ed51ce6259e0ba38c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signals that no camera image could be retrieved. <br/></td></tr>
 <tr class="separator:ab4f2d915696149ed51ce6259e0ba38c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-slots"></a>
+Private Slots</h2></td></tr>
+<tr class="memitem:a70ae8a137c2b4571f307d0a0dd9f6a92"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a70ae8a137c2b4571f307d0a0dd9f6a92"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scan</b> ()</td></tr>
+<tr class="separator:a70ae8a137c2b4571f307d0a0dd9f6a92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a629bd4c12d93f43249b7ee1ec12b5782"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a629bd4c12d93f43249b7ee1ec12b5782"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>signalGuiGameHasEnded</b> () const </td></tr>
+<tr class="separator:a629bd4c12d93f43249b7ee1ec12b5782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada2100ea8737f0ec0bedfb5ec04c8ad6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada2100ea8737f0ec0bedfb5ec04c8ad6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>signalGuiGameDataChanged</b> () const </td></tr>
+<tr class="separator:ada2100ea8737f0ec0bedfb5ec04c8ad6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9892cafef7a8488a293541e33de33d7a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9892cafef7a8488a293541e33de33d7a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>virtualModeActive</b> () const </td></tr>
+<tr class="separator:a9892cafef7a8488a293541e33de33d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:adc05823effad2aecf16e52b3aac48dc6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adc05823effad2aecf16e52b3aac48dc6"></a>
+<a class="el" href="class_go___backend_1_1_game.html">Go_Backend::Game</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_game</b></td></tr>
+<tr class="separator:adc05823effad2aecf16e52b3aac48dc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a793419d7c1c9bcbf09e25436b34314f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a793419d7c1c9bcbf09e25436b34314f2"></a>
+<a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_scanner</b></td></tr>
+<tr class="separator:a793419d7c1c9bcbf09e25436b34314f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2851238e7a25a764c00f14e2192c64b8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2851238e7a25a764c00f14e2192c64b8"></a>
+QTimer&#160;</td><td class="memItemRight" valign="bottom"><b>_scan_timer</b></td></tr>
+<tr class="separator:a2851238e7a25a764c00f14e2192c64b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07187f89885b93088f4a91efc14dff16"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07187f89885b93088f4a91efc14dff16"></a>
+GoRules&#160;</td><td class="memItemRight" valign="bottom"><b>_new_game_rules</b></td></tr>
+<tr class="separator:a07187f89885b93088f4a91efc14dff16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a204467849e24feaaa2bc78f844ad116f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a204467849e24feaaa2bc78f844ad116f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_game_is_initialized</b></td></tr>
+<tr class="separator:a204467849e24feaaa2bc78f844ad116f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0db252f5d10cb1edaba452d24d5f82b9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0db252f5d10cb1edaba452d24d5f82b9"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>_cached_board_size</b></td></tr>
+<tr class="separator:a0db252f5d10cb1edaba452d24d5f82b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for the scanning- and game-update-loop.<br/>
@@ -582,7 +623,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

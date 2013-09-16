@@ -69,7 +69,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -92,8 +92,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_go___scanner_1_1lesser_point2f.html">lesserPoint2f</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_go___scanner_1_1lesser_point2fx.html">lesserPoint2fx</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">cv::Point2f comparison functor. Compares by y-value first and x-value second.<br/>
+ Needed for example for a std::map and sorting.  <a href="struct_go___scanner_1_1lesser_point2f.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___scanner_1_1_scanner.html">Scanner</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">TODO.  <a href="class_go___scanner_1_1_scanner.html#details">More...</a><br/></td></tr>
@@ -146,77 +146,75 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afcf29033d739cc1f3bea0d8d91b9cab7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afcf29033d739cc1f3bea0d8d91b9cab7"></a>
-cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>warpImage</b> (cv::Mat img, cv::Point2f p0, cv::Point2f p1, cv::Point2f p2, cv::Point2f p3)</td></tr>
+<tr class="memitem:afcf29033d739cc1f3bea0d8d91b9cab7"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#afcf29033d739cc1f3bea0d8d91b9cab7">warpImage</a> (cv::Mat img, cv::Point2f p0, cv::Point2f p1, cv::Point2f p2, cv::Point2f p3)</td></tr>
+<tr class="memdesc:afcf29033d739cc1f3bea0d8d91b9cab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">warpes an image  <a href="#afcf29033d739cc1f3bea0d8d91b9cab7">More...</a><br/></td></tr>
 <tr class="separator:afcf29033d739cc1f3bea0d8d91b9cab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a523c782dc1b86956cc3fa68a258fac6f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a523c782dc1b86956cc3fa68a258fac6f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>automatic_warp</b> (const cv::Mat &amp;input, cv::Point2f &amp;p0, cv::Point2f &amp;p1, cv::Point2f &amp;p2, cv::Point2f &amp;p3)</td></tr>
+<tr class="memitem:a523c782dc1b86956cc3fa68a258fac6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a523c782dc1b86956cc3fa68a258fac6f">automatic_warp</a> (const cv::Mat &amp;input, cv::Point2f &amp;p0, cv::Point2f &amp;p1, cv::Point2f &amp;p2, cv::Point2f &amp;p3)</td></tr>
+<tr class="memdesc:a523c782dc1b86956cc3fa68a258fac6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to automatically detect the corner points of the go board This function simply returns without modifying p0, .., p3 if the board couldn't be found.  <a href="#a523c782dc1b86956cc3fa68a258fac6f">More...</a><br/></td></tr>
 <tr class="separator:a523c782dc1b86956cc3fa68a258fac6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec335e2def53224e4f4a8563f235564a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aec335e2def53224e4f4a8563f235564a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#aec335e2def53224e4f4a8563f235564a">showImage</a> ()</td></tr>
+<tr class="memdesc:aec335e2def53224e4f4a8563f235564a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shows the selected points (through manual or automatic board detection) on a clone of the img0 in a new window. <br/></td></tr>
+<tr class="separator:aec335e2def53224e4f4a8563f235564a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc5fd791706bac67552670d879e239b9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afc5fd791706bac67552670d879e239b9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>releaseImg</b> (cv::Mat a, int x, int y)</td></tr>
 <tr class="separator:afc5fd791706bac67552670d879e239b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec335e2def53224e4f4a8563f235564a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aec335e2def53224e4f4a8563f235564a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>showImage</b> ()</td></tr>
-<tr class="separator:aec335e2def53224e4f4a8563f235564a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa40da7a238eff87fefed74289a1187f9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa40da7a238eff87fefed74289a1187f9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>showImage</b> (int *board_corner_X, int *board_corner_Y)</td></tr>
+<tr class="separator:aa40da7a238eff87fefed74289a1187f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20f91ab39370755e1ddb50cd80c9337d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a20f91ab39370755e1ddb50cd80c9337d"></a>
 cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>holdImg</b> (int x, int y)</td></tr>
 <tr class="separator:a20f91ab39370755e1ddb50cd80c9337d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bf56c77b12799753771ca8dca4b2a5b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1bf56c77b12799753771ca8dca4b2a5b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>do_auto_board_detection</b> ()</td></tr>
-<tr class="separator:a1bf56c77b12799753771ca8dca4b2a5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8eb43bcee000659e3cc174dbe11148f8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8eb43bcee000659e3cc174dbe11148f8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>ask_for_board_contour</b> ()</td></tr>
-<tr class="separator:a8eb43bcee000659e3cc174dbe11148f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6078ca6c86d05239b080f8835a2554e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa6078ca6c86d05239b080f8835a2554e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>getWarpedImg</b> (cv::Mat &amp;warpedImg)</td></tr>
-<tr class="separator:aa6078ca6c86d05239b080f8835a2554e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad942ad6c1216d86c119135d4b1305c1a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad942ad6c1216d86c119135d4b1305c1a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>mouseHandler</b> (int event, int x, int y, int flags, void *param)</td></tr>
 <tr class="separator:ad942ad6c1216d86c119135d4b1305c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10235eba83bcbc6d49ab7be721202db6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a10235eba83bcbc6d49ab7be721202db6"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>calcBetweenAngle</b> (cv::Vec2f v1, cv::Vec2f v2)</td></tr>
+<tr class="memitem:a1bf56c77b12799753771ca8dca4b2a5b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1bf56c77b12799753771ca8dca4b2a5b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a1bf56c77b12799753771ca8dca4b2a5b">do_auto_board_detection</a> ()</td></tr>
+<tr class="memdesc:a1bf56c77b12799753771ca8dca4b2a5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the automatic board detection and shows the result in a new window. Prints an error to the console if the automatic detection couldn't find anything. <br/></td></tr>
+<tr class="separator:a1bf56c77b12799753771ca8dca4b2a5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eb43bcee000659e3cc174dbe11148f8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8eb43bcee000659e3cc174dbe11148f8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a8eb43bcee000659e3cc174dbe11148f8">ask_for_board_contour</a> ()</td></tr>
+<tr class="memdesc:a8eb43bcee000659e3cc174dbe11148f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the manual board detection and shows the result in a new window. <br/></td></tr>
+<tr class="separator:a8eb43bcee000659e3cc174dbe11148f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6078ca6c86d05239b080f8835a2554e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#aa6078ca6c86d05239b080f8835a2554e">getWarpedImg</a> (cv::Mat &amp;warpedImg)</td></tr>
+<tr class="memdesc:aa6078ca6c86d05239b080f8835a2554e"><td class="mdescLeft">&#160;</td><td class="mdescRight">only process the image if the user selected the board with "ask_for_board_contour" or "do_auto_board_detection" once. this is triggered through the GUI (and the Scanners selectBoardManually() and selectBoardAutomatically() methods.  <a href="#aa6078ca6c86d05239b080f8835a2554e">More...</a><br/></td></tr>
+<tr class="separator:aa6078ca6c86d05239b080f8835a2554e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10235eba83bcbc6d49ab7be721202db6"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a10235eba83bcbc6d49ab7be721202db6">calcBetweenAngle</a> (cv::Vec2f v1, cv::Vec2f v2)</td></tr>
+<tr class="memdesc:a10235eba83bcbc6d49ab7be721202db6"><td class="mdescLeft">&#160;</td><td class="mdescRight">calculate angle in radians between the 2 vectors to degree  <a href="#a10235eba83bcbc6d49ab7be721202db6">More...</a><br/></td></tr>
 <tr class="separator:a10235eba83bcbc6d49ab7be721202db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a544f47e6176f89ed6c9538c62de885"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5a544f47e6176f89ed6c9538c62de885"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>groupIntersectionLines</b> (cv::vector&lt; cv::Vec4i &gt; &amp;lines, cv::vector&lt; cv::Vec4i &gt; &amp;horizontalLines, cv::vector&lt; cv::Vec4i &gt; &amp;verticalLines)</td></tr>
+<tr class="memitem:a5a544f47e6176f89ed6c9538c62de885"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a5a544f47e6176f89ed6c9538c62de885">groupIntersectionLines</a> (cv::vector&lt; cv::Vec4i &gt; &amp;lines, cv::vector&lt; cv::Vec4i &gt; &amp;horizontalLines, cv::vector&lt; cv::Vec4i &gt; &amp;verticalLines)</td></tr>
+<tr class="memdesc:a5a544f47e6176f89ed6c9538c62de885"><td class="mdescLeft">&#160;</td><td class="mdescRight">Group the Lines into vertical (angle -1.0 to 1.0) and horizontal (angle 88.0 to 92.0). Stretch them depening on what orientation they have to reach the borders of the picture.  <a href="#a5a544f47e6176f89ed6c9538c62de885">More...</a><br/></td></tr>
 <tr class="separator:a5a544f47e6176f89ed6c9538c62de885"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ab2fd4e17e2e826f5f82687e7bcf7dd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ab2fd4e17e2e826f5f82687e7bcf7dd"></a>
-cv::vector&lt; cv::Vec4i &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getBoardLines</b> (cv::vector&lt; cv::Vec4i &gt; &amp;lines, lineType type, int board_size)</td></tr>
+<tr class="memitem:a9ab2fd4e17e2e826f5f82687e7bcf7dd"><td class="memItemLeft" align="right" valign="top">cv::vector&lt; cv::Vec4i &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a9ab2fd4e17e2e826f5f82687e7bcf7dd">getBoardLines</a> (cv::vector&lt; cv::Vec4i &gt; &amp;lines, lineType type, int board_size)</td></tr>
+<tr class="memdesc:a9ab2fd4e17e2e826f5f82687e7bcf7dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all lines that are found by houghline algorithmen (vertical or horizontal) and put them into clusters. The result of each cluster is one middled line which is streched vertically or horizontally from the starting picture border to the facing one.  <a href="#a9ab2fd4e17e2e826f5f82687e7bcf7dd">More...</a><br/></td></tr>
 <tr class="separator:a9ab2fd4e17e2e826f5f82687e7bcf7dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8847f63c46c1347dda556fffc868abfe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8847f63c46c1347dda556fffc868abfe"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>intersection</b> (cv::Vec4i horizontalLine, cv::Vec4i verticalLine, cv::Point2f &amp;r)</td></tr>
+<tr class="memitem:a8847f63c46c1347dda556fffc868abfe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a8847f63c46c1347dda556fffc868abfe">intersection</a> (cv::Vec4i horizontalLine, cv::Vec4i verticalLine, cv::Point2f &amp;r)</td></tr>
+<tr class="memdesc:a8847f63c46c1347dda556fffc868abfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the intersection between two lines.  <a href="#a8847f63c46c1347dda556fffc868abfe">More...</a><br/></td></tr>
 <tr class="separator:a8847f63c46c1347dda556fffc868abfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a918c7950e660ba19bde3c9d16b5397c3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a918c7950e660ba19bde3c9d16b5397c3"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>getBoardIntersections</b> (cv::Mat warpedImg, int thresholdValue, int board_size, cv::vector&lt; cv::Point2f &gt; &amp;intersectionPoints, cv::Mat &amp;paintedWarpedImg)</td></tr>
+<tr class="memitem:a918c7950e660ba19bde3c9d16b5397c3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a918c7950e660ba19bde3c9d16b5397c3">getBoardIntersections</a> (cv::Mat warpedImg, int thresholdValue, int board_size, cv::vector&lt; cv::Point2f &gt; &amp;intersectionPoints, cv::Mat &amp;paintedWarpedImg)</td></tr>
+<tr class="memdesc:a918c7950e660ba19bde3c9d16b5397c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function delivers the board intersections. Its the "main" function and calls all other functions within detect_lines_intersection.hpp.  <a href="#a918c7950e660ba19bde3c9d16b5397c3">More...</a><br/></td></tr>
 <tr class="separator:a918c7950e660ba19bde3c9d16b5397c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2f82877ed457f1f23d52dcca76ed144"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac2f82877ed457f1f23d52dcca76ed144"></a>
-cv::vector&lt; cv::Vec4i &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>createLinefromValue</b> (cv::vector&lt; int &gt; circles, lineType type, int board_size)</td></tr>
+<tr class="memitem:ac2f82877ed457f1f23d52dcca76ed144"><td class="memItemLeft" align="right" valign="top">cv::vector&lt; cv::Vec4i &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#ac2f82877ed457f1f23d52dcca76ed144">createLinefromValue</a> (cv::vector&lt; int &gt; circles, lineType type, int board_size)</td></tr>
+<tr class="memdesc:ac2f82877ed457f1f23d52dcca76ed144"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses the midpoints of circles, averages them and creates a straight line from that data.  <a href="#ac2f82877ed457f1f23d52dcca76ed144">More...</a><br/></td></tr>
 <tr class="separator:ac2f82877ed457f1f23d52dcca76ed144"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46e70e1cab44a665996217b64f294d50"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a46e70e1cab44a665996217b64f294d50"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getBetterDetectionImage</b> (cv::Mat &amp;houghImg, bool createFakeLines, int board_size)</td></tr>
+<tr class="memitem:a46e70e1cab44a665996217b64f294d50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a46e70e1cab44a665996217b64f294d50">getBetterDetectionImage</a> (cv::Mat &amp;houghImg, bool createFakeLines, int board_size)</td></tr>
+<tr class="memdesc:a46e70e1cab44a665996217b64f294d50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Using HoughCircle to detect some stones (not all can be found). make those circle completely black to erase the white borders from the stones detected by canny. Now the image contains mostly straight white lines and houghline detection cannot find those small white stoneborders. Draws straight white lines with the help of createLinefromValue.  <a href="#a46e70e1cab44a665996217b64f294d50">More...</a><br/></td></tr>
 <tr class="separator:a46e70e1cab44a665996217b64f294d50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab60119ee64db94472862c5bb8536ed28"><td class="memTemplParams" colspan="2"><a class="anchor" id="ab60119ee64db94472862c5bb8536ed28"></a>
-template&lt;typename T , typename R &gt; </td></tr>
-<tr class="memitem:ab60119ee64db94472862c5bb8536ed28"><td class="memTemplItemLeft" align="right" valign="top">vector&lt; R &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>filter_unique</b> (const vector&lt; T &gt; &amp;input, std::function&lt; R(T)&gt; pred)</td></tr>
-<tr class="separator:ab60119ee64db94472862c5bb8536ed28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac060c4fbb320c3e05ddd71c410fdcc74"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac060c4fbb320c3e05ddd71c410fdcc74"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ac060c4fbb320c3e05ddd71c410fdcc74"><td class="memTemplItemLeft" align="right" valign="top">vector&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>filter_vector</b> (const vector&lt; T &gt; &amp;input, std::function&lt; bool(T)&gt; pred)</td></tr>
-<tr class="separator:ac060c4fbb320c3e05ddd71c410fdcc74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a123da547cd1649c2ce0a688e9a13b7b5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a123da547cd1649c2ce0a688e9a13b7b5"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getStoneDistanceAndMidpoint</b> (const cv::Mat &amp;warpedImgGray, int x, int y, lineheading heading, cv::Point2i &amp;midpointLine)</td></tr>
+<tr class="memitem:a123da547cd1649c2ce0a688e9a13b7b5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a123da547cd1649c2ce0a688e9a13b7b5">getStoneDistanceAndMidpoint</a> (const cv::Mat &amp;warpedImgGray, int x, int y, lineheading heading, cv::Point2i &amp;midpointLine)</td></tr>
+<tr class="memdesc:a123da547cd1649c2ce0a688e9a13b7b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the size of a 45°(left headed) or 135°(right headed) line within a circle, starting from any point within that circle mainly used to get the diameters of the stones. This functin also provides the Midpoint of that line.  <a href="#a123da547cd1649c2ce0a688e9a13b7b5">More...</a><br/></td></tr>
 <tr class="separator:a123da547cd1649c2ce0a688e9a13b7b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82701df36bf17f0bdb7ed7fbe3b9f6ae"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a82701df36bf17f0bdb7ed7fbe3b9f6ae"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>detectBlackStones</b> (cv::Mat &amp;warpedImg, cv::vector&lt; cv::Point2f &gt; intersectionPoints, int board_size, std::map&lt; cv::Point2f, SgPoint, <a class="el" href="struct_go___scanner_1_1lesser_point2f.html">lesserPoint2f</a> &gt; to_board_coords, float stone_diameter, SgPointSet &amp;stones, cv::Mat &amp;paintedWarpedImg)</td></tr>
+<tr class="memitem:a82701df36bf17f0bdb7ed7fbe3b9f6ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a82701df36bf17f0bdb7ed7fbe3b9f6ae">detectBlackStones</a> (cv::Mat &amp;warpedImg, cv::vector&lt; cv::Point2f &gt; intersectionPoints, int board_size, std::map&lt; cv::Point2f, SgPoint, <a class="el" href="struct_go___scanner_1_1lesser_point2f.html">lesserPoint2f</a> &gt; to_board_coords, float stone_diameter, SgPointSet &amp;stones, cv::Mat &amp;paintedWarpedImg)</td></tr>
+<tr class="memdesc:a82701df36bf17f0bdb7ed7fbe3b9f6ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detect the black stones on the board.  <a href="#a82701df36bf17f0bdb7ed7fbe3b9f6ae">More...</a><br/></td></tr>
 <tr class="separator:a82701df36bf17f0bdb7ed7fbe3b9f6ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58dc249e7d5b80119a01ba476d208906"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a58dc249e7d5b80119a01ba476d208906"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>detectAllStones</b> (cv::Mat &amp;warpedImg, cv::vector&lt; cv::Point2f &gt; intersectionPoints, std::map&lt; cv::Point2f, SgPoint, <a class="el" href="struct_go___scanner_1_1lesser_point2f.html">lesserPoint2f</a> &gt; to_board_coords, SgPointSet &amp;stones, float stone_diameter, cv::Mat &amp;paintedWarpedImg)</td></tr>
+<tr class="memitem:a58dc249e7d5b80119a01ba476d208906"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a58dc249e7d5b80119a01ba476d208906">detectAllStones</a> (cv::Mat &amp;warpedImg, cv::vector&lt; cv::Point2f &gt; intersectionPoints, std::map&lt; cv::Point2f, SgPoint, <a class="el" href="struct_go___scanner_1_1lesser_point2f.html">lesserPoint2f</a> &gt; to_board_coords, SgPointSet &amp;stones, float stone_diameter, cv::Mat &amp;paintedWarpedImg)</td></tr>
+<tr class="memdesc:a58dc249e7d5b80119a01ba476d208906"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detect all stones on the board.  <a href="#a58dc249e7d5b80119a01ba476d208906">More...</a><br/></td></tr>
 <tr class="separator:a58dc249e7d5b80119a01ba476d208906"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c2178f75f3965fd7314c0be32492b19"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c2178f75f3965fd7314c0be32492b19"></a>
-std::map&lt; cv::Point2f, SgPoint, <br class="typebreak"/>
-<a class="el" href="struct_go___scanner_1_1lesser_point2f.html">lesserPoint2f</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getBoardCoordMapFor</b> (std::vector&lt; cv::Point2f &gt; intersectionPoints, int board_size)</td></tr>
-<tr class="separator:a0c2178f75f3965fd7314c0be32492b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a655e6551e999e34a5e6235e9211ed567"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a655e6551e999e34a5e6235e9211ed567"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>getStones</b> (cv::Mat srcWarpedImg, cv::vector&lt; cv::Point2f &gt; intersectionPoints, GoSetup &amp;setup, int &amp;board_size, cv::Mat &amp;paintedWarpedImg)</td></tr>
+<tr class="memitem:a74efe614977f31f494d9120f5fe6cd81"><td class="memItemLeft" align="right" valign="top">std::map&lt; cv::Point2f, SgPoint, <br class="typebreak"/>
+<a class="el" href="struct_go___scanner_1_1lesser_point2f.html">lesserPoint2f</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a74efe614977f31f494d9120f5fe6cd81">getBoardCoordMapFor</a> (std::vector&lt; cv::Point2f &gt; intersectionPoints, int board_size)</td></tr>
+<tr class="memdesc:a74efe614977f31f494d9120f5fe6cd81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map pixel coordinates (intersection points) to board coordinates Begins at the left of the lowermost line and gradually moves the lines from left to right upwards. Preconditions:  <a href="#a74efe614977f31f494d9120f5fe6cd81">More...</a><br/></td></tr>
+<tr class="separator:a74efe614977f31f494d9120f5fe6cd81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a655e6551e999e34a5e6235e9211ed567"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_go___scanner.html#a655e6551e999e34a5e6235e9211ed567">getStones</a> (cv::Mat srcWarpedImg, cv::vector&lt; cv::Point2f &gt; intersectionPoints, GoSetup &amp;setup, int &amp;board_size, cv::Mat &amp;paintedWarpedImg)</td></tr>
+<tr class="memdesc:a655e6551e999e34a5e6235e9211ed567"><td class="mdescLeft">&#160;</td><td class="mdescRight">main function of detect_stones. it delivers the detected stones within setup.  <a href="#a655e6551e999e34a5e6235e9211ed567">More...</a><br/></td></tr>
 <tr class="separator:a655e6551e999e34a5e6235e9211ed567"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d4593a16cb1f749c82d309e9a2b5112"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d4593a16cb1f749c82d309e9a2b5112"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>imshow</b> (const cv::string &amp;winname, cv::Mat mat)</td></tr>
@@ -227,10 +225,640 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>scanner_main</b> (con
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Classes for detecting a go board and the stones </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a523c782dc1b86956cc3fa68a258fac6f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_Scanner::automatic_warp </td>
+          <td>(</td>
+          <td class="paramtype">const cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Point2f &amp;&#160;</td>
+          <td class="paramname"><em>p0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Point2f &amp;&#160;</td>
+          <td class="paramname"><em>p1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Point2f &amp;&#160;</td>
+          <td class="paramname"><em>p2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Point2f &amp;&#160;</td>
+          <td class="paramname"><em>p3</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tries to automatically detect the corner points of the go board This function simply returns without modifying p0, .., p3 if the board couldn't be found. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>matrix with webcam or the debug image p0 Left top point of warping area p1 right top point of warping area p2 Left bottom point of warping area p3 right bottom point of warping area </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a10235eba83bcbc6d49ab7be721202db6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Go_Scanner::calcBetweenAngle </td>
+          <td>(</td>
+          <td class="paramtype">cv::Vec2f&#160;</td>
+          <td class="paramname"><em>v1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Vec2f&#160;</td>
+          <td class="paramname"><em>v2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>calculate angle in radians between the 2 vectors to degree </p>
+<p>v1 first vector v2 second vector</p>
+<dl class="section return"><dt>Returns</dt><dd>angle in float between those 2 vectors </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac2f82877ed457f1f23d52dcca76ed144"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cv::vector&lt;cv::Vec4i&gt; Go_Scanner::createLinefromValue </td>
+          <td>(</td>
+          <td class="paramtype">cv::vector&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>circles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">lineType&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>board_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Uses the midpoints of circles, averages them and creates a straight line from that data. </p>
+<p>circles circles detected by houghcircle detection type enum lineType HORIZONTAL or VERTICAL board_size size of the go board</p>
+<dl class="section return"><dt>Returns</dt><dd>vector containing the calculated lines. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a58dc249e7d5b80119a01ba476d208906"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_Scanner::detectAllStones </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>warpedImg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::vector&lt; cv::Point2f &gt;&#160;</td>
+          <td class="paramname"><em>intersectionPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::map&lt; cv::Point2f, SgPoint, lesserPoint2f &gt;&#160;</td>
+          <td class="paramname"><em>to_board_coords</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SgPointSet &amp;&#160;</td>
+          <td class="paramname"><em>stones</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>stone_diameter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>paintedWarpedImg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Detect all stones on the board. </p>
+<p>wapredImg warpedImg of the camera image or picture intersectionsPoints vector of the intersection points to_board_coords map that saves the pixel and board coordinates of the stones stone_diameter approxiated stones_diameter stones the found stones paintedWarpedImg a debug image </p>
+
+</div>
+</div>
+<a class="anchor" id="a82701df36bf17f0bdb7ed7fbe3b9f6ae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_Scanner::detectBlackStones </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>warpedImg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::vector&lt; cv::Point2f &gt;&#160;</td>
+          <td class="paramname"><em>intersectionPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>board_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::map&lt; cv::Point2f, SgPoint, lesserPoint2f &gt;&#160;</td>
+          <td class="paramname"><em>to_board_coords</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>stone_diameter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SgPointSet &amp;&#160;</td>
+          <td class="paramname"><em>stones</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>paintedWarpedImg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Detect the black stones on the board. </p>
+<p>wapredImg warpedImg of the camera image or picture intersectionsPoints vector of the intersection points board_size size of the go board to_board_coords map that saves the pixel and board coordinates of the stones stone_diameter approxiated stones_diameter stones the found stones paintedWarpedImg a debug image </p>
+
+</div>
+</div>
+<a class="anchor" id="a46e70e1cab44a665996217b64f294d50"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_Scanner::getBetterDetectionImage </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>houghImg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>createFakeLines</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>board_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Using HoughCircle to detect some stones (not all can be found). make those circle completely black to erase the white borders from the stones detected by canny. Now the image contains mostly straight white lines and houghline detection cannot find those small white stoneborders. Draws straight white lines with the help of createLinefromValue. </p>
+<p>houghImg a morphed canny image (normal canny image also possible) createFakeLines true if getBoardIntersections should also be called board_size size of the go board </p>
+
+</div>
+</div>
+<a class="anchor" id="a74efe614977f31f494d9120f5fe6cd81"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt; cv::Point2f, SgPoint, <a class="el" href="struct_go___scanner_1_1lesser_point2f.html">lesserPoint2f</a> &gt; Go_Scanner::getBoardCoordMapFor </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; cv::Point2f &gt;&#160;</td>
+          <td class="paramname"><em>intersectionPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>board_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Map pixel coordinates (intersection points) to board coordinates Begins at the left of the lowermost line and gradually moves the lines from left to right upwards. Preconditions: </p>
+<p>Maps pixel coordinates (intersection points) to board coordinates (SgPoint).</p>
+<pre class="fragment">      - The number of intersection points must match board_size * board_size!
+      - Each line (or column if you want) must have exactly the same number of intersection points as the board_size value
+      - It is required that the intersection points on a specific line all have almost equal y-values!
+      Thats the decision criteria for selecting the points on a given line.
+</pre><dl class="section return"><dt>Returns</dt><dd>map that contains the pixel and board coordinates of the stones</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">intersectionPoints</td><td>Found intersection points on the go board </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">board_size</td><td>The size of the go board </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The map containing key-value pairs of every intersection point to an SgPoint. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a918c7950e660ba19bde3c9d16b5397c3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Go_Scanner::getBoardIntersections </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat&#160;</td>
+          <td class="paramname"><em>warpedImg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>thresholdValue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>board_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::vector&lt; cv::Point2f &gt; &amp;&#160;</td>
+          <td class="paramname"><em>intersectionPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>paintedWarpedImg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function delivers the board intersections. Its the "main" function and calls all other functions within detect_lines_intersection.hpp. </p>
+<p>warpedImg The warpedImg from cam or picture thresholdValue no function yet board_size size of the go board intersectionPoints The intersectionspoints paintedWarpedImg A debug image </p>
+
+</div>
+</div>
+<a class="anchor" id="a9ab2fd4e17e2e826f5f82687e7bcf7dd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cv::vector&lt;cv::Vec4i&gt; Go_Scanner::getBoardLines </td>
+          <td>(</td>
+          <td class="paramtype">cv::vector&lt; cv::Vec4i &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lines</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">lineType&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>board_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get all lines that are found by houghline algorithmen (vertical or horizontal) and put them into clusters. The result of each cluster is one middled line which is streched vertically or horizontally from the starting picture border to the facing one. </p>
+<p>lines vector of lines type enum lineType HORIZONTAL or VERTICAL board_size size of the go board</p>
+<dl class="section return"><dt>Returns</dt><dd>vector with our board lines </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a123da547cd1649c2ce0a688e9a13b7b5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Go_Scanner::getStoneDistanceAndMidpoint </td>
+          <td>(</td>
+          <td class="paramtype">const cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>warpedImgGray</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">lineheading&#160;</td>
+          <td class="paramname"><em>heading</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Point2i &amp;&#160;</td>
+          <td class="paramname"><em>midpointLine</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the size of a 45°(left headed) or 135°(right headed) line within a circle, starting from any point within that circle mainly used to get the diameters of the stones. This functin also provides the Midpoint of that line. </p>
+<p>warpedImgGray a image/matrix which is highly modified by morphologyEx with getStructuringElement(MORPH_ELLIPSE, Size(stone_diameter*0.38, stone_diameter*0.38)) and operation MORPH_OPEN. x x value of the intersection y y value of the intersection heading enum lineheading LEFT or RIGHT midpointline Midpoint of the line</p>
+<dl class="section return"><dt>Returns</dt><dd>Size of a 45°(left headed) or 135°(right headed) line within a circle. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a655e6551e999e34a5e6235e9211ed567"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Go_Scanner::getStones </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat&#160;</td>
+          <td class="paramname"><em>srcWarpedImg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::vector&lt; cv::Point2f &gt;&#160;</td>
+          <td class="paramname"><em>intersectionPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GoSetup &amp;&#160;</td>
+          <td class="paramname"><em>setup</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>board_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>paintedWarpedImg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>main function of detect_stones. it delivers the detected stones within setup. </p>
+<p>srcWarpedImg warpedImg from webcam or picture paintedWarpedImg a debug image</p>
+<dl class="section return"><dt>Returns</dt><dd>true if the stone detection is possible </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aa6078ca6c86d05239b080f8835a2554e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Go_Scanner::getWarpedImg </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>warpedImg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>only process the image if the user selected the board with "ask_for_board_contour" or "do_auto_board_detection" once. this is triggered through the GUI (and the Scanners selectBoardManually() and selectBoardAutomatically() methods. </p>
+<dl class="section return"><dt>Returns</dt><dd>true or false </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5a544f47e6176f89ed6c9538c62de885"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_Scanner::groupIntersectionLines </td>
+          <td>(</td>
+          <td class="paramtype">cv::vector&lt; cv::Vec4i &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lines</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::vector&lt; cv::Vec4i &gt; &amp;&#160;</td>
+          <td class="paramname"><em>horizontalLines</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::vector&lt; cv::Vec4i &gt; &amp;&#160;</td>
+          <td class="paramname"><em>verticalLines</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Group the Lines into vertical (angle -1.0 to 1.0) and horizontal (angle 88.0 to 92.0). Stretch them depening on what orientation they have to reach the borders of the picture. </p>
+<p>lines vector of all lines detected by houghlines horizontalLines all horizontal lines from lines verticalLines all vertical lines from lines </p>
+
+</div>
+</div>
+<a class="anchor" id="a8847f63c46c1347dda556fffc868abfe"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Go_Scanner::intersection </td>
+          <td>(</td>
+          <td class="paramtype">cv::Vec4i&#160;</td>
+          <td class="paramname"><em>horizontalLine</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Vec4i&#160;</td>
+          <td class="paramname"><em>verticalLine</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Point2f &amp;&#160;</td>
+          <td class="paramname"><em>r</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculates the intersection between two lines. </p>
+<p>horizontalLine a horizontal line verticalLine a vertical line r the calculated point</p>
+<dl class="section return"><dt>Returns</dt><dd>true if the two lines have a intersection </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="afcf29033d739cc1f3bea0d8d91b9cab7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cv::Mat Go_Scanner::warpImage </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat&#160;</td>
+          <td class="paramname"><em>img</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Point2f&#160;</td>
+          <td class="paramname"><em>p0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Point2f&#160;</td>
+          <td class="paramname"><em>p1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Point2f&#160;</td>
+          <td class="paramname"><em>p2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::Point2f&#160;</td>
+          <td class="paramname"><em>p3</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>warpes an image </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">img</td><td>the image given by webcam or the debug image p0 Left top point of warping area p1 right top point of warping area p2 Left bottom point of warping area p3 right bottom point of warping area</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a warped image </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:03 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

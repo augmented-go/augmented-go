@@ -62,7 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -90,6 +90,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-slots">Public Slots</a> &#124;
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_go___g_u_i_1_1_virtual_view-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Go_GUI::VirtualView Class Reference</div>  </div>
@@ -101,13 +103,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p><code>#include &lt;<a class="el" href="_virtual_view_8hpp_source.html">VirtualView.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for Go_GUI::VirtualView:</div>
+Collaboration diagram for Go_GUI::VirtualView:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="class_go___g_u_i_1_1_virtual_view.png" usemap="#Go_GUI::VirtualView_map" alt=""/>
-  <map id="Go_GUI::VirtualView_map" name="Go_GUI::VirtualView_map">
+<div class="center"><img src="class_go___g_u_i_1_1_virtual_view__coll__graph.png" border="0" usemap="#_go___g_u_i_1_1_virtual_view_coll__map" alt="Collaboration graph"/></div>
+<map name="_go___g_u_i_1_1_virtual_view_coll__map" id="_go___g_u_i_1_1_virtual_view_coll__map">
 </map>
- </div></div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
@@ -135,6 +136,59 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad70d7b82b05d4c7baf55d5e8204cac3d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad70d7b82b05d4c7baf55d5e8204cac3d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeVirtualView</b> ()</td></tr>
 <tr class="separator:ad70d7b82b05d4c7baf55d5e8204cac3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ac057654f75623985ccb087baa8cde534"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_virtual_view.html#ac057654f75623985ccb087baa8cde534">mousePressEvent</a> (QMouseEvent *event)</td></tr>
+<tr class="memdesc:ac057654f75623985ccb087baa8cde534"><td class="mdescLeft">&#160;</td><td class="mdescRight">override Checks for mousebuttons. If a left mousebutton was pressed, the current board_position that is currently pointed at, gets send to backend to play a move. Only in virtual game mode!  <a href="#ac057654f75623985ccb087baa8cde534">More...</a><br/></td></tr>
+<tr class="separator:ac057654f75623985ccb087baa8cde534"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8774ee46ec54e30d3da47d152412840"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_virtual_view.html#ac8774ee46ec54e30d3da47d152412840">mouseMoveEvent</a> (QMouseEvent *event)</td></tr>
+<tr class="memdesc:ac8774ee46ec54e30d3da47d152412840"><td class="mdescLeft">&#160;</td><td class="mdescRight">If in virtual game mode, the position the mouse hovers over, gets calculated into game board coordinates and a transparent circle is shown on that position. Only if the position changes to another board coordinate that circle changes its position.  <a href="#ac8774ee46ec54e30d3da47d152412840">More...</a><br/></td></tr>
+<tr class="separator:ac8774ee46ec54e30d3da47d152412840"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:af981ecb1616c364fc256409242dc7bc8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af981ecb1616c364fc256409242dc7bc8"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>virtual_game_mode</b></td></tr>
+<tr class="separator:af981ecb1616c364fc256409242dc7bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa52f2031819a7d74a65d87d9dcd8e9a2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa52f2031819a7d74a65d87d9dcd8e9a2"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>board_size</b></td></tr>
+<tr class="separator:aa52f2031819a7d74a65d87d9dcd8e9a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69cbb46877ce27b9cf826354f15d73c7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a69cbb46877ce27b9cf826354f15d73c7"></a>
+QGraphicsScene&#160;</td><td class="memItemRight" valign="bottom"><b>scene</b></td></tr>
+<tr class="separator:a69cbb46877ce27b9cf826354f15d73c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65dc9370736a2c1c4c76e6fad49305cc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a65dc9370736a2c1c4c76e6fad49305cc"></a>
+QImage&#160;</td><td class="memItemRight" valign="bottom"><b>board_image_size9</b></td></tr>
+<tr class="separator:a65dc9370736a2c1c4c76e6fad49305cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3ba7571796e3ea290f686d37251da68"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa3ba7571796e3ea290f686d37251da68"></a>
+QImage&#160;</td><td class="memItemRight" valign="bottom"><b>board_image_size13</b></td></tr>
+<tr class="separator:aa3ba7571796e3ea290f686d37251da68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9e6739e058a6ec171fbb8b2a26ef016"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad9e6739e058a6ec171fbb8b2a26ef016"></a>
+QImage&#160;</td><td class="memItemRight" valign="bottom"><b>board_image_size19</b></td></tr>
+<tr class="separator:ad9e6739e058a6ec171fbb8b2a26ef016"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad28e36475eab8851d531b0f305b09f11"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad28e36475eab8851d531b0f305b09f11"></a>
+QImage&#160;</td><td class="memItemRight" valign="bottom"><b>black_stone_image</b></td></tr>
+<tr class="separator:ad28e36475eab8851d531b0f305b09f11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a1a0b21e3978101ec6e206ba7522c89"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a1a0b21e3978101ec6e206ba7522c89"></a>
+QImage&#160;</td><td class="memItemRight" valign="bottom"><b>white_stone_image</b></td></tr>
+<tr class="separator:a2a1a0b21e3978101ec6e206ba7522c89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a801b81961ce9f0adad71febc3a2db600"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a801b81961ce9f0adad71febc3a2db600"></a>
+QImage&#160;</td><td class="memItemRight" valign="bottom"><b>illegal_stone_image</b></td></tr>
+<tr class="separator:a801b81961ce9f0adad71febc3a2db600"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96dbe572c885941186a21f9d27ca9e30"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a96dbe572c885941186a21f9d27ca9e30"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>setting_stone_valid</b></td></tr>
+<tr class="separator:a96dbe572c885941186a21f9d27ca9e30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37ef5c888ceb052a29e5c4416a49b808"><td class="memItemLeft" align="right" valign="top">qreal&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_virtual_view.html#a37ef5c888ceb052a29e5c4416a49b808">cell_width</a></td></tr>
+<tr class="separator:a37ef5c888ceb052a29e5c4416a49b808"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32442937aa374acdbf504c566df594d6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a32442937aa374acdbf504c566df594d6"></a>
+qreal&#160;</td><td class="memItemRight" valign="bottom"><b>cell_height</b></td></tr>
+<tr class="separator:a32442937aa374acdbf504c566df594d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebf87e16ea74b8229c10329b3eaf01c2"><td class="memItemLeft" align="right" valign="top">QPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_virtual_view.html#aebf87e16ea74b8229c10329b3eaf01c2">mouse_hover_coord</a></td></tr>
+<tr class="separator:aebf87e16ea74b8229c10329b3eaf01c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae652929ae92eacec5f453583c2d9972d"><td class="memItemLeft" align="right" valign="top">QRectF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_virtual_view.html#ae652929ae92eacec5f453583c2d9972d">selection_ellipse</a></td></tr>
+<tr class="separator:ae652929ae92eacec5f453583c2d9972d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a375a0593a8516422a4a871c0ff1b0c84"><td class="memItemLeft" align="right" valign="top">QGraphicsEllipseItem *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_virtual_view.html#a375a0593a8516422a4a871c0ff1b0c84">ghost_stone</a></td></tr>
+<tr class="separator:a375a0593a8516422a4a871c0ff1b0c84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_go___g_u_i_1_1_virtual_view.html" title="The VirtualView is part of Augmented-Go Gui. The virtual view shows a virtual representation of the g...">VirtualView</a> is part of Augmented-Go Gui. The virtual view shows a virtual representation of the game. Red circles represent differences of the game on the camera picture and the virtual board. If the game is in virtual mode, the user can place stones by clicking on the board. </p>
@@ -200,6 +254,70 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeVirtualView</b>
     <tr><td class="paramname">QSize</td><td>size of the container </td></tr>
     <tr><td class="paramname">SgPointSet</td><td>set of all differences between real board and virtual board </td></tr>
     <tr><td class="paramname">GoBoard</td><td>current go game board </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ac8774ee46ec54e30d3da47d152412840"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_GUI::VirtualView::mouseMoveEvent </td>
+          <td>(</td>
+          <td class="paramtype">QMouseEvent *&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If in virtual game mode, the position the mouse hovers over, gets calculated into game board coordinates and a transparent circle is shown on that position. Only if the position changes to another board coordinate that circle changes its position. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">QMouseEvent</td><td>event triggered by mouse </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ac057654f75623985ccb087baa8cde534"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_GUI::VirtualView::mousePressEvent </td>
+          <td>(</td>
+          <td class="paramtype">QMouseEvent *&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>override Checks for mousebuttons. If a left mousebutton was pressed, the current board_position that is currently pointed at, gets send to backend to play a move. Only in virtual game mode! </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">QMouseEvent</td><td>event triggered by mouse </td></tr>
   </table>
   </dd>
 </dl>
@@ -313,13 +431,98 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeVirtualView</b>
 
 </div>
 </div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a37ef5c888ceb052a29e5c4416a49b808"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">qreal Go_GUI::VirtualView::cell_width</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>dimensions of cells when scene was created </p>
+
+</div>
+</div>
+<a class="anchor" id="a375a0593a8516422a4a871c0ff1b0c84"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QGraphicsEllipseItem* Go_GUI::VirtualView::ghost_stone</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>stone that appears when hovering over virtual board in virtual game mode </p>
+
+</div>
+</div>
+<a class="anchor" id="aebf87e16ea74b8229c10329b3eaf01c2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QPoint Go_GUI::VirtualView::mouse_hover_coord</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>coordinate of mouse </p>
+
+</div>
+</div>
+<a class="anchor" id="ae652929ae92eacec5f453583c2d9972d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QRectF Go_GUI::VirtualView::selection_ellipse</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>dimensions of ellipse of ghost_stone </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>augmented-go/Go_GUI/<a class="el" href="_virtual_view_8hpp_source.html">VirtualView.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:03 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

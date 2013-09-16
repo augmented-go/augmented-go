@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$class_go___g_u_i_1_1_change_scan_rate_dialog.html" title="The ChangeScanRateDialog is part of Augmented&#45;Go Gui. Uses the ChangeScanRateDialog.ui The Dialog lets the user choose the scanning rate of the camera. When the user presses &quot;OK&quot; the information gets signaled and the dialog closes. " alt="" coords="123,5,336,32"/>
+<area shape="rect" id="node3" href="$class_go___g_u_i_1_1_new_game_dialog.html" title="The NewGameDialog is part of Augmented&#45;Go Gui. Uses the NewGameDialog.ui The Dialog lets the user cho..." alt="" coords="143,56,315,83"/>
+</map>

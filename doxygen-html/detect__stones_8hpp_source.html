@@ -68,7 +68,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -106,57 +106,37 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">enum</span> lineheading{LEFT, RIGHT};</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">enum</span> stoneColor{BLACK, WHITE};</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="comment">// Vector helper</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> R&gt;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    vector&lt;R&gt; filter_unique(<span class="keyword">const</span> vector&lt;T&gt;&amp; input, std::function&lt;R(T)&gt; pred) {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        std::set&lt;R&gt; filtered_results;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> T&amp; element : input)</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            filtered_results.insert(pred(element));</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordflow">return</span> vector&lt;R&gt;(begin(filtered_results), end(filtered_results));</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    vector&lt;T&gt; filter_vector(<span class="keyword">const</span> vector&lt;T&gt;&amp; input, std::function&lt;<span class="keywordtype">bool</span>(T)&gt; pred) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        vector&lt;T&gt; filtered_results;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        std::copy_if(</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            std::begin(input),</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            std::end(input),</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            std::back_inserter(filtered_results),</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            pred</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        );</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">return</span> filtered_results;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">// cv::Point2f comparison helper</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// function objects for less comparison between two cv::Point2f&#39;s</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// needed for a std::map and sorting</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="struct_go___scanner_1_1lesser_point2f.html">   44</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_go___scanner_1_1lesser_point2f.html">lesserPoint2f</a> {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> cv::Point2f&amp; left, <span class="keyword">const</span> cv::Point2f&amp; right) {</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            <span class="keywordflow">if</span> (left.y == right.y)</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                <span class="keywordflow">return</span> left.x &lt; right.x;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                <span class="keywordflow">return</span> left.y &lt; right.y;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        }</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    };</div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="struct_go___scanner_1_1lesser_point2fx.html">   52</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_go___scanner_1_1lesser_point2fx.html">lesserPoint2fx</a> {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> cv::Point2f&amp; left, <span class="keyword">const</span> cv::Point2f&amp; right) { <span class="keywordflow">return</span> left.x &lt; right.x; }</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    };</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">int</span> getStoneDistanceAndMidpoint(<span class="keyword">const</span> cv::Mat&amp; warpedImgGray, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, lineheading heading, cv::Point2i&amp; midpointLine);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> detectBlackStones(cv::Mat&amp; warpedImg, cv::vector&lt;cv::Point2f&gt; intersectionPoints, <span class="keywordtype">int</span> board_size, std::map&lt;cv::Point2f, SgPoint, lesserPoint2f&gt; to_board_coords, <span class="keywordtype">float</span> stone_diameter, SgPointSet&amp; stones, cv::Mat&amp; paintedWarpedImg);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> detectAllStones(cv::Mat&amp; warpedImg, cv::vector&lt;cv::Point2f&gt; intersectionPoints, std::map&lt;cv::Point2f, SgPoint, lesserPoint2f&gt; to_board_coords, SgPointSet&amp; stones, <span class="keywordtype">float</span> stone_diameter, cv::Mat&amp; paintedWarpedImg);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    std::map&lt;cv::Point2f, SgPoint, lesserPoint2f&gt; getBoardCoordMapFor(std::vector&lt;cv::Point2f&gt; intersectionPoints, <span class="keywordtype">int</span> board_size);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">bool</span> getStones(cv::Mat srcWarpedImg, cv::vector&lt;cv::Point2f&gt; intersectionPoints, GoSetup&amp; setup, <span class="keywordtype">int</span>&amp; board_size, cv::Mat&amp; paintedWarpedImg);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
-<div class="ttc" id="struct_go___scanner_1_1lesser_point2fx_html"><div class="ttname"><a href="struct_go___scanner_1_1lesser_point2fx.html">Go_Scanner::lesserPoint2fx</a></div><div class="ttdef"><b>Definition:</b> detect_stones.hpp:52</div></div>
-<div class="ttc" id="struct_go___scanner_1_1lesser_point2f_html"><div class="ttname"><a href="struct_go___scanner_1_1lesser_point2f.html">Go_Scanner::lesserPoint2f</a></div><div class="ttdef"><b>Definition:</b> detect_stones.hpp:44</div></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="struct_go___scanner_1_1lesser_point2f.html">   24</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_go___scanner_1_1lesser_point2f.html">lesserPoint2f</a> {</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> cv::Point2f&amp; left, <span class="keyword">const</span> cv::Point2f&amp; right) {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            <span class="keywordflow">if</span> (left.y == right.y)</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                <span class="keywordflow">return</span> left.x &lt; right.x;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                <span class="keywordflow">return</span> left.y &lt; right.y;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        }</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    };</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="namespace_go___scanner.html#a123da547cd1649c2ce0a688e9a13b7b5">getStoneDistanceAndMidpoint</a>(<span class="keyword">const</span> cv::Mat&amp; warpedImgGray, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, lineheading heading, cv::Point2i&amp; midpointLine);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#a82701df36bf17f0bdb7ed7fbe3b9f6ae">detectBlackStones</a>(cv::Mat&amp; warpedImg, cv::vector&lt;cv::Point2f&gt; intersectionPoints, <span class="keywordtype">int</span> board_size, std::map&lt;cv::Point2f, SgPoint, lesserPoint2f&gt; to_board_coords, <span class="keywordtype">float</span> stone_diameter, SgPointSet&amp; stones, cv::Mat&amp; paintedWarpedImg);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#a58dc249e7d5b80119a01ba476d208906">detectAllStones</a>(cv::Mat&amp; warpedImg, cv::vector&lt;cv::Point2f&gt; intersectionPoints, std::map&lt;cv::Point2f, SgPoint, lesserPoint2f&gt; to_board_coords, SgPointSet&amp; stones, <span class="keywordtype">float</span> stone_diameter, cv::Mat&amp; paintedWarpedImg);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    std::map&lt;cv::Point2f, SgPoint, lesserPoint2f&gt; <a class="code" href="namespace_go___scanner.html#a74efe614977f31f494d9120f5fe6cd81">getBoardCoordMapFor</a>(std::vector&lt;cv::Point2f&gt; intersectionPoints, <span class="keywordtype">int</span> board_size);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="namespace_go___scanner.html#a655e6551e999e34a5e6235e9211ed567">getStones</a>(cv::Mat srcWarpedImg, cv::vector&lt;cv::Point2f&gt; intersectionPoints, GoSetup&amp; setup, <span class="keywordtype">int</span>&amp; board_size, cv::Mat&amp; paintedWarpedImg);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    std::map&lt;cv::Point2f, SgPoint, lesserPoint2f&gt; <a class="code" href="namespace_go___scanner.html#a74efe614977f31f494d9120f5fe6cd81">getBoardCoordMapFor</a>(std::vector&lt;cv::Point2f&gt; intersectionPoints, <span class="keywordtype">int</span> board_size);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
+<div class="ttc" id="namespace_go___scanner_html_a655e6551e999e34a5e6235e9211ed567"><div class="ttname"><a href="namespace_go___scanner.html#a655e6551e999e34a5e6235e9211ed567">Go_Scanner::getStones</a></div><div class="ttdeci">bool getStones(cv::Mat srcWarpedImg, cv::vector&lt; cv::Point2f &gt; intersectionPoints, GoSetup &amp;setup, int &amp;board_size, cv::Mat &amp;paintedWarpedImg)</div><div class="ttdoc">main function of detect_stones. it delivers the detected stones within setup. </div></div>
+<div class="ttc" id="namespace_go___scanner_html_a74efe614977f31f494d9120f5fe6cd81"><div class="ttname"><a href="namespace_go___scanner.html#a74efe614977f31f494d9120f5fe6cd81">Go_Scanner::getBoardCoordMapFor</a></div><div class="ttdeci">std::map&lt; cv::Point2f, SgPoint, lesserPoint2f &gt; getBoardCoordMapFor(std::vector&lt; cv::Point2f &gt; intersectionPoints, int board_size)</div><div class="ttdoc">Map pixel coordinates (intersection points) to board coordinates Begins at the left of the lowermost ...</div></div>
+<div class="ttc" id="namespace_go___scanner_html_a123da547cd1649c2ce0a688e9a13b7b5"><div class="ttname"><a href="namespace_go___scanner.html#a123da547cd1649c2ce0a688e9a13b7b5">Go_Scanner::getStoneDistanceAndMidpoint</a></div><div class="ttdeci">int getStoneDistanceAndMidpoint(const cv::Mat &amp;warpedImgGray, int x, int y, lineheading heading, cv::Point2i &amp;midpointLine)</div><div class="ttdoc">Returns the size of a 45°(left headed) or 135°(right headed) line within a circle, starting from any po...</div></div>
+<div class="ttc" id="struct_go___scanner_1_1lesser_point2f_html"><div class="ttname"><a href="struct_go___scanner_1_1lesser_point2f.html">Go_Scanner::lesserPoint2f</a></div><div class="ttdoc">cv::Point2f comparison functor. Compares by y-value first and x-value second.  Needed for example for...</div><div class="ttdef"><b>Definition:</b> detect_stones.hpp:24</div></div>
+<div class="ttc" id="namespace_go___scanner_html_a58dc249e7d5b80119a01ba476d208906"><div class="ttname"><a href="namespace_go___scanner.html#a58dc249e7d5b80119a01ba476d208906">Go_Scanner::detectAllStones</a></div><div class="ttdeci">void detectAllStones(cv::Mat &amp;warpedImg, cv::vector&lt; cv::Point2f &gt; intersectionPoints, std::map&lt; cv::Point2f, SgPoint, lesserPoint2f &gt; to_board_coords, SgPointSet &amp;stones, float stone_diameter, cv::Mat &amp;paintedWarpedImg)</div><div class="ttdoc">Detect all stones on the board. </div></div>
+<div class="ttc" id="namespace_go___scanner_html_a82701df36bf17f0bdb7ed7fbe3b9f6ae"><div class="ttname"><a href="namespace_go___scanner.html#a82701df36bf17f0bdb7ed7fbe3b9f6ae">Go_Scanner::detectBlackStones</a></div><div class="ttdeci">void detectBlackStones(cv::Mat &amp;warpedImg, cv::vector&lt; cv::Point2f &gt; intersectionPoints, int board_size, std::map&lt; cv::Point2f, SgPoint, lesserPoint2f &gt; to_board_coords, float stone_diameter, SgPointSet &amp;stones, cv::Mat &amp;paintedWarpedImg)</div><div class="ttdoc">Detect the black stones on the board. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

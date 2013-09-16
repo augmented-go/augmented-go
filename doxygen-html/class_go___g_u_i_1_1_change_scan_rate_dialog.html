@@ -62,7 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,6 +89,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_go___g_u_i_1_1_change_scan_rate_dialog-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Go_GUI::ChangeScanRateDialog Class Reference</div>  </div>
@@ -100,13 +101,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p><code>#include &lt;<a class="el" href="_change_scan_rate_dialog_8hpp_source.html">ChangeScanRateDialog.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for Go_GUI::ChangeScanRateDialog:</div>
+Collaboration diagram for Go_GUI::ChangeScanRateDialog:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="class_go___g_u_i_1_1_change_scan_rate_dialog.png" usemap="#Go_GUI::ChangeScanRateDialog_map" alt=""/>
-  <map id="Go_GUI::ChangeScanRateDialog_map" name="Go_GUI::ChangeScanRateDialog_map">
+<div class="center"><img src="class_go___g_u_i_1_1_change_scan_rate_dialog__coll__graph.png" border="0" usemap="#_go___g_u_i_1_1_change_scan_rate_dialog_coll__map" alt="Collaboration graph"/></div>
+<map name="_go___g_u_i_1_1_change_scan_rate_dialog_coll__map" id="_go___g_u_i_1_1_change_scan_rate_dialog_coll__map">
 </map>
- </div></div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
 Signals</h2></td></tr>
@@ -127,6 +127,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a59c3759f227a86ec9f4cff58804282f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_change_scan_rate_dialog.html#a59c3759f227a86ec9f4cff58804282f2">valueChanged</a> (int new_value)</td></tr>
 <tr class="memdesc:a59c3759f227a86ec9f4cff58804282f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the text above the slider.  <a href="#a59c3759f227a86ec9f4cff58804282f2">More...</a><br/></td></tr>
 <tr class="separator:a59c3759f227a86ec9f4cff58804282f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:aae734d4142826edd06351e5231166f9d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aae734d4142826edd06351e5231166f9d"></a>
+Ui::changeScanRate&#160;</td><td class="memItemRight" valign="bottom"><b>ui_changescanrate</b></td></tr>
+<tr class="separator:aae734d4142826edd06351e5231166f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_go___g_u_i_1_1_change_scan_rate_dialog.html" title="The ChangeScanRateDialog is part of Augmented-Go Gui. Uses the ChangeScanRateDialog.ui The Dialog lets the user choose the scanning rate of the camera. When the user presses &quot;OK&quot; the information gets signaled and the dialog closes. ">ChangeScanRateDialog</a> is part of Augmented-Go Gui. Uses the ChangeScanRateDialog.ui The Dialog lets the user choose the scanning rate of the camera. When the user presses "OK" the information gets signaled and the dialog closes. </p>
@@ -201,7 +207,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

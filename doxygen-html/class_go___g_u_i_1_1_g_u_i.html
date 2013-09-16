@@ -62,7 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -90,6 +90,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-slots">Public Slots</a> &#124;
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-slots">Private Slots</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="class_go___g_u_i_1_1_g_u_i-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -102,13 +105,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p><code>#include &lt;<a class="el" href="_g_u_i_8hpp_source.html">GUI.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for Go_GUI::GUI:</div>
+Collaboration diagram for Go_GUI::GUI:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="class_go___g_u_i_1_1_g_u_i.png" usemap="#Go_GUI::GUI_map" alt=""/>
-  <map id="Go_GUI::GUI_map" name="Go_GUI::GUI_map">
-</map>
- </div></div>
+<div class="center"><img src="class_go___g_u_i_1_1_g_u_i__coll__graph.png" border="0" usemap="#_go___g_u_i_1_1_g_u_i_coll__map" alt="Collaboration graph"/></div>
+<map name="_go___g_u_i_1_1_g_u_i_coll__map" id="_go___g_u_i_1_1_g_u_i_coll__map">
+<area shape="rect" id="node3" href="class_go___g_u_i_1_1_virtual_view.html" title="The VirtualView is part of Augmented&#45;Go Gui. The virtual view shows a virtual representation of the g..." alt="" coords="136,83,277,109"/><area shape="rect" id="node5" href="class_go___g_u_i_1_1_augmented_view.html" title="The AugmentedView is part of Augmented&#45;Go Gui. The view shows the camera picture (if a camera is conn..." alt="" coords="301,83,472,109"/><area shape="rect" id="node7" href="class_go___backend_1_1_game.html" title="Basic game class to play and keep track of a game of go. One instance handles one game of go..." alt="" coords="497,83,636,109"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
@@ -187,6 +189,137 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aba1b8596de5ece989b7c1a28275fa314"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor Checks for gui elements and fonts. Connects signals and slots.  <a href="#aba1b8596de5ece989b7c1a28275fa314">More...</a><br/></td></tr>
 <tr class="separator:aba1b8596de5ece989b7c1a28275fa314"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-slots"></a>
+Private Slots</h2></td></tr>
+<tr class="memitem:a38eef4bde6652434c4921d626d91fa93"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38eef4bde6652434c4921d626d91fa93"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a38eef4bde6652434c4921d626d91fa93">slot_ButtonNewGame</a> ()</td></tr>
+<tr class="memdesc:a38eef4bde6652434c4921d626d91fa93"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT "NewGame/Reset" Opens a Dialog that asks for game rules and names. <br/></td></tr>
+<tr class="separator:a38eef4bde6652434c4921d626d91fa93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6ae05f09475f0adf62f616945dd9e77"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6ae05f09475f0adf62f616945dd9e77"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#ad6ae05f09475f0adf62f616945dd9e77">slot_ButtonResign</a> ()</td></tr>
+<tr class="memdesc:ad6ae05f09475f0adf62f616945dd9e77"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT "Resign" Opens a Dialog that asks for confirmation. If answered yes, a signal is sent to backend that the current player surrenders. <br/></td></tr>
+<tr class="separator:ad6ae05f09475f0adf62f616945dd9e77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfe8183a3e8a80820cc2929ffaf7c7be"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abfe8183a3e8a80820cc2929ffaf7c7be"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#abfe8183a3e8a80820cc2929ffaf7c7be">slot_ButtonPass</a> ()</td></tr>
+<tr class="memdesc:abfe8183a3e8a80820cc2929ffaf7c7be"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT "Pass" Opens a Dialog that asks for confirmation. If answered yes, a signal is sent to backend that the current player passes. <br/></td></tr>
+<tr class="separator:abfe8183a3e8a80820cc2929ffaf7c7be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a317e909e5f70ff210db077b736c6fe25"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a317e909e5f70ff210db077b736c6fe25"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a317e909e5f70ff210db077b736c6fe25">slot_MenuOpen</a> ()</td></tr>
+<tr class="memdesc:a317e909e5f70ff210db077b736c6fe25"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT QAction "MenuOpen" opens a filedialog that lets the user choose an sgf-file. sends via "signal_openGame" filename to backend. <br/></td></tr>
+<tr class="separator:a317e909e5f70ff210db077b736c6fe25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59d300f0cb47876d2cdb0f2d7561a9fc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a59d300f0cb47876d2cdb0f2d7561a9fc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a59d300f0cb47876d2cdb0f2d7561a9fc">slot_MenuSave</a> ()</td></tr>
+<tr class="memdesc:a59d300f0cb47876d2cdb0f2d7561a9fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT QAction "MenuSave" opens a filedialog that lets the user choose an sgf-file. sends via "signal_saveGame" filename, gamename and playernames to backend. <br/></td></tr>
+<tr class="separator:a59d300f0cb47876d2cdb0f2d7561a9fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeeb3f45a4ca3ada82243d0c06cb4745f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeeb3f45a4ca3ada82243d0c06cb4745f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#aeeb3f45a4ca3ada82243d0c06cb4745f">slot_MenuInfo</a> ()</td></tr>
+<tr class="memdesc:aeeb3f45a4ca3ada82243d0c06cb4745f"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT QAction "MenuInfo" opens a window with information about the application. <br/></td></tr>
+<tr class="separator:aeeb3f45a4ca3ada82243d0c06cb4745f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e7f2bf4d63041b12e57cc9ede64cfd9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4e7f2bf4d63041b12e57cc9ede64cfd9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a4e7f2bf4d63041b12e57cc9ede64cfd9">slot_MenuChangeScanRate</a> ()</td></tr>
+<tr class="memdesc:a4e7f2bf4d63041b12e57cc9ede64cfd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT QAction "MenuInfo" opens a window to change the scanning rate. <br/></td></tr>
+<tr class="separator:a4e7f2bf4d63041b12e57cc9ede64cfd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f64e432c5917e77173f1f6cd619c568"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f64e432c5917e77173f1f6cd619c568"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a4f64e432c5917e77173f1f6cd619c568">slot_ViewSwitch</a> ()</td></tr>
+<tr class="memdesc:a4f64e432c5917e77173f1f6cd619c568"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT "ViewSwitch" Switches big view with small view. To assign a view to something a QWidget has to be created. Changes the appereance of button to "pressed". <br/></td></tr>
+<tr class="separator:a4f64e432c5917e77173f1f6cd619c568"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1e249eac65263587a4d26147f7405ac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad1e249eac65263587a4d26147f7405ac"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#ad1e249eac65263587a4d26147f7405ac">slot_HistoryBackward</a> ()</td></tr>
+<tr class="memdesc:ad1e249eac65263587a4d26147f7405ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT "HistoryBackward" Signals to the backend, that the user wants to navigate backward in history. <br/></td></tr>
+<tr class="separator:ad1e249eac65263587a4d26147f7405ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54f442f5f58f05b71b9d8cc5b3b5c932"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a54f442f5f58f05b71b9d8cc5b3b5c932"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a54f442f5f58f05b71b9d8cc5b3b5c932">slot_HistoryForward</a> ()</td></tr>
+<tr class="memdesc:a54f442f5f58f05b71b9d8cc5b3b5c932"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT "HistoryForward" Signals to the backend, that the user wants to navigate forward in history. <br/></td></tr>
+<tr class="separator:a54f442f5f58f05b71b9d8cc5b3b5c932"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c313a85a4d925415ee8864afc0bd25b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6c313a85a4d925415ee8864afc0bd25b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a6c313a85a4d925415ee8864afc0bd25b">slot_ViewSwitch_released</a> ()</td></tr>
+<tr class="memdesc:a6c313a85a4d925415ee8864afc0bd25b"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT "ViewSwitch_released" changes the appereance of button back to normal/"unpressed". <br/></td></tr>
+<tr class="separator:a6c313a85a4d925415ee8864afc0bd25b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07935ffe4c835619b9af9a3357c600d4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07935ffe4c835619b9af9a3357c600d4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a07935ffe4c835619b9af9a3357c600d4">slot_BoardDetectionManually</a> ()</td></tr>
+<tr class="memdesc:a07935ffe4c835619b9af9a3357c600d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT BoardDetectionManually Repeates a signal from the QAction "manually_action" to notify to manually detect gameboard. <br/></td></tr>
+<tr class="separator:a07935ffe4c835619b9af9a3357c600d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a760ca6078ba96cba0c62592850124348"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a760ca6078ba96cba0c62592850124348"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a760ca6078ba96cba0c62592850124348">slot_BoardDetectionAutomatically</a> ()</td></tr>
+<tr class="memdesc:a760ca6078ba96cba0c62592850124348"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT BoardDetectionManually Repeates a signal from the QAction "manually_action" to notify to automatically detect gameboard. <br/></td></tr>
+<tr class="separator:a760ca6078ba96cba0c62592850124348"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6c2d60e181f091800eac0fd97feef60"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6c2d60e181f091800eac0fd97feef60"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#ad6c2d60e181f091800eac0fd97feef60">slot_ToggleVirtualGameMode</a> ()</td></tr>
+<tr class="memdesc:ad6c2d60e181f091800eac0fd97feef60"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT ToggleVirtualGameMode Sends a signal which determines the game mode the user chose. <br/></td></tr>
+<tr class="separator:ad6c2d60e181f091800eac0fd97feef60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a129eb70905a79bf351c3cd013ffb57ce"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a129eb70905a79bf351c3cd013ffb57ce"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a129eb70905a79bf351c3cd013ffb57ce">slot_passOnVirtualViewPlayMove</a> (const int x, const int y)</td></tr>
+<tr class="memdesc:a129eb70905a79bf351c3cd013ffb57ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT passOnVirtualViewPlayMove Repeates a signal from Virtual View to backend. The signal has the position of the board the player wants to place a stone to. <br/></td></tr>
+<tr class="separator:a129eb70905a79bf351c3cd013ffb57ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83c8e7ed74401b13d4fe8ddde6ecbd17"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83c8e7ed74401b13d4fe8ddde6ecbd17"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a83c8e7ed74401b13d4fe8ddde6ecbd17">slot_toggleScannerDebugImage</a> ()</td></tr>
+<tr class="memdesc:a83c8e7ed74401b13d4fe8ddde6ecbd17"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT toggleScannerDebugImage Sends a signal which determines the scanner image mode the user chose. <br/></td></tr>
+<tr class="separator:a83c8e7ed74401b13d4fe8ddde6ecbd17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd32b7e72c9a4c02c864011035b8a070"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#afd32b7e72c9a4c02c864011035b8a070">slot_changeScanRate</a> (int milliseconds)</td></tr>
+<tr class="memdesc:afd32b7e72c9a4c02c864011035b8a070"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT "change scan rate" Sends a signal that changes the camera scanning rate in the backend.  <a href="#afd32b7e72c9a4c02c864011035b8a070">More...</a><br/></td></tr>
+<tr class="separator:afd32b7e72c9a4c02c864011035b8a070"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a750b464d11f3596a988f9ecf1e13689c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a750b464d11f3596a988f9ecf1e13689c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a750b464d11f3596a988f9ecf1e13689c">init</a> ()</td></tr>
+<tr class="memdesc:a750b464d11f3596a988f9ecf1e13689c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets initial settings like the content of views, texts and windows. <br/></td></tr>
+<tr class="separator:a750b464d11f3596a988f9ecf1e13689c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e65e8c2d2c250b2c93d23b6ab944408"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a0e65e8c2d2c250b2c93d23b6ab944408">setPlayerLabels</a> (QString blackplayer_name, QString whiteplayer_name)</td></tr>
+<tr class="memdesc:a0e65e8c2d2c250b2c93d23b6ab944408"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets labels and variables for player names.  <a href="#a0e65e8c2d2c250b2c93d23b6ab944408">More...</a><br/></td></tr>
+<tr class="separator:a0e65e8c2d2c250b2c93d23b6ab944408"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a055054ffdfad948a57575d409f4e8147"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a055054ffdfad948a57575d409f4e8147">resizeEvent</a> (QResizeEvent *event)</td></tr>
+<tr class="memdesc:a055054ffdfad948a57575d409f4e8147"><td class="mdescLeft">&#160;</td><td class="mdescRight">overridden SLOT QCloseEvent "resizeEvent". Calls the resizeEvent of virtual view to notice changes. Not needed for augmented view because it scales automatically.  <a href="#a055054ffdfad948a57575d409f4e8147">More...</a><br/></td></tr>
+<tr class="separator:a055054ffdfad948a57575d409f4e8147"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba675b18cab6bdf0cb10bee9f253283a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#aba675b18cab6bdf0cb10bee9f253283a">closeEvent</a> (QCloseEvent *event)</td></tr>
+<tr class="memdesc:aba675b18cab6bdf0cb10bee9f253283a"><td class="mdescLeft">&#160;</td><td class="mdescRight">overridden SLOT QCloseEvent "closeEvent" When trying to close the application a window appears and asks if user is sure. If answered "yes" the a signal to the backend thread is sent to stop it. If answered "no" the close event is ignored.  <a href="#aba675b18cab6bdf0cb10bee9f253283a">More...</a><br/></td></tr>
+<tr class="separator:aba675b18cab6bdf0cb10bee9f253283a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a95e455122becfb0db5ecd6b79fff1487"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a95e455122becfb0db5ecd6b79fff1487"></a>
+Ui::MainWindow&#160;</td><td class="memItemRight" valign="bottom"><b>ui_main</b></td></tr>
+<tr class="separator:a95e455122becfb0db5ecd6b79fff1487"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d6162c9d99aee710cb6c87e6cd591b4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9d6162c9d99aee710cb6c87e6cd591b4"></a>
+<a class="el" href="class_go___g_u_i_1_1_virtual_view.html">VirtualView</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>virtual_view</b></td></tr>
+<tr class="separator:a9d6162c9d99aee710cb6c87e6cd591b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a50c7e0389ba4b62982293ab0914f4b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3a50c7e0389ba4b62982293ab0914f4b"></a>
+<a class="el" href="class_go___g_u_i_1_1_augmented_view.html">AugmentedView</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>augmented_view</b></td></tr>
+<tr class="separator:a3a50c7e0389ba4b62982293ab0914f4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabbb6abd0b9941e8b84efcc06a6194fa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aabbb6abd0b9941e8b84efcc06a6194fa"></a>
+QPixmap&#160;</td><td class="memItemRight" valign="bottom"><b>whitebasket_pixmap</b></td></tr>
+<tr class="separator:aabbb6abd0b9941e8b84efcc06a6194fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadd6bd0742c6745e05729f222a9d3b70"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aadd6bd0742c6745e05729f222a9d3b70"></a>
+QPixmap&#160;</td><td class="memItemRight" valign="bottom"><b>blackbasket_pixmap</b></td></tr>
+<tr class="separator:aadd6bd0742c6745e05729f222a9d3b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ecb73287fffc68501457b999207cef8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ecb73287fffc68501457b999207cef8"></a>
+QPixmap&#160;</td><td class="memItemRight" valign="bottom"><b>closedbasket_pixmap</b></td></tr>
+<tr class="separator:a5ecb73287fffc68501457b999207cef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18fa496d13bbe413eeb2e3a246e4f748"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a18fa496d13bbe413eeb2e3a246e4f748"></a>
+QPixmap&#160;</td><td class="memItemRight" valign="bottom"><b>gotable_pixmap</b></td></tr>
+<tr class="separator:a18fa496d13bbe413eeb2e3a246e4f748"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a0d26a0d722bb9760e11e94ab276739"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a0d26a0d722bb9760e11e94ab276739"></a>
+QImage&#160;</td><td class="memItemRight" valign="bottom"><b>augmented_logo</b></td></tr>
+<tr class="separator:a6a0d26a0d722bb9760e11e94ab276739"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af585338d766f1b1ea5bd5fe3a45a7c57"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af585338d766f1b1ea5bd5fe3a45a7c57"></a>
+QIcon&#160;</td><td class="memItemRight" valign="bottom"><b>switchbutton_icon</b></td></tr>
+<tr class="separator:af585338d766f1b1ea5bd5fe3a45a7c57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77df65bc3c61ac106b3e63f64b00431c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a77df65bc3c61ac106b3e63f64b00431c"></a>
+QIcon&#160;</td><td class="memItemRight" valign="bottom"><b>switchbuttonpressed_icon</b></td></tr>
+<tr class="separator:a77df65bc3c61ac106b3e63f64b00431c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb63636ab1249954244ef412dee14843"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adb63636ab1249954244ef412dee14843"></a>
+QString&#160;</td><td class="memItemRight" valign="bottom"><b>game_name</b></td></tr>
+<tr class="separator:adb63636ab1249954244ef412dee14843"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83b96f37e845371f5ba77f3834cc2f8d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83b96f37e845371f5ba77f3834cc2f8d"></a>
+QString&#160;</td><td class="memItemRight" valign="bottom"><b>texture_path</b></td></tr>
+<tr class="separator:a83b96f37e845371f5ba77f3834cc2f8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac9d45656b5ba403ac61750af3e5d119"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac9d45656b5ba403ac61750af3e5d119"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>current_scanning_fps</b></td></tr>
+<tr class="separator:aac9d45656b5ba403ac61750af3e5d119"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ed28e12c6aa23a932d6003503b18f31"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4ed28e12c6aa23a932d6003503b18f31"></a>
+const <a class="el" href="class_go___backend_1_1_game.html">Go_Backend::Game</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>go_game</b></td></tr>
+<tr class="separator:a4ed28e12c6aa23a932d6003503b18f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:a7ac645c24b3abc0154ab137733198df6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7ac645c24b3abc0154ab137733198df6"></a>
@@ -221,6 +354,113 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Go_GUI::ChangeScanRa
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="aba675b18cab6bdf0cb10bee9f253283a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_GUI::GUI::closeEvent </td>
+          <td>(</td>
+          <td class="paramtype">QCloseEvent *&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>overridden SLOT QCloseEvent "closeEvent" When trying to close the application a window appears and asks if user is sure. If answered "yes" the a signal to the backend thread is sent to stop it. If answered "no" the close event is ignored. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">QCloseEvent</td><td>close event that shall or shall not be executed afterwards. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a055054ffdfad948a57575d409f4e8147"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_GUI::GUI::resizeEvent </td>
+          <td>(</td>
+          <td class="paramtype">QResizeEvent *&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>overridden SLOT QCloseEvent "resizeEvent". Calls the resizeEvent of virtual view to notice changes. Not needed for augmented view because it scales automatically. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">QResizeEvent*</td><td>resize event </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a0e65e8c2d2c250b2c93d23b6ab944408"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_GUI::GUI::setPlayerLabels </td>
+          <td>(</td>
+          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>blackplayer_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>whiteplayer_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets labels and variables for player names. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">QString</td><td>name of black player (default: "Black" </td></tr>
+    <tr><td class="paramname">QString</td><td>name of white player (default: "White" </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a1035799b538b1dbcc626aa6aa39d4256"></a>
 <div class="memitem">
 <div class="memproto">
@@ -513,6 +753,38 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Go_GUI::ChangeScanRa
 
 </div>
 </div>
+<a class="anchor" id="afd32b7e72c9a4c02c864011035b8a070"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_GUI::GUI::slot_changeScanRate </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>milliseconds</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>SLOT "change scan rate" Sends a signal that changes the camera scanning rate in the backend. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">int</td><td>New scanning rate in milliseconds </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a7f1ea03506e61481cc881f7dbd7d2a45"></a>
 <div class="memitem">
 <div class="memproto">
@@ -639,7 +911,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Go_GUI::ChangeScanRa
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:03 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

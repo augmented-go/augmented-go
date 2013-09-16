@@ -1,0 +1,5 @@
+<map id="Go_GUI::GUI" name="Go_GUI::GUI">
+<area shape="rect" id="node3" href="$class_go___g_u_i_1_1_virtual_view.html" title="The VirtualView is part of Augmented&#45;Go Gui. The virtual view shows a virtual representation of the g..." alt="" coords="136,83,277,109"/>
+<area shape="rect" id="node5" href="$class_go___g_u_i_1_1_augmented_view.html" title="The AugmentedView is part of Augmented&#45;Go Gui. The view shows the camera picture (if a camera is conn..." alt="" coords="301,83,472,109"/>
+<area shape="rect" id="node7" href="$class_go___backend_1_1_game.html" title="Basic game class to play and keep track of a game of go. One instance handles one game of go..." alt="" coords="497,83,636,109"/>
+</map>

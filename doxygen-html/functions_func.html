@@ -62,7 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li class="current"><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -70,6 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="functions.html"><span>All</span></a></li>
       <li class="current"><a href="functions_func.html"><span>Functions</span></a></li>
+      <li><a href="functions_vars.html"><span>Variables</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -81,6 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_g"><span>g</span></a></li>
       <li><a href="#index_h"><span>h</span></a></li>
       <li><a href="#index_i"><span>i</span></a></li>
+      <li><a href="#index_m"><span>m</span></a></li>
       <li><a href="#index_n"><span>n</span></a></li>
       <li><a href="#index_p"><span>p</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
@@ -95,7 +97,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -127,6 +129,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>ChangeScanRateDialog()
 : <a class="el" href="class_go___g_u_i_1_1_change_scan_rate_dialog.html#a56078345bf87f26330d4cd9af5b363a1">Go_GUI::ChangeScanRateDialog</a>
+</li>
+<li>closeEvent()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#aba675b18cab6bdf0cb10bee9f253283a">Go_GUI::GUI</a>
 </li>
 <li>createAndSetScene()
 : <a class="el" href="class_go___g_u_i_1_1_virtual_view.html#a67a8a372bbe90bf6c012166dc930a71f">Go_GUI::VirtualView</a>
@@ -183,6 +188,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h3><a class="anchor" id="index_i"></a>- i -</h3><ul>
 <li>init()
 : <a class="el" href="class_go___backend_1_1_game.html#a3724f3317f8503be75dd2ba302c2fb59">Go_Backend::Game</a>
+, <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a750b464d11f3596a988f9ecf1e13689c">Go_GUI::GUI</a>
+</li>
+<li>isPlacingHandicap()
+: <a class="el" href="class_go___backend_1_1_game.html#a8a593a87e05f6c37bd0241264a41266c">Go_Backend::Game</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_m"></a>- m -</h3><ul>
+<li>mouseMoveEvent()
+: <a class="el" href="class_go___g_u_i_1_1_virtual_view.html#ac8774ee46ec54e30d3da47d152412840">Go_GUI::VirtualView</a>
+</li>
+<li>mousePressEvent()
+: <a class="el" href="class_go___g_u_i_1_1_virtual_view.html#ac057654f75623985ccb087baa8cde534">Go_GUI::VirtualView</a>
 </li>
 </ul>
 
@@ -207,13 +226,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="class_go___controller_1_1_backend_worker.html#a96b18c2f17d4075b38127a0a98d44fc5">Go_Controller::BackendWorker</a>
 </li>
 <li>playMove()
-: <a class="el" href="class_go___backend_1_1_game.html#ad84fcf4e1ed0f9a522b38562fabfb884">Go_Backend::Game</a>
-, <a class="el" href="class_go___controller_1_1_backend_worker.html#a8cdf151be4cf5aa5a4ded99f14a2c9a6">Go_Controller::BackendWorker</a>
+: <a class="el" href="class_go___controller_1_1_backend_worker.html#a8cdf151be4cf5aa5a4ded99f14a2c9a6">Go_Controller::BackendWorker</a>
+, <a class="el" href="class_go___backend_1_1_game.html#ad84fcf4e1ed0f9a522b38562fabfb884">Go_Backend::Game</a>
+</li>
+<li>possibleCapturedStones()
+: <a class="el" href="class_go___backend_1_1_game.html#acbc5906b5821dcf48c7f99f48e18d6e8">Go_Backend::Game</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
+<li>readCameraFrame()
+: <a class="el" href="class_go___scanner_1_1_scanner.html#abaaa083bfdc2ba8524599e305793c902">Go_Scanner::Scanner</a>
+</li>
 <li>rescaleImage()
 : <a class="el" href="class_go___g_u_i_1_1_augmented_view.html#a6be7c9a32c80814fec2b21f9209f8b29">Go_GUI::AugmentedView</a>
 </li>
@@ -225,7 +250,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="class_go___backend_1_1_game.html#aabe4c7ea8376f5018db381f94cd48e1e">Go_Backend::Game</a>
 </li>
 <li>resizeEvent()
-: <a class="el" href="class_go___g_u_i_1_1_virtual_view.html#a1b28ea2869a7a759adafc179147190cd">Go_GUI::VirtualView</a>
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a055054ffdfad948a57575d409f4e8147">Go_GUI::GUI</a>
+, <a class="el" href="class_go___g_u_i_1_1_virtual_view.html#a1b28ea2869a7a759adafc179147190cd">Go_GUI::VirtualView</a>
 </li>
 </ul>
 
@@ -256,6 +282,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>setImage()
 : <a class="el" href="class_go___g_u_i_1_1_augmented_view.html#a5849e398aec9d2d832ef383ad7dabd7a">Go_GUI::AugmentedView</a>
+</li>
+<li>setPlayerLabels()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a0e65e8c2d2c250b2c93d23b6ab944408">Go_GUI::GUI</a>
 </li>
 <li>setScannerDebugImage()
 : <a class="el" href="class_go___controller_1_1_backend_worker.html#a5e0585036fb3f14df4b0e80e843eb8eb">Go_Controller::BackendWorker</a>
@@ -308,8 +337,44 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>signal_virtualViewplayMove()
 : <a class="el" href="class_go___g_u_i_1_1_virtual_view.html#a2535fb5c6234855de1a3af5408ef01ef">Go_GUI::VirtualView</a>
 </li>
+<li>slot_BoardDetectionAutomatically()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a760ca6078ba96cba0c62592850124348">Go_GUI::GUI</a>
+</li>
+<li>slot_BoardDetectionManually()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a07935ffe4c835619b9af9a3357c600d4">Go_GUI::GUI</a>
+</li>
+<li>slot_ButtonNewGame()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a38eef4bde6652434c4921d626d91fa93">Go_GUI::GUI</a>
+</li>
+<li>slot_ButtonPass()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#abfe8183a3e8a80820cc2929ffaf7c7be">Go_GUI::GUI</a>
+</li>
+<li>slot_ButtonResign()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#ad6ae05f09475f0adf62f616945dd9e77">Go_GUI::GUI</a>
+</li>
+<li>slot_changeScanRate()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#afd32b7e72c9a4c02c864011035b8a070">Go_GUI::GUI</a>
+</li>
 <li>slot_displayErrorMessage()
 : <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a51885cedc84449550a394f0c61d8e985">Go_GUI::GUI</a>
+</li>
+<li>slot_HistoryBackward()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#ad1e249eac65263587a4d26147f7405ac">Go_GUI::GUI</a>
+</li>
+<li>slot_HistoryForward()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a54f442f5f58f05b71b9d8cc5b3b5c932">Go_GUI::GUI</a>
+</li>
+<li>slot_MenuChangeScanRate()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a4e7f2bf4d63041b12e57cc9ede64cfd9">Go_GUI::GUI</a>
+</li>
+<li>slot_MenuInfo()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#aeeb3f45a4ca3ada82243d0c06cb4745f">Go_GUI::GUI</a>
+</li>
+<li>slot_MenuOpen()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a317e909e5f70ff210db077b736c6fe25">Go_GUI::GUI</a>
+</li>
+<li>slot_MenuSave()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a59d300f0cb47876d2cdb0f2d7561a9fc">Go_GUI::GUI</a>
 </li>
 <li>slot_newGameData()
 : <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a7f1ea03506e61481cc881f7dbd7d2a45">Go_GUI::GUI</a>
@@ -320,6 +385,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>slot_noCameraImage()
 : <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#ab0f2d3ffe44cfd922eb8db8fb566aada">Go_GUI::GUI</a>
 </li>
+<li>slot_passOnVirtualViewPlayMove()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a129eb70905a79bf351c3cd013ffb57ce">Go_GUI::GUI</a>
+</li>
 <li>slot_setupNewGame()
 : <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a37db2a498fbabe09efdcca92869fc3c3">Go_GUI::GUI</a>
 </li>
@@ -328,6 +396,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>slot_showFinishedGameResults()
 : <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#aea1eb5e415e6ef358452947ff6e232db">Go_GUI::GUI</a>
+</li>
+<li>slot_toggleScannerDebugImage()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a83c8e7ed74401b13d4fe8ddde6ecbd17">Go_GUI::GUI</a>
+</li>
+<li>slot_ToggleVirtualGameMode()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#ad6c2d60e181f091800eac0fd97feef60">Go_GUI::GUI</a>
+</li>
+<li>slot_ViewSwitch()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a4f64e432c5917e77173f1f6cd619c568">Go_GUI::GUI</a>
+</li>
+<li>slot_ViewSwitch_released()
+: <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a6c313a85a4d925415ee8864afc0bd25b">Go_GUI::GUI</a>
 </li>
 <li>stop_backend_thread()
 : <a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a9cf250a3aeda797540759ddbb4ce4f9d">Go_GUI::GUI</a>
@@ -338,6 +418,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h3><a class="anchor" id="index_u"></a>- u -</h3><ul>
 <li>update()
 : <a class="el" href="class_go___backend_1_1_game.html#af3d1281326b2cd0ce57e21c3b0496683">Go_Backend::Game</a>
+</li>
+<li>updateSingleMove()
+: <a class="el" href="class_go___backend_1_1_game.html#af1398185231100e1fa54d8e1935f7da8">Go_Backend::Game</a>
 </li>
 </ul>
 
@@ -353,7 +436,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:03 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

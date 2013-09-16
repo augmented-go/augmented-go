@@ -62,7 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -88,6 +88,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_go___backend_1_1_game-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Go_Backend::Game Class Reference</div>  </div>
@@ -146,6 +148,56 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <tr class="memitem:af478b563663c14dbc628a0c02b91d065"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___backend_1_1_game.html#af478b563663c14dbc628a0c02b91d065">navigateHistory</a> (SgNode::Direction dir)</td></tr>
 <tr class="memdesc:af478b563663c14dbc628a0c02b91d065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Navigates the history in the given direction and updates the board accordingly. Make sure that going in that direction is even possible, by calling canNavigateHistory.  <a href="#af478b563663c14dbc628a0c02b91d065">More...</a><br/></td></tr>
 <tr class="separator:af478b563663c14dbc628a0c02b91d065"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a8c650e003a305ef74bbb50e681cc3d55"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c650e003a305ef74bbb50e681cc3d55"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Game</b> (const <a class="el" href="class_go___backend_1_1_game.html">Game</a> &amp;)</td></tr>
+<tr class="separator:a8c650e003a305ef74bbb50e681cc3d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cbcb31d0a8b2cb860e36aea576d1e6f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0cbcb31d0a8b2cb860e36aea576d1e6f"></a>
+<a class="el" href="class_go___backend_1_1_game.html">Game</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="class_go___backend_1_1_game.html">Game</a> &amp;)</td></tr>
+<tr class="separator:a0cbcb31d0a8b2cb860e36aea576d1e6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81e175dbdc0579d9fce19da88e981bcd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a81e175dbdc0579d9fce19da88e981bcd"></a>
+<a class="el" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>updateNormal</b> (SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites)</td></tr>
+<tr class="separator:a81e175dbdc0579d9fce19da88e981bcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2aaf8d04e0b667d71ddcb0042f2962b3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2aaf8d04e0b667d71ddcb0042f2962b3"></a>
+<a class="el" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>updateWhileCapturing</b> (GoSetup new_setup)</td></tr>
+<tr class="separator:a2aaf8d04e0b667d71ddcb0042f2962b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a593a87e05f6c37bd0241264a41266c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8a593a87e05f6c37bd0241264a41266c"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___backend_1_1_game.html#a8a593a87e05f6c37bd0241264a41266c">isPlacingHandicap</a> (SgPointSet current_blacks, SgPointSet current_whites, SgPointSet new_whites)</td></tr>
+<tr class="memdesc:a8a593a87e05f6c37bd0241264a41266c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether handicap stones are being placed or not. <br/></td></tr>
+<tr class="separator:a8a593a87e05f6c37bd0241264a41266c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6f27840985d12f1cfdfcfcdec8acb4d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab6f27840985d12f1cfdfcfcdec8acb4d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>placeHandicap</b> (GoSetup new_setup)</td></tr>
+<tr class="separator:ab6f27840985d12f1cfdfcfcdec8acb4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1398185231100e1fa54d8e1935f7da8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___backend_1_1_game.html#af1398185231100e1fa54d8e1935f7da8">updateSingleMove</a> (SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent)</td></tr>
+<tr class="memdesc:af1398185231100e1fa54d8e1935f7da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to play a move at point for player. Also checks if removed_of_player and removed_of_opponent are captured stones. Gets called inside updateNormal.  <a href="#af1398185231100e1fa54d8e1935f7da8">More...</a><br/></td></tr>
+<tr class="separator:af1398185231100e1fa54d8e1935f7da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbc5906b5821dcf48c7f99f48e18d6e8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acbc5906b5821dcf48c7f99f48e18d6e8"></a>
+SgPointSet&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___backend_1_1_game.html#acbc5906b5821dcf48c7f99f48e18d6e8">possibleCapturedStones</a> (const GoBoard &amp;const_board, SgPoint point)</td></tr>
+<tr class="memdesc:acbc5906b5821dcf48c7f99f48e18d6e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the possibly captured stones when current player of cons_board would play at point. <br/></td></tr>
+<tr class="separator:acbc5906b5821dcf48c7f99f48e18d6e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa61bf90b010025a0911244a8481168db"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa61bf90b010025a0911244a8481168db"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>validSetup</b> (const GoSetup &amp;setup) const </td></tr>
+<tr class="separator:aa61bf90b010025a0911244a8481168db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d83bbd3d12ef749a4c4c7409e00f676"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d83bbd3d12ef749a4c4c7409e00f676"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>allValidPoints</b> (const SgPointSet &amp;stones) const </td></tr>
+<tr class="separator:a0d83bbd3d12ef749a4c4c7409e00f676"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a6b7d5ad2206086b5fcb9a936de534cab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6b7d5ad2206086b5fcb9a936de534cab"></a>
+GoGame&#160;</td><td class="memItemRight" valign="bottom"><b>_go_game</b></td></tr>
+<tr class="separator:a6b7d5ad2206086b5fcb9a936de534cab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc2749ad7f28deb653fb55ff737ef1d5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acc2749ad7f28deb653fb55ff737ef1d5"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_game_finished</b></td></tr>
+<tr class="separator:acc2749ad7f28deb653fb55ff737ef1d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f369b8e3a1a75dbdd59bbf24b9811df"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f369b8e3a1a75dbdd59bbf24b9811df"></a>
+SgPointSet&#160;</td><td class="memItemRight" valign="bottom"><b>_differences</b></td></tr>
+<tr class="separator:a4f369b8e3a1a75dbdd59bbf24b9811df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d41a31684775477016c09dc8a87b4c8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4d41a31684775477016c09dc8a87b4c8"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_while_capturing</b></td></tr>
+<tr class="separator:a4d41a31684775477016c09dc8a87b4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Basic game class to play and keep track of a game of go. One instance handles one game of go.<br/>
@@ -398,13 +450,62 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 
 </div>
 </div>
+<a class="anchor" id="af1398185231100e1fa54d8e1935f7da8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> Go_Backend::Game::updateSingleMove </td>
+          <td>(</td>
+          <td class="paramtype">SgPoint&#160;</td>
+          <td class="paramname"><em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SgBlackWhite&#160;</td>
+          <td class="paramname"><em>player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SgPointSet&#160;</td>
+          <td class="paramname"><em>removed_of_player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SgPointSet&#160;</td>
+          <td class="paramname"><em>removed_of_opponent</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tries to play a move at point for player. Also checks if removed_of_player and removed_of_opponent are captured stones. Gets called inside updateNormal. </p>
+<dl class="section return"><dt>Returns</dt><dd>Whether the move was legal or illegal. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>augmented-go/Go_Backend/<a class="el" href="_game_8hpp_source.html">Game.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

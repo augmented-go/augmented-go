@@ -68,7 +68,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -97,53 +97,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
 <div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="namespace_go___g_u_i.html">    9</a></span>&#160;<span class="keyword">namespace </span>Go_GUI {</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="class_go___g_u_i_1_1_augmented_view.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_go___g_u_i_1_1_augmented_view.html">AugmentedView</a> : <span class="keyword">public</span> QLabel</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    Q_OBJECT</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="class_go___g_u_i_1_1_augmented_view.html#a95b49c287846563462d9df1f2df34163">   22</a></span>&#160;    <a class="code" href="class_go___g_u_i_1_1_augmented_view.html#a95b49c287846563462d9df1f2df34163">AugmentedView</a>(QWidget *parent = 0) {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        this-&gt;setParent(parent);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        this-&gt;setAlignment(Qt::AlignCenter);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="comment">// Setting up augmented logo as standard picture</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        QString augmented_logo_path = <span class="stringliteral">&quot;res/textures/augmented_logo.png&quot;</span>;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordflow">if</span>(QImage(augmented_logo_path).isNull())</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            QMessageBox::critical(<span class="keyword">this</span>, <span class="stringliteral">&quot;GUI element not found&quot;</span>, <span class="stringliteral">&quot;Warning image of AugmentedView not found!\n searched relative to exe in&quot;</span> + augmented_logo_path);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordflow">else</span>{</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <a class="code" href="class_go___g_u_i_1_1_augmented_view.html#a5849e398aec9d2d832ef383ad7dabd7a">setImage</a>(QImage(augmented_logo_path));</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            <a class="code" href="class_go___g_u_i_1_1_augmented_view.html#a6be7c9a32c80814fec2b21f9209f8b29">rescaleImage</a>(parentWidget()-&gt;size());</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        }</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    }</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    ~<a class="code" href="class_go___g_u_i_1_1_augmented_view.html">AugmentedView</a>(){};</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="class_go___g_u_i_1_1_augmented_view.html#a5849e398aec9d2d832ef383ad7dabd7a">   43</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_augmented_view.html#a5849e398aec9d2d832ef383ad7dabd7a">setImage</a>(QImage image){</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordflow">if</span>(!image.isNull())     <span class="comment">// if image is empty take old picture!</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            picture = QPixmap::fromImage(image);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        this-&gt;setPixmap(picture);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        this-&gt;show();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="class_go___g_u_i_1_1_augmented_view.html#a6be7c9a32c80814fec2b21f9209f8b29">   55</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_augmented_view.html#a6be7c9a32c80814fec2b21f9209f8b29">rescaleImage</a>(QSize size){</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        this-&gt;resize(size);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">if</span> (!picture.isNull())</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            setPixmap(picture.scaled(size, Qt::KeepAspectRatio));</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    }</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    QPixmap picture;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;};</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
-<div class="ttc" id="class_go___g_u_i_1_1_augmented_view_html_a6be7c9a32c80814fec2b21f9209f8b29"><div class="ttname"><a href="class_go___g_u_i_1_1_augmented_view.html#a6be7c9a32c80814fec2b21f9209f8b29">Go_GUI::AugmentedView::rescaleImage</a></div><div class="ttdeci">void rescaleImage(QSize size)</div><div class="ttdoc">scales the pixmap to the width of size  QSize </div><div class="ttdef"><b>Definition:</b> AugmentedView.hpp:55</div></div>
-<div class="ttc" id="class_go___g_u_i_1_1_augmented_view_html"><div class="ttname"><a href="class_go___g_u_i_1_1_augmented_view.html">Go_GUI::AugmentedView</a></div><div class="ttdef"><b>Definition:</b> AugmentedView.hpp:11</div></div>
-<div class="ttc" id="class_go___g_u_i_1_1_augmented_view_html_a5849e398aec9d2d832ef383ad7dabd7a"><div class="ttname"><a href="class_go___g_u_i_1_1_augmented_view.html#a5849e398aec9d2d832ef383ad7dabd7a">Go_GUI::AugmentedView::setImage</a></div><div class="ttdeci">void setImage(QImage image)</div><div class="ttdoc">Sets the new image that shall be displayed. If the new image is empty, show the same picture as befor...</div><div class="ttdef"><b>Definition:</b> AugmentedView.hpp:43</div></div>
-<div class="ttc" id="class_go___g_u_i_1_1_augmented_view_html_a95b49c287846563462d9df1f2df34163"><div class="ttname"><a href="class_go___g_u_i_1_1_augmented_view.html#a95b49c287846563462d9df1f2df34163">Go_GUI::AugmentedView::AugmentedView</a></div><div class="ttdeci">AugmentedView(QWidget *parent=0)</div><div class="ttdoc">Constructor Sets its parent widget, Sets the alignment of its content to center Sets up the Augmented...</div><div class="ttdef"><b>Definition:</b> AugmentedView.hpp:22</div></div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="class_go___g_u_i_1_1_augmented_view.html">   18</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_go___g_u_i_1_1_augmented_view.html">AugmentedView</a> : <span class="keyword">public</span> QLabel</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    Q_OBJECT</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="class_go___g_u_i_1_1_augmented_view.html#a95b49c287846563462d9df1f2df34163">   29</a></span>&#160;    <a class="code" href="class_go___g_u_i_1_1_augmented_view.html#a95b49c287846563462d9df1f2df34163">AugmentedView</a>(QWidget *parent = 0) {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        this-&gt;setParent(parent);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        this-&gt;setAlignment(Qt::AlignCenter);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="comment">// Setting up augmented logo as standard picture</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        QString augmented_logo_path = <span class="stringliteral">&quot;res/textures/augmented_logo.png&quot;</span>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">if</span>(QImage(augmented_logo_path).isNull())</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            QMessageBox::critical(<span class="keyword">this</span>, <span class="stringliteral">&quot;GUI element not found&quot;</span>, <span class="stringliteral">&quot;Warning image of AugmentedView not found!\n searched relative to exe in&quot;</span> + augmented_logo_path);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">else</span>{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            <a class="code" href="class_go___g_u_i_1_1_augmented_view.html#a5849e398aec9d2d832ef383ad7dabd7a">setImage</a>(QImage(augmented_logo_path));</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            <a class="code" href="class_go___g_u_i_1_1_augmented_view.html#a6be7c9a32c80814fec2b21f9209f8b29">rescaleImage</a>(parentWidget()-&gt;size());</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    ~<a class="code" href="class_go___g_u_i_1_1_augmented_view.html">AugmentedView</a>(){};</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="class_go___g_u_i_1_1_augmented_view.html#a5849e398aec9d2d832ef383ad7dabd7a">   50</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_augmented_view.html#a5849e398aec9d2d832ef383ad7dabd7a">setImage</a>(QImage image){</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">if</span>(!image.isNull())     <span class="comment">// if image is empty take old picture!</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            picture = QPixmap::fromImage(image);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        this-&gt;setPixmap(picture);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        this-&gt;show();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="class_go___g_u_i_1_1_augmented_view.html#a6be7c9a32c80814fec2b21f9209f8b29">   62</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_augmented_view.html#a6be7c9a32c80814fec2b21f9209f8b29">rescaleImage</a>(QSize size){</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        this-&gt;resize(size);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">if</span> (!picture.isNull())</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            setPixmap(picture.scaled(size, Qt::KeepAspectRatio));</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    QPixmap picture;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;};</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
+<div class="ttc" id="class_go___g_u_i_1_1_augmented_view_html_a6be7c9a32c80814fec2b21f9209f8b29"><div class="ttname"><a href="class_go___g_u_i_1_1_augmented_view.html#a6be7c9a32c80814fec2b21f9209f8b29">Go_GUI::AugmentedView::rescaleImage</a></div><div class="ttdeci">void rescaleImage(QSize size)</div><div class="ttdoc">scales the pixmap to the width of size  QSize </div><div class="ttdef"><b>Definition:</b> AugmentedView.hpp:62</div></div>
+<div class="ttc" id="class_go___g_u_i_1_1_augmented_view_html"><div class="ttname"><a href="class_go___g_u_i_1_1_augmented_view.html">Go_GUI::AugmentedView</a></div><div class="ttdoc">The AugmentedView is part of Augmented-Go Gui. The view shows the camera picture (if a camera is conn...</div><div class="ttdef"><b>Definition:</b> AugmentedView.hpp:18</div></div>
+<div class="ttc" id="class_go___g_u_i_1_1_augmented_view_html_a5849e398aec9d2d832ef383ad7dabd7a"><div class="ttname"><a href="class_go___g_u_i_1_1_augmented_view.html#a5849e398aec9d2d832ef383ad7dabd7a">Go_GUI::AugmentedView::setImage</a></div><div class="ttdeci">void setImage(QImage image)</div><div class="ttdoc">Sets the new image that shall be displayed. If the new image is empty, show the same picture as befor...</div><div class="ttdef"><b>Definition:</b> AugmentedView.hpp:50</div></div>
+<div class="ttc" id="class_go___g_u_i_1_1_augmented_view_html_a95b49c287846563462d9df1f2df34163"><div class="ttname"><a href="class_go___g_u_i_1_1_augmented_view.html#a95b49c287846563462d9df1f2df34163">Go_GUI::AugmentedView::AugmentedView</a></div><div class="ttdeci">AugmentedView(QWidget *parent=0)</div><div class="ttdoc">Constructor Sets its parent widget, Sets the alignment of its content to center Sets up the Augmented...</div><div class="ttdef"><b>Definition:</b> AugmentedView.hpp:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

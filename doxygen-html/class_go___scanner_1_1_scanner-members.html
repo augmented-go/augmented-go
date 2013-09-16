@@ -62,7 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -93,8 +93,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>This is the complete list of members for <a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html#a9106e6764d11eb88f9534940dc73408d">scanCamera</a>(GoSetup &amp;setup, int &amp;board_size, cv::Mat &amp;out_image)</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>Scanner</b>() (defined in <a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a>)</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>_camera</b> (defined in <a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a>)</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>_last_frame</b> (defined in <a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a>)</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>_setDebugImg</b> (defined in <a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a>)</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>operator=</b>(const Scanner &amp;) (defined in <a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a>)</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html#abaaa083bfdc2ba8524599e305793c902">readCameraFrame</a>(cv::Mat &amp;frame)</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html#a9106e6764d11eb88f9534940dc73408d">scanCamera</a>(GoSetup &amp;setup, int &amp;board_size, cv::Mat &amp;out_image)</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Scanner</b>() (defined in <a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a>)</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>Scanner</b>(const Scanner &amp;) (defined in <a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a>)</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html#a8a590e012e6424bc300b14dbfdda3dce">Scanner::setDebugImage</a>()</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html#af1ec79f13301fc166e37766a47566b2b">Scanner::setNormalImage</a>()</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html#ab29aec484a3fb2e3344ded478e8748e3">selectBoardAutomatically</a>()</td><td class="entry"><a class="el" href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></td><td class="entry"></td></tr>
@@ -102,7 +108,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 6 2013 16:52:26 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 16 2013 12:00:03 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>
