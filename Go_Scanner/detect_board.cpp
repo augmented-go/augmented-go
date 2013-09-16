@@ -150,9 +150,10 @@ namespace Go_Scanner {
             return;
 
         // APPROX. CONTOURS TO RECTANGLES
+        const auto factor = .065f; // found through testing!
         for (auto& contour : contours) {
             // approximating each contour to get a rectangle with 4 points!
-            approxPolyDP(Mat(contour), contour, arcLength(Mat(contour), true)*0.02, true);
+            approxPolyDP(Mat(contour), contour, arcLength(Mat(contour), true)*factor, true);
         }
 
         // CALCULATING BBOXES
@@ -170,7 +171,8 @@ namespace Go_Scanner {
         // or don't have exactly 4 corner points after approximation ( == rectangle)
         assert(bboxes.size() == contours.size());
 
-        const float edge_factor = .95f;
+        // for discarding contours that contain the complete image
+        const float edge_factor = .99f;
         const float max_width   = input.cols * edge_factor;
         const float max_height  = input.rows * edge_factor;
 
