@@ -169,6 +169,13 @@ namespace Go_Controller {
         void displayErrorMessage(QString message) const;
 
         /**
+        * @brief       Signals an error message with a messagebox the user must explicitly close.
+        * @param[in]   title     Title of the messagebox
+        * @param[in]   message   Error message
+        */
+        void displayErrorMessagebox(QString title, QString message) const;
+
+        /**
          * @brief       Signals that no camera image could be retrieved.
          */
         void noCameraImage() const;

@@ -404,6 +404,14 @@ void GUI::slot_displayErrorMessage(QString message) {
     }
 }
 
+void GUI::slot_displayErrorMessagebox(QString title, QString text) {
+    auto icon = QMessageBox::Icon::Warning;
+    auto buttons = QMessageBox::StandardButton::Ok;
+    auto parent = this;
+
+    QMessageBox(icon, title, text, buttons, parent).exec();
+}
+
 void GUI::slot_noCameraImage() {
     ui_main.automatic_action->setEnabled(false);
     ui_main.manually_action->setEnabled(false);

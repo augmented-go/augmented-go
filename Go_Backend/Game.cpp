@@ -361,18 +361,11 @@ SgNode* Game::loadGame(string file_path) {
     std::ifstream file(file_path.c_str());
     if (!file.is_open()) {
         // @todo(jschmer): support better diagnostics such as throwing an exception like FAILED_TO_OPEN_FILE
-        return false;
+        return nullptr;
     }
 
     SgGameReader reader(file);
-    auto root_node = reader.ReadGame();
-
-    if (!root_node->HasProp(SG_PROP_SIZE)) {
-        // @todo(jschmer): support better diagnostics such as throwing an exception like MISSING_BOARD_SIZE
-        return false;
-    }
-
-    return root_node;
+    return reader.ReadGame();
 }
 
 std::string Game::finishGame() {

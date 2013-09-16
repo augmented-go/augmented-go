@@ -137,26 +137,29 @@ void BackendWorker::loadSgf(QString path) {
     auto filepath = path.toStdString();
 
     auto new_game = _game.loadGame(filepath);
-    if (!new_game)
-        std::cerr << "Error loading game data from file \"" << filepath << "\"!" << std::endl;
+    if (!new_game) {
+        emit displayErrorMessagebox("Error loading the game", "Failed to open the selected sgf-file!");
+        return;
+    }
 
     auto size = 0;
     if (!new_game->GetIntProp(SG_PROP_SIZE, &size)) {
-        // @todo(jschmer): we need a signal to pop up a message box on the gui here
-        //                 because this message will be overwritten by messages from the scan() method
-        //                 and there aren't even error messages in virtual mode
-        emit displayErrorMessage("Your tried to load a sgf file with missing board size!");
+        emit displayErrorMessagebox("Error loading the game", "You tried to load a sgf file with missing board size!\nOnly sgf-files with a defined board size are supported here.");
+
+        // cleanup
+        new_game->DeleteTree();
         return;
     }
 
     if (size != 9 && size != 13 && size != 19) {
-        // @todo(jschmer): we need a signal to pop up a message box on the gui here
-        //                 because this message will be overwritten by messages from the scan() method
-        //                 and there aren't even error messages in virtual mode
-        emit displayErrorMessage("Only board sizes of 9x9, 13x13 and 19x19 are supported!");
+        emit displayErrorMessagebox("Error loading the game", "Only board sizes of 9x9, 13x13 and 19x19 are supported!");
+
+        // cleanup
+        new_game->DeleteTree();
         return;
     }
 
+    // _game takes ownership of new_game
     _game.init(new_game);
 
     signalGuiGameDataChanged();
