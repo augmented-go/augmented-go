@@ -1,0 +1,4 @@
+#include "Version.hpp"
+
+// seperate cpp file so that the gui.cpp doen't need be rebuilt every time the sha1 changes
+const char g_GIT_SHA1[] = "@GIT_SHA1@";
