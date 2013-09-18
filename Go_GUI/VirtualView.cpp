@@ -9,6 +9,7 @@
 
 #include <GoBoard.h>
 
+namespace Go_GUI {
 
 VirtualView::VirtualView(QWidget *parent){
     this->setParent(parent);
@@ -255,4 +256,6 @@ void VirtualView::mouseMoveEvent(QMouseEvent* event){
         // save new mouse hover coordinates
         mouse_hover_coord = new_mouse_hover_coord;
     }
+}
+
 }

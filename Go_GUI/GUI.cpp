@@ -177,11 +177,7 @@ void GUI::slot_HistoryForward(){
     emit signal_navigateHistory(SgNode::Direction::NEXT);
 }
 
-/**
- * @brief	SLOT QAction "MenuOpen"
- *			opens a filedialog that lets the user choose an sgf-file.
- * @todo	loading sgf file
- */
+
 void GUI::slot_MenuOpen(){
     QString selfilter = tr("SGF (*.sgf)");
     QString fileName = QFileDialog::getOpenFileName(
@@ -308,7 +304,7 @@ void GUI::slot_newImage(QImage image) {
         ui_main.manually_action->setEnabled(true);
     }
 
-void GUI::slot_newGameData(const GoBackend::Game* game) {
+void GUI::slot_newGameData(const Go_Backend::Game* game) {
 
     // update internal pointer if the board has been changed
     if (go_game != game)

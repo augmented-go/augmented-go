@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
     GoInit();
 
     {
-        using Go_AR::BackendWorker;
+        using Go_Controller::BackendWorker;
         using Go_GUI::GUI;
 
         GUI gui;
