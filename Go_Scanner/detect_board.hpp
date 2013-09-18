@@ -6,7 +6,6 @@
 #include <opencv2/objdetect/objdetect.hpp>
 
 namespace Go_Scanner {
-
     /**
     * @brief        warpes an image 
     *
@@ -40,6 +39,7 @@ namespace Go_Scanner {
 
     //Only functions for the mousehandler of opencv. used for manual selection.
     void releaseImg(cv::Mat a,int x,int y);
+    void showImage(int* board_corner_X, int* board_corner_Y);
     void showImage(int* board_corner_X, int* board_corner_Y);
     cv::Mat holdImg(int x,int y);
     void mouseHandler(int event, int x, int y, int flags, void *param);
