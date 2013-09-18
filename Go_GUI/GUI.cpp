@@ -13,6 +13,7 @@
 #include "ChangeScanRateDialog.hpp"
 #include "VirtualView.hpp"
 #include "AugmentedView.hpp"
+#include "Version.hpp"
 
 
 namespace Go_GUI {
@@ -216,17 +217,9 @@ void GUI::slot_MenuInfo(){
     // Build date and time
     output += "This build of Augmented Go was compiled at " __DATE__ ", " __TIME__ ".\n";
 
-    std::string version;
 
     // sha1 of the git commit this build is based on
-    QFile versionfile("VERSION");
-    if (versionfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        version = versionfile.readAll();
-    }
-    else {
-        version = "Could not find VERSION file.";
-    }
-    output += version + "\n";
+    output += "The git sha1 this build is based on is " + std::string(g_GIT_SHA1) + ".\n";
 
     // Copyright
     std::string year = __DATE__;
