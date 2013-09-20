@@ -161,6 +161,7 @@ void BackendWorker::loadSgf(QString path) {
 
     // _game takes ownership of new_game
     _game.init(new_game);
+    _game_is_initialized = true;
 
     signalGuiGameDataChanged();
 }
