@@ -133,6 +133,39 @@ void BackendWorker::saveSgf(QString path, QString blackplayer_name, QString whit
         std::cerr << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
 }
 
+void BackendWorker::loadSgf(QString path) {
+    auto filepath = path.toStdString();
+
+    auto new_game = _game.loadGame(filepath);
+    if (!new_game) {
+        emit displayErrorMessagebox("Error loading the game", "Failed to open the selected sgf-file!");
+        return;
+    }
+
+    auto size = 0;
+    if (!new_game->GetIntProp(SG_PROP_SIZE, &size)) {
+        emit displayErrorMessagebox("Error loading the game", "You tried to load a sgf file with missing board size!\nOnly sgf-files with a defined board size are supported here.");
+
+        // cleanup
+        new_game->DeleteTree();
+        return;
+    }
+
+    if (size != 9 && size != 13 && size != 19) {
+        emit displayErrorMessagebox("Error loading the game", "Only board sizes of 9x9, 13x13 and 19x19 are supported!");
+
+        // cleanup
+        new_game->DeleteTree();
+        return;
+    }
+
+    // _game takes ownership of new_game
+    _game.init(new_game);
+    _game_is_initialized = true;
+
+    signalGuiGameDataChanged();
+}
+
 void BackendWorker::pass() {
     _game.pass();
     

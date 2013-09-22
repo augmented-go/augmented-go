@@ -50,9 +50,9 @@ GUI::GUI(QWidget *parent)
         QMessageBox::critical(this, "Font not found", QString("FromWhereYouAre font was not found!\n searched relative to exe in: " + font_path));
 
     // connections
+    connect(ui_main.exit_action,		&QAction::triggered,	this, &QMainWindow::close);	
     connect(ui_main.open_action,		&QAction::triggered,	this, &GUI::slot_MenuOpen);
     connect(ui_main.save_action,		&QAction::triggered,	this, &GUI::slot_MenuSave);
-    connect(ui_main.exit_action,		&QAction::triggered,	this, &QWidget::close);	
     connect(ui_main.info_action,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
     connect(ui_main.automatic_action,   &QAction::triggered,	this, &GUI::slot_BoardDetectionAutomatically);
     connect(ui_main.manually_action,	&QAction::triggered,	this, &GUI::slot_BoardDetectionManually);
@@ -180,6 +180,25 @@ void GUI::slot_HistoryForward(){
 
 
 void GUI::slot_MenuOpen(){
+    // if at least one move was made -> ask if user wants to save
+    bool saveable = ui_main.movenumber_label->text().toInt() > 0;
+
+    if (saveable) {
+        auto answer = QMessageBox::question(this, "Save?", "Do you want to save before loading a new game?", "Save", "Don't Save", "Cancel");
+
+        if (answer == 0) {
+            // Save
+            this->slot_MenuSave();
+        }
+        else if (answer == 2) {
+            // Cancel
+            return;
+        }
+        else {
+            // Don't Save
+        }
+    }
+    
     QString selfilter = tr("SGF (*.sgf)");
     QString fileName = QFileDialog::getOpenFileName(
         this,
@@ -189,8 +208,7 @@ void GUI::slot_MenuOpen(){
         &selfilter 
     );
 
-    if (!fileName.isNull()){
-        // TODO ask if user wants to save the current game!
+    if (!fileName.isNull()) {
         emit signal_openGame(fileName);
     }
 }
@@ -389,6 +407,14 @@ void GUI::slot_displayErrorMessage(QString message) {
         ui_main.error_label->raise();
         ui_main.error_label->setText(message);
     }
+}
+
+void GUI::slot_displayErrorMessagebox(QString title, QString text) {
+    auto icon = QMessageBox::Icon::Warning;
+    auto buttons = QMessageBox::StandardButton::Ok;
+    auto parent = this;
+
+    QMessageBox(icon, title, text, buttons, parent).exec();
 }
 
 void GUI::slot_noCameraImage() {

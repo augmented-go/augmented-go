@@ -134,6 +134,14 @@ public slots:
     void slot_displayErrorMessage(QString message);
 
     /**
+    * @brief   SLOT "display error messagebox"
+    *          Pops up a messagebox with the given text. Don't call this subsequently, or you'll have a load of messageboxes the user has to click away.
+    * @param   title    Message box title
+    * @param   text     Error message to show
+    */
+    void slot_displayErrorMessagebox(QString title, QString text);
+
+    /**
      * @brief   SLOT noCameraImage
      *          Disables the board selection buttons.
      */
@@ -207,7 +215,6 @@ signals:
      * @param   GoRules rules   rules of the new game
      */
     void signal_setScannerDebugImage(bool debug);
-
 
 private slots:
     /**

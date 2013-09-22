@@ -33,14 +33,16 @@ int main(int argc, char** argv) {
         qRegisterMetaType<SgNode::Direction>("SgNode::Direction");
 
         // connect signal from worker to gui
-        QObject::connect(worker, &BackendWorker::newImage,           &gui, &GUI::slot_newImage);
-        QObject::connect(worker, &BackendWorker::gameDataChanged,    &gui, &GUI::slot_newGameData);
-        QObject::connect(worker, &BackendWorker::finishedGameResult, &gui, &GUI::slot_showFinishedGameResults);
-        QObject::connect(worker, &BackendWorker::displayErrorMessage, &gui, &GUI::slot_displayErrorMessage);
-        QObject::connect(worker, &BackendWorker::noCameraImage,      &gui, &GUI::slot_noCameraImage);
+        QObject::connect(worker, &BackendWorker::newImage,               &gui, &GUI::slot_newImage);
+        QObject::connect(worker, &BackendWorker::gameDataChanged,        &gui, &GUI::slot_newGameData);
+        QObject::connect(worker, &BackendWorker::finishedGameResult,     &gui, &GUI::slot_showFinishedGameResults);
+        QObject::connect(worker, &BackendWorker::displayErrorMessage,    &gui, &GUI::slot_displayErrorMessage);
+        QObject::connect(worker, &BackendWorker::displayErrorMessagebox, &gui, &GUI::slot_displayErrorMessagebox);
+        QObject::connect(worker, &BackendWorker::noCameraImage,          &gui, &GUI::slot_noCameraImage);
 
         // connect signal from gui to worker
         QObject::connect(&gui, &GUI::signal_saveGame,                    worker, &BackendWorker::saveSgf);
+        QObject::connect(&gui, &GUI::signal_openGame,                    worker, &BackendWorker::loadSgf);
         QObject::connect(&gui, &GUI::signal_pass,                        worker, &BackendWorker::pass);
         QObject::connect(&gui, &GUI::signal_resign,                      worker, &BackendWorker::resign);
         QObject::connect(&gui, &GUI::signal_newGame,                     worker, &BackendWorker::resetGame);

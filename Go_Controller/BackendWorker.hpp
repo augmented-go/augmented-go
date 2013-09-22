@@ -59,6 +59,12 @@ namespace Go_Controller {
         void saveSgf(QString path, QString blackplayer_name, QString whiteplayer_name, QString game_name);
 
         /**
+         * @brief       Loads the specified game from a sgf file, discards the current one.
+         */
+        void loadSgf(QString fileName);
+
+
+        /**
          * @brief       Plays a pass for the current player.
          *              Also emits finished_game_result if the game has ended because of playing a pass.
          *              See Go_Backend::Game::pass()
@@ -161,6 +167,13 @@ namespace Go_Controller {
          * @param[in]   message     Error message
          */
         void displayErrorMessage(QString message) const;
+
+        /**
+        * @brief       Signals an error message with a messagebox the user must explicitly close.
+        * @param[in]   title     Title of the messagebox
+        * @param[in]   message   Error message
+        */
+        void displayErrorMessagebox(QString title, QString message) const;
 
         /**
          * @brief       Signals that no camera image could be retrieved.
