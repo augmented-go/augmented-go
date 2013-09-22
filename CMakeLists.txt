@@ -75,4 +75,3 @@ endif(MSVC11)
 
 # copies res folder to output directory
 file(COPY res DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-
