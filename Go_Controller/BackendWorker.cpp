@@ -196,12 +196,14 @@ void BackendWorker::playMove(const int x, const int y){
 
 void BackendWorker::selectBoardManually() {
     _scan_timer.stop();
+    _cached_board_size = 0;
     _scanner.selectBoardManually();
     _scan_timer.start();
 }
 
 void BackendWorker::selectBoardAutomatically() {
     _scan_timer.stop();
+    _cached_board_size = 0;
     _scanner.selectBoardAutomatically();
     _scan_timer.start();
 }
@@ -212,6 +214,7 @@ void BackendWorker::setScannerDebugImage(bool debug) {
     else
         _scanner.setNormalImage();
 }
+
 
 bool BackendWorker::virtualModeActive() const {
     return !_scan_timer.isActive();

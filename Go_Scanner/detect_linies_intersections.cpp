@@ -28,7 +28,7 @@ struct PartitionOperator
 
         //the right boardsize is necessary for the calculation of our clusters. if we don't know it yet,
         //we randomly choose it :D
-        if(board_size == 0)
+        if(board_size != 9 || board_size != 13 || board_size != 19)
         {
             int n  = (rand() % 3) + 1;
 
