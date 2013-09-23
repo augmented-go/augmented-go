@@ -121,11 +121,14 @@ bool scanner_main(Mat& camera_frame, GoSetup& setup, int& board_size, bool& setD
         // Extract the board size
         // Board dimensions are quadratic, meaning width and height are the same so the sqrt(of the number of intersections) 
         // is the board size if it is a perfect square
-        board_size = (int) floor( sqrt((double) intersectionPoints.size()) + 0.5 ); // The .5 is needed to round to the nearest integer
-        if (board_size*board_size != intersectionPoints.size()) {
+        int local_board_size = (int) floor( sqrt((double) intersectionPoints.size()) + 0.5 ); // The .5 is needed to round to the nearest integer
+        if (local_board_size*local_board_size != intersectionPoints.size() || (local_board_size != 9 && local_board_size != 13 && local_board_size != 19)) {
             // Got a false number of intersectionPoints
             // Stop the processing here
             return false;
+        }
+        else{
+            board_size = local_board_size; 
         }
 
         stoneResult = getStones(srcWarpedImg, intersectionPoints, setup, board_size, paintedWarpedImg);
