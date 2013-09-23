@@ -92,14 +92,13 @@ void Scanner::setNormalImage() {
  * @returns     true, if the user marked the board, and lines as well as stones could be found
  *              false, if the board wasn't marked before or if any of the operations fail (detecting stones, finding lines, etc.)
  */
-bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg)
+bool scanner_main(Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg)
 {
     // TODO: convert the warped image just once to greyscale! 
     Mat img;
     img = camera_frame; 
 
-    if(!getWarpedImg(img))
-    {
+    if(!getWarpedImg(img)) {
         return false;
     }
 
@@ -108,6 +107,12 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
     Mat srcWarpedImg = img.clone();
     Mat paintedWarpedImg = img.clone();
     vector<Point2f> intersectionPoints;
+
+    
+    if(setDebugImg) {
+       // camera_frame and paintedWarpedImg now point to the same data
+       camera_frame = paintedWarpedImg;
+    }
 
     getBoardIntersections(img, 255, board_size, intersectionPoints, paintedWarpedImg);
 
@@ -126,11 +131,6 @@ bool scanner_main(const Mat& camera_frame, GoSetup& setup, int& board_size, bool
         stoneResult = getStones(srcWarpedImg, intersectionPoints, setup, board_size, paintedWarpedImg);
     }
     imshow("Detected Stones and Intersections", paintedWarpedImg);
-
-    if(setDebugImg)
-    {
-       paintedWarpedImg.copyTo(camera_frame);
-    }
 
     std::cout << ">>> Scanning finished <<<" << std::endl;
 
