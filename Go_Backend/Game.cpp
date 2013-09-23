@@ -277,7 +277,7 @@ bool Game::isPlacingHandicap(SgPointSet current_blacks, SgPointSet current_white
     // see placeHandicap()
     bool only_one_black_move = getBoard().MoveNumber() == 1 && current_blacks.Size() == 1;
     
-    // only black stones (now whites) and no move played
+    // only black stones (no white stones) and no move played
     return current_whites.IsEmpty() && new_whites.IsEmpty() && (no_moves_played || only_one_black_move);
 }
 
