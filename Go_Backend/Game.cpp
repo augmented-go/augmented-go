@@ -9,6 +9,7 @@
 
 #include "GoSetupUtil.h"
 #include "SgGameWriter.h"
+#include "SgGameReader.h"
 #include "SgProp.h"
 #include "GoModBoard.h"
 
@@ -68,6 +69,14 @@ bool Game::init(int size, GoSetup setup, GoRules rules) {
     _while_capturing = false;
 
     return true;
+}
+
+void Game::init(SgNode* game_tree) {
+    _go_game.Init(game_tree);
+
+    // fast forward to latest move
+    while (canNavigateHistory(SgNode::Direction::NEXT))
+        navigateHistory(SgNode::Direction::NEXT);
 }
 
 const GoBoard& Game::getBoard() const {
@@ -346,6 +355,17 @@ bool Game::saveGame(string file_path, string name_black, string name_white, stri
     writer.WriteGame(_go_game.Root(), all_props, file_format, game_number, default_size);
 
     return true;
+}
+
+SgNode* Game::loadGame(string file_path) {
+    std::ifstream file(file_path.c_str());
+    if (!file.is_open()) {
+        // @todo(jschmer): support better diagnostics such as throwing an exception like FAILED_TO_OPEN_FILE
+        return nullptr;
+    }
+
+    SgGameReader reader(file);
+    return reader.ReadGame();
 }
 
 std::string Game::finishGame() {
