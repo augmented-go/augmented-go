@@ -131,6 +131,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a51885cedc84449550a394f0c61d8e985">slot_displayErrorMessage</a> (QString message)</td></tr>
 <tr class="memdesc:a51885cedc84449550a394f0c61d8e985"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT "display error message" Displays the error message on the gui. Message gets overwritten by subsequent calls. A Empty string can be used to hide any error message. <br/></td></tr>
 <tr class="separator:a51885cedc84449550a394f0c61d8e985"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ce2667fa1f1d0e242e1f292d6a97a63"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#a1ce2667fa1f1d0e242e1f292d6a97a63">slot_displayErrorMessagebox</a> (QString title, QString text)</td></tr>
+<tr class="memdesc:a1ce2667fa1f1d0e242e1f292d6a97a63"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT "display error messagebox" Pops up a messagebox with the given text. Don't call this subsequently, or you'll have a load of messageboxes the user has to click away.  <a href="#a1ce2667fa1f1d0e242e1f292d6a97a63">More...</a><br/></td></tr>
+<tr class="separator:a1ce2667fa1f1d0e242e1f292d6a97a63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0f2d3ffe44cfd922eb8db8fb566aada"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab0f2d3ffe44cfd922eb8db8fb566aada"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___g_u_i_1_1_g_u_i.html#ab0f2d3ffe44cfd922eb8db8fb566aada">slot_noCameraImage</a> ()</td></tr>
 <tr class="memdesc:ab0f2d3ffe44cfd922eb8db8fb566aada"><td class="mdescLeft">&#160;</td><td class="mdescRight">SLOT noCameraImage Disables the board selection buttons. <br/></td></tr>
@@ -785,6 +788,49 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Go_GUI::ChangeScanRa
 
 </div>
 </div>
+<a class="anchor" id="a1ce2667fa1f1d0e242e1f292d6a97a63"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Go_GUI::GUI::slot_displayErrorMessagebox </td>
+          <td>(</td>
+          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>title</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>text</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>SLOT "display error messagebox" Pops up a messagebox with the given text. Don't call this subsequently, or you'll have a load of messageboxes the user has to click away. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">title</td><td>Message box title </td></tr>
+    <tr><td class="paramname">text</td><td>Error message to show </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a7f1ea03506e61481cc881f7dbd7d2a45"></a>
 <div class="memitem">
 <div class="memproto">
@@ -911,7 +957,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Go_GUI::ChangeScanRa
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 16 2013 12:00:03 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 23 2013 17:34:37 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

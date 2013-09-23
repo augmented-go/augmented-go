@@ -36,6 +36,7 @@ var searchData=
   ['slot_5fbuttonresign',['slot_ButtonResign',['../class_go___g_u_i_1_1_g_u_i.html#ad6ae05f09475f0adf62f616945dd9e77',1,'Go_GUI::GUI']]],
   ['slot_5fchangescanrate',['slot_changeScanRate',['../class_go___g_u_i_1_1_g_u_i.html#afd32b7e72c9a4c02c864011035b8a070',1,'Go_GUI::GUI']]],
   ['slot_5fdisplayerrormessage',['slot_displayErrorMessage',['../class_go___g_u_i_1_1_g_u_i.html#a51885cedc84449550a394f0c61d8e985',1,'Go_GUI::GUI']]],
+  ['slot_5fdisplayerrormessagebox',['slot_displayErrorMessagebox',['../class_go___g_u_i_1_1_g_u_i.html#a1ce2667fa1f1d0e242e1f292d6a97a63',1,'Go_GUI::GUI']]],
   ['slot_5fhistorybackward',['slot_HistoryBackward',['../class_go___g_u_i_1_1_g_u_i.html#ad1e249eac65263587a4d26147f7405ac',1,'Go_GUI::GUI']]],
   ['slot_5fhistoryforward',['slot_HistoryForward',['../class_go___g_u_i_1_1_g_u_i.html#a54f442f5f58f05b71b9d8cc5b3b5c932',1,'Go_GUI::GUI']]],
   ['slot_5fmenuchangescanrate',['slot_MenuChangeScanRate',['../class_go___g_u_i_1_1_g_u_i.html#a4e7f2bf4d63041b12e57cc9ede64cfd9',1,'Go_GUI::GUI']]],

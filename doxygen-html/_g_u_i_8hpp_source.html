@@ -155,72 +155,73 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a51885cedc84449550a394f0c61d8e985">slot_displayErrorMessage</a>(QString message);</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ab0f2d3ffe44cfd922eb8db8fb566aada">slot_noCameraImage</a>();</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;signals:</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a7132a05d6dfe07aca4a946eeadcbc5d5">signal_saveGame</a>(QString fileName, QString blackplayer_label, QString whiteplayer_label, QString game_name);</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ac92f409389ead565356828a250adbaf5">signal_openGame</a>(QString fileName);</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ad18d18afe0e33e9a09aa208ba0752695">signal_pass</a>();</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a6571b2e867fd69b18c0d55f25c9cd95d">signal_resign</a>();</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a0b9bc30e6cb379a381f6a3ea385d414f">signal_boardDetectionManually</a>();</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a9cb1fe9b56faafcd5afd3bb59d848da8">signal_boardDetectionAutomatically</a>();</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a18a871eca818a41b506dbeef6e15ef66">signal_setVirtualGameMode</a>(<span class="keywordtype">bool</span> checked);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a1035799b538b1dbcc626aa6aa39d4256">signal_navigateHistory</a>(SgNode::Direction);</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a9cf250a3aeda797540759ddbb4ce4f9d">stop_backend_thread</a>();</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a533ff43812204c136c0bade42ecaaaef">signal_new_scanning_rate</a>(<span class="keywordtype">int</span> milliseconds);</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a62f96767a2629052b7aed60d43544b66">signal_newGame</a>(GoRules rules);</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a51cce26f495aa8495aa355fcc0fa185c">signal_playMove</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> x, <span class="keyword">const</span> <span class="keywordtype">int</span> y);</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a1ce2667fa1f1d0e242e1f292d6a97a63">slot_displayErrorMessagebox</a>(QString title, QString text);</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ab0f2d3ffe44cfd922eb8db8fb566aada">slot_noCameraImage</a>();</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;signals:</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a7132a05d6dfe07aca4a946eeadcbc5d5">signal_saveGame</a>(QString fileName, QString blackplayer_label, QString whiteplayer_label, QString game_name);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ac92f409389ead565356828a250adbaf5">signal_openGame</a>(QString fileName);</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ad18d18afe0e33e9a09aa208ba0752695">signal_pass</a>();</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a6571b2e867fd69b18c0d55f25c9cd95d">signal_resign</a>();</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a0b9bc30e6cb379a381f6a3ea385d414f">signal_boardDetectionManually</a>();</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a9cb1fe9b56faafcd5afd3bb59d848da8">signal_boardDetectionAutomatically</a>();</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a18a871eca818a41b506dbeef6e15ef66">signal_setVirtualGameMode</a>(<span class="keywordtype">bool</span> checked);</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a1035799b538b1dbcc626aa6aa39d4256">signal_navigateHistory</a>(SgNode::Direction);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a9cf250a3aeda797540759ddbb4ce4f9d">stop_backend_thread</a>();</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a533ff43812204c136c0bade42ecaaaef">signal_new_scanning_rate</a>(<span class="keywordtype">int</span> milliseconds);</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a62f96767a2629052b7aed60d43544b66">signal_newGame</a>(GoRules rules);</div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#aae5d4b9b46dfb3e387a4964041386ba2">signal_setScannerDebugImage</a>(<span class="keywordtype">bool</span> debug);</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="keyword">private</span> slots:</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a38eef4bde6652434c4921d626d91fa93">slot_ButtonNewGame</a>();</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a51cce26f495aa8495aa355fcc0fa185c">signal_playMove</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> x, <span class="keyword">const</span> <span class="keywordtype">int</span> y);</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#aae5d4b9b46dfb3e387a4964041386ba2">signal_setScannerDebugImage</a>(<span class="keywordtype">bool</span> debug);</div>
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ad6ae05f09475f0adf62f616945dd9e77">slot_ButtonResign</a>();</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="keyword">private</span> slots:</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a38eef4bde6652434c4921d626d91fa93">slot_ButtonNewGame</a>();</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#abfe8183a3e8a80820cc2929ffaf7c7be">slot_ButtonPass</a>();</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ad6ae05f09475f0adf62f616945dd9e77">slot_ButtonResign</a>();</div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a317e909e5f70ff210db077b736c6fe25">slot_MenuOpen</a>();</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160; </div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a59d300f0cb47876d2cdb0f2d7561a9fc">slot_MenuSave</a>();</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#aeeb3f45a4ca3ada82243d0c06cb4745f">slot_MenuInfo</a>();</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a4e7f2bf4d63041b12e57cc9ede64cfd9">slot_MenuChangeScanRate</a>();</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a4f64e432c5917e77173f1f6cd619c568">slot_ViewSwitch</a>();</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ad1e249eac65263587a4d26147f7405ac">slot_HistoryBackward</a>();</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a54f442f5f58f05b71b9d8cc5b3b5c932">slot_HistoryForward</a>();</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a6c313a85a4d925415ee8864afc0bd25b">slot_ViewSwitch_released</a>();</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a07935ffe4c835619b9af9a3357c600d4">slot_BoardDetectionManually</a>();</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#abfe8183a3e8a80820cc2929ffaf7c7be">slot_ButtonPass</a>();</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a317e909e5f70ff210db077b736c6fe25">slot_MenuOpen</a>();</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a59d300f0cb47876d2cdb0f2d7561a9fc">slot_MenuSave</a>();</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#aeeb3f45a4ca3ada82243d0c06cb4745f">slot_MenuInfo</a>();</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a4e7f2bf4d63041b12e57cc9ede64cfd9">slot_MenuChangeScanRate</a>();</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a4f64e432c5917e77173f1f6cd619c568">slot_ViewSwitch</a>();</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ad1e249eac65263587a4d26147f7405ac">slot_HistoryBackward</a>();</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a54f442f5f58f05b71b9d8cc5b3b5c932">slot_HistoryForward</a>();</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a6c313a85a4d925415ee8864afc0bd25b">slot_ViewSwitch_released</a>();</div>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a760ca6078ba96cba0c62592850124348">slot_BoardDetectionAutomatically</a>();</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a07935ffe4c835619b9af9a3357c600d4">slot_BoardDetectionManually</a>();</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ad6c2d60e181f091800eac0fd97feef60">slot_ToggleVirtualGameMode</a>();</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a129eb70905a79bf351c3cd013ffb57ce">slot_passOnVirtualViewPlayMove</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> x, <span class="keyword">const</span> <span class="keywordtype">int</span> y);</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a83c8e7ed74401b13d4fe8ddde6ecbd17">slot_toggleScannerDebugImage</a>();</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#afd32b7e72c9a4c02c864011035b8a070">slot_changeScanRate</a>(<span class="keywordtype">int</span> milliseconds);</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;};</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;} <span class="comment">// namespace Go_GUI</span></div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a760ca6078ba96cba0c62592850124348">slot_BoardDetectionAutomatically</a>();</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#ad6c2d60e181f091800eac0fd97feef60">slot_ToggleVirtualGameMode</a>();</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a129eb70905a79bf351c3cd013ffb57ce">slot_passOnVirtualViewPlayMove</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> x, <span class="keyword">const</span> <span class="keywordtype">int</span> y);</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#a83c8e7ed74401b13d4fe8ddde6ecbd17">slot_toggleScannerDebugImage</a>();</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___g_u_i_1_1_g_u_i.html#afd32b7e72c9a4c02c864011035b8a070">slot_changeScanRate</a>(<span class="keywordtype">int</span> milliseconds);</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;};</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;} <span class="comment">// namespace Go_GUI</span></div>
 <div class="ttc" id="class_go___g_u_i_1_1_virtual_view_html_a1b28ea2869a7a759adafc179147190cd"><div class="ttname"><a href="class_go___g_u_i_1_1_virtual_view.html#a1b28ea2869a7a759adafc179147190cd">Go_GUI::VirtualView::resizeEvent</a></div><div class="ttdeci">void resizeEvent(QResizeEvent *event)</div><div class="ttdoc">override calls public function resizeVirtualView </div><div class="ttdef"><b>Definition:</b> VirtualView.hpp:42</div></div>
 <div class="ttc" id="class_go___g_u_i_1_1_g_u_i_html_a37db2a498fbabe09efdcca92869fc3c3"><div class="ttname"><a href="class_go___g_u_i_1_1_g_u_i.html#a37db2a498fbabe09efdcca92869fc3c3">Go_GUI::GUI::slot_setupNewGame</a></div><div class="ttdeci">void slot_setupNewGame(QString game_name, QString blackplayer_name, QString whiteplayer_name, float komi)</div><div class="ttdoc">SLOT &amp;quot;setup new game&amp;quot; When a new game has been started, setup game name and player names on gui...</div></div>
 <div class="ttc" id="class_go___g_u_i_1_1_g_u_i_html_a4e7f2bf4d63041b12e57cc9ede64cfd9"><div class="ttname"><a href="class_go___g_u_i_1_1_g_u_i.html#a4e7f2bf4d63041b12e57cc9ede64cfd9">Go_GUI::GUI::slot_MenuChangeScanRate</a></div><div class="ttdeci">void slot_MenuChangeScanRate()</div><div class="ttdoc">SLOT QAction &amp;quot;MenuInfo&amp;quot; opens a window to change the scanning rate. </div></div>
@@ -250,6 +251,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="class_go___g_u_i_1_1_g_u_i_html_ab0f2d3ffe44cfd922eb8db8fb566aada"><div class="ttname"><a href="class_go___g_u_i_1_1_g_u_i.html#ab0f2d3ffe44cfd922eb8db8fb566aada">Go_GUI::GUI::slot_noCameraImage</a></div><div class="ttdeci">void slot_noCameraImage()</div><div class="ttdoc">SLOT noCameraImage Disables the board selection buttons. </div></div>
 <div class="ttc" id="class_go___g_u_i_1_1_g_u_i_html_aea1eb5e415e6ef358452947ff6e232db"><div class="ttname"><a href="class_go___g_u_i_1_1_g_u_i.html#aea1eb5e415e6ef358452947ff6e232db">Go_GUI::GUI::slot_showFinishedGameResults</a></div><div class="ttdeci">void slot_showFinishedGameResults(QString result)</div><div class="ttdoc">SLOT &amp;quot;Show finished game results&amp;quot; If a game ended, the BackendThread sends a signal with the results...</div></div>
 <div class="ttc" id="class_go___g_u_i_1_1_g_u_i_html_a07935ffe4c835619b9af9a3357c600d4"><div class="ttname"><a href="class_go___g_u_i_1_1_g_u_i.html#a07935ffe4c835619b9af9a3357c600d4">Go_GUI::GUI::slot_BoardDetectionManually</a></div><div class="ttdeci">void slot_BoardDetectionManually()</div><div class="ttdoc">SLOT BoardDetectionManually Repeates a signal from the QAction &amp;quot;manually_action&amp;quot; to notify to manuall...</div></div>
+<div class="ttc" id="class_go___g_u_i_1_1_g_u_i_html_a1ce2667fa1f1d0e242e1f292d6a97a63"><div class="ttname"><a href="class_go___g_u_i_1_1_g_u_i.html#a1ce2667fa1f1d0e242e1f292d6a97a63">Go_GUI::GUI::slot_displayErrorMessagebox</a></div><div class="ttdeci">void slot_displayErrorMessagebox(QString title, QString text)</div><div class="ttdoc">SLOT &amp;quot;display error messagebox&amp;quot; Pops up a messagebox with the given text. Don&amp;#39;t call this subsequen...</div></div>
 <div class="ttc" id="class_go___g_u_i_1_1_g_u_i_html_a62f96767a2629052b7aed60d43544b66"><div class="ttname"><a href="class_go___g_u_i_1_1_g_u_i.html#a62f96767a2629052b7aed60d43544b66">Go_GUI::GUI::signal_newGame</a></div><div class="ttdeci">void signal_newGame(GoRules rules)</div><div class="ttdoc">Signals that the user wants to start a new game. </div></div>
 <div class="ttc" id="class_go___g_u_i_1_1_g_u_i_html_aba675b18cab6bdf0cb10bee9f253283a"><div class="ttname"><a href="class_go___g_u_i_1_1_g_u_i.html#aba675b18cab6bdf0cb10bee9f253283a">Go_GUI::GUI::closeEvent</a></div><div class="ttdeci">void closeEvent(QCloseEvent *event)</div><div class="ttdoc">overridden SLOT QCloseEvent &amp;quot;closeEvent&amp;quot; When trying to close the application a window appears and as...</div></div>
 <div class="ttc" id="class_go___g_u_i_1_1_g_u_i_html_a9cf250a3aeda797540759ddbb4ce4f9d"><div class="ttname"><a href="class_go___g_u_i_1_1_g_u_i.html#a9cf250a3aeda797540759ddbb4ce4f9d">Go_GUI::GUI::stop_backend_thread</a></div><div class="ttdeci">void stop_backend_thread()</div><div class="ttdoc">Signals that backend thread should stop. </div></div>
@@ -271,7 +273,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 23 2013 17:34:36 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

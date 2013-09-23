@@ -98,7 +98,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>Go_Scanner {</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keywordtype">bool</span> scanner_main(<span class="keyword">const</span> cv::Mat&amp; camera_frame, GoSetup&amp; setup, <span class="keywordtype">int</span>&amp; board_size, <span class="keywordtype">bool</span>&amp; setDebugImg);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keywordtype">bool</span> scanner_main(cv::Mat&amp; camera_frame, GoSetup&amp; setup, <span class="keywordtype">int</span>&amp; board_size, <span class="keywordtype">bool</span>&amp; setDebugImg);</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#a8eb43bcee000659e3cc174dbe11148f8">ask_for_board_contour</a>();</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#a1bf56c77b12799753771ca8dca4b2a5b">do_auto_board_detection</a>();</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
@@ -147,12 +147,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="class_go___scanner_1_1_scanner_html_a0af770a7d3c2d081dc76f390ea93a780"><div class="ttname"><a href="class_go___scanner_1_1_scanner.html#a0af770a7d3c2d081dc76f390ea93a780">Go_Scanner::Scanner::selectBoardManually</a></div><div class="ttdeci">void selectBoardManually()</div><div class="ttdoc">Displays a window to let the user select the go board manually. This call blocks until the user is fi...</div></div>
 <div class="ttc" id="class_go___scanner_1_1_scanner_html_af1ec79f13301fc166e37766a47566b2b"><div class="ttname"><a href="class_go___scanner_1_1_scanner.html#af1ec79f13301fc166e37766a47566b2b">Go_Scanner::Scanner::setNormalImage</a></div><div class="ttdeci">void Scanner::setNormalImage()</div><div class="ttdoc">Sets the image of the camera as image for the GUI. </div></div>
 <div class="ttc" id="class_go___scanner_1_1_scanner_html_ab29aec484a3fb2e3344ded478e8748e3"><div class="ttname"><a href="class_go___scanner_1_1_scanner.html#ab29aec484a3fb2e3344ded478e8748e3">Go_Scanner::Scanner::selectBoardAutomatically</a></div><div class="ttdeci">void selectBoardAutomatically()</div><div class="ttdoc">Tries to detect the go board automatically. Displays the result if its successfully found a board...</div></div>
-<div class="ttc" id="class_go___scanner_1_1_scanner_html"><div class="ttname"><a href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></div><div class="ttdoc">TODO. </div><div class="ttdef"><b>Definition:</b> Scanner.hpp:31</div></div>
+<div class="ttc" id="class_go___scanner_1_1_scanner_html"><div class="ttname"><a href="class_go___scanner_1_1_scanner.html">Go_Scanner::Scanner</a></div><div class="ttdoc">This class is used by the controller to interface with the scanner. </div><div class="ttdef"><b>Definition:</b> Scanner.hpp:31</div></div>
 <div class="ttc" id="class_go___scanner_1_1_scanner_html_a9106e6764d11eb88f9534940dc73408d"><div class="ttname"><a href="class_go___scanner_1_1_scanner.html#a9106e6764d11eb88f9534940dc73408d">Go_Scanner::Scanner::scanCamera</a></div><div class="ttdeci">ScanResult scanCamera(GoSetup &amp;setup, int &amp;board_size, cv::Mat &amp;out_image)</div><div class="ttdoc">Reads an image from the camera and scans it for go stones. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 23 2013 17:34:36 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

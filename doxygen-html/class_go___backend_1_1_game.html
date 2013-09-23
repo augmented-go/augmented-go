@@ -107,6 +107,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3724f3317f8503be75dd2ba302c2fb59"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___backend_1_1_game.html#a3724f3317f8503be75dd2ba302c2fb59">init</a> (int size, GoSetup setup=GoSetup(), GoRules rules=GoRules(0, GoKomi(6.5), true, true))</td></tr>
 <tr class="memdesc:a3724f3317f8503be75dd2ba302c2fb59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the game board with given size, setup (starting positions) and rules. The setup defaults to an empty board. The rules default to handicap: 0 komi: 6.5 scoring: japanese game end: after 2 consecutive passes.  <a href="#a3724f3317f8503be75dd2ba302c2fb59">More...</a><br/></td></tr>
 <tr class="separator:a3724f3317f8503be75dd2ba302c2fb59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6caa9bb764c022ce57e7d9a8b810372"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af6caa9bb764c022ce57e7d9a8b810372"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (SgNode *game_tree)</td></tr>
+<tr class="separator:af6caa9bb764c022ce57e7d9a8b810372"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3d1281326b2cd0ce57e21c3b0496683"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___backend_1_1_game.html#af3d1281326b2cd0ce57e21c3b0496683">update</a> (GoSetup setup)</td></tr>
 <tr class="memdesc:af3d1281326b2cd0ce57e21c3b0496683"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the game with the given setup. Tries to extract a valid move from the setup. Note: Ignores current player information in setup.  <a href="#af3d1281326b2cd0ce57e21c3b0496683">More...</a><br/></td></tr>
 <tr class="separator:af3d1281326b2cd0ce57e21c3b0496683"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,6 +125,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a810d338f36258b86d3abf401df35c16b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___backend_1_1_game.html#a810d338f36258b86d3abf401df35c16b">saveGame</a> (string file_path, string name_black=&quot;&quot;, string name_white=&quot;&quot;, string game_name=&quot;&quot;)</td></tr>
 <tr class="memdesc:a810d338f36258b86d3abf401df35c16b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the current game state to a sgf file. Names for players and game are only added to the file if not empty. Also includes the current date.  <a href="#a810d338f36258b86d3abf401df35c16b">More...</a><br/></td></tr>
 <tr class="separator:a810d338f36258b86d3abf401df35c16b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97a23128c7d87153c43bf1ff0edd26ac"><td class="memItemLeft" align="right" valign="top">SgNode *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___backend_1_1_game.html#a97a23128c7d87153c43bf1ff0edd26ac">loadGame</a> (string file_path)</td></tr>
+<tr class="memdesc:a97a23128c7d87153c43bf1ff0edd26ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overwrites the current game state with the game in a sgf file. The board size has to be defined in the sgf.  <a href="#a97a23128c7d87153c43bf1ff0edd26ac">More...</a><br/></td></tr>
+<tr class="separator:a97a23128c7d87153c43bf1ff0edd26ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b0e991a1a94ef6057c7e3703e559962"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b0e991a1a94ef6057c7e3703e559962"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_go___backend_1_1_game.html#a5b0e991a1a94ef6057c7e3703e559962">finishGame</a> ()</td></tr>
 <tr class="memdesc:a5b0e991a1a94ef6057c7e3703e559962"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience function to quickly finish a game. Plays a pass for each player and returns the result (see <a class="el" href="class_go___backend_1_1_game.html#aed5a56c11c33e9b9176f42f366eeca9e" title="Returns the result of the game in a standard way, for example W+1.5 (White wins by 1...">Game::getResult</a>) <br/></td></tr>
@@ -335,6 +341,25 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>_while_capturing</b><
 
 </div>
 </div>
+<a class="anchor" id="a97a23128c7d87153c43bf1ff0edd26ac"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SgNode* Go_Backend::Game::loadGame </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>file_path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Overwrites the current game state with the game in a sgf file. The board size has to be defined in the sgf. </p>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the loaded game tree or nullptr if there was an error. Use this pointer to initialize the game. Errors can be: Failed to open file or missing board size information in the sgf file. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="af478b563663c14dbc628a0c02b91d065"></a>
 <div class="memitem">
 <div class="memproto">
@@ -505,7 +530,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>_while_capturing</b><
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 23 2013 17:34:36 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

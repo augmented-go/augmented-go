@@ -95,15 +95,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;opencv2/objdetect/objdetect.hpp&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
 <div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="namespace_go___scanner.html">    8</a></span>&#160;<span class="keyword">namespace </span>Go_Scanner {</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    cv::Mat <a class="code" href="namespace_go___scanner.html#afcf29033d739cc1f3bea0d8d91b9cab7">warpImage</a>(cv::Mat img, cv::Point2f p0, cv::Point2f p1, cv::Point2f p2, cv::Point2f p3);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#a523c782dc1b86956cc3fa68a258fac6f">automatic_warp</a>(<span class="keyword">const</span> cv::Mat&amp; input, cv::Point2f&amp; p0, cv::Point2f&amp; p1, cv::Point2f&amp; p2, cv::Point2f&amp; p3);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#aec335e2def53224e4f4a8563f235564a">showImage</a>();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">//Only functions for the mousehandler of opencv. used for manual selection.</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">void</span> releaseImg(cv::Mat a,<span class="keywordtype">int</span> x,<span class="keywordtype">int</span> y);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    cv::Mat <a class="code" href="namespace_go___scanner.html#afcf29033d739cc1f3bea0d8d91b9cab7">warpImage</a>(cv::Mat img, cv::Point2f p0, cv::Point2f p1, cv::Point2f p2, cv::Point2f p3);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#a523c782dc1b86956cc3fa68a258fac6f">automatic_warp</a>(<span class="keyword">const</span> cv::Mat&amp; input, cv::Point2f&amp; p0, cv::Point2f&amp; p1, cv::Point2f&amp; p2, cv::Point2f&amp; p3);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#aec335e2def53224e4f4a8563f235564a">showImage</a>();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">//Only functions for the mousehandler of opencv. used for manual selection.</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> releaseImg(cv::Mat a,<span class="keywordtype">int</span> x,<span class="keywordtype">int</span> y);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#aec335e2def53224e4f4a8563f235564a">showImage</a>(<span class="keywordtype">int</span>* board_corner_X, <span class="keywordtype">int</span>* board_corner_Y);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespace_go___scanner.html#aec335e2def53224e4f4a8563f235564a">showImage</a>(<span class="keywordtype">int</span>* board_corner_X, <span class="keywordtype">int</span>* board_corner_Y);</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    cv::Mat holdImg(<span class="keywordtype">int</span> x,<span class="keywordtype">int</span> y);</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> mouseHandler(<span class="keywordtype">int</span> event, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> flags, <span class="keywordtype">void</span> *param);</div>
@@ -125,7 +125,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 23 2013 17:34:36 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

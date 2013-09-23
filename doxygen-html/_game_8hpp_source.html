@@ -115,61 +115,65 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="class_go___backend_1_1_game.html">Game</a>();</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_go___backend_1_1_game.html#a3724f3317f8503be75dd2ba302c2fb59">init</a>(<span class="keywordtype">int</span> size, GoSetup setup = GoSetup(), GoRules rules = GoRules(0, GoKomi(6.5), <span class="keyword">true</span>, <span class="keyword">true</span>));</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> <a class="code" href="class_go___backend_1_1_game.html#af3d1281326b2cd0ce57e21c3b0496683">update</a>(GoSetup setup);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    SgPointSet <a class="code" href="class_go___backend_1_1_game.html#a6f710066a76ce86ef4bfb2d34e393e22">getDifferences</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___backend_1_1_game.html#a3724f3317f8503be75dd2ba302c2fb59">init</a>(SgNode* game_tree);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> <a class="code" href="class_go___backend_1_1_game.html#af3d1281326b2cd0ce57e21c3b0496683">update</a>(GoSetup setup);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    SgPointSet <a class="code" href="class_go___backend_1_1_game.html#a6f710066a76ce86ef4bfb2d34e393e22">getDifferences</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> <a class="code" href="class_go___backend_1_1_game.html#ad84fcf4e1ed0f9a522b38562fabfb884">playMove</a>(SgPoint position);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">const</span> GoBoard&amp; <a class="code" href="class_go___backend_1_1_game.html#ab50258b32cf4b246173eecdce3fc529c">getBoard</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_go___backend_1_1_game.html#a810d338f36258b86d3abf401df35c16b">saveGame</a>(<span class="keywordtype">string</span> file_path, <span class="keywordtype">string</span> name_black = <span class="stringliteral">&quot;&quot;</span>, <span class="keywordtype">string</span> name_white = <span class="stringliteral">&quot;&quot;</span>, <span class="keywordtype">string</span> game_name = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    std::string <a class="code" href="class_go___backend_1_1_game.html#a5b0e991a1a94ef6057c7e3703e559962">finishGame</a>();</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___backend_1_1_game.html#afdbce2bfd8d62b8bb9d394532f70fe1a">pass</a>();</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___backend_1_1_game.html#aabe4c7ea8376f5018db381f94cd48e1e">resign</a>();</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> <a class="code" href="class_go___backend_1_1_game.html#ad84fcf4e1ed0f9a522b38562fabfb884">playMove</a>(SgPoint position);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keyword">const</span> GoBoard&amp; <a class="code" href="class_go___backend_1_1_game.html#ab50258b32cf4b246173eecdce3fc529c">getBoard</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_go___backend_1_1_game.html#a810d338f36258b86d3abf401df35c16b">saveGame</a>(<span class="keywordtype">string</span> file_path, <span class="keywordtype">string</span> name_black = <span class="stringliteral">&quot;&quot;</span>, <span class="keywordtype">string</span> name_white = <span class="stringliteral">&quot;&quot;</span>, <span class="keywordtype">string</span> game_name = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    SgNode* <a class="code" href="class_go___backend_1_1_game.html#a97a23128c7d87153c43bf1ff0edd26ac">loadGame</a>(<span class="keywordtype">string</span> file_path);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    std::string <a class="code" href="class_go___backend_1_1_game.html#a5b0e991a1a94ef6057c7e3703e559962">finishGame</a>();</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    std::string <a class="code" href="class_go___backend_1_1_game.html#aed5a56c11c33e9b9176f42f366eeca9e">getResult</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___backend_1_1_game.html#afdbce2bfd8d62b8bb9d394532f70fe1a">pass</a>();</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___backend_1_1_game.html#aabe4c7ea8376f5018db381f94cd48e1e">resign</a>();</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_go___backend_1_1_game.html#a1434db82bbf8cf079a4900a640a6ca71">hasEnded</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_go___backend_1_1_game.html#a50d8303d22b721271ccbfffec8eef62e">canNavigateHistory</a>(SgNode::Direction dir) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___backend_1_1_game.html#af478b563663c14dbc628a0c02b91d065">navigateHistory</a>(SgNode::Direction dir);</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="comment">// Not implemented</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <a class="code" href="class_go___backend_1_1_game.html">Game</a>(<span class="keyword">const</span> <a class="code" href="class_go___backend_1_1_game.html">Game</a>&amp;);</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <a class="code" href="class_go___backend_1_1_game.html">Game</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="class_go___backend_1_1_game.html">Game</a>&amp;);</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <a class="code" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites);</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <a class="code" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> updateWhileCapturing(GoSetup new_setup);</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_go___backend_1_1_game.html#a8a593a87e05f6c37bd0241264a41266c">isPlacingHandicap</a>(SgPointSet current_blacks, SgPointSet current_whites, SgPointSet new_whites);</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordtype">void</span> placeHandicap(GoSetup new_setup);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    std::string <a class="code" href="class_go___backend_1_1_game.html#aed5a56c11c33e9b9176f42f366eeca9e">getResult</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_go___backend_1_1_game.html#a1434db82bbf8cf079a4900a640a6ca71">hasEnded</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_go___backend_1_1_game.html#a50d8303d22b721271ccbfffec8eef62e">canNavigateHistory</a>(SgNode::Direction dir) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_go___backend_1_1_game.html#af478b563663c14dbc628a0c02b91d065">navigateHistory</a>(SgNode::Direction dir);</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="comment">// Not implemented</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <a class="code" href="class_go___backend_1_1_game.html">Game</a>(<span class="keyword">const</span> <a class="code" href="class_go___backend_1_1_game.html">Game</a>&amp;);</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <a class="code" href="class_go___backend_1_1_game.html">Game</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="class_go___backend_1_1_game.html">Game</a>&amp;);</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <a class="code" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> <a class="code" href="class_go___backend_1_1_game.html#af1398185231100e1fa54d8e1935f7da8">updateSingleMove</a>(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent);</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    SgPointSet <a class="code" href="class_go___backend_1_1_game.html#acbc5906b5821dcf48c7f99f48e18d6e8">possibleCapturedStones</a>(<span class="keyword">const</span> GoBoard&amp; const_board, SgPoint point);</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keywordtype">bool</span> validSetup(<span class="keyword">const</span> GoSetup&amp; setup) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <span class="keywordtype">bool</span> allValidPoints(<span class="keyword">const</span> SgPointSet&amp; stones) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    GoGame _go_game;</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keywordtype">bool</span> _game_finished; <span class="comment">// we need this variable because fuego doesn&#39;t tag a game</span></div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;                         <span class="comment">// finished if a player resigns</span></div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    SgPointSet _differences; <span class="comment">// differences of the last setup that was updated to the current board</span></div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keywordtype">bool</span> _while_capturing;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;};</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;}</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <a class="code" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites);</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <a class="code" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> updateWhileCapturing(GoSetup new_setup);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_go___backend_1_1_game.html#a8a593a87e05f6c37bd0241264a41266c">isPlacingHandicap</a>(SgPointSet current_blacks, SgPointSet current_whites, SgPointSet new_whites);</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keywordtype">void</span> placeHandicap(GoSetup new_setup);</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <a class="code" href="namespace_go___backend.html#a427b38a69a93e58524a731565cb31c13">UpdateResult</a> <a class="code" href="class_go___backend_1_1_game.html#af1398185231100e1fa54d8e1935f7da8">updateSingleMove</a>(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent);</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    SgPointSet <a class="code" href="class_go___backend_1_1_game.html#acbc5906b5821dcf48c7f99f48e18d6e8">possibleCapturedStones</a>(<span class="keyword">const</span> GoBoard&amp; const_board, SgPoint point);</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordtype">bool</span> validSetup(<span class="keyword">const</span> GoSetup&amp; setup) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordtype">bool</span> allValidPoints(<span class="keyword">const</span> SgPointSet&amp; stones) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    GoGame _go_game;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordtype">bool</span> _game_finished; <span class="comment">// we need this variable because fuego doesn&#39;t tag a game</span></div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;                         <span class="comment">// finished if a player resigns</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    SgPointSet _differences; <span class="comment">// differences of the last setup that was updated to the current board</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keywordtype">bool</span> _while_capturing;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;};</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;}</div>
 <div class="ttc" id="class_go___backend_1_1_game_html_af1398185231100e1fa54d8e1935f7da8"><div class="ttname"><a href="class_go___backend_1_1_game.html#af1398185231100e1fa54d8e1935f7da8">Go_Backend::Game::updateSingleMove</a></div><div class="ttdeci">UpdateResult updateSingleMove(SgPoint point, SgBlackWhite player, SgPointSet removed_of_player, SgPointSet removed_of_opponent)</div><div class="ttdoc">Tries to play a move at point for player. Also checks if removed_of_player and removed_of_opponent ar...</div></div>
 <div class="ttc" id="class_go___backend_1_1_game_html_a810d338f36258b86d3abf401df35c16b"><div class="ttname"><a href="class_go___backend_1_1_game.html#a810d338f36258b86d3abf401df35c16b">Go_Backend::Game::saveGame</a></div><div class="ttdeci">bool saveGame(string file_path, string name_black=&quot;&quot;, string name_white=&quot;&quot;, string game_name=&quot;&quot;)</div><div class="ttdoc">Writes the current game state to a sgf file. Names for players and game are only added to the file if...</div></div>
 <div class="ttc" id="class_go___backend_1_1_game_html_a5b0e991a1a94ef6057c7e3703e559962"><div class="ttname"><a href="class_go___backend_1_1_game.html#a5b0e991a1a94ef6057c7e3703e559962">Go_Backend::Game::finishGame</a></div><div class="ttdeci">std::string finishGame()</div><div class="ttdoc">Convenience function to quickly finish a game. Plays a pass for each player and returns the result (s...</div></div>
@@ -189,12 +193,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="class_go___backend_1_1_game_html_ab50258b32cf4b246173eecdce3fc529c"><div class="ttname"><a href="class_go___backend_1_1_game.html#ab50258b32cf4b246173eecdce3fc529c">Go_Backend::Game::getBoard</a></div><div class="ttdeci">const GoBoard &amp; getBoard() const </div><div class="ttdoc">Get current board information. </div></div>
 <div class="ttc" id="class_go___backend_1_1_game_html_a50d8303d22b721271ccbfffec8eef62e"><div class="ttname"><a href="class_go___backend_1_1_game.html#a50d8303d22b721271ccbfffec8eef62e">Go_Backend::Game::canNavigateHistory</a></div><div class="ttdeci">bool canNavigateHistory(SgNode::Direction dir) const </div><div class="ttdoc">Returns whether there is actually any history in the given direction. </div></div>
 <div class="ttc" id="class_go___backend_1_1_game_html_a3724f3317f8503be75dd2ba302c2fb59"><div class="ttname"><a href="class_go___backend_1_1_game.html#a3724f3317f8503be75dd2ba302c2fb59">Go_Backend::Game::init</a></div><div class="ttdeci">bool init(int size, GoSetup setup=GoSetup(), GoRules rules=GoRules(0, GoKomi(6.5), true, true))</div><div class="ttdoc">Initializes the game board with given size, setup (starting positions) and rules. The setup defaults ...</div></div>
+<div class="ttc" id="class_go___backend_1_1_game_html_a97a23128c7d87153c43bf1ff0edd26ac"><div class="ttname"><a href="class_go___backend_1_1_game.html#a97a23128c7d87153c43bf1ff0edd26ac">Go_Backend::Game::loadGame</a></div><div class="ttdeci">SgNode * loadGame(string file_path)</div><div class="ttdoc">Overwrites the current game state with the game in a sgf file. The board size has to be defined in th...</div></div>
 <div class="ttc" id="class_go___backend_1_1_game_html_af3d1281326b2cd0ce57e21c3b0496683"><div class="ttname"><a href="class_go___backend_1_1_game.html#af3d1281326b2cd0ce57e21c3b0496683">Go_Backend::Game::update</a></div><div class="ttdeci">UpdateResult update(GoSetup setup)</div><div class="ttdoc">Updates the game with the given setup. Tries to extract a valid move from the setup. Note: Ignores current player information in setup. </div></div>
 <div class="ttc" id="class_go___backend_1_1_game_html_a1434db82bbf8cf079a4900a640a6ca71"><div class="ttname"><a href="class_go___backend_1_1_game.html#a1434db82bbf8cf079a4900a640a6ca71">Go_Backend::Game::hasEnded</a></div><div class="ttdeci">bool hasEnded() const </div><div class="ttdoc">Checks if the game has ended. A game ends if a player resigns or if both player have played a pass...</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 16 2013 12:00:02 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 23 2013 17:34:36 for Augmented Go by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>
