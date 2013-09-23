@@ -71,9 +71,6 @@ GUI::GUI(QWidget *parent)
 
     // setting initial values
     this->init();
-
-    // tell the backend to use the default scanning rate
-    slot_changeScanRate(current_scanning_fps);
 }
 
 void GUI::init(){
