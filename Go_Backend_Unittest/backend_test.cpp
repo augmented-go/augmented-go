@@ -1246,7 +1246,7 @@ namespace Go_BackendGameTest
         TEST_METHOD(load_game_state_from_sgf_file) {
             string filename = "load_game_state_from_sgf_file.sgf";
             std::ofstream file(filename);
-            file << "(;SZ[4]KM[6.5]\n"
+            file << "(;SZ[9]KM[6.5]\n"
                     "DT[2013-Sep-04];\n"
                     "AB[ac]\n"
                     "AW[ad];B[bd])\n"
@@ -1254,18 +1254,27 @@ namespace Go_BackendGameTest
             file.close();
 
             Game go_game;
-            go_game.init(4);
+            go_game.init(9);
 
-            Assert::IsTrue(go_game.loadGame(filename));
+            // load game
+            auto loaded_game = go_game.loadGame(filename);
+            Assert::IsNotNull(loaded_game);
 
-            // m_player 1
+            // now initialize the loaded game
+            go_game.init(loaded_game);
+
             auto setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
 
             int size;
-            auto s = std::string("...."
-                                 "...."
-                                 "X..."
-                                 "OX..");
+            auto s = std::string(".........\n"
+                                 ".........\n"
+                                 "X........\n"
+                                 "OX.......\n"
+                                 ".........\n"
+                                 ".........\n"
+                                 ".........\n"
+                                 ".........\n"
+                                 ".........");
 
             // m_player 0
             auto expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
