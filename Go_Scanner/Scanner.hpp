@@ -12,7 +12,7 @@
  */
 namespace Go_Scanner {
 
-bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg);
+bool scanner_main(cv::Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg);
 void ask_for_board_contour();
 void do_auto_board_detection();
 
