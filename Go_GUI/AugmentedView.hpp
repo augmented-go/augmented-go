@@ -6,10 +6,26 @@
 #include <QPixmap>
 #include <QMessageBox>
 
+namespace Go_GUI {
+
+/**
+ * @class   AugmentedView
+ * @brief   The AugmentedView is part of Augmented-Go Gui.
+ *          The view shows the camera picture (if a camera is connected) or the augmented logo.
+ *			If an error occurs an error message is shown on top of the camera picture.
+ *          If the game is in virtual mode, the user can place stones by clicking on the board.
+ */
 class AugmentedView : public QLabel
 {
     Q_OBJECT
 public:
+
+    /**
+     * @brief	Constructor
+     *          Sets its parent widget,
+     *          Sets the alignment of its content to center
+     *          Sets up the Augmented Logo as its standard picture it shows and resizes it
+     */
     AugmentedView(QWidget *parent = 0) {
         this->setParent(parent);
         this->setAlignment(Qt::AlignCenter);
@@ -52,3 +68,5 @@ public:
 private:
     QPixmap picture;
 };
+
+}

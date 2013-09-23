@@ -6,15 +6,14 @@
 #include <opencv2/objdetect/objdetect.hpp>
 
 namespace Go_Scanner {
-
     /**
     * @brief        warpes an image 
     *
-    * @param		img		the image given by webcam or the debug image
-    *				p0		Left top point of warping area
-    *				p1		right top point of warping area
-    *               p2		Left bottom point of warping area
-    *				p3		right bottom point of warping area
+    * @param        img     the image given by webcam or the debug image
+    *               p0      Left top point of warping area
+    *               p1      right top point of warping area
+    *               p2      Left bottom point of warping area
+    *               p3      right bottom point of warping area
     *
     * @returns      a warped image
     */
@@ -22,13 +21,13 @@ namespace Go_Scanner {
 
     /**
     * @brief        Tries to automatically detect the corner points of the go board
-    *			    This function simply returns without modifying p0, .., p3 if the board couldn't be found
+    *               This function simply returns without modifying p0, .., p3 if the board couldn't be found
     *
-    * @param	    input	matrix with webcam or the debug image
-    *				p0		Left top point of warping area
-    *				p1		right top point of warping area
-    *				p2		Left bottom point of warping area
-    *			    p3		right bottom point of warping area
+    * @param        input   matrix with webcam or the debug image
+    *               p0      Left top point of warping area
+    *               p1      right top point of warping area
+    *               p2      Left bottom point of warping area
+    *               p3      right bottom point of warping area
     *
     */
     void automatic_warp(const cv::Mat& input, cv::Point2f& p0, cv::Point2f& p1, cv::Point2f& p2, cv::Point2f& p3);
@@ -40,6 +39,7 @@ namespace Go_Scanner {
 
     //Only functions for the mousehandler of opencv. used for manual selection.
     void releaseImg(cv::Mat a,int x,int y);
+    void showImage(int* board_corner_X, int* board_corner_Y);
     void showImage(int* board_corner_X, int* board_corner_Y);
     cv::Mat holdImg(int x,int y);
     void mouseHandler(int event, int x, int y, int flags, void *param);

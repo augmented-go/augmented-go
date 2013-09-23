@@ -22,6 +22,86 @@ namespace Go_Scanner {
     Mat img0, selectedImg, temp;
     string windowName = "Manual Selection Window";
 
+    int board_selection_cancel_key = 27;
+
+    // split a string at each char that is contained in delimiters and return the tokens
+    vector<string> split(const string& str, const string& delimiters)
+    {
+        // Skip delimiters at beginning.
+        string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+        // Find first "non-delimiter".
+        string::size_type pos     = str.find_first_of(delimiters, lastPos);
+
+        vector<string> tokens;
+        while (string::npos != pos || string::npos != lastPos)
+        {
+            // Found a token, add it to the vector.
+            tokens.push_back(str.substr(lastPos, pos - lastPos));
+            // Skip delimiters.  Note the "not_of"
+            lastPos = str.find_first_not_of(delimiters, pos);
+            // Find next "non-delimiter"
+            pos = str.find_first_of(delimiters, lastPos);
+        }
+
+        return tokens;
+    }
+
+    // renders a text in img with text at position
+    // automatically handels newlines
+    void putText(Mat img, string text, Point position) {
+        // text appearence
+        int fontFace     = 1;
+        double fontScale = 1.2;
+        int thickness    = 1;
+        int baseline     = 0;
+        int offset_x = 1, offset_y = 3;
+
+        // text size of one line
+        Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+        baseline += thickness;
+
+        auto total_height = textSize.height + baseline + 1;
+
+        auto lines = split(text, "\n");
+
+        // recurse if we got more than one line
+        // and put each line directly under the preceding
+        if (lines.size() > 1) {
+            int i = 0;
+            for (const auto& line : lines) {
+                putText(img, line, position + Point(0, i*total_height));
+                ++i;
+            }
+            return;
+        }
+
+        // buffer for the transparent box under the text (achieved through blending the images)
+        Mat box_buf = img.clone();
+
+        // draw the solid box
+        rectangle(box_buf, position + Point(0, baseline),
+            position + Point(textSize.width, -textSize.height),
+            Scalar(0, 0, 0),
+            CV_FILLED);
+
+        // blend the box to make it transparent
+        auto alpha = .3f;
+        addWeighted(box_buf, alpha, img, 1.0 - alpha, 0.0, img);
+
+        // draw the baseline
+        line(img, position + Point(0, thickness + offset_y),
+            position + Point(textSize.width, thickness + offset_y),
+            Scalar(0, 0, 255));
+
+        // draw the actual text
+        putText(img, text, 
+                    position + Point(offset_x, offset_y),            // position
+                    fontFace,            // font face
+                    fontScale,           // font scale
+                    Scalar(64, 64, 255), // color
+                    thickness,           // thickness
+                    CV_AA);              // line type
+    }
 
      /**
      * @brief   Calls the manual board detection and shows the result in a new window.
@@ -29,13 +109,18 @@ namespace Go_Scanner {
     void ask_for_board_contour() {
         namedWindow(windowName, CV_WINDOW_AUTOSIZE);
         setMouseCallback(windowName, mouseHandler, NULL);
-        putText(img0, "Mark the Go board with the blue rectangle. Press any Key when finished.", 
-                    cvPoint(20,20), 1, 0.8, Scalar(64, 64, 255), 1, CV_AA);
+        putText(img0,
+            "Mark the Go board with the blue rectangle\n"
+            "Press ESC to cancel or any other key to accept.",
+            cvPoint(10, 20));
+
         showImage();
-        waitKey(0);
+        auto key = waitKey(0);
         destroyWindow(windowName);
 
-        asked_for_board_contour = true;
+        // only accept board selection if the ESCAPE key was NOT pressed!
+        if (key != board_selection_cancel_key)
+            asked_for_board_contour = true;
     }
 
     /**
@@ -50,6 +135,7 @@ namespace Go_Scanner {
         // if one of the points wasn't set
         if (p0 == Point2f()) {
             cout << "!!ERROR >> Failed to automatically detect the go board!" << endl;
+            ask_for_board_contour();
             return;
         }
 
@@ -60,24 +146,35 @@ namespace Go_Scanner {
         p2 += Point2f(-gap, -gap);
         p3 += Point2f(gap, -gap);
 
-        boardCornerX[0] = cvRound(p0.x);
-        boardCornerX[1] = cvRound(p1.x);
-        boardCornerX[2] = cvRound(p2.x);
-        boardCornerX[3] = cvRound(p3.x);
-
-        boardCornerY[0] = cvRound(p0.y);
-        boardCornerY[1] = cvRound(p1.y);
-        boardCornerY[2] = cvRound(p2.y);
-        boardCornerY[3] = cvRound(p3.y);
+        // create data suitable for showImage()
+        int board_corners_X[] = { (int)p0.x, (int)p1.x, (int)p2.x, (int)p3.x };
+        int board_corners_Y[] = { (int)p0.y, (int)p1.y, (int)p2.y, (int)p3.y };
 
         namedWindow(windowName, CV_WINDOW_AUTOSIZE);
-        putText(img0, "Result of automatically detecting the Go board.", 
-                    cvPoint(20,20), 1, 0.8, Scalar(64, 64, 255), 1, CV_AA);
-        showImage();
-        waitKey(0);
+        putText(img0,
+            "Result of automatically detecting the Go board.\n"
+            "Press ESC to cancel or any other key to accept.",
+            cvPoint(10, 20));
+
+        showImage(board_corners_X, board_corners_Y);
+        auto key = waitKey(0);
         destroyWindow(windowName);
 
-        asked_for_board_contour = true;
+        // only accept board selection if the ESCAPE key was NOT pressed!
+        if (key != board_selection_cancel_key) {
+            asked_for_board_contour = true;
+
+            // actually commmit the selection to the internal used variables
+            boardCornerX[0] = cvRound(p0.x);
+            boardCornerX[1] = cvRound(p1.x);
+            boardCornerX[2] = cvRound(p2.x);
+            boardCornerX[3] = cvRound(p3.x);
+
+            boardCornerY[0] = cvRound(p0.y);
+            boardCornerY[1] = cvRound(p1.y);
+            boardCornerY[2] = cvRound(p2.y);
+            boardCornerY[3] = cvRound(p3.y);
+        }
     }
 
     Mat warpImage(Mat img, Point2f p0, Point2f p1, Point2f p2, Point2f p3)
@@ -145,9 +242,10 @@ namespace Go_Scanner {
             return;
 
         // APPROX. CONTOURS TO RECTANGLES
+        const auto factor = .065f; // found through testing!
         for (auto& contour : contours) {
             // approximating each contour to get a rectangle with 4 points!
-            approxPolyDP(Mat(contour), contour, arcLength(Mat(contour), true)*0.02, true);
+            approxPolyDP(Mat(contour), contour, arcLength(Mat(contour), true)*factor, true);
         }
 
         // CALCULATING BBOXES
@@ -165,7 +263,8 @@ namespace Go_Scanner {
         // or don't have exactly 4 corner points after approximation ( == rectangle)
         assert(bboxes.size() == contours.size());
 
-        const float edge_factor = .95f;
+        // for discarding contours that contain the complete image
+        const float edge_factor = .99f;
         const float max_width   = input.cols * edge_factor;
         const float max_height  = input.rows * edge_factor;
 
@@ -228,7 +327,10 @@ namespace Go_Scanner {
         auto board_bbox    = bboxes.front();
 
         // GETTING CORNER POINTS OF CONTOUR
-        assert(board_contour.size() == 4); // the contour should have left only 4 points after approximating
+
+        // stop if the contour has left only 4 points after approximating
+        if (board_contour.size() != 4)
+            return;
 
         // Rectangle Order for warping: 
         // 0--------1
@@ -247,10 +349,11 @@ namespace Go_Scanner {
                 lowers.emplace_back(point);
         }
 
-        // deciding which point is left/right
-        assert(uppers.size() == 2);
-        assert(lowers.size() == 2);
+        // stop if we couldn't classify two uppers and lowers
+        if (uppers.size() != 2 || lowers.size() != 2)
+            return;
 
+        // deciding which point is left/right
         // upper side
         p0 = uppers[0];
         p1 = uppers[1];
@@ -390,9 +493,10 @@ namespace Go_Scanner {
     }
 
     /**
-     * @brief   Shows the selected points (through manual or automatic board detection) on a clone of the img0 in a new window.
+     * @brief   Shows the points given through the two passed parameters on a clone of the img0 in a new window.
+     *          Both pointers have to point to memory containing 4 variables
      */
-    void showImage()
+    void showImage(int* board_corner_X, int* board_corner_Y)
     {
         Mat img1 = img0.clone();
 
@@ -400,8 +504,8 @@ namespace Go_Scanner {
         for(int j=0;j<nop;j++)
         {        
             rectangle(img1, 
-                Point(boardCornerX[j] - 1, boardCornerY[j] - 1), 
-                Point(boardCornerX[j] + 1, boardCornerY[j] + 1), 
+                Point(board_corner_X[j] - 1, board_corner_Y[j] - 1), 
+                Point(board_corner_X[j] + 1, board_corner_Y[j] + 1), 
                 Scalar(255, 0,  0, 0), 2, 8, 0);
 
 
@@ -409,14 +513,21 @@ namespace Go_Scanner {
             for(int k=j+1;k<nop;k++)
             {
                 line(img1,
-                    Point(boardCornerX[j] , boardCornerY[j] ), 
-                    Point(boardCornerX[k] , boardCornerY[k] ), 
+                    Point(board_corner_X[j] , board_corner_Y[j] ), 
+                    Point(board_corner_X[k] , board_corner_Y[k] ), 
                     Scalar(255, 0,  0, 0), 1,8,0);
             }
         }
         imshow(windowName, img1);
     }
 
+    /**
+     * @brief   Shows the selected points (through manual or automatic board detection) on a clone of the img0 in a new window.
+     */
+    void showImage()
+    {
+        showImage(boardCornerX, boardCornerY);
+    }
 
     bool getWarpedImg(Mat& warpedImg)
     {

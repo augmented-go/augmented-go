@@ -9,14 +9,16 @@
 
 #include "GoSetupUtil.h"
 #include "SgGameWriter.h"
+#include "SgGameReader.h"
 #include "SgProp.h"
 #include "GoModBoard.h"
 
-namespace GoBackend {
+namespace Go_Backend {
 Game::Game()
     : _go_game(),
       _game_finished(false),
-      _while_capturing(false)
+      _while_capturing(false),
+      _differences()
 {}
 
 bool Game::validSetup(const GoSetup& setup) const {
@@ -69,6 +71,14 @@ bool Game::init(int size, GoSetup setup, GoRules rules) {
     return true;
 }
 
+void Game::init(SgNode* game_tree) {
+    _go_game.Init(game_tree);
+
+    // fast forward to latest move
+    while (canNavigateHistory(SgNode::Direction::NEXT))
+        navigateHistory(SgNode::Direction::NEXT);
+}
+
 const GoBoard& Game::getBoard() const {
     return _go_game.Board();
 }
@@ -95,25 +105,48 @@ UpdateResult Game::update(GoSetup setup) {
     auto removed_blacks = current_blacks - new_blacks;
     auto removed_whites = current_whites - new_whites;
 
+    // calc differences between updated setup and current board setup
+    _differences.Clear();
+    _differences |= current_blacks ^ new_blacks;
+    _differences |= current_whites ^ new_whites;
 
     // handicap
     if (isPlacingHandicap(current_blacks, current_whites, new_whites)) {
         assert(_while_capturing == false);
         placeHandicap(setup);
+
+        // this is a valid move -> clear differences as the internal board now matches the real board
+        _differences.Clear();
         return UpdateResult::Legal;
     }
 
-
     if (_while_capturing) {
         assert(getBoard().CapturingMove());
-        return updateWhileCapturing(setup);
+        
+        auto move_result = updateWhileCapturing(setup);
+
+        if (move_result == UpdateResult::Legal) {
+            // this is a valid move -> clear differences as the internal board now matches the real board
+            _differences.Clear();
+        }
+
+        return move_result;
     }
     else {
-        return updateNormal(added_blacks, added_whites, removed_blacks, removed_whites);
+        auto move_result = updateNormal(added_blacks, added_whites, removed_blacks, removed_whites);
+
+        if (move_result == UpdateResult::Legal) {
+            // this is a valid move -> clear differences as the internal board now matches the real board
+            _differences.Clear();
+        }
+
+        return move_result;
     }
 }
 
-
+SgPointSet Game::getDifferences() const {
+    return _differences;
+}
 
 UpdateResult Game::updateNormal(SgPointSet added_blacks, SgPointSet added_whites, SgPointSet removed_blacks, SgPointSet removed_whites) {
     assert(_while_capturing == false);
@@ -155,7 +188,7 @@ UpdateResult Game::updateWhileCapturing(GoSetup new_setup) {
     }
     else {
         // real life board dosn't match internal state
-        return UpdateResult::Illegal;
+        return UpdateResult::ToCapture;
     }
 }
 
@@ -208,7 +241,7 @@ UpdateResult Game::updateSingleMove(SgPoint point, SgBlackWhite player, SgPointS
             // some stones may have already been removed after playing the move,
             // but there are still stones left to be removed, tell the user to remove them as well
             _while_capturing = true;
-            return UpdateResult::Illegal;
+            return UpdateResult::ToCapture;
         }
         else {
             // stones that are not beeing captured have been removed
@@ -324,6 +357,17 @@ bool Game::saveGame(string file_path, string name_black, string name_white, stri
     return true;
 }
 
+SgNode* Game::loadGame(string file_path) {
+    std::ifstream file(file_path.c_str());
+    if (!file.is_open()) {
+        // @todo(jschmer): support better diagnostics such as throwing an exception like FAILED_TO_OPEN_FILE
+        return nullptr;
+    }
+
+    SgGameReader reader(file);
+    return reader.ReadGame();
+}
+
 std::string Game::finishGame() {
     pass();
     pass();
@@ -387,6 +431,14 @@ std::string Game::getResult() const {
 
 bool Game::hasEnded() const {
     return _game_finished;
+}
+
+void Game::navigateHistory(SgNode::Direction dir) {
+    _go_game.GoInDirection(dir);
+}
+
+bool Game::canNavigateHistory(SgNode::Direction dir) const {
+    return _go_game.CanGoInDirection(dir);
 }
 
 } // 

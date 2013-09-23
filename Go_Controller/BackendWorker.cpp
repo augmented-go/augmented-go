@@ -7,7 +7,7 @@
 #include "SgPoint.h"
 #include "SgSystem.h"
 
-namespace Go_AR {
+namespace Go_Controller {
 
 // converts a cv::Mat to a QImage
 // inspired from http://www.qtforum.de/forum/viewtopic.php?t=9721
@@ -49,7 +49,7 @@ BackendWorker::BackendWorker()
     _new_game_rules = GoRules(0, GoKomi(6.5), true, true);
 
     connect(&_scan_timer, SIGNAL(timeout()), this, SLOT(scan()));
-    _scan_timer.setInterval(2000);// call the connected slot every 1000 msec
+    _scan_timer.setInterval(1000);// call the connected slot every 1000 msec (1 fps)
     _scan_timer.start();  // put one event in this threads event queue
 }
 
@@ -65,7 +65,7 @@ void BackendWorker::scan() {
     auto scan_result = _scanner.scanCamera(setup, _cached_board_size, image);
 
     using Go_Scanner::ScanResult;
-    using GoBackend::UpdateResult;
+    using Go_Backend::UpdateResult;
 
     switch (scan_result) {
     case ScanResult::Success:
@@ -73,8 +73,12 @@ void BackendWorker::scan() {
             if (_game_is_initialized) {
                 // update game state
                 UpdateResult result = _game.update(setup);
-                if (result == UpdateResult::Illegal)
+                if (result == UpdateResult::Illegal) {
                     emit displayErrorMessage("Your board differs from virtual board!");
+                }
+                else if (result == UpdateResult::ToCapture) {
+                    emit displayErrorMessage("There are stones left to capture.\nMake sure your board matches the virtual one.");
+                }
                 else {
                     emit displayErrorMessage(""); // no error
                 }
@@ -127,6 +131,39 @@ void BackendWorker::saveSgf(QString path, QString blackplayer_name, QString whit
 
     if (!_game.saveGame(filepath, blackplayer_name.toStdString(), whiteplayer_name.toStdString(), game_name.toStdString()))
         std::cerr << "Error writing game data to file \"" << filepath << "\"!" << std::endl;
+}
+
+void BackendWorker::loadSgf(QString path) {
+    auto filepath = path.toStdString();
+
+    auto new_game = _game.loadGame(filepath);
+    if (!new_game) {
+        emit displayErrorMessagebox("Error loading the game", "Failed to open the selected sgf-file!");
+        return;
+    }
+
+    auto size = 0;
+    if (!new_game->GetIntProp(SG_PROP_SIZE, &size)) {
+        emit displayErrorMessagebox("Error loading the game", "You tried to load a sgf file with missing board size!\nOnly sgf-files with a defined board size are supported here.");
+
+        // cleanup
+        new_game->DeleteTree();
+        return;
+    }
+
+    if (size != 9 && size != 13 && size != 19) {
+        emit displayErrorMessagebox("Error loading the game", "Only board sizes of 9x9, 13x13 and 19x19 are supported!");
+
+        // cleanup
+        new_game->DeleteTree();
+        return;
+    }
+
+    // _game takes ownership of new_game
+    _game.init(new_game);
+    _game_is_initialized = true;
+
+    signalGuiGameDataChanged();
 }
 
 void BackendWorker::pass() {
@@ -228,4 +265,14 @@ void BackendWorker::signalGuiGameDataChanged() const {
     emit gameDataChanged(&_game);
 }
 
-} // namespace Go_AR
+void BackendWorker::navigateHistory(SgNode::Direction dir) {
+    if (_game.canNavigateHistory(dir))
+        _game.navigateHistory(dir);
+    signalGuiGameDataChanged();
+}
+
+void BackendWorker::changeScanningRate(int milliseconds) {
+    _scan_timer.setInterval(milliseconds);
+}
+
+} // namespace Go_Controller

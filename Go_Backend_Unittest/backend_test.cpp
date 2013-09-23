@@ -13,10 +13,10 @@
 #include <fstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-namespace GoBackendGameTest
+namespace Go_BackendGameTest
 {
-    using GoBackend::Game;
-    using GoBackend::UpdateResult;
+    using Go_Backend::Game;
+    using Go_Backend::UpdateResult;
     using SgPointUtil::Pt;
     using std::string;
 
@@ -373,7 +373,7 @@ namespace GoBackendGameTest
 
             auto result = go_game.update(new_setup);
             // internal board and real life board do not match
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
 
             // internal board state should automatically removes stones
             s = "..OX\n"
@@ -396,7 +396,7 @@ namespace GoBackendGameTest
                 ".X..";
             new_setup = GoSetupUtil::CreateSetupFromString(s, size);
             result = go_game.update(new_setup);
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
         }
 
         TEST_METHOD(after_capturing_allow_playing_where_caputred_stones_were) {
@@ -516,11 +516,11 @@ namespace GoBackendGameTest
                             "OX..");
             setup = GoSetupUtil::CreateSetupFromString(s, size);
             auto result = go_game.update(setup);
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
 
-            // another update with still illegal setup
+            // another update with still illegal/not captured stones setup
             result = go_game.update(setup);
-            Assert::IsTrue(result == UpdateResult::Illegal);
+            Assert::IsTrue(result == UpdateResult::ToCapture);
         }
 
         TEST_METHOD(can_get_board_information) {
@@ -893,6 +893,119 @@ namespace GoBackendGameTest
             Assert::IsTrue(result == UpdateResult::Illegal);
         }
 
+        TEST_METHOD(can_get_differences_of_faulty_moves) {
+            std::string s(  "....\n"
+                            ".X..\n"
+                            "O...\n"
+                            ".O..");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // illegal move: black removes a white stone
+            s = "....\n"
+                ".X..\n"
+                "....\n"
+                ".O..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            auto diff = go_game.getDifferences();
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                auto point = *iter;
+
+                Assert::IsTrue(point == Pt(1, 2));
+            }
+
+            // illegal move: black removes a black stone
+            s = "....\n"
+                ".X..\n"
+                "O...\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                auto point = *iter;
+
+                Assert::IsTrue(point == Pt(2, 3));
+            }
+
+            // illegal move: black plays suicide
+            s = "....\n"
+                ".X..\n"
+                "O...\n"
+                "XO..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                auto point = *iter;
+
+                Assert::IsTrue(point == Pt(1, 1));
+            }
+
+            // illegal move: black plays two stones
+            s = "....\n"
+                ".X..\n"
+                "O...\n"
+                ".OXX";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            std::vector<SgPoint> real_faulty_stones;
+            for (auto iter = SgSetIterator(diff); iter; ++iter) {
+                real_faulty_stones.push_back(*iter);
+            }
+
+            std::vector<SgPoint> expected_faulty_stones;
+            expected_faulty_stones.push_back(Pt(3,1));
+            expected_faulty_stones.push_back(Pt(4,1));
+         
+            Assert::IsTrue(expected_faulty_stones == real_faulty_stones);
+        }
+
+        TEST_METHOD(no_differences_after_valid_moves) {
+            std::string s(  "....\n"
+                            ".X..\n"
+                            "O...\n"
+                            ".O..");
+
+            int size;
+            auto setup = GoSetupUtil::CreateSetupFromString(s, size);
+
+            Game go_game;
+            go_game.init(size, setup);
+
+            // black moves
+            s = "....\n"
+                "XX..\n"
+                "O...\n"
+                ".O..";
+            auto new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            auto diff = go_game.getDifferences();
+            Assert::IsTrue(diff.IsEmpty());
+
+            // white moves
+            s = "....\n"
+                "XX..\n"
+                "O.O.\n"
+                ".O..";
+            new_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(new_setup);
+
+            diff = go_game.getDifferences();
+            Assert::IsTrue(diff.IsEmpty());
+        }
+
         TEST_METHOD(allow_move_from_black_after_init_with_setup) {
             GoSetup setup;
             setup.AddWhite(Pt(1, 2));
@@ -927,7 +1040,6 @@ namespace GoBackendGameTest
             Assert::IsTrue(result == UpdateResult::Illegal);
         }
     };
-    
     
     TEST_CLASS(GoRulesTest)
     {
@@ -1019,8 +1131,6 @@ namespace GoBackendGameTest
             Assert::AreEqual("W+7.5", res.c_str());
         }
     };
-    
-
     
     TEST_CLASS(SgfTest)
     {
@@ -1132,6 +1242,38 @@ namespace GoBackendGameTest
             contents = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
             Assert::IsTrue(contents.find("RE[B+1.5]") != string::npos);
         }
+        
+        TEST_METHOD(load_game_state_from_sgf_file) {
+            string filename = "load_game_state_from_sgf_file.sgf";
+            std::ofstream file(filename);
+            file << "(;SZ[4]KM[6.5]\n"
+                    "DT[2013-Sep-04];\n"
+                    "AB[ac]\n"
+                    "AW[ad];B[bd])\n"
+                    "";
+            file.close();
+
+            Game go_game;
+            go_game.init(4);
+
+            Assert::IsTrue(go_game.loadGame(filename));
+
+            // m_player 1
+            auto setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
+
+            int size;
+            auto s = std::string("...."
+                                 "...."
+                                 "X..."
+                                 "OX..");
+
+            // m_player 0
+            auto expected_setup = GoSetupUtil::CreateSetupFromString(s, size);
+            expected_setup.m_player = SG_WHITE;
+
+            Assert::IsTrue(expected_setup == setup);
+        }
+
     };
 
     TEST_CLASS(PlayMoveTest) {
@@ -1303,6 +1445,70 @@ namespace GoBackendGameTest
 
             board_setup = GoSetupUtil::CurrentPosSetup(go_game.getBoard());
             Assert::IsTrue(expected_setup == board_setup);
+        }
+    };
+
+    TEST_CLASS(HistoryNavigationTest) {
+        TEST_METHOD(board_updates_after_history_movement) {
+            Game go_game;
+            go_game.init(19);
+
+            // two moves
+            GoSetup setup;
+            setup.AddBlack(Pt(1, 2));
+            setup.m_player = SG_WHITE;
+            go_game.update(setup);
+
+            GoSetup setup2 = setup;
+            setup2.AddWhite(Pt(1, 3));
+            setup2.m_player = SG_BLACK;
+            go_game.update(setup2);
+
+            // can't navigate into "future"
+            Assert::IsFalse(go_game.canNavigateHistory(SgNode::Direction::NEXT));
+
+            // back one step
+            go_game.navigateHistory(SgNode::Direction::PREVIOUS);
+            Assert::IsTrue(GoSetupUtil::CurrentPosSetup(go_game.getBoard()) == setup);
+            
+            // back to the last move
+            go_game.navigateHistory(SgNode::Direction::NEXT);
+            Assert::IsTrue(GoSetupUtil::CurrentPosSetup(go_game.getBoard()) == setup2);
+        }
+
+        TEST_METHOD(history_allows_variations) {
+            // to make the variations properly work with handicap, some backend refactoring is probably needed, if we even want that
+            // (navigating while still being in the SettingHandicap sate doesn't preserve the history)
+            Game go_game;
+            go_game.init(19);
+
+            GoSetup first_move;
+            first_move.AddBlack(Pt(1, 1));
+            first_move.m_player = SG_WHITE;
+            go_game.update(first_move);
+
+            // first white move
+            GoSetup first_variation = first_move;
+            first_variation.AddWhite(Pt(1, 2));
+            first_variation.m_player = SG_BLACK;
+            go_game.update(first_variation);
+
+            go_game.navigateHistory(SgNode::Direction::PREVIOUS);
+            // one black stone
+            Assert::IsTrue(GoSetupUtil::CurrentPosSetup(go_game.getBoard()) == first_move);
+
+            // white variation
+            GoSetup second_variation = first_move;
+            second_variation.AddWhite(Pt(1, 3));
+            go_game.update(second_variation);
+
+            // back to original variation
+            bool left = go_game.canNavigateHistory(SgNode::Direction::LEFT_BROTHER);
+            bool right = go_game.canNavigateHistory(SgNode::Direction::RIGHT_BROTHER);
+            bool branch = go_game.canNavigateHistory(SgNode::Direction::PREV_BRANCH);
+
+            go_game.navigateHistory(SgNode::Direction::LEFT_BROTHER);
+            Assert::IsTrue(GoSetupUtil::CurrentPosSetup(go_game.getBoard()) == first_variation);
         }
     };
 }

@@ -7,19 +7,27 @@
 
 #include <tuple>
 
-
+/**
+ * Classes for detecting a go board and the stones
+ */
 namespace Go_Scanner {
 
-bool scanner_main(const cv::Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg);
+bool scanner_main(cv::Mat& camera_frame, GoSetup& setup, int& board_size, bool& setDebugImg);
 void ask_for_board_contour();
 void do_auto_board_detection();
 
+/**
+ * @brief   Result types of a scan operation
+ */
 enum ScanResult {
     Success,
     Failed,
     NoCamera
 };
 
+/**
+ * @brief       TODO
+ */
 class Scanner {
 public:
     Scanner() {
@@ -32,9 +40,11 @@ private:
         
 public:
     /**
-    * @brief        currently only sets out_image to the read camera image
-    * @returns      true if a new image could be retrieved and lines as well as stones could be detected
-    *               false otherwise, may be changed to an enum or so
+    * @brief        Reads an image from the camera and scans it for go stones.
+    * @param[out]   setup       The detected stone setup on the board
+    * @param[out]   board_size  The calculated board size
+    * @param[out]   out_image   The camera image (or debug image)
+    * @returns      see Go_Scanner::ScanResult
     */
     ScanResult scanCamera(GoSetup& setup, int& board_size, cv::Mat& out_image);
 

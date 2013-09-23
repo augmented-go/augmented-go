@@ -110,7 +110,8 @@ SgMove SgPropUtil::SgfStringToPoint(const string& s, int boardSize,
             {
                 int col = s[0] - 'a' + 1;
                 int row = s[1] - 'a' + 1;
-                p = SgPointUtil::Pt(col, boardSize - row + 1);
+                if (InRange(col, 1, boardSize) && InRange(row, 1, boardSize))
+                    p = SgPointUtil::Pt(col, boardSize - row + 1);
             }
             else if (s.empty() // new FF[4] definition
                      || (s.size() == 2 && s[0] == 't' && s[1] == 't'))

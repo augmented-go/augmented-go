@@ -10,14 +10,19 @@
 #include "Game.hpp"
 
 #include "NewGameDialog.hpp"
+#include "ChangeScanRateDialog.hpp"
 #include "VirtualView.hpp"
 #include "AugmentedView.hpp"
+#include "Version.hpp"
 
 
 namespace Go_GUI {
     
 
-GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
+GUI::GUI(QWidget *parent)
+    : QMainWindow(parent),
+    go_game(nullptr),
+    current_scanning_fps(1)
 {
     ui_main.setupUi(this);
     
@@ -45,9 +50,9 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
         QMessageBox::critical(this, "Font not found", QString("FromWhereYouAre font was not found!\n searched relative to exe in: " + font_path));
 
     // connections
+    connect(ui_main.exit_action,		&QAction::triggered,	this, &QMainWindow::close);	
     connect(ui_main.open_action,		&QAction::triggered,	this, &GUI::slot_MenuOpen);
     connect(ui_main.save_action,		&QAction::triggered,	this, &GUI::slot_MenuSave);
-    connect(ui_main.exit_action,		&QAction::triggered,	this, &QWidget::close);	
     connect(ui_main.info_action,		&QAction::triggered,	this, &GUI::slot_MenuInfo);
     connect(ui_main.automatic_action,   &QAction::triggered,	this, &GUI::slot_BoardDetectionAutomatically);
     connect(ui_main.manually_action,	&QAction::triggered,	this, &GUI::slot_BoardDetectionManually);
@@ -58,10 +63,13 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent), go_game(nullptr)
     connect(ui_main.newgame_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonNewGame);
     connect(ui_main.pass_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonPass);
     connect(ui_main.resign_button,	    &QPushButton::clicked,	this, &GUI::slot_ButtonResign);
+    connect(ui_main.backward_button,    &QPushButton::clicked,    this, &GUI::slot_HistoryBackward);
+    connect(ui_main.forward_button,     &QPushButton::clicked,    this, &GUI::slot_HistoryForward);
     connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
     connect(ui_main.scannerdebugimage_action,	&QAction::triggered,	this, &GUI::slot_toggleScannerDebugImage);
     
    
+    connect(ui_main.scanning_rate_action, &QAction::triggered,	this, &GUI::slot_MenuChangeScanRate);
     // setting initial values
     this->init();
 }
@@ -107,8 +115,8 @@ void GUI::setPlayerLabels(QString blackplayer_name, QString whiteplayer_name){
 //////////
 
 void GUI::slot_ButtonNewGame(){
-    NewGameDialog* newgame = new NewGameDialog(this);
-    newgame->exec();
+    NewGameDialog newgame(this);
+    newgame.exec();
 }
 
 void GUI::slot_ButtonResign(){
@@ -122,7 +130,12 @@ void GUI::slot_ButtonPass(){
 }
 
 void GUI::slot_ViewSwitch(){
+
+    if (go_game == nullptr)
+        return;
+
     ui_main.viewswitch_button->setIcon(this->switchbuttonpressed_icon);
+    auto differences = go_game->getDifferences();
 
     if (ui_main.big_container->toolTip() == "virtual view"){
 
@@ -134,7 +147,7 @@ void GUI::slot_ViewSwitch(){
 
         // new style
         virtual_view->setParent(ui_main.small_container);
-        virtual_view->createAndSetScene(ui_main.small_container->size(), &(go_game->getBoard()));
+            virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &(go_game->getBoard()));
         ui_main.small_container->setToolTip("virtual view");
         virtual_view->show();
         
@@ -147,7 +160,7 @@ void GUI::slot_ViewSwitch(){
         augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
         virtual_view->setParent(ui_main.big_container);
-        virtual_view->createAndSetScene(ui_main.big_container->size(), &(go_game->getBoard()));
+        virtual_view->createAndSetScene(ui_main.big_container->size(), differences, &(go_game->getBoard()));
         ui_main.big_container->setToolTip("virtual view");
         virtual_view->show(); 
     }
@@ -157,7 +170,35 @@ void GUI::slot_ViewSwitch_released(){
     ui_main.viewswitch_button->setIcon(this->switchbutton_icon);
 }
 
+void GUI::slot_HistoryBackward(){
+    emit signal_navigateHistory(SgNode::Direction::PREVIOUS);
+}
+
+void GUI::slot_HistoryForward(){
+    emit signal_navigateHistory(SgNode::Direction::NEXT);
+}
+
+
 void GUI::slot_MenuOpen(){
+    // if at least one move was made -> ask if user wants to save
+    bool saveable = ui_main.movenumber_label->text().toInt() > 0;
+
+    if (saveable) {
+        auto answer = QMessageBox::question(this, "Save?", "Do you want to save before loading a new game?", "Save", "Don't Save", "Cancel");
+
+        if (answer == 0) {
+            // Save
+            this->slot_MenuSave();
+        }
+        else if (answer == 2) {
+            // Cancel
+            return;
+        }
+        else {
+            // Don't Save
+        }
+    }
+    
     QString selfilter = tr("SGF (*.sgf)");
     QString fileName = QFileDialog::getOpenFileName(
         this,
@@ -167,8 +208,7 @@ void GUI::slot_MenuOpen(){
         &selfilter 
     );
 
-    if (!fileName.isNull()){
-        // TODO ask if user wants to save the current game!
+    if (!fileName.isNull()) {
         emit signal_openGame(fileName);
     }
 }
@@ -195,6 +235,10 @@ void GUI::slot_MenuInfo(){
     // Build date and time
     output += "This build of Augmented Go was compiled at " __DATE__ ", " __TIME__ ".\n";
 
+
+    // sha1 of the git commit this build is based on
+    output += "The git sha1 this build is based on is " + std::string(g_GIT_SHA1) + ".\n";
+
     // Copyright
     std::string year = __DATE__;
     year = year.substr(year.find_last_of(" "));	// deleting day and month
@@ -206,6 +250,11 @@ void GUI::slot_MenuInfo(){
 
     // Final InfoBox
     QMessageBox::about(this, "Info", output.c_str());
+}
+
+void GUI::slot_MenuChangeScanRate() {
+    ChangeScanRateDialog scan_rate_dialog(this, current_scanning_fps);
+    scan_rate_dialog.exec();
 }
 
 void GUI::slot_BoardDetectionManually() {
@@ -255,6 +304,15 @@ void GUI::slot_toggleScannerDebugImage()
 }
 
 
+void GUI::slot_changeScanRate(int fps) {
+    current_scanning_fps = fps;
+
+    // convert fps to ms
+    auto milliseconds = fps == 0 ? 0 : 1000.f / current_scanning_fps;
+
+    emit signal_new_scanning_rate(milliseconds);
+}
+
 //////////
 //Public Slots
 //////////
@@ -269,12 +327,17 @@ void GUI::slot_newImage(QImage image) {
         ui_main.manually_action->setEnabled(true);
     }
 
-void GUI::slot_newGameData(const GoBackend::Game* game) {
+void GUI::slot_newGameData(const Go_Backend::Game* game) {
+
     // update internal pointer if the board has been changed
     if (go_game != game)
         go_game = game;
 
+    if (go_game == nullptr)
+        return;
+
     auto& board = go_game->getBoard();
+    auto differences = go_game->getDifferences();
 
     auto current_player = board.ToPlay();
 
@@ -302,11 +365,15 @@ void GUI::slot_newGameData(const GoBackend::Game* game) {
 
     // refresh virtual view
     if (ui_main.big_container->toolTip() == "virtual view")
-        virtual_view->createAndSetScene(ui_main.big_container->size(), &board);
-    
+        virtual_view->createAndSetScene(ui_main.big_container->size(), differences, &board);
+
     else if (ui_main.big_container->toolTip() == "augmented view")
-        virtual_view->createAndSetScene(ui_main.small_container->size(), &board);
-    
+        virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &board);
+
+    // disable navigation button if there is no history in that direction
+    ui_main.forward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::NEXT));
+    ui_main.backward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::PREVIOUS));
+
     printf(">>> New Game data! <<<\n");
 }    
 
@@ -340,6 +407,14 @@ void GUI::slot_displayErrorMessage(QString message) {
         ui_main.error_label->raise();
         ui_main.error_label->setText(message);
     }
+}
+
+void GUI::slot_displayErrorMessagebox(QString title, QString text) {
+    auto icon = QMessageBox::Icon::Warning;
+    auto buttons = QMessageBox::StandardButton::Ok;
+    auto parent = this;
+
+    QMessageBox(icon, title, text, buttons, parent).exec();
 }
 
 void GUI::slot_noCameraImage() {
