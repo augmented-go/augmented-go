@@ -22,7 +22,7 @@ namespace Go_GUI {
 GUI::GUI(QWidget *parent)
     : QMainWindow(parent),
     go_game(nullptr),
-    current_scanning_fps(1)
+    current_scanning_fps(25)
 {
     ui_main.setupUi(this);
     
@@ -67,11 +67,13 @@ GUI::GUI(QWidget *parent)
     connect(ui_main.forward_button,     &QPushButton::clicked,    this, &GUI::slot_HistoryForward);
     connect(this->virtual_view,	        &VirtualView::signal_virtualViewplayMove,	this, &GUI::slot_passOnVirtualViewPlayMove);
     connect(ui_main.scannerdebugimage_action,	&QAction::triggered,	this, &GUI::slot_toggleScannerDebugImage);
-    
-   
     connect(ui_main.scanning_rate_action, &QAction::triggered,	this, &GUI::slot_MenuChangeScanRate);
+
     // setting initial values
     this->init();
+
+    // tell the backend to use the default scanning rate
+    slot_changeScanRate(current_scanning_fps);
 }
 
 void GUI::init(){
