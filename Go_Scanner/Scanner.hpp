@@ -26,7 +26,7 @@ enum ScanResult {
 };
 
 /**
- * @brief       TODO
+ * @brief   This class is used by the controller to interface with the scanner.
  */
 class Scanner {
 public:
