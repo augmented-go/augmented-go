@@ -15,7 +15,7 @@
             -->
             <Functions>
               <Include>
-                <Function>^GoBackend::.*</Function>
+                <Function>^Go_Backend::.*</Function>
               </Include>
             </Functions>
 
