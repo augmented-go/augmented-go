@@ -194,7 +194,6 @@ private:
     /**
      * @brief       Places the black stones as handicap stones. If there is exaclty one black stone, it is played as a normal move.
                     Requires the setup to not contain white stones.
-                    Note: if there are no black stones either, nothing will be placed, but the current player changes to white regardless.
      */
     void placeHandicap(GoSetup new_setup);
 

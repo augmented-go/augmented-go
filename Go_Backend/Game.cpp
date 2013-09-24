@@ -55,7 +55,7 @@ bool Game::init(int size, GoSetup setup, GoRules rules) {
         return false;
     }
 
-    if (setup.m_stones[SG_WHITE].Size() == 0 && setup.m_stones[SG_BLACK].Size() != 0) {
+    if (setup.m_stones[SG_WHITE].Size() == 0) {
         // no or only black stones, consider them to be handicap stones
         placeHandicap(setup);
     }
@@ -302,6 +302,10 @@ void Game::placeHandicap(GoSetup new_setup) {
         // play the black stone just like a regular move
         assert(getBoard().IsLegal(blacks.PointOf(), SG_BLACK));
         _go_game.AddMove(blacks.PointOf(), SG_BLACK);
+    }
+    else if(blacks.Size() == 0) {
+        // no black stones at all, just let the freshly reset game empty
+        // (calling PlaceHandicap would set the current player to white)
     }
     else {
         SgVector<SgPoint> handicap_stones;

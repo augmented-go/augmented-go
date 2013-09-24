@@ -1050,15 +1050,22 @@ namespace Go_BackendGameTest
             GoSetup setup1 = GoSetupUtil::CreateSetupFromString(s, size);
             go_game.update(setup1);
 
+            // the internal board got actually updated
+            auto& board = go_game.getBoard();
+            Assert::AreEqual(0, board.TotalNumStones(SG_WHITE));
+            Assert::AreEqual(2, board.TotalNumStones(SG_BLACK));
+
+
             // all handicap stones have been removed again
             GoSetup empty_setup = GoSetup();
             go_game.update(empty_setup);
 
-            
-            // the internal board got actually updated
-            auto& board = go_game.getBoard();
-            empty_setup.m_player = SG_WHITE;
-            Assert::IsTrue(board.Setup() == empty_setup);
+            // no stones present on the board
+            Assert::AreEqual(0, board.TotalNumStones(SG_WHITE));
+            Assert::AreEqual(0, board.TotalNumStones(SG_BLACK));
+
+            // no stone at all, therefore blacks turn
+            Assert::IsTrue(board.ToPlay() == SG_BLACK);
         }
 
         TEST_METHOD(update_internal_board_when_a_handicap_stone_gets_moved) {
@@ -1079,7 +1086,6 @@ namespace Go_BackendGameTest
             GoSetup setup2 = GoSetupUtil::CreateSetupFromString(s2, size);
             go_game.update(setup2);
 
-            
             // the internal board got actually updated
             auto& board = go_game.getBoard();
             setup2.m_player = SG_WHITE;
