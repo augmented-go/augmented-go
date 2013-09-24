@@ -9,6 +9,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QImage>
+#include <QTime>
 
 #include "SgNode.h"
 
@@ -184,15 +185,21 @@ namespace Go_Controller {
         void signalGuiGameHasEnded() const;
         void signalGuiGameDataChanged() const;
         bool virtualModeActive() const;
+        bool setupIsStable(const GoSetup& setup);
 
     // Member vars    
     private:
-        Go_Backend::Game     _game;
+        Go_Backend::Game    _game;
         Go_Scanner::Scanner _scanner;
         QTimer              _scan_timer;
+
         GoRules _new_game_rules;
         bool    _game_is_initialized;
         int     _cached_board_size;
 
+        // variables for the check if a setup is stable
+        GoSetup _stable_reference_setup;
+        QTime   _stable_period_timer;
+        int     _stable_setup_period;
     };
 }
