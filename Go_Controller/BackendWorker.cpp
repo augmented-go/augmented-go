@@ -52,8 +52,8 @@ BackendWorker::BackendWorker()
     _new_game_rules = GoRules(0, GoKomi(6.5), true, true);
 
     connect(&_scan_timer, SIGNAL(timeout()), this, SLOT(scan()));
-    _scan_timer.setInterval(40);// call the connected slot every 1000 msec (1 fps)
-    _scan_timer.start();  // put one event in this threads event queue
+    _scan_timer.setInterval(40); // call the connected slot periodically in this interval (ms)
+    _scan_timer.start();         // put one timer event in this threads event queue
 
     // start timing for the stable setup check
     _stable_period_timer.start();
