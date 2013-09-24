@@ -38,7 +38,10 @@ BackendWorker::BackendWorker()
     _scanner(),
     _game_is_initialized(false),
     _cached_board_size(0),
-    _scan_timer(this) // this makes sure that the timer has the same thread affinity as its parent (this)
+    _scan_timer(this), // this makes sure that the timer has the same thread affinity as its parent (this)
+    _stable_reference_setup(),
+    _stable_period_timer(),
+    _stable_setup_period(100) // this is considered a stable period
 {
     /* define default game rules
      *     handicap: 0
@@ -49,8 +52,11 @@ BackendWorker::BackendWorker()
     _new_game_rules = GoRules(0, GoKomi(6.5), true, true);
 
     connect(&_scan_timer, SIGNAL(timeout()), this, SLOT(scan()));
-    _scan_timer.setInterval(40);// call the connected slot every 1000 msec (1 fps)
-    _scan_timer.start();  // put one event in this threads event queue
+    _scan_timer.setInterval(40); // call the connected slot periodically in this interval (ms)
+    _scan_timer.start();         // put one timer event in this threads event queue
+
+    // start timing for the stable setup check
+    _stable_period_timer.start();
 }
 
 
@@ -70,32 +76,39 @@ void BackendWorker::scan() {
     switch (scan_result) {
     case ScanResult::Success:
         {
-            if (_game_is_initialized) {
-                // update game state
-                UpdateResult result = _game.update(setup);
-                if (result == UpdateResult::Illegal) {
-                    emit displayErrorMessage("Your board differs from virtual board!");
-                }
-                else if (result == UpdateResult::ToCapture) {
-                    emit displayErrorMessage("There are stones left to capture.\nMake sure your board matches the virtual one.");
-                }
-                else {
-                    emit displayErrorMessage(""); // no error
-                }
-            }
-            else {
-                // the gui doesn't support other sizes
-                if (_cached_board_size == 9 || _cached_board_size == 13 || _cached_board_size == 19 ) {
-                    _game.init(_cached_board_size, setup, _new_game_rules);
-                    _game_is_initialized = true;
-                    emit displayErrorMessage("");
-                }
-                else {
-                    emit displayErrorMessage(QString("Not supported board size of %1x%1 detected!").arg(_cached_board_size));
-                }
-            }
+            // We only allow a game update if the same setup was scanned for a fixed time period.
+            // This should mitigate problems when a player hovers over the board with his hand while
+            // playing a stone and the scanner wrongly detects stones on the players hand.
+            // There's no need to check for a stable setup in virtual mode.
+            if (virtualModeActive() || setupIsStable(setup)) {
 
-            signalGuiGameDataChanged();
+                if (_game_is_initialized) {
+                    // update game state
+                    UpdateResult result = _game.update(setup);
+                    if (result == UpdateResult::Illegal) {
+                        emit displayErrorMessage("Your board differs from virtual board!");
+                    }
+                    else if (result == UpdateResult::ToCapture) {
+                        emit displayErrorMessage("There are stones left to capture.\nMake sure your board matches the virtual one.");
+                    }
+                    else {
+                        emit displayErrorMessage(""); // no error
+                    }
+                }
+                else {
+                    // the gui doesn't support other sizes
+                    if (_cached_board_size == 9 || _cached_board_size == 13 || _cached_board_size == 19) {
+                        _game.init(_cached_board_size, setup, _new_game_rules);
+                        _game_is_initialized = true;
+                        emit displayErrorMessage("");
+                    }
+                    else {
+                        emit displayErrorMessage(QString("Not supported board size of %1x%1 detected!").arg(_cached_board_size));
+                    }
+                }
+
+                signalGuiGameDataChanged();
+            }
 
             // converting image (OpenCV data type) to QImage (Qt data type)
             const auto scanner_image = mat_to_QImage(image);
@@ -209,6 +222,7 @@ void BackendWorker::setVirtualGameMode(bool checked) {
     if (virtualModeActive()) {
         // go into augmented mode -> do the scanning!
         _scan_timer.start();
+        _stable_period_timer.start();
     }
     else {
         // go into virtual mode -> no scanning!
@@ -273,6 +287,20 @@ void BackendWorker::navigateHistory(SgNode::Direction dir) {
 
 void BackendWorker::changeScanningRate(int milliseconds) {
     _scan_timer.setInterval(milliseconds);
+}
+
+bool BackendWorker::setupIsStable(const GoSetup& setup) {
+    if (_stable_reference_setup == setup) {
+        if (_stable_period_timer.elapsed() >= _stable_setup_period) {
+            return true;
+        }
+    }
+    else {
+        _stable_reference_setup = setup;
+        _stable_period_timer.start(); // restart the timer to get the elapsed time since the setup was changed
+    }
+    
+    return false;
 }
 
 } // namespace Go_Controller
