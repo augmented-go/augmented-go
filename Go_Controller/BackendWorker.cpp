@@ -41,7 +41,7 @@ BackendWorker::BackendWorker()
     _scan_timer(this), // this makes sure that the timer has the same thread affinity as its parent (this)
     _stable_reference_setup(),
     _stable_period_timer(),
-    _stable_setup_period(1000) // this is considered a stable period
+    _stable_setup_period(100) // this is considered a stable period
 {
     /* define default game rules
      *     handicap: 0
