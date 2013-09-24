@@ -1039,6 +1039,52 @@ namespace Go_BackendGameTest
             result = go_game.update(setup);
             Assert::IsTrue(result == UpdateResult::Illegal);
         }
+
+        TEST_METHOD(update_internal_board_when_all_handicap_stones_get_removed) {
+            Game go_game;
+            std::string s(  "....\n"
+                            "..X.\n"
+                            ".X..\n"
+                            "....");
+            int size;
+            GoSetup setup1 = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup1);
+
+            // all handicap stones have been removed again
+            GoSetup empty_setup = GoSetup();
+            go_game.update(empty_setup);
+
+            
+            // the internal board got actually updated
+            auto& board = go_game.getBoard();
+            empty_setup.m_player = SG_WHITE;
+            Assert::IsTrue(board.Setup() == empty_setup);
+        }
+
+        TEST_METHOD(update_internal_board_when_a_handicap_stone_gets_moved) {
+            Game go_game;
+            std::string s(  "....\n"
+                            "..X.\n"
+                            ".X..\n"
+                            "....");
+            int size;
+            GoSetup setup1 = GoSetupUtil::CreateSetupFromString(s, size);
+            go_game.update(setup1);
+
+            // handicap stones were moved around
+            std::string s2( "..X.\n"
+                            "....\n"
+                            ".X..\n"
+                            "....");
+            GoSetup setup2 = GoSetupUtil::CreateSetupFromString(s2, size);
+            go_game.update(setup2);
+
+            
+            // the internal board got actually updated
+            auto& board = go_game.getBoard();
+            setup2.m_player = SG_WHITE;
+            Assert::IsTrue(board.Setup() == setup2);
+        }
     };
     
     TEST_CLASS(GoRulesTest)
