@@ -190,6 +190,11 @@ private:
      * @brief       Checks whether handicap stones are being placed or not.
      */
     bool isPlacingHandicap(SgPointSet current_blacks, SgPointSet current_whites, SgPointSet new_whites);
+
+    /**
+     * @brief       Places the black stones as handicap stones. If there is exaclty one black stone, it is played as a normal move.
+                    Requires the setup to not contain white stones.
+     */
     void placeHandicap(GoSetup new_setup);
 
     /**
