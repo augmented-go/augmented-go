@@ -287,28 +287,30 @@ void Game::placeHandicap(GoSetup new_setup) {
     auto whites = new_setup.m_stones[SG_WHITE];
     assert(whites.IsEmpty());
 
-    if (!blacks.IsEmpty() && blacks.Size() != previous_blacks.Size()) {
-        // the GoGame class only allows adding handicap stones all at once
-        // when getting a new handicap stone, the GoGame is therefore reset and 
-        // and all handicap stones ar added anew
+    // the GoGame class only allows adding handicap stones all at once
+    // when getting a new handicap stone, the GoGame is therefore reset and 
+    // and all handicap stones are added anew
 
-        // the PlaceHandicap() call also increases the handicap inside the rules of the board,
-        // these would then be placed automatically by the Init() call, we don't want that
-        GoRules rules = getBoard().Rules();
-        rules.SetHandicap(0);
-        _go_game.Init(getBoard().Size(), rules);
+    // the PlaceHandicap() call also increases the handicap inside the rules of the board,
+    // these would then be placed automatically by the Init() call, we don't want that
+    GoRules rules = getBoard().Rules();
+    rules.SetHandicap(0);
+    _go_game.Init(getBoard().Size(), rules);
 
-        if (blacks.Size() == 1) {
-            // only a single black stone played and is therefore not a handicap stone
-            // play the black stone just like a regular move
-            assert(getBoard().IsLegal(blacks.PointOf(), SG_BLACK));
-            _go_game.AddMove(blacks.PointOf(), SG_BLACK);
-        }
-        else {
-            SgVector<SgPoint> handicap_stones;
-            blacks.ToVector(&handicap_stones);
-            _go_game.PlaceHandicap(handicap_stones);
-        }
+    if (blacks.Size() == 1) {
+        // only a single black stone played and is therefore not a handicap stone
+        // play the black stone just like a regular move
+        assert(getBoard().IsLegal(blacks.PointOf(), SG_BLACK));
+        _go_game.AddMove(blacks.PointOf(), SG_BLACK);
+    }
+    else if(blacks.Size() == 0) {
+        // no black stones at all, just let the freshly reset game empty
+        // (calling PlaceHandicap would set the current player to white)
+    }
+    else {
+        SgVector<SgPoint> handicap_stones;
+        blacks.ToVector(&handicap_stones);
+        _go_game.PlaceHandicap(handicap_stones);
     }
 }
 
