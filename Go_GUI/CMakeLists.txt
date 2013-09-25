@@ -63,7 +63,7 @@ SET(gui_SOURCE
 SET(gui_HEADERS
     GUI.hpp
     VirtualView.hpp
-    AugmentedView.hpp
+    CameraView.hpp
     NewGameDialog.hpp
     ChangeScanRateDialog.hpp
     Version.hpp

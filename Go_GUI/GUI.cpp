@@ -12,7 +12,7 @@
 #include "NewGameDialog.hpp"
 #include "ChangeScanRateDialog.hpp"
 #include "VirtualView.hpp"
-#include "AugmentedView.hpp"
+#include "CameraView.hpp"
 #include "Version.hpp"
 
 
@@ -31,7 +31,7 @@ GUI::GUI(QWidget *parent)
     augmented_logo = QImage(texture_path + "augmented_logo.png");
 
     virtual_view = new VirtualView(this);
-    augmented_view = new AugmentedView(this);
+    augmented_view = new CameraView(this);
 
     switchbutton_icon = QIcon(texture_path + "Arrow_SwitchButton.png");
     switchbuttonpressed_icon = QIcon(texture_path + "Arrow_SwitchButton_pressed.png");

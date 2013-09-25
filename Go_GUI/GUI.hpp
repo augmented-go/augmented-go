@@ -10,7 +10,7 @@
 #include "Game.hpp"
 
 #include "ui_GUI.h"
-#include "AugmentedView.hpp"
+#include "CameraView.hpp"
 #include "VirtualView.hpp"
 
 /**
@@ -38,7 +38,7 @@ class GUI : public QMainWindow
 private:
     Ui::MainWindow ui_main;
     VirtualView* virtual_view;
-    AugmentedView* augmented_view;
+    CameraView* augmented_view;
 
     QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
     QImage augmented_logo;
