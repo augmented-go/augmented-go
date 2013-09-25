@@ -12,6 +12,7 @@
 #include "NewGameDialog.hpp"
 #include "ChangeScanRateDialog.hpp"
 #include "VirtualView.hpp"
+#include "AugmentedView.hpp"
 #include "CameraView.hpp"
 #include "Version.hpp"
 
@@ -31,7 +32,11 @@ GUI::GUI(QWidget *parent)
     augmented_logo = QImage(texture_path + "augmented_logo.png");
 
     virtual_view = new VirtualView(this);
-    augmented_view = new CameraView(this);
+	augmented_view = new AugmentedView(this);
+	QSize big_container_size = ui_main.big_container->size();	// saving size
+	ui_main.big_container = QWidget::createWindowContainer(augmented_view, ui_main.big_container, Qt::Widget);
+	ui_main.big_container->resize(big_container_size);
+	augmented_view->resize(big_container_size);
 
     switchbutton_icon = QIcon(texture_path + "Arrow_SwitchButton.png");
     switchbuttonpressed_icon = QIcon(texture_path + "Arrow_SwitchButton_pressed.png");
@@ -78,10 +83,13 @@ void GUI::init(){
     this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     
     // Attaching augmented view to big container
-    augmented_view->setParent(ui_main.big_container);
-    augmented_view->rescaleImage(ui_main.big_container->size());
+	QSize big_container_size = ui_main.big_container->size();	// saving size
+	ui_main.big_container = QWidget::createWindowContainer(augmented_view, ui_main.big_container, Qt::Widget);
+    ui_main.big_container->resize(big_container_size);
+	augmented_view->resize(big_container_size);
+	augmented_view->rescaleImage(ui_main.big_container->size());
     ui_main.big_container->setToolTip("augmented view");
-    augmented_view->show();
+    //augmented_view->show();
 
     // Attaching virtual view to small container
     virtual_view->setParent(ui_main.small_container);
@@ -139,10 +147,10 @@ void GUI::slot_ViewSwitch(){
     if (ui_main.big_container->toolTip() == "virtual view"){
 
         // switching augmented view to big container
-        augmented_view->setParent(ui_main.big_container);
+        ui_main.big_container = QWidget::createWindowContainer(augmented_view);
         augmented_view->rescaleImage(ui_main.big_container->size());
         ui_main.big_container->setToolTip("augmented view");
-        augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+        //augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
         // new style
         virtual_view->setParent(ui_main.small_container);
@@ -153,10 +161,10 @@ void GUI::slot_ViewSwitch(){
     }
     else if (ui_main.big_container->toolTip() == "augmented view"){
         // switching augmented view to small container
-        augmented_view->setParent(ui_main.small_container);
+        ui_main.big_container = QWidget::createWindowContainer(augmented_view);
         augmented_view->rescaleImage(ui_main.small_container->size());
         ui_main.small_container->setToolTip("augmented view");
-        augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+        //augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
         virtual_view->setParent(ui_main.big_container);
         virtual_view->createAndSetScene(ui_main.big_container->size(), differences, &(go_game->getBoard()));
@@ -284,7 +292,6 @@ void GUI::slot_ToggleVirtualGameMode() {
         // change augmented view to big container
         if (ui_main.big_container->toolTip() != "augmented view")
             this->slot_ViewSwitch();
-        augmented_view->setStyleSheet("background-color: black");
     
         emit signal_setVirtualGameMode(false);
     }
@@ -319,7 +326,7 @@ void GUI::slot_changeScanRate(int fps) {
 void GUI::slot_newImage(QImage image) {
         printf(">>> New Image arrived! '%d x %d' -- Format: %d <<<\n", image.width(), image.height(), image.format());
         augmented_view->setImage(image);
-        augmented_view->rescaleImage(augmented_view->parentWidget()->size());
+        //augmented_view->rescaleImage(augmented_view->parentWidget()->size());
 
         // we got an image, so board contours can be selected now
         ui_main.automatic_action->setEnabled(true);
