@@ -33,10 +33,13 @@ GUI::GUI(QWidget *parent)
 
     virtual_view = new VirtualView(this);
 	augmented_view = new AugmentedView(this);
+
 	QSize big_container_size = ui_main.big_container->size();	// saving size
 	ui_main.big_container = QWidget::createWindowContainer(augmented_view, ui_main.big_container, Qt::Widget);
 	ui_main.big_container->resize(big_container_size);
 	augmented_view->resize(big_container_size);
+    ui_main.big_container->setToolTip("augmented view");
+
 
     switchbutton_icon = QIcon(texture_path + "Arrow_SwitchButton.png");
     switchbuttonpressed_icon = QIcon(texture_path + "Arrow_SwitchButton_pressed.png");
@@ -88,7 +91,7 @@ void GUI::init(){
     ui_main.big_container->resize(big_container_size);
 	augmented_view->resize(big_container_size);
 	augmented_view->rescaleImage(ui_main.big_container->size());
-    ui_main.big_container->setToolTip("augmented view");
+
     //augmented_view->show();
 
     // Attaching virtual view to small container

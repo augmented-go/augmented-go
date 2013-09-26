@@ -40,6 +40,7 @@ private:
     Ui::MainWindow ui_main;
     VirtualView* virtual_view;
     AugmentedView* augmented_view;
+	CameraView* camera_view;
 
     QPixmap whitebasket_pixmap, blackbasket_pixmap, closedbasket_pixmap, gotable_pixmap;
     QImage augmented_logo;

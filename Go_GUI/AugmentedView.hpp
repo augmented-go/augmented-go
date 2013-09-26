@@ -2,6 +2,8 @@
 
 #include <QGLView>
 #include <QGLAbstractScene>
+#include <QGLBuilder>
+#include <QGraphicsBillboardTransform>
 
 class AugmentedView : public QGLView
 {
@@ -21,6 +23,11 @@ protected:
 	
  
 private:
+	float ratio;
     QGLAbstractScene *m_scene;
-    QGLSceneNode *m_rootNode;
+    QGLSceneNode *m_stone;
+	QGLSceneNode *m_background;
+	QGraphicsBillboardTransform* faceToCamera;
+	QGLTexture2D white_stone_tex, background_tex;
+	QGLMaterial white_stone_mat, background_mat;
 };
