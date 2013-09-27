@@ -90,7 +90,8 @@ void GUI::init(){
 	ui_main.big_container = QWidget::createWindowContainer(augmented_view, ui_main.big_container, Qt::Widget);
     ui_main.big_container->resize(big_container_size);
 	augmented_view->resize(big_container_size);
-	augmented_view->rescaleImage(ui_main.big_container->size());
+	//augmented_view->rescaleImage(ui_main.big_container->size());
+	ui_main.big_container->setToolTip("augmented view");
 
     //augmented_view->show();
 
@@ -150,12 +151,14 @@ void GUI::slot_ViewSwitch(){
     if (ui_main.big_container->toolTip() == "virtual view"){
 
         // switching augmented view to big container
-        ui_main.big_container = QWidget::createWindowContainer(augmented_view);
-        augmented_view->rescaleImage(ui_main.big_container->size());
-        ui_main.big_container->setToolTip("augmented view");
-        //augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+        QSize big_container_size = ui_main.big_container->size();	// saving size
+		ui_main.big_container = QWidget::createWindowContainer(augmented_view, ui_main.big_container, Qt::Widget);
+		ui_main.big_container->resize(big_container_size);
+		augmented_view->resize(big_container_size);
+		//augmented_view->rescaleImage(ui_main.big_container->size());
+		ui_main.big_container->setToolTip("augmented view");
+        ui_main.big_container->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
-        // new style
         virtual_view->setParent(ui_main.small_container);
         virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &(go_game->getBoard()));
         ui_main.small_container->setToolTip("virtual view");
@@ -164,10 +167,13 @@ void GUI::slot_ViewSwitch(){
     }
     else if (ui_main.big_container->toolTip() == "augmented view"){
         // switching augmented view to small container
-        ui_main.big_container = QWidget::createWindowContainer(augmented_view);
-        augmented_view->rescaleImage(ui_main.small_container->size());
-        ui_main.small_container->setToolTip("augmented view");
-        //augmented_view->show();		// when changing parent, it gets invisible -> show again! -.- !!
+        QSize small_container_size = ui_main.small_container->size();	// saving size
+		ui_main.small_container = QWidget::createWindowContainer(augmented_view, ui_main.small_container, Qt::Widget);
+		ui_main.small_container->resize(small_container_size);
+		augmented_view->resize(small_container_size);
+		//augmented_view->rescaleImage(ui_main.small_container->size());
+		ui_main.small_container->setToolTip("augmented view");
+		ui_main.small_container->show();		// when changing parent, it gets invisible -> show again! -.- !!
 
         virtual_view->setParent(ui_main.big_container);
         virtual_view->createAndSetScene(ui_main.big_container->size(), differences, &(go_game->getBoard()));

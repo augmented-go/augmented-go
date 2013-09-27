@@ -14,7 +14,6 @@ public:
 
 	void setImage(QImage image);
 	void rescaleImage(QSize size){};
-	void resize(int, int);
 	void resize(QSize size);
 	void updateDifferences(QList<QPoint>* errors = 0);
  

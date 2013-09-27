@@ -17,6 +17,7 @@ void AugmentedView::initializeGL(QGLPainter * painter)
 { 
     //this->setCsetClearBeforeRendering(true);
     //viewer.setFlags(Qt::FramelessWindowHint);
+	setOption(QGLView::Option::CameraNavigation, false);
 
 	// Viewing Volume
     camera()->setFieldOfView(60);
@@ -52,10 +53,10 @@ void AugmentedView::initializeGL(QGLPainter * painter)
 	m_background->setEffect(QGL::StandardEffect::LitModulateTexture2D); // texture
 	m_background->setMaterial(&background_mat);	
 
-	white_stone_mat.setDiffuseColor(QColor(255,255,255));
-	black_stone_mat.setDiffuseColor(QColor(255,255,255));
-	redglowing_stone_mat.setAmbientColor(QColor(255,0,0));
-	redglowing_stone_mat.setDiffuseColor(QColor(200,0,0));
+	white_stone_mat.setDiffuseColor(QColor(255,255,255,50));
+	black_stone_mat.setDiffuseColor(QColor(0,0,0,50));
+	redglowing_stone_mat.setAmbientColor(QColor(255,0,0,50));
+	redglowing_stone_mat.setDiffuseColor(QColor(200,0,0,50));
 
 	// not yet found out how to find child (functions don't work)
 	for(QGLSceneNode* s : m_white_stone->allChildren()){
@@ -81,12 +82,15 @@ void AugmentedView::initializeGL(QGLPainter * painter)
 
 	// for tests
 	white_stones.push_back(QPoint(245,90));
+	black_stones.push_back(QPoint(396, 151));
 	redglowing_stones.push_back(QPoint(309,334));
 	redglowing_stones.push_back(QPoint(376,335));
 }
  
 void AugmentedView::paintGL(QGLPainter * painter)
 {
+	painter->setClearColor(QColor(0,0,0,1));
+	//qDebug() << "REPAINT AUGMENTED VIEW!";
 	float scene_width = camera()->eye().length() / tan(camera()->fieldOfView() * degToRad) * 2 * cont_width/cont_height;
 	float scene_height = camera()->eye().length() / tan(camera()->fieldOfView() * degToRad) * 2;
 
@@ -134,7 +138,7 @@ void AugmentedView::setImage(QImage image){
 	background_mat.setTexture(&background_tex);
 	img_width = image.width() * 1.0f;
 	img_height = image.height() * 1.0f;
-	//qDebug() << ratio;
+	this->update();
 }
 
 void AugmentedView::updateDifferences(QList<QPoint>* errors){
@@ -145,18 +149,10 @@ void AugmentedView::updateDifferences(QList<QPoint>* errors){
 	this->redglowing_stones = *errors;
 }
 
-void AugmentedView::resize(int w, int h){
-	float distance = camera()->eye().length();
-	float width = distance / tan(camera()->fieldOfView() * degToRad) / 4.5f; // 4.5?!
-	//ratio = w * 1.0f/h;
-	//qDebug() << ratio;
-}
-
 void AugmentedView::resize(QSize size){
 	qDebug() << "resized!";
 	//camera()->setViewSize(size);
 	cont_width = size.width();
 	cont_height = size.height();
-
-	
+	this->update();
 }
