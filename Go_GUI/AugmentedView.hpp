@@ -16,6 +16,7 @@ public:
 	void rescaleImage(QSize size){};
 	void resize(int, int);
 	void resize(QSize size);
+	void updateDifferences(QList<QPoint>* errors = 0);
  
 protected:
     void initializeGL(QGLPainter * painter);
@@ -23,11 +24,13 @@ protected:
 	
  
 private:
-	float ratio;
-    QGLAbstractScene *m_scene;
-    QGLSceneNode *m_stone;
+	float cont_width, cont_height, img_width, img_height;
+	int stone_size;
+	QList<QPoint> white_stones;
+	QList<QPoint> black_stones;
+	QList<QPoint> redglowing_stones;
+    QGLSceneNode *m_white_stone, *m_black_stone, *m_redglowing_stone;
 	QGLSceneNode *m_background;
-	QGraphicsBillboardTransform* faceToCamera;
-	QGLTexture2D white_stone_tex, background_tex;
-	QGLMaterial white_stone_mat, background_mat;
+	QGLTexture2D background_tex;
+	QGLMaterial white_stone_mat, black_stone_mat, redglowing_stone_mat, background_mat;
 };

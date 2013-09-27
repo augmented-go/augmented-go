@@ -157,7 +157,7 @@ void GUI::slot_ViewSwitch(){
 
         // new style
         virtual_view->setParent(ui_main.small_container);
-            virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &(go_game->getBoard()));
+        virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &(go_game->getBoard()));
         ui_main.small_container->setToolTip("virtual view");
         virtual_view->show();
         
@@ -378,6 +378,9 @@ void GUI::slot_newGameData(const Go_Backend::Game* game) {
 
     else if (ui_main.big_container->toolTip() == "augmented view")
         virtual_view->createAndSetScene(ui_main.small_container->size(), differences, &board);
+
+	// update differences on augmented view
+	//augmented_view->updateDifferences();
 
     // disable navigation button if there is no history in that direction
     ui_main.forward_button->setDisabled(!go_game->canNavigateHistory(SgNode::Direction::NEXT));
